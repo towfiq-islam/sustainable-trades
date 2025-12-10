@@ -18,7 +18,7 @@
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.544.0",
     "moment": "^2.30.1",
-    "next": "^15.4.6",
+    "next": "^16.0.7",
     "postcss": "^8.5.4",
     "pusher-js": "^8.4.0",
     "react": "^19.1.1",

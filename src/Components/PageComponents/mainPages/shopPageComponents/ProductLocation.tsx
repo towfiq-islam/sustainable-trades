@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { LuFileQuestion } from "react-icons/lu";
 import { getAllProducts } from "@/Hooks/api/cms_api";
@@ -89,7 +89,7 @@ const ProductLocation = () => {
 
                         {/* Distance */}
                         <p className="text-secondary-gray font-semibold text-xs md:text-sm mb-0.5">
-                          {product?.distance?.toFixed(1)} mi
+                          {Number(product?.distance).toFixed(1)} mi
                         </p>
 
                         {/* Selling Option */}

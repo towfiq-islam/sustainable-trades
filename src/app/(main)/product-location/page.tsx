@@ -9,7 +9,7 @@ import {
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
 import { Navigation } from "swiper/modules";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Subscribe from "@/Components/PageComponents/mainPages/homePageComponents/Subscribe";
 import CommunityMember from "@/Components/PageComponents/mainPages/homePageComponents/CommunityMember";

@@ -77,6 +77,7 @@ const ProductLocation = () => {
                               className="text-primary-green text-xs md:text-sm"
                             />
                           ))}
+
                           {Array.from({
                             length: 5 - +product?.reviews_avg_rating,
                           }).map((_, index) => (

@@ -39,7 +39,7 @@ Developed using the latest Next.js features, TypeScript for type safety, and Tan
 
 #### Real-Time Chat:
 - Real-time user-to-vendor messaging system powered by Pusher.js and Laravel Echo.
-- Instant updates, typing indicators, and unread message notifications.
+- Instant updates, typing indicators, and unread message notification.
 
 #### Smart Location System:
 - Integrated Google Map API for finding shops.

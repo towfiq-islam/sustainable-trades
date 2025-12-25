@@ -1,12 +1,14 @@
 "use client";
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
-import React, { useState } from "react";
+import { useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { getPricingData } from "@/Hooks/api/cms_api";
 import Container from "@/Components/Common/Container";
 import { usePurchasePlan } from "@/Hooks/api/auth_api";
 import { PricingSkeletonCard } from "@/Components/Loader/Loader";
+import Modal from "@/Components/Common/Modal";
+import SubscriptionPaypalModal from "@/Components/Modals/SubscriptionPaypalModal";
 
 type benefitItem = {
   id: string;
@@ -38,19 +40,12 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
 
   // States
   const [activeTab, setActiveTab] = useState<string>("yearly");
+  const [isOpen, setOpen] = useState<boolean>(false);
   const [planId, setPlanId] = useState<number>(0);
 
   // Queries & Mutations
   const { mutate: purchasePlanMutation, isPending } = usePurchasePlan(planId);
   const { data: pricingData, isLoading } = getPricingData(activeTab);
-
-  // Func for purchase plan
-  const handlePurchasePlan = async (id: number) => {
-    await purchasePlanMutation({
-      success_url: `${window.location.origin}/complete-shop-creation`,
-      cancel_url: `${window.location.origin}/auth/create-shop`,
-    });
-  };
 
   return (
     <section id="membership_plan" className="py-8 md:py-20">
@@ -195,7 +190,7 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
                         e.preventDefault();
                         e.stopPropagation();
                         setPlanId(id);
-                        handlePurchasePlan(id);
+                        setOpen(true);
                       }}
                       className={`w-full block duration-500 transition-all md:text-lg cursor-pointer py-1.5 md:py-3 border-2 border-primary-green font-semibold rounded-lg shadow-lg hover:scale-105 ${
                         idx === 0
@@ -226,6 +221,10 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
               )}
         </div>
       </Container>
+
+      <Modal open={isOpen} onClose={() => setOpen(false)}>
+        <SubscriptionPaypalModal planId={planId} />
+      </Modal>
     </section>
   );
 };

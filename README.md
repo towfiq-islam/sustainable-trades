@@ -2,19 +2,28 @@
 
 ## 1. Description:
 
-**Multi-Vendor E-Commerce Platform** is a fully dynamic, production-ready, and SEO-friendly marketplace built with Next.js v15, TypeScript, and a modern tech stack.
+**Multi-Vendor E-Commerce Platform** is a fully dynamic, production-ready, and
+SEO-friendly marketplace built with Next.js v15, TypeScript, and a modern tech
+stack.
 
-It’s designed for real-world e-commerce operations, supporting five user roles — Admin, Basic Vendor, Pro Vendor, Customer, and Guest — each with their own tailored dashboards and permissions.
+It’s designed for real-world e-commerce operations, supporting five user roles —
+Admin, Basic Vendor, Pro Vendor, Customer, and Guest — each with their own
+tailored dashboards and permissions.
 
-The platform enables multiple vendors to manage their shops, products, trades, and subscriptions, while customers can explore nearby shops, chat in real time, follow stores, and purchase products seamlessly.
+The platform enables multiple vendors to manage their shops, products, trades,
+and subscriptions, while customers can explore nearby shops, chat in real time,
+follow stores, and purchase products seamlessly.
 
-Developed using the latest Next.js features, TypeScript for type safety, and TanStack Query for optimized data fetching, this application ensures performance, maintainability, and scalability across all devices.
+Developed using the latest Next.js features, TypeScript for type safety, and
+TanStack Query for optimized data fetching, this application ensures
+performance, maintainability, and scalability across all devices.
 
 ---
 
 ## 2. Used Technologies:
 
-- Next.js v15 – Leveraging SSR, CSR, SSG, and ISR for optimized performance and SEO.
+- Next.js v15 – Leveraging SSR, CSR, SSG, and ISR for optimized performance and
+  SEO.
 - TypeScript – For robust, type-safe, and maintainable code.
 - Tailwind CSS v4 – To craft a modern, responsive, and clean UI.
 - TanStack Query – For powerful, cache-optimized API data fetching.
@@ -29,25 +38,33 @@ Developed using the latest Next.js features, TypeScript for type safety, and Tan
 ## 3. Main Features:
 
 #### Multi-Role System:
-- Admin, Basic Vendor, Pro Vendor, Customer, and Guest – each with their own dashboard and permissions.
-- Dynamic Role Management – Role-specific functionalities and UI are rendered conditionally.
+
+- Admin, Basic Vendor, Pro Vendor, Customer, and Guest – each with their own
+  dashboard and permissions.
+- Dynamic Role Management – Role-specific functionalities and UI are rendered
+  conditionally.
 
 #### Vendor & Product Management:
+
 - Vendors can add products, which are published only after admin approval.
 - Vendors can upgrade subscriptions between Basic and Pro plans.
 - Vendors can edit profiles, manage listings, discounts, and trades.
 
 #### Real-Time Chat:
-- Real-time user-to-vendor messaging system powered by Pusher.js and Laravel Echo.
+
+- Real-time user-to-vendor messaging system powered by Pusher.js and Laravel
+  Echo.
 - Instant updates, typing indicators, and unread message notifications.
 
 #### Smart Location System:
+
 - Integrated Google Map API for finding shops.
 - The platform captures user’s latitude and longitude and displays nearby shops.
 - Interactive split view: left side shop list, right side live map view.
 - On hover, the shop’s name and photo appear live on the map.
 
 #### Customer Features:
+
 - Browse and filter products by category, subcategory, price, or popularity.
 - Add to Cart, Add to Favorites, and Follow/Unfollow Shops.
 - Write product reviews and view average ratings.
@@ -57,18 +74,25 @@ Developed using the latest Next.js features, TypeScript for type safety, and Tan
 #### Dashboard Functionalities:
 
 ##### Customer Features:
+
 - Orders, Favorites, Cart, Messages, Reviews, Settings
 
 ##### Basic Vendor Dashboard::
-- Listings, Trades, Memberships, Favorites, Membership Spotlights, Notifications, Messages, Settings
+
+- Listings, Trades, Memberships, Favorites, Membership Spotlights,
+  Notifications, Messages, Settings
 
 ##### Pro Vendor Dashboard:
-- Orders, Trades, Listings, Payments, Accounting, Discounts, Shipping, Favorites, Membership Spotlights, Notifications, Messages, Settings
+
+- Orders, Trades, Listings, Payments, Accounting, Discounts, Shipping,
+  Favorites, Membership Spotlights, Notifications, Messages, Settings
 
 ##### Admin Dashboard:
+
 - Manage users, shops, products, reviews, CMS content, and platform settings
 
 #### Performance & Design:
+
 - Modern, beautiful, and lightweight UI.
 - Fully responsive on all screen sizes (mobile, tablet, and desktop).
 - SEO optimized for better visibility.

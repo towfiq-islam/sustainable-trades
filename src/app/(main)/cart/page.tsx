@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { getProductCart } from "@/Hooks/api/cms_api";
 import PrivateLayout from "@/Private/PrivateLayout";
 import Container from "@/Components/Common/Container";

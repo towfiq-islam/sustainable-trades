@@ -2,10 +2,8 @@
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
 import { useState } from "react";
-import { CgSpinnerTwo } from "react-icons/cg";
 import { getPricingData } from "@/Hooks/api/cms_api";
 import Container from "@/Components/Common/Container";
-import { usePurchasePlan } from "@/Hooks/api/auth_api";
 import { PricingSkeletonCard } from "@/Components/Loader/Loader";
 import Modal from "@/Components/Common/Modal";
 import SubscriptionPaypalModal from "@/Components/Modals/SubscriptionPaypalModal";
@@ -44,7 +42,6 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
   const [planId, setPlanId] = useState<number>(0);
 
   // Queries & Mutations
-  const { mutate: purchasePlanMutation, isPending } = usePurchasePlan(planId);
   const { data: pricingData, isLoading } = getPricingData(activeTab);
 
   return (
@@ -183,7 +180,6 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
 
                     <button
                       disabled={
-                        isPending ||
                         user?.membership?.membership_type === membership_type
                       }
                       onClick={e => {
@@ -203,18 +199,9 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
                       }
                         `}
                     >
-                      {isPending && id === planId ? (
-                        <p className="flex gap-2 items-center justify-center">
-                          <CgSpinnerTwo className="animate-spin text-xl" />
-                          <span>Please wait...</span>
-                        </p>
-                      ) : (
-                        <div>
-                          {user?.membership?.membership_type === membership_type
-                            ? "Purchased"
-                            : `Choose ${name}`}
-                        </div>
-                      )}
+                      {user?.membership?.membership_type === membership_type
+                        ? "Purchased"
+                        : `Choose ${name}`}
                     </button>
                   </div>
                 )

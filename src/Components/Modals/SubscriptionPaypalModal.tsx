@@ -7,12 +7,12 @@ const SubscriptionPaypalModal = ({ planId }: { planId: number }) => {
   const token = getItem("token");
   const initialOptions = {
     "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-    "enable-funding": "venmo",
-    "disable-funding": "",
-    "buyer-country": "US",
     currency: "USD",
-    "data-page-type": "product-details",
     components: "buttons",
+    "enable-funding": "venmo",
+    // "buyer-country": "US",
+    "disable-funding": "",
+    "data-page-type": "product-details",
     "data-sdk-integration-source": "developer-studio",
   };
 

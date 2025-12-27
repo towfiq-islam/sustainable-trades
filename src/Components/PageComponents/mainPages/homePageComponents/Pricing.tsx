@@ -195,7 +195,7 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
                       }
                       ${
                         user?.membership?.membership_type === membership_type &&
-                        "opacity-70 !cursor-not-allowed"
+                        "opacity-70 !cursor-not-allowed hover:!scale-100 hover:!bg-primary-green !text-accent-white"
                       }
                         `}
                     >

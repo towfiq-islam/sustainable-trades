@@ -193,6 +193,7 @@ const CartItem = ({ item }: any) => {
             setShippingOptionsOpen(false);
             setSuccessOpen(true);
           }}
+          onClose={() => setShippingOptionsOpen(false)}
         />
       </Modal>
 

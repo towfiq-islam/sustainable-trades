@@ -13,13 +13,14 @@ type ShippingOptionsProps = {
   userId: any;
   onProceed: () => void;
   onSuccess: () => void;
+  onClose: () => void;
 };
 
 const ShippingOptionsModal = ({
   userId,
   onProceed,
-}: // onSuccess,
-ShippingOptionsProps) => {
+  onClose,
+}: ShippingOptionsProps) => {
   const [shippingMethod, setShippingMethod] = useState("proceed");
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
 
@@ -40,6 +41,7 @@ ShippingOptionsProps) => {
       onSuccess: (data: any) => {
         if (data?.success) {
           toast.success(data?.message);
+          onClose();
         }
       },
     });

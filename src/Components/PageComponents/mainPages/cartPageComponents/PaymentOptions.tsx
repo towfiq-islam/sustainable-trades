@@ -1,6 +1,5 @@
 "use client";
 import CartItem from "./CartItem";
-import React from "react";
 import { TiDelete } from "react-icons/ti";
 import { useClearCart } from "@/Hooks/api/cms_api";
 import { CgSpinnerTwo } from "react-icons/cg";

@@ -155,7 +155,7 @@ export const useCancelTrade = () => {
 export const useApproveTrade = () => {
   return useMutation({
     mutationFn: (id: any) =>
-      axiosSecure.get(`/api/trade-offer-approve/${id}`).then((res) => res.data),
+      axiosSecure.get(`/api/trade-offer-approve/${id}`).then(res => res.data),
   });
 };
 
@@ -163,7 +163,7 @@ export const useApproveTrade = () => {
 export const useCancel = () => {
   return useMutation({
     mutationFn: (id: any) =>
-      axiosSecure.get(`/api/trade-offer-cancel/${id}`).then((res) => res.data),
+      axiosSecure.get(`/api/trade-offer-cancel/${id}`).then(res => res.data),
   });
 };
 
@@ -362,7 +362,7 @@ export const useMembershipget = () => {
     isPrivate: true,
     endpoint: "/api/subscriptions",
   });
-}
+};
 
 // Hook for updating a discount
 export const useDiscountUpdate = (id?: string) => {
@@ -420,7 +420,7 @@ export const useBulkDeleteDiscount = () => {
 };
 
 // Image Delete Discounts
-export const useImageDelete = (id:any) => {
+export const useImageDelete = (id: any) => {
   return useClientApi({
     method: "delete",
     key: ["image-delete"],
@@ -432,9 +432,20 @@ export const useImageDelete = (id:any) => {
       }
     },
     onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message || "Failed to delete image"
-      );
+      toast.error(err?.response?.data?.message || "Failed to delete image");
+    },
+  });
+};
+
+// Get My Orders
+export const getMyOrders = () => {
+  return useClientApi({
+    method: "get",
+    key: ["get-my-orders"],
+    isPrivate: true,
+    endpoint: "/api/my-orders",
+    queryOptions: {
+      retry: false,
     },
   });
 };

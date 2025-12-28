@@ -608,3 +608,42 @@ export const ShopCardSkeleton = () => {
     </div>
   );
 };
+
+const OrderCardSkeleton = () => {
+  return (
+    <div className="border border-[#BFBEBE] rounded-[8px] animate-pulse">
+      {/* Top section */}
+      <div className="px-3 md:px-6 py-2 md:py-4">
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div>
+            <div className="h-4 w-28 bg-gray-300 rounded mb-2" />
+            <div className="h-5 w-32 bg-gray-200 rounded" />
+          </div>
+          <div className="h-5 w-24 bg-gray-200 rounded self-center" />
+        </div>
+      </div>
+
+      <div className="w-full bg-[#BFBEBE] h-[1px]" />
+
+      {/* Bottom section */}
+      <div className="pt-2 px-4 pb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
+          <div className="w-full">
+            <div className="h-6 w-48 bg-gray-300 rounded mb-3" />
+            <div className="h-4 w-64 bg-gray-200 rounded mb-4" />
+
+            <div className="flex gap-x-3 mb-4">
+              <div className="h-[117px] w-[115px] bg-gray-300 rounded" />
+              <div className="flex flex-col gap-3">
+                <div className="h-5 w-40 bg-gray-300 rounded" />
+                <div className="h-4 w-28 bg-gray-200 rounded" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OrderCardSkeleton;

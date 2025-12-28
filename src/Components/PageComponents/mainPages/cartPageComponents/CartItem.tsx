@@ -11,6 +11,7 @@ import Modal from "@/Components/Common/Modal";
 import SuccessModal from "@/Components/Modals/SuccessModal";
 import ShippingAddress from "@/Components/Modals/ShippingAddress";
 import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 const CartItem = ({ item }: any) => {
   const [shippingOptionsOpen, setShippingOptionsOpen] =
@@ -61,7 +62,9 @@ const CartItem = ({ item }: any) => {
         <div className="flex gap-2 items-center">
           <LocationTwoSvg />
           <p className="text-primary-green font-semibold">
-            {item?.shop?.address?.address_line_1}
+            {item?.shop?.address?.display_my_address
+              ? item?.shop?.address?.address_line_1
+              : `${item?.shop?.address?.city}, ${item?.shop?.address?.state}`}
           </p>
         </div>
 
@@ -72,17 +75,16 @@ const CartItem = ({ item }: any) => {
             setCartId(item?.id);
             removeCartMutation();
           }}
-          className={`absolute right-2 top-2 px-3 py-1 text-sm grid place-items-center rounded-full font-semibold bg-accent-red text-white ${
+          className={`absolute right-2 top-2 size-8 text-sm grid place-items-center rounded-full font-semibold bg-accent-red text-white ${
             cartPending ? "cursor-not-allowed" : "cursor-pointer"
           }`}
         >
           {cartPending && cartId === item?.id ? (
             <p className="flex gap-2 items-center justify-center">
               <CgSpinnerTwo className="animate-spin" />
-              <span>Deleting...</span>
             </p>
           ) : (
-            "Delete cart"
+            <RiDeleteBin6Line className="text-lg" />
           )}
         </button>
       </div>
@@ -204,12 +206,15 @@ const CartItem = ({ item }: any) => {
         open={shippingAddressOpen}
         onClose={() => setShippingAddressOpen(false)}
       >
-        <ShippingAddress cart_id={cartId} />
+        <ShippingAddress
+          cart_id={cartId}
+          onClose={() => setShippingAddressOpen(false)}
+        />
       </Modal>
 
-      <Modal open={successOpen} onClose={() => setSuccessOpen(false)}>
+      {/* <Modal open={successOpen} onClose={() => setSuccessOpen(false)}>
         <SuccessModal />
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

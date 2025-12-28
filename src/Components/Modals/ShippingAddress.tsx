@@ -1,5 +1,8 @@
 "use client";
+import { useCheckout } from "@/Hooks/api/cms_api";
 import { useForm } from "react-hook-form";
+import { CgSpinnerTwo } from "react-icons/cg";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 type FormData = {
   first_name: string;
@@ -12,17 +15,33 @@ type FormData = {
   city: string;
   state: string;
   postal_code: string;
+  payment_method: string;
+  shipping_option: string;
 };
 
-const ShippingAddress = ({ cart_id }: { cart_id: number | null }) => {
+const ShippingAddress = ({
+  cart_id,
+  onClose,
+}: {
+  cart_id: number | null;
+  onClose: () => void;
+}) => {
+  const { mutateAsync: checkoutMutation, isPending } = useCheckout(cart_id);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log("Submitted Data:", data);
+  const onSubmit = async (data: FormData) => {
+    await checkoutMutation(data, {
+      onSuccess: (data: any) => {
+        if (data?.status || data?.success) {
+          onClose();
+        }
+      },
+    });
   };
 
   return (
@@ -62,58 +81,92 @@ const ShippingAddress = ({ cart_id }: { cart_id: number | null }) => {
           </div>
         </div>
 
-        {/* Email */}
-        <div>
-          <label className="form-label">Email *</label>
-          <input
-            type="email"
-            className="form-input"
-            {...register("email", { required: "Email is required" })}
-            placeholder="example@mail.com"
-          />
-          {errors.email && <p className="form-error">{errors.email.message}</p>}
+        {/* Email + Phone */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="form-label">Email *</label>
+            <input
+              type="email"
+              className="form-input"
+              {...register("email", { required: "Email is required" })}
+              placeholder="example@mail.com"
+            />
+            {errors.email && (
+              <p className="form-error">{errors.email.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="form-label">Phone</label>
+            <input
+              type="tel"
+              className="form-input"
+              {...register("phone", { required: "Phone is required" })}
+              placeholder="+1 (000) 000-0000"
+            />
+            {errors.phone && (
+              <p className="form-error">{errors.phone.message}</p>
+            )}
+          </div>
         </div>
 
-        {/* Address */}
-        <div>
-          <label className="form-label">Address *</label>
-          <input
-            type="text"
-            className="form-input"
-            {...register("address", { required: "Address is required" })}
-            placeholder="Texas, Austin"
-          />
-          {errors.address && (
-            <p className="form-error">{errors.address.message}</p>
-          )}
+        {/* Country + Address */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="form-label">Country *</label>
+            <input
+              type="text"
+              className="form-input"
+              {...register("country", { required: "Country is required" })}
+              placeholder="USA"
+            />
+            {errors.country && (
+              <p className="form-error">{errors.country.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="form-label">Address *</label>
+            <input
+              type="text"
+              className="form-input"
+              {...register("address", { required: "Address is required" })}
+              placeholder="Texas, Austin"
+            />
+            {errors.address && (
+              <p className="form-error">{errors.address.message}</p>
+            )}
+          </div>
         </div>
 
-        {/* Country */}
-        <div>
-          <label className="form-label">Country *</label>
-          <input
-            type="text"
-            className="form-input"
-            {...register("country", { required: "Country is required" })}
-            placeholder="USA"
-          />
-          {errors.country && (
-            <p className="form-error">{errors.country.message}</p>
-          )}
+        {/* State + City */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="form-label">State *</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="State"
+              {...register("state", { required: "State is required" })}
+            />
+            {errors.state && (
+              <p className="form-error">{errors.state.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="form-label">City *</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Austin"
+              {...register("city", { required: "City is required" })}
+            />
+            {errors.city && <p className="form-error">{errors.city.message}</p>}
+          </div>
         </div>
 
-        {/* Apt / Suite */}
-        <div>
-          <label className="form-label">Apt / Suite (Optional)</label>
-          <input
-            type="text"
-            className="form-input"
-            {...register("apt")}
-            placeholder="Apartment / Suite"
-          />
-        </div>
-
-        {/* Postal Code + City */}
+        {/* Apt/Suite + Postal Code  */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="form-label">Zip Code *</label>
@@ -127,45 +180,73 @@ const ShippingAddress = ({ cart_id }: { cart_id: number | null }) => {
               <p className="form-error">{errors.postal_code.message}</p>
             )}
           </div>
+
           <div>
-            <label className="form-label">City *</label>
+            <label className="form-label">Apt / Suite (Optional)</label>
             <input
               type="text"
               className="form-input"
-              placeholder="Austin"
-              {...register("city", { required: "City is required" })}
+              {...register("apt")}
+              placeholder="Apartment / Suite"
             />
-            {errors.city && <p className="form-error">{errors.city.message}</p>}
           </div>
         </div>
 
-        {/* State */}
+        {/* Payment Method */}
         <div>
-          <label className="form-label">State *</label>
-          <input
-            type="text"
+          <label className="form-label">Payment Method *</label>
+          <select
             className="form-input"
-            placeholder="State"
-            {...register("state", { required: "State is required" })}
-          />
-          {errors.state && <p className="form-error">{errors.state.message}</p>}
+            {...register("payment_method", {
+              required: "Payment method is required",
+            })}
+          >
+            <option value="">Select payment method</option>
+            {/* <option value="paypal">Paypal</option> */}
+            <option value="cash_on_delivery">Paypal</option>
+            <option value="cash_on_delivery">Cash on delivery</option>
+          </select>
+          {errors.payment_method && (
+            <p className="form-error">{errors.payment_method.message}</p>
+          )}
         </div>
 
-        {/* Phone */}
+        {/* Shipping Option */}
         <div>
-          <label className="form-label">Phone</label>
-          <input
-            type="tel"
+          <label className="form-label">Shipping Option *</label>
+          <select
             className="form-input"
-            {...register("phone", { required: "Phone is required" })}
-            placeholder="+1 (000) 000-0000"
-          />
-          {errors.phone && <p className="form-error">{errors.phone.message}</p>}
+            {...register("shipping_option", {
+              required: "Payment method is required",
+            })}
+          >
+            <option value="">Select pickup option</option>
+            <option value="pickup">Pickup</option>
+            <option value="delivery">Delivery</option>
+          </select>
+          {errors.shipping_option && (
+            <p className="form-error">{errors.shipping_option.message}</p>
+          )}
         </div>
 
         {/* Button */}
-        <button type="submit" className="primary_btn w-full">
-          Continue to Payment
+        <button
+          type="submit"
+          disabled={isPending}
+          className={`primary_btn ${
+            isPending
+              ? "!cursor-not-allowed opacity-85 hover:!bg-primary-green hover:!text-white"
+              : "cursor-pointer"
+          } `}
+        >
+          {isPending ? (
+            <span className="flex gap-2 items-center justify-center">
+              <CgSpinnerTwo className="animate-spin text-xl" />
+              <span>Please wait....</span>
+            </span>
+          ) : (
+            "Continue to Payment"
+          )}
         </button>
       </form>
     </>

@@ -4,7 +4,7 @@ import {
   useUpdateCart,
 } from "@/Hooks/api/cms_api";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { LocationTwoSvg, MinSvg } from "@/Components/Svg/SvgContainer";
 import Modal from "@/Components/Common/Modal";
@@ -171,7 +171,10 @@ const CartItem = ({ item }: any) => {
       {/* Add to cart */}
       <div className="flex justify-end">
         <button
-          onClick={() => setShippingOptionsOpen(true)}
+          onClick={() => {
+            setShippingOptionsOpen(true);
+            setCartId(item?.id);
+          }}
           className="bg-primary-green text-white cursor-pointer font-semibold rounded !w-fit px-4 !py-2 !text-sm"
         >
           Proceed to Checkout
@@ -201,7 +204,7 @@ const CartItem = ({ item }: any) => {
         open={shippingAddressOpen}
         onClose={() => setShippingAddressOpen(false)}
       >
-        <ShippingAddress />
+        <ShippingAddress cart_id={cartId} />
       </Modal>
 
       <Modal open={successOpen} onClose={() => setSuccessOpen(false)}>

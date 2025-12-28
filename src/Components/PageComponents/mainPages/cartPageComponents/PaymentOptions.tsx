@@ -41,18 +41,14 @@ const PaymentOptions = ({ data, isLoading }: any) => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12">
-        <div className="lg:col-span-8">
-          <div className="space-y-7">
-            {isLoading
-              ? [1, 2].map((_, idx) => <CartItemSkeleton key={idx} />)
-              : !data || data?.length === 0
-              ? "No Cart Found"
-              : data?.cart?.map((item: any) => (
-                  <CartItem key={item?.id} item={item} />
-                ))}
-          </div>
-        </div>
+      <div className="space-y-7">
+        {isLoading
+          ? [1, 2].map((_, idx) => <CartItemSkeleton key={idx} />)
+          : !data || data?.length === 0
+          ? "No Cart Found"
+          : data?.cart?.map((item: any) => (
+              <CartItem key={item?.id} item={item} />
+            ))}
       </div>
     </section>
   );

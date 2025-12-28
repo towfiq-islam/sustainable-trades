@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { testimonial } from "@/Components/Data/data";
 import Image from "next/image";

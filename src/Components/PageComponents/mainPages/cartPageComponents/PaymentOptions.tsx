@@ -1,24 +1,25 @@
 "use client";
 import CartItem from "./CartItem";
 import { TiDelete } from "react-icons/ti";
-import { useClearCart } from "@/Hooks/api/cms_api";
+import { getProductCart, useClearCart } from "@/Hooks/api/cms_api";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { CartItemSkeleton } from "@/Components/Loader/Loader";
 
-const PaymentOptions = ({ data, isLoading }: any) => {
-  // Mutation
+const PaymentOptions = () => {
+  // Mutation + Query
+  const { data: cartData, isLoading } = getProductCart();
   const { mutate: clearCartMutation, isPending } = useClearCart();
 
   return (
     <section className="mb-20">
       <div className="flex items-center justify-between">
         <h3 className="section_sub_title">
-          {data?.total_cart_items
-            ? `${data?.total_cart_items} Items In Your Cart`
+          {cartData?.data?.total_cart_items
+            ? `${cartData?.data?.total_cart_items} Items In Your Cart`
             : "Card is empty"}
         </h3>
 
-        {data && (
+        {cartData?.data && (
           <button
             disabled={isPending}
             onClick={() => clearCartMutation()}
@@ -44,9 +45,9 @@ const PaymentOptions = ({ data, isLoading }: any) => {
       <div className="space-y-7">
         {isLoading
           ? [1, 2].map((_, idx) => <CartItemSkeleton key={idx} />)
-          : !data || data?.length === 0
+          : !cartData?.data || cartData?.data?.length === 0
           ? "No Cart Found"
-          : data?.cart?.map((item: any) => (
+          : cartData?.data?.cart?.map((item: any) => (
               <CartItem key={item?.id} item={item} />
             ))}
       </div>

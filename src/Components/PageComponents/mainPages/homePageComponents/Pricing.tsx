@@ -40,6 +40,7 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
   const [activeTab, setActiveTab] = useState<string>("yearly");
   const [isOpen, setOpen] = useState<boolean>(false);
   const [planId, setPlanId] = useState<number>(0);
+  const [interval, setInterval] = useState<string>("");
 
   // Queries & Mutations
   const { data: pricingData, isLoading } = getPricingData(activeTab);
@@ -186,6 +187,7 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
                         e.preventDefault();
                         e.stopPropagation();
                         setPlanId(id);
+                        setInterval(interval);
                         setOpen(true);
                       }}
                       className={`w-full block duration-500 transition-all md:text-lg cursor-pointer py-1.5 md:py-3 border-2 border-primary-green font-semibold rounded-lg shadow-lg hover:scale-105 ${
@@ -210,7 +212,7 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
       </Container>
 
       <Modal open={isOpen} onClose={() => setOpen(false)}>
-        <SubscriptionPaypalModal planId={planId} />
+        <SubscriptionPaypalModal planId={planId} interval={interval} />
       </Modal>
     </section>
   );

@@ -3,7 +3,13 @@ import { getItem } from "@/lib/localStorage";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import toast from "react-hot-toast";
 
-const SubscriptionPaypalModal = ({ planId }: { planId: number }) => {
+const SubscriptionPaypalModal = ({
+  planId,
+  interval,
+}: {
+  planId: number;
+  interval: string;
+}) => {
   const token = getItem("token");
   const initialOptions = {
     "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
@@ -18,6 +24,21 @@ const SubscriptionPaypalModal = ({ planId }: { planId: number }) => {
 
   return (
     <div className="pt-5">
+      {interval === "yearly" ? (
+        <p className="text-primary-green leading-[160%] text-[17px] mb-7">
+          <span className="font-semibold"> Note:</span> By selecting the annual
+          plan, you authorize an automatic charge once per year. Your
+          subscription will renew annually unless canceled before the renewal
+          date.
+        </p>
+      ) : (
+        <p className="text-primary-green leading-[160%] text-[17px] mb-7">
+          <span className="font-semibold"> Note:</span> By selecting the monthly
+          plan, you authorize an automatic charge each month. Your subscription
+          will renew monthly unless canceled before the next billing cycle.
+        </p>
+      )}
+
       <PayPalScriptProvider options={initialOptions as any}>
         <PayPalButtons
           style={{

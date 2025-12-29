@@ -12,6 +12,7 @@ type ProductImg = {
 };
 
 type SingleItem = {
+  product_id: number;
   product: {
     product_name: string;
     product_price: string;
@@ -179,7 +180,7 @@ const page = () => {
                     </button>
 
                     <Link
-                      href={``}
+                      href={`/dashboard/customer/orders/1`}
                       className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer text-center w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
                     >
                       View Order
@@ -192,11 +193,22 @@ const page = () => {
                       Get Help
                     </Link>
 
-                    <Link href={`/dashboard/customer/reviews/${order?.id}`}>
-                      <button className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer w-full sm:w-[250px] hover:scale-105 duration-500 ease-in-out">
-                        Write a Review
-                      </button>
-                    </Link>
+                    {/* <button
+                      disabled={order?.status !== "delivered"}
+                      className={`p-2 rounded-[8px] border text-[13px] md:text-[16px] text-[#000] w-full sm:w-[250px] duration-500 ease-in-out ${
+                        order?.status !== "delivered"
+                          ? " border-gray-300 cursor-not-allowed opacity-70"
+                          : "border-[#BFBEBE] cursor-pointer hover:scale-105"
+                      }`}
+                    >
+                      {order?.status === "delivered" ? (
+                        <Link href={`/dashboard/customer/reviews/${order?.id}`}>
+                          Write a Review
+                        </Link>
+                      ) : (
+                        "Write a Review"
+                      )}
+                    </button> */}
                   </div>
                 </div>
               </div>

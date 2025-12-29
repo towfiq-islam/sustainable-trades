@@ -468,3 +468,17 @@ export const useAddReview = (order_id: number) => {
     },
   });
 };
+
+// Get Customer Reviews
+export const getCustomerReviews = (page?: string) => {
+  return useClientApi({
+    method: "get",
+    isPrivate: true,
+    key: ["get-customer-reviews", page],
+    endpoint: "/api/my-reviews",
+    params: { page },
+    queryOptions: {
+      retry: false,
+    },
+  });
+};

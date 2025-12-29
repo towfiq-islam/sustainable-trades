@@ -103,7 +103,7 @@ const ReviewDetails = () => {
           <input
             type="text"
             placeholder="Title your experience"
-            className="border-2 py-3 px-4 rounded-[8px] w-full"
+            className="border-2 py-3 px-4 rounded-[8px] w-full mt-3"
             {...register("title", {
               required: "Title is required",
             })}

@@ -450,3 +450,21 @@ export const getMyOrders = (status: string) => {
     },
   });
 };
+
+// Add Review
+export const useAddReview = (order_id: number) => {
+  return useClientApi({
+    method: "post",
+    key: ["add-review", order_id],
+    isPrivate: true,
+    endpoint: `/api/add-review/${order_id}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};

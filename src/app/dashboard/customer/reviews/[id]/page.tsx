@@ -3,37 +3,88 @@ import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { Camera } from "@/Components/Svg/SvgContainer";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
-import { useParams } from "next/navigation";
-import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { useAddReview } from "@/Hooks/api/dashboard_api";
+
+type ReviewFormValues = {
+  title: string;
+  message: string;
+  images: FileList;
+};
 
 const ReviewDetails = () => {
+  const router = useRouter();
+  const params = useParams();
+  const orderId = Number(params?.id);
+
+  const { mutateAsync: addReviewMutation, isPending } = useAddReview(orderId);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<ReviewFormValues>();
+
   const [rating, setRating] = useState<number>(0);
   const [hover, setHover] = useState<number>(0);
-  const [preview, setPreview] = useState<string | null>(null);
-  const params = useParams();
-  const orderId = params.id;
+  const [previews, setPreviews] = useState<string[]>([]);
+  const [error, setError] = useState<string>("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
+    const files = e.target.files;
+    if (!files) return;
+
+    setValue("images", files);
+
+    const previewUrls = Array.from(files).map(file =>
+      URL.createObjectURL(file)
+    );
+    setPreviews(previewUrls);
   };
 
+  const onSubmit = async (data: ReviewFormValues) => {
+    setError("");
+    if (!rating) {
+      setError("Please select a rating");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("rating", String(rating));
+    formData.append("title", data.title);
+    formData.append("message", data.message);
+
+    if (data?.images?.length) {
+      Array.from(data.images).forEach(file => {
+        formData.append("images[]", file);
+      });
+    }
+
+    await addReviewMutation(formData, {
+      onSuccess: (data: any) => {
+        if (data?.success) {
+          router.push("/dashboard/customer/reviews");
+        }
+      },
+    });
+  };
 
   return (
     <>
       <DashBoardHeader heading="Tell Us What You Think!" placeholder="Search" />
-      <div className="mt-10">
-        <div className="">
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* Rating */}
+        <div className="my-7">
           <div className="flex gap-x-1">
             {[1, 2, 3, 4, 5].map(star => (
               <FaStar
                 key={star}
-                className={`size-[30px] transition-all cursor-pointer 
-              ${
-                (rating || hover) >= star ? "fill-amber-300" : "fill-gray-300"
-              }`}
+                className={`size-[30px] cursor-pointer transition-all ${
+                  (rating || hover) >= star ? "fill-amber-300" : "fill-gray-300"
+                }`}
                 onClick={() => setRating(star)}
                 onMouseEnter={() => setHover(star)}
                 onMouseLeave={() => setHover(0)}
@@ -41,71 +92,90 @@ const ReviewDetails = () => {
             ))}
           </div>
 
-          <div className="border rounded-lg p-5 mt-3 w-fit">
-            {/* <Image
-              src={product.productImage}
-              alt={product.productName}
-              height={117}
-              width={115}
-              unoptimized
-            /> */}
-            {/* <div className="flex flex-col gap-y-10">
-              <h5 className="text-[20px] font-bold text-[#000]">
-                {product.productName}
-              </h5>
-            </div> */}
-          </div>
+          {!rating && error && (
+            <p className="text-red-500 text-sm mt-1">Rating is required</p>
+          )}
         </div>
-      </div>
-      <div className="my-10">
-        <h4 className="text-[20px] text-[#13141D] font-normal">
-          Leave a review
-        </h4>
-        <textarea
-          placeholder="What would you tell others?"
-          className="border-2 p-4 rounded-[8px] border-[#67645F] w-full mt-3 h-[150px] text-[#67645F] font-bold text-[16px]"
-        ></textarea>
+
+        {/* Title */}
+        <div>
+          <h4 className="text-[20px]">Add a headline (required)</h4>
+          <input
+            type="text"
+            placeholder="Title your experience"
+            className="border-2 py-3 px-4 rounded-[8px] w-full"
+            {...register("title", {
+              required: "Title is required",
+            })}
+          />
+          {errors.title && (
+            <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
+          )}
+        </div>
+
+        {/* Message */}
+        <div className="my-8">
+          <h4 className="text-[20px]">Leave a review</h4>
+          <textarea
+            {...register("message", {
+              required: "Message is required",
+            })}
+            placeholder="What would you tell others?"
+            className="border-2 p-4 rounded-[8px] w-full mt-3 h-[150px]"
+          />
+          {errors.message && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.message.message}
+            </p>
+          )}
+        </div>
+
+        {/* Images */}
         <div className="w-full mx-auto my-8">
           <label
             htmlFor="fileUpload"
-            className="border border-dashed border-[#67645F] rounded-[8px] w-full h-[100px] flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition"
+            className="border border-dashed rounded-[8px] w-full h-[100px] flex items-center justify-center cursor-pointer"
           >
-            {preview ? (
-              <img
-                src={preview}
-                alt="Preview"
-                className="w-full h-full object-cover object-center rounded-[8px]"
-              />
+            {previews.length ? (
+              <div className="flex gap-2">
+                {previews?.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt="preview"
+                    className="size-20 object-cover rounded"
+                  />
+                ))}
+              </div>
             ) : (
-              <div className="flex gap-x-3 items-center justify-center text-gray-500">
+              <div className="flex gap-x-3 items-center text-gray-500">
                 <Camera />
-                <p className="text-[#67645F] font-bold text-[16px] mt-1">
-                  Share photos or videos
-                </p>
+                <p>Share photos or videos</p>
               </div>
             )}
           </label>
+
           <input
             type="file"
             id="fileUpload"
+            multiple
             accept="image/*"
             className="hidden"
             onChange={handleFileChange}
           />
         </div>
-        <div className="">
-          <h4 className="text-[20px] text-[#13141D] font-normal">
-            Add a headline (required)
-          </h4>
-          <textarea
-            placeholder="Title your experience"
-            className="border-2 py-5 px-4 flex items-center rounded-[8px] border-[#67645F] w-full text-[#67645F] font-bold text-[16px]"
-          ></textarea>
-        </div>
+
+        {/* Submit */}
         <div className="mt-12 flex justify-end">
-          <button className="auth-secondary-btn w-[190px]">Submit</button>
+          <button
+            type="submit"
+            disabled={isPending}
+            className="auth-secondary-btn w-[190px]"
+          >
+            {isPending ? "Submitting..." : "Submit"}
+          </button>
         </div>
-      </div>
+      </form>
     </>
   );
 };

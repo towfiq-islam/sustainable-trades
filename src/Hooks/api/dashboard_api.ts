@@ -482,3 +482,16 @@ export const getCustomerReviews = (page?: string) => {
     },
   });
 };
+
+// Get Order Details
+export const getMyOrderDetails = (order_id: number) => {
+  return useClientApi({
+    method: "get",
+    isPrivate: true,
+    key: ["get-order-details", order_id],
+    endpoint: `/api/my-order/${order_id}`,
+    queryOptions: {
+      retry: false,
+    },
+  });
+};

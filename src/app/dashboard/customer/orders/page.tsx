@@ -84,6 +84,7 @@ const page = () => {
                       <h3 className="text-[#67645F] font-sans font-bold">
                         Order Placed
                       </h3>
+
                       <p className="font-sans font-normal text-[#000] text-[16px]">
                         {moment(order?.created_at).format("LL")}
                       </p>
@@ -93,6 +94,7 @@ const page = () => {
                       <h3 className="text-[#67645F] font-sans font-bold">
                         Total
                       </h3>
+
                       <p className="font-sans font-normal text-[#000] text-[16px]">
                         ${order?.total_amount}
                       </p>
@@ -102,6 +104,7 @@ const page = () => {
                       <h3 className="text-[#67645F] font-sans font-bold  mb-1">
                         Status
                       </h3>
+
                       <p
                         className={`font-sans font-normal text-white px-3 text-sm py-1 rounded-lg capitalize ${
                           order?.status === "delivered"
@@ -125,6 +128,7 @@ const page = () => {
                       <h3 className="text-[#67645F] font-sans font-bold">
                         Order Number
                       </h3>
+
                       <p className="font-sans font-normal text-[#000] text-[16px]">
                         {order?.order_number}
                       </p>
@@ -152,7 +156,7 @@ const page = () => {
 
                     {order?.order_items?.map(item => (
                       <div className="flex gap-x-3 mb-3">
-                        <figure className="rounded size-[90px]">
+                        <figure className="rounded size-[120px]">
                           <Image
                             src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images[0]?.image}`}
                             alt="order_img"
@@ -162,13 +166,22 @@ const page = () => {
                             className="rounded size-full object-cover"
                           />
                         </figure>
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-1.5">
                           <h5 className="text-[16px] sm:text-[20px] font-bold text-[#000]">
                             {item?.product?.product_name}
                           </h5>
                           <h5 className="text-[#222]">
                             Price: ${item?.product?.product_price}
                           </h5>
+
+                          {order?.status === "delivered" && (
+                            <Link
+                              href={`/dashboard/customer/reviews/${item?.product_id}`}
+                              className="px-3 py-1 rounded-full cursor-pointer border text-sm w-fit font-semibold border-primary-green"
+                            >
+                              Write review
+                            </Link>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -180,7 +193,7 @@ const page = () => {
                     </button>
 
                     <Link
-                      href={`/dashboard/customer/orders/1`}
+                      href={`/dashboard/customer/orders/${order?.id}`}
                       className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer text-center w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
                     >
                       View Order
@@ -192,23 +205,6 @@ const page = () => {
                     >
                       Get Help
                     </Link>
-
-                    {/* <button
-                      disabled={order?.status !== "delivered"}
-                      className={`p-2 rounded-[8px] border text-[13px] md:text-[16px] text-[#000] w-full sm:w-[250px] duration-500 ease-in-out ${
-                        order?.status !== "delivered"
-                          ? " border-gray-300 cursor-not-allowed opacity-70"
-                          : "border-[#BFBEBE] cursor-pointer hover:scale-105"
-                      }`}
-                    >
-                      {order?.status === "delivered" ? (
-                        <Link href={`/dashboard/customer/reviews/${order?.id}`}>
-                          Write a Review
-                        </Link>
-                      ) : (
-                        "Write a Review"
-                      )}
-                    </button> */}
                   </div>
                 </div>
               </div>

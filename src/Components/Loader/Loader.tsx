@@ -611,7 +611,7 @@ export const ShopCardSkeleton = () => {
 
 const OrderCardSkeleton = () => {
   return (
-    <div className="border border-[#BFBEBE] rounded-[8px] animate-pulse">
+    <div className="border border-gray-300 rounded-[8px] animate-pulse">
       {/* Top section */}
       <div className="px-3 md:px-6 py-2 md:py-4">
         <div className="flex flex-col sm:flex-row gap-6">
@@ -623,7 +623,7 @@ const OrderCardSkeleton = () => {
         </div>
       </div>
 
-      <div className="w-full bg-[#BFBEBE] h-[1px]" />
+      <div className="w-full bg-gray-300 h-[1px]" />
 
       {/* Bottom section */}
       <div className="pt-2 px-4 pb-6">

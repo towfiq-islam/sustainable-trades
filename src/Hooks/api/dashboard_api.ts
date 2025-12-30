@@ -495,3 +495,15 @@ export const getMyOrderDetails = (order_id: number) => {
     },
   });
 };
+
+// Download Invoice
+export const useDownloadInvoice = () => {
+  return useClientApi({
+    method: "post",
+    key: ["download-invoice"],
+    isPrivate: true,
+    axiosOptions: {
+      responseType: "blob",
+    },
+  });
+};

@@ -1,17 +1,41 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Again } from "@/Components/Svg/SvgContainer";
-import { getMyOrderDetails } from "@/Hooks/api/dashboard_api";
+import { Again, GoBackSvg } from "@/Components/Svg/SvgContainer";
+import {
+  getMyOrderDetails,
+  useDownloadInvoice,
+} from "@/Hooks/api/dashboard_api";
 import moment from "moment";
 import { PuffLoader } from "react-spinners";
 
 const OrderDetailsPage = () => {
+  const router = useRouter();
   const params = useParams();
   const orderId = Number(params?.id);
   const { data: getSingleOrder, isLoading } = getMyOrderDetails(orderId);
+  const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
   console.log(getSingleOrder?.data);
+
+  // Func for download Invoice pdf
+  const handleDownloadInvoice = () => {
+    downloadInvoicePdf(
+      { endpoint: `/api/invoice-generate/${orderId}` },
+      {
+        onSuccess: async (res: any) => {
+          const url = window.URL.createObjectURL(res);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "invoice.pdf");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        },
+      }
+    );
+  };
 
   if (isLoading) {
     return (
@@ -23,6 +47,17 @@ const OrderDetailsPage = () => {
 
   return (
     <>
+      {/* Back Btn */}
+      <button
+        onClick={() => router.back()}
+        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
+      >
+        <span className="group-hover:-translate-x-1 duration-300 transition-transform">
+          <GoBackSvg />
+        </span>
+        <span>Back</span>
+      </button>
+
       <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000]">
         Order Details
       </h2>
@@ -55,11 +90,23 @@ const OrderDetailsPage = () => {
                   {getSingleOrder?.data?.order_number}
                 </p>
               </div>
-              <div>
-                <h3 className="text-[#1F4038] font-sans font-bold underline cursor-pointer">
-                  View Invoice
-                </h3>
-              </div>
+
+              <button
+                disabled={isPending}
+                onClick={handleDownloadInvoice}
+                className={`text-[#1F4038] font-sans font-bold ${
+                  isPending ? "cursor-not-allowed" : "cursor-pointer underline"
+                }`}
+              >
+                {isPending ? (
+                  <>
+                    <span className="inline-block animate-spin">⏳</span>{" "}
+                    Downloading
+                  </>
+                ) : (
+                  "View Invoice"
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -139,7 +186,7 @@ const OrderDetailsPage = () => {
               {getSingleOrder?.data?.shop?.shop_name}
             </h4>
             <p className="font-sans font-normal text-[#000] text-[16px] pt-2 pb-3">
-              Your package was left near the front door or porch.
+              {getSingleOrder?.data?.latest_order_status?.content}
             </p>
 
             <div className="space-y-5">
@@ -175,23 +222,17 @@ const OrderDetailsPage = () => {
               ))}
             </div>
           </div>
-          
+
           <div className="flex flex-col gap-4">
             <button className="p-2 rounded-[8px] border border-[#BFBEBE] text-[14px] md:text-[16px]  font-normal text-[#000] cursor-pointer w-full md:w-[250px] hover:scale-105 duration-500 ease-in-out">
               Track Package
             </button>
-            <Link href={`/dashboard/customer/orders/${orderId}`}>
-              <button className="p-2 rounded-[8px] border border-[#BFBEBE] text-[14px] md:text-[16px]  font-normal text-[#000] cursor-pointer w-full md:w-[250px]  hover:scale-105 duration-500 ease-in-out">
-                View Order
-              </button>
-            </Link>
-            <button className="p-2 rounded-[8px] border border-[#BFBEBE] text-[14px] md:text-[16px] font-normal text-[#000] cursor-pointer w-full md:w-[250px]  hover:scale-105 duration-500 ease-in-out">
+
+            <Link
+              href={`/dashboard/${getSingleOrder?.data?.shop?.user?.membership?.membership_type}/messages/inbox/${getSingleOrder?.data?.shop?.user_id}`}
+              className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal text-[#000] cursor-pointer w-full sm:w-[250px] text-center hover:scale-105 duration-500 ease-in-out"
+            >
               Get Help
-            </button>
-            <Link href={`/dashboard/customer/reviews/${orderId}`}>
-              <button className="p-2 rounded-[8px] border border-[#BFBEBE] text-[14px] md:text-[16px] font-normal text-[#000] cursor-pointer w-full md:w-[250px]  hover:scale-105 duration-500 ease-in-out">
-                Write a Review
-              </button>
             </Link>
           </div>
         </div>

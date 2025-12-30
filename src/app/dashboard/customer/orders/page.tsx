@@ -4,7 +4,7 @@ import Link from "next/link";
 import moment from "moment";
 import { useState } from "react";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
-import { getMyOrders } from "@/Hooks/api/dashboard_api";
+import { getMyOrders, useDownloadInvoice } from "@/Hooks/api/dashboard_api";
 import OrderCardSkeleton from "@/Components/Loader/Loader";
 
 type ProductImg = {
@@ -36,14 +36,37 @@ type orderItem = {
     };
   };
   order_items: SingleItem[];
+  latest_order_status: {
+    content: string;
+  };
 };
 
 const page = () => {
   const [isActive, setIsActive] = useState("orders");
   const [status, setStatus] = useState<string>("");
   const tabs = ["orders", "pending", "confirmed", "delivered", "cancelled"];
+  const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
   const { data: myOrders, isLoading } = getMyOrders(status);
   console.log(myOrders?.data);
+
+  // Func for download Invoice pdf
+  const handleDownloadInvoice = (order_id: number) => {
+    downloadInvoicePdf(
+      { endpoint: `/api/invoice-generate/${order_id}` },
+      {
+        onSuccess: async (res: any) => {
+          const url = window.URL.createObjectURL(res);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "invoice.pdf");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        },
+      }
+    );
+  };
 
   return (
     <section>
@@ -134,8 +157,23 @@ const page = () => {
                       </p>
                     </div>
 
-                    <button className="text-[#1F4038] font-sans font-bold underline cursor-pointer">
-                      View Invoice
+                    <button
+                      disabled={isPending}
+                      onClick={() => handleDownloadInvoice(order?.id)}
+                      className={`text-[#1F4038] font-sans font-bold ${
+                        isPending
+                          ? "cursor-not-allowed"
+                          : "cursor-pointer underline"
+                      }`}
+                    >
+                      {isPending ? (
+                        <>
+                          <span className="inline-block animate-spin">⏳</span>{" "}
+                          Downloading
+                        </>
+                      ) : (
+                        "View Invoice"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -151,7 +189,7 @@ const page = () => {
                     </h4>
 
                     <p className="font-sans font-normal text-[#000] text-[13px] sm:text-[16px] pt-2 pb-3">
-                      Your package was left near the front door or porch.
+                      {order?.latest_order_status?.content}
                     </p>
 
                     <div className="space-y-5">

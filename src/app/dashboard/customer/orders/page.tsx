@@ -154,37 +154,39 @@ const page = () => {
                       Your package was left near the front door or porch.
                     </p>
 
-                    {order?.order_items?.map(item => (
-                      <div className="flex gap-x-3 mb-3">
-                        <figure className="rounded size-[120px]">
-                          <Image
-                            src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images[0]?.image}`}
-                            alt="order_img"
-                            height={117}
-                            width={115}
-                            unoptimized
-                            className="rounded size-full object-cover"
-                          />
-                        </figure>
-                        <div className="flex flex-col gap-1.5">
-                          <h5 className="text-[16px] sm:text-[20px] font-bold text-[#000]">
-                            {item?.product?.product_name}
-                          </h5>
-                          <h5 className="text-[#222]">
-                            Price: ${item?.product?.product_price}
-                          </h5>
+                    <div className="space-y-5">
+                      {order?.order_items?.map(item => (
+                        <div className="flex gap-x-3">
+                          <figure className="rounded size-[120px]">
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images[0]?.image}`}
+                              alt="order_img"
+                              height={117}
+                              width={115}
+                              unoptimized
+                              className="rounded size-full object-cover"
+                            />
+                          </figure>
+                          <div className="flex flex-col gap-1.5">
+                            <h5 className="text-[16px] sm:text-[20px] font-bold text-[#000]">
+                              {item?.product?.product_name}
+                            </h5>
+                            <h5 className="text-[#222]">
+                              Price: ${item?.product?.product_price}
+                            </h5>
 
-                          {order?.status === "delivered" && (
-                            <Link
-                              href={`/dashboard/customer/reviews/${item?.product_id}`}
-                              className="px-3 py-1 rounded-full cursor-pointer border text-sm w-fit font-semibold border-primary-green"
-                            >
-                              Write review
-                            </Link>
-                          )}
+                            {order?.status === "delivered" && (
+                              <Link
+                                href={`/dashboard/customer/reviews/${item?.product_id}`}
+                                className="px-3 py-1 rounded-full cursor-pointer border text-sm w-fit font-semibold border-primary-green"
+                              >
+                                Write review
+                              </Link>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-4 ">

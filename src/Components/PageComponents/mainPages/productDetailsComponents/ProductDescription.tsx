@@ -26,6 +26,7 @@ type descriptionItem = {
   selling_option: string;
   reviews_avg_rating: string;
   distance_in_miles: number;
+  shop_info_id: number;
   shop: {
     id: number;
     user_id: number;
@@ -179,7 +180,9 @@ const ProductDescription = ({ data }: descriptionProps) => {
 
       <div className="flex items-center justify-between mb-7">
         {/* Price */}
-        <p className="text-2xl md:text-3xl lg:text-4xl font-semibold">${data?.product_price}</p>
+        <p className="text-2xl md:text-3xl lg:text-4xl font-semibold">
+          ${data?.product_price}
+        </p>
 
         {/* Quantity */}
         <div className="flex gap-3 items-center border rounded-lg px-4 md:px-7 py-2 font-semibold border-primary-green">
@@ -208,7 +211,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
               if (!user) {
                 return toast.error("Please login first to proceed");
               }
-              setId(data?.shop?.user_id);
+              setId(data?.shop_info_id);
               setProductId(data?.id);
               setTradeOpen(true);
             }}

@@ -6,6 +6,8 @@ import { useState } from "react";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { getMyOrders, useDownloadInvoice } from "@/Hooks/api/dashboard_api";
 import OrderCardSkeleton from "@/Components/Loader/Loader";
+import Modal from "@/Components/Common/Modal";
+import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 
 type ProductImg = {
   image: string;
@@ -44,10 +46,11 @@ type orderItem = {
 const page = () => {
   const [isActive, setIsActive] = useState("orders");
   const [status, setStatus] = useState<string>("");
+  const [orderId, setOrderId] = useState<number | null>(null);
+  const [open, isOpen] = useState<boolean>(false);
   const tabs = ["orders", "pending", "confirmed", "delivered", "cancelled"];
   const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
   const { data: myOrders, isLoading } = getMyOrders(status);
-  console.log(myOrders?.data);
 
   // Func for download Invoice pdf
   const handleDownloadInvoice = (order_id: number) => {
@@ -228,7 +231,13 @@ const page = () => {
                   </div>
 
                   <div className="flex flex-col gap-4 ">
-                    <button className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out">
+                    <button
+                      onClick={() => {
+                        isOpen(true);
+                        setOrderId(order?.id);
+                      }}
+                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
+                    >
                       Track Package
                     </button>
 
@@ -254,6 +263,10 @@ const page = () => {
           <p className="text-red-500 font-semibold text-lg">No Orders Found</p>
         )}
       </div>
+
+      <Modal open={open} onClose={() => isOpen(false)}>
+        <TrackPackageModal order_id={orderId} />
+      </Modal>
     </section>
   );
 };

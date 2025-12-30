@@ -507,3 +507,13 @@ export const useDownloadInvoice = () => {
     },
   });
 };
+
+// Get Order History
+export const getOrderHistory = (order_id: number | null) => {
+  return useClientApi({
+    method: "get",
+    isPrivate: true,
+    key: ["get-order-history", order_id],
+    endpoint: `/api/my-order/${order_id}/history`,
+  });
+};

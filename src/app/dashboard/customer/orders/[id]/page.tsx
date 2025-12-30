@@ -9,14 +9,17 @@ import {
 } from "@/Hooks/api/dashboard_api";
 import moment from "moment";
 import { PuffLoader } from "react-spinners";
+import Modal from "@/Components/Common/Modal";
+import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
+import { useState } from "react";
 
 const OrderDetailsPage = () => {
   const router = useRouter();
   const params = useParams();
   const orderId = Number(params?.id);
+  const [open, isOpen] = useState<boolean>(false);
   const { data: getSingleOrder, isLoading } = getMyOrderDetails(orderId);
   const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
-  console.log(getSingleOrder?.data);
 
   // Func for download Invoice pdf
   const handleDownloadInvoice = () => {
@@ -224,7 +227,10 @@ const OrderDetailsPage = () => {
           </div>
 
           <div className="flex flex-col gap-4">
-            <button className="p-2 rounded-[8px] border border-[#BFBEBE] text-[14px] md:text-[16px]  font-normal text-[#000] cursor-pointer w-full md:w-[250px] hover:scale-105 duration-500 ease-in-out">
+            <button
+              onClick={() => isOpen(true)}
+              className="p-2 rounded-[8px] border border-[#BFBEBE] text-[14px] md:text-[16px]  font-normal text-[#000] cursor-pointer w-full md:w-[250px] hover:scale-105 duration-500 ease-in-out"
+            >
               Track Package
             </button>
 
@@ -237,6 +243,10 @@ const OrderDetailsPage = () => {
           </div>
         </div>
       </div>
+
+      <Modal open={open} onClose={() => isOpen(false)}>
+        <TrackPackageModal order_id={orderId} />
+      </Modal>
     </>
   );
 };

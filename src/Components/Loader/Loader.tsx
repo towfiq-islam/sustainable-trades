@@ -666,3 +666,14 @@ export const CustomerReviewCardSkeleton = () => {
     </div>
   );
 };
+
+export const OrderTrackSkeleton = () => {
+  return (
+    <div className="mb-5 ml-4 animate-pulse">
+      <div className="bg-white p-4 rounded-lg border border-gray-300">
+        <p className="h-4 bg-gray-300 rounded w-3/4 mb-2" />
+        <p className="h-3 bg-gray-200 rounded w-1/2" />
+      </div>
+    </div>
+  );
+};

@@ -155,7 +155,7 @@ export const useCancelTrade = () => {
 export const useApproveTrade = () => {
   return useMutation({
     mutationFn: (id: any) =>
-      axiosSecure.get(`/api/trade-offer-approve/${id}`).then((res) => res.data),
+      axiosSecure.get(`/api/trade-offer-approve/${id}`).then(res => res.data),
   });
 };
 
@@ -163,7 +163,7 @@ export const useApproveTrade = () => {
 export const useCancel = () => {
   return useMutation({
     mutationFn: (id: any) =>
-      axiosSecure.get(`/api/trade-offer-cancel/${id}`).then((res) => res.data),
+      axiosSecure.get(`/api/trade-offer-cancel/${id}`).then(res => res.data),
   });
 };
 
@@ -362,7 +362,7 @@ export const useMembershipget = () => {
     isPrivate: true,
     endpoint: "/api/subscriptions",
   });
-}
+};
 
 // Hook for updating a discount
 export const useDiscountUpdate = (id?: string) => {
@@ -420,7 +420,7 @@ export const useBulkDeleteDiscount = () => {
 };
 
 // Image Delete Discounts
-export const useImageDelete = (id:any) => {
+export const useImageDelete = (id: any) => {
   return useClientApi({
     method: "delete",
     key: ["image-delete"],
@@ -432,9 +432,88 @@ export const useImageDelete = (id:any) => {
       }
     },
     onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message || "Failed to delete image"
-      );
+      toast.error(err?.response?.data?.message || "Failed to delete image");
     },
+  });
+};
+
+// Get My Orders
+export const getMyOrders = (status: string) => {
+  return useClientApi({
+    method: "get",
+    key: ["get-my-orders", status],
+    isPrivate: true,
+    endpoint: "/api/my-orders",
+    params: { status },
+    queryOptions: {
+      retry: false,
+    },
+  });
+};
+
+// Add Review
+export const useAddReview = (order_id: number) => {
+  return useClientApi({
+    method: "post",
+    key: ["add-review", order_id],
+    isPrivate: true,
+    endpoint: `/api/add-review/${order_id}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get Customer Reviews
+export const getCustomerReviews = (page?: string) => {
+  return useClientApi({
+    method: "get",
+    isPrivate: true,
+    key: ["get-customer-reviews", page],
+    endpoint: "/api/my-reviews",
+    params: { page },
+    queryOptions: {
+      retry: false,
+    },
+  });
+};
+
+// Get Order Details
+export const getMyOrderDetails = (order_id: number) => {
+  return useClientApi({
+    method: "get",
+    isPrivate: true,
+    key: ["get-order-details", order_id],
+    endpoint: `/api/my-order/${order_id}`,
+    queryOptions: {
+      retry: false,
+    },
+  });
+};
+
+// Download Invoice
+export const useDownloadInvoice = () => {
+  return useClientApi({
+    method: "post",
+    key: ["download-invoice"],
+    isPrivate: true,
+    axiosOptions: {
+      responseType: "blob",
+    },
+  });
+};
+
+// Get Order History
+export const getOrderHistory = (order_id: number | null) => {
+  return useClientApi({
+    method: "get",
+    isPrivate: true,
+    key: ["get-order-history", order_id],
+    endpoint: `/api/my-order/${order_id}/history`,
   });
 };

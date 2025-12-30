@@ -608,3 +608,72 @@ export const ShopCardSkeleton = () => {
     </div>
   );
 };
+
+const OrderCardSkeleton = () => {
+  return (
+    <div className="border border-gray-300 rounded-[8px] animate-pulse">
+      {/* Top section */}
+      <div className="px-3 md:px-6 py-2 md:py-4">
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div>
+            <div className="h-4 w-28 bg-gray-300 rounded mb-2" />
+            <div className="h-5 w-32 bg-gray-200 rounded" />
+          </div>
+          <div className="h-5 w-24 bg-gray-200 rounded self-center" />
+        </div>
+      </div>
+
+      <div className="w-full bg-gray-300 h-[1px]" />
+
+      {/* Bottom section */}
+      <div className="pt-2 px-4 pb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
+          <div className="w-full">
+            <div className="h-6 w-48 bg-gray-300 rounded mb-3" />
+            <div className="h-4 w-64 bg-gray-200 rounded mb-4" />
+
+            <div className="flex gap-x-3 mb-4">
+              <div className="h-[117px] w-[115px] bg-gray-300 rounded" />
+              <div className="flex flex-col gap-3">
+                <div className="h-5 w-40 bg-gray-300 rounded" />
+                <div className="h-4 w-28 bg-gray-200 rounded" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OrderCardSkeleton;
+
+export const CustomerReviewCardSkeleton = () => {
+  return (
+    <div className="border border-gray-300 rounded-xl p-6 shadow-md bg-white flex flex-col items-center text-center animate-pulse">
+      <div className="size-16 rounded-full mb-4 bg-gray-200" />
+      <div className="h-5 w-40 bg-gray-200 rounded mb-2" />
+      <div className="h-4 w-24 bg-gray-200 rounded mb-4" />
+      <div className="space-y-2 w-full">
+        <div className="h-4 w-full bg-gray-200 rounded" />
+        <div className="h-4 w-5/6 bg-gray-200 rounded mx-auto" />
+      </div>
+      <div className="flex gap-1 mt-4">
+        {[1, 2, 3, 4, 5].map(i => (
+          <div key={i} className="h-4 w-4 bg-gray-200 rounded" />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const OrderTrackSkeleton = () => {
+  return (
+    <div className="mb-5 ml-4 animate-pulse">
+      <div className="bg-white p-4 rounded-lg border border-gray-300">
+        <p className="h-4 bg-gray-300 rounded w-3/4 mb-2" />
+        <p className="h-3 bg-gray-200 rounded w-1/2" />
+      </div>
+    </div>
+  );
+};

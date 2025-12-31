@@ -14,12 +14,8 @@ const SubscriptionPaypalModal = ({
   const initialOptions = {
     "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
     currency: "USD",
-    components: "buttons",
-    "enable-funding": "venmo",
-    // "buyer-country": "US",
-    "disable-funding": "",
-    "data-page-type": "product-details",
-    "data-sdk-integration-source": "developer-studio",
+    intent: "subscription",
+    vault: true,
   };
 
   return (
@@ -45,12 +41,12 @@ const SubscriptionPaypalModal = ({
             shape: "rect",
             layout: "vertical",
             color: "gold",
-            label: "paypal",
+            label: "subscribe",
           }}
-          createOrder={async () => {
+          createSubscription={async () => {
             try {
               const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/create-order`,
+                `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/create-subscription`,
                 {
                   method: "POST",
                   headers: {
@@ -63,8 +59,8 @@ const SubscriptionPaypalModal = ({
 
               const orderData = await response.json();
 
-              if (orderData?.data?.orderID) {
-                return orderData?.data?.orderID;
+              if (orderData?.data?.subscriptionID) {
+                return orderData?.data?.subscriptionID;
               }
             } catch (error) {
               console.error(error);
@@ -73,7 +69,7 @@ const SubscriptionPaypalModal = ({
           onApprove={async data => {
             try {
               const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture-order`,
+                `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture-subscription`,
                 {
                   method: "POST",
                   headers: {
@@ -82,7 +78,7 @@ const SubscriptionPaypalModal = ({
                   },
                   body: JSON.stringify({
                     plan_id: planId,
-                    orderID: data?.orderID,
+                    subscriptionID: data?.subscriptionID,
                   }),
                 }
               );
@@ -92,8 +88,6 @@ const SubscriptionPaypalModal = ({
                 toast.success(orderData?.message);
                 window.location.href = `${window.location.origin}/complete-shop-creation`;
               }
-
-              // console.log("Capturing...", orderData);
             } catch (error) {
               console.error(error);
             }

@@ -12,13 +12,16 @@ import SuccessModal from "@/Components/Modals/SuccessModal";
 import ShippingAddress from "@/Components/Modals/ShippingAddress";
 import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 
 const CartItem = ({ item }: any) => {
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
   const [shippingAddressOpen, setShippingAddressOpen] =
     useState<boolean>(false);
-  const [successOpen, setSuccessOpen] = useState<boolean>(false);
+  const [formData, setFormData] = useState<any>([]);
+  const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
+  // const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
   const { mutate: removeCartItemMutation, isPending: cartItemPending } =
@@ -196,7 +199,7 @@ const CartItem = ({ item }: any) => {
           }}
           onSuccess={() => {
             setShippingOptionsOpen(false);
-            setSuccessOpen(true);
+            // setSuccessOpen(true);
           }}
           onClose={() => setShippingOptionsOpen(false)}
         />
@@ -207,14 +210,17 @@ const CartItem = ({ item }: any) => {
         onClose={() => setShippingAddressOpen(false)}
       >
         <ShippingAddress
-          cart_id={cartId}
-          onClose={() => setShippingAddressOpen(false)}
+          setFormData={setFormData}
+          onNext={() => {
+            setShippingAddressOpen(false);
+            setPaypalOpen(true);
+          }}
         />
       </Modal>
 
-      {/* <Modal open={successOpen} onClose={() => setSuccessOpen(false)}>
-        <SuccessModal />
-      </Modal> */}
+      <Modal open={paypalOpen} onClose={() => setPaypalOpen(false)}>
+        <CheckoutPaypalModal cart_id={cartId} formData={formData} />
+      </Modal>
     </div>
   );
 };

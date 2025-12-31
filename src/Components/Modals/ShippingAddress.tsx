@@ -1,8 +1,8 @@
 "use client";
 import { useCheckout } from "@/Hooks/api/cms_api";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { RiDeleteBin6Line } from "react-icons/ri";
 
 type FormData = {
   first_name: string;
@@ -15,19 +15,16 @@ type FormData = {
   city: string;
   state: string;
   postal_code: string;
-  payment_method: string;
   shipping_option: string;
 };
 
 const ShippingAddress = ({
-  cart_id,
-  onClose,
+  onNext,
+  setFormData,
 }: {
-  cart_id: number | null;
-  onClose: () => void;
+  onNext: () => void;
+  setFormData: any;
 }) => {
-  const { mutateAsync: checkoutMutation, isPending } = useCheckout(cart_id);
-
   const {
     register,
     handleSubmit,
@@ -35,13 +32,10 @@ const ShippingAddress = ({
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    await checkoutMutation(data, {
-      onSuccess: (data: any) => {
-        if (data?.status || data?.success) {
-          onClose();
-        }
-      },
-    });
+    if (data) {
+      setFormData(data);
+      onNext();
+    }
   };
 
   return (
@@ -192,25 +186,6 @@ const ShippingAddress = ({
           </div>
         </div>
 
-        {/* Payment Method */}
-        <div>
-          <label className="form-label">Payment Method *</label>
-          <select
-            className="form-input"
-            {...register("payment_method", {
-              required: "Payment method is required",
-            })}
-          >
-            <option value="">Select payment method</option>
-            {/* <option value="paypal">Paypal</option> */}
-            <option value="cash_on_delivery">Paypal</option>
-            <option value="cash_on_delivery">Cash on delivery</option>
-          </select>
-          {errors.payment_method && (
-            <p className="form-error">{errors.payment_method.message}</p>
-          )}
-        </div>
-
         {/* Shipping Option */}
         <div>
           <label className="form-label">Shipping Option *</label>
@@ -230,23 +205,8 @@ const ShippingAddress = ({
         </div>
 
         {/* Button */}
-        <button
-          type="submit"
-          disabled={isPending}
-          className={`primary_btn ${
-            isPending
-              ? "!cursor-not-allowed opacity-85 hover:!bg-primary-green hover:!text-white"
-              : "cursor-pointer"
-          } `}
-        >
-          {isPending ? (
-            <span className="flex gap-2 items-center justify-center">
-              <CgSpinnerTwo className="animate-spin text-xl" />
-              <span>Please wait....</span>
-            </span>
-          ) : (
-            "Continue to Payment"
-          )}
+        <button type="submit" className="primary_btn cursor-pointer">
+          Continue to Payment
         </button>
       </form>
     </>

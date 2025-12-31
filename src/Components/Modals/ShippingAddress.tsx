@@ -2,7 +2,6 @@
 import { useCheckout } from "@/Hooks/api/cms_api";
 import { useForm } from "react-hook-form";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { RiDeleteBin6Line } from "react-icons/ri";
 
 type FormData = {
   first_name: string;
@@ -37,6 +36,7 @@ const ShippingAddress = ({
   const onSubmit = async (data: FormData) => {
     await checkoutMutation(data, {
       onSuccess: (data: any) => {
+        console.log(data);
         if (data?.status || data?.success) {
           onClose();
         }
@@ -202,8 +202,7 @@ const ShippingAddress = ({
             })}
           >
             <option value="">Select payment method</option>
-            {/* <option value="paypal">Paypal</option> */}
-            <option value="cash_on_delivery">Paypal</option>
+            <option value="paypal">Paypal</option>
             <option value="cash_on_delivery">Cash on delivery</option>
           </select>
           {errors.payment_method && (

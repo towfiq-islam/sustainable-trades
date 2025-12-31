@@ -114,9 +114,9 @@ const ProductDescription = ({ data }: descriptionProps) => {
         </button>
       </div>
 
-      <div className="flex justify-between items-center mb-5">
+      <div className="flex gap-5 justify-between items-center mb-5">
         {/* Product Name */}
-        <h3 className="text-xl md:text-2xl font-semibold text-secondary-black">
+        <h3 className="text-xl md:text-2xl font-semibold text-secondary-black truncate">
           {data?.product_name}
         </h3>
 
@@ -124,7 +124,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
         <button
           disabled={addCardPending}
           onClick={user ? handleAddToCart : handleBuyNow}
-          className={`border border-primary-green rounded-lg px-4 py-2 hover:bg-primary-green hover:text-accent-white duration-500 transition-all ${
+          className={`border border-primary-green rounded-lg px-4 py-2 hover:bg-primary-green hover:text-accent-white duration-500 transition-all shrink-0 ${
             addCardPending ? "cursor-not-allowed" : "cursor-pointer"
           }`}
         >

@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosSecure } from "../useAxiosSecure";
 
 // Add Product
@@ -515,5 +515,25 @@ export const getOrderHistory = (order_id: number | null) => {
     isPrivate: true,
     key: ["get-order-history", order_id],
     endpoint: `/api/my-order/${order_id}/history`,
+  });
+};
+
+// Cancel Membership
+export const useCancelMembership = () => {
+  const queryClient = useQueryClient();
+  return useClientApi({
+    method: "post",
+    key: ["cancel-membership"],
+    isPrivate: true,
+    endpoint: "/api/paypal/cancel-membership",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        queryClient.invalidateQueries("get-pricing" as any);
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
   });
 };

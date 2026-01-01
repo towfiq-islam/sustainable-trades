@@ -2,11 +2,14 @@
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
 import { useState } from "react";
+import { CgSpinnerTwo } from "react-icons/cg";
+import { useRouter } from "next/navigation";
+import Modal from "@/Components/Common/Modal";
 import { getPricingData } from "@/Hooks/api/cms_api";
 import Container from "@/Components/Common/Container";
 import { PricingSkeletonCard } from "@/Components/Loader/Loader";
-import Modal from "@/Components/Common/Modal";
 import SubscriptionPaypalModal from "@/Components/Modals/SubscriptionPaypalModal";
+import { useCancelMembership } from "@/Hooks/api/dashboard_api";
 
 type benefitItem = {
   id: string;
@@ -30,11 +33,18 @@ interface PricingProps {
   description: string;
   button1: string;
   button2: string;
+  isCancel?: boolean;
 }
 
-const Pricing = ({ description, button1, button2 }: PricingProps) => {
+const Pricing = ({
+  description,
+  button1,
+  button2,
+  isCancel = false,
+}: PricingProps) => {
   // Hook
   const { user } = useAuth();
+  const router = useRouter();
 
   // States
   const [activeTab, setActiveTab] = useState<string>("yearly");
@@ -43,6 +53,7 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
   const [interval, setInterval] = useState<string>("");
 
   // Queries & Mutations
+  const { mutate: cancelMembership, isPending } = useCancelMembership();
   const { data: pricingData, isLoading } = getPricingData(activeTab);
 
   return (
@@ -114,7 +125,13 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
                   <div
                     key={id}
                     className={`border border-primary-green shadow rounded-2xl p-4 md:p-6 w-full md:w-[400px] flex flex-col justify-between ${
-                      idx === 1 && "bg-[#EDF3F1]"
+                      user?.membership?.status === "active" &&
+                      user?.membership?.membership_type === membership_type &&
+                      user?.membership?.type === interval
+                        ? "bg-[#EDF3F1]"
+                        : user?.membership?.status !== "active" &&
+                          idx === 1 &&
+                          "bg-[#EDF3F1]"
                     }`}
                   >
                     <div>
@@ -169,6 +186,7 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
                                 <h4 className="text-secondary-black text-sm md:text-base font-semibold">
                                   {benefit_name}
                                 </h4>
+
                                 <p className="text-secondary-gray text-xs md:text-[15px]">
                                   {benefit_description}
                                 </p>
@@ -181,14 +199,20 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
 
                     <button
                       disabled={
-                        user?.membership?.membership_type === membership_type
+                        user?.membership?.status === "active" &&
+                        user?.membership?.membership_type === membership_type &&
+                        user?.membership?.type === interval
                       }
                       onClick={e => {
                         e.preventDefault();
                         e.stopPropagation();
-                        setPlanId(id);
-                        setInterval(interval);
-                        setOpen(true);
+                        if (!user) {
+                          router.push("/auth/login");
+                        } else {
+                          setPlanId(id);
+                          setInterval(interval);
+                          setOpen(true);
+                        }
                       }}
                       className={`w-full block duration-500 transition-all md:text-lg cursor-pointer py-1.5 md:py-3 border-2 border-primary-green font-semibold rounded-lg shadow-lg hover:scale-105 ${
                         idx === 0
@@ -196,12 +220,16 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
                           : "text-accent-white hover:text-primary-green bg-primary-green hover:bg-transparent"
                       }
                       ${
+                        user?.membership?.status === "active" &&
                         user?.membership?.membership_type === membership_type &&
-                        "opacity-70 !cursor-not-allowed hover:!scale-100 hover:!bg-primary-green !text-accent-white"
+                        user?.membership?.type === interval &&
+                        "opacity-70 !cursor-not-allowed hover:!scale-100 !bg-primary-green !text-accent-white"
                       }
                         `}
                     >
-                      {user?.membership?.membership_type === membership_type
+                      {user?.membership?.status === "active" &&
+                      user?.membership?.membership_type === membership_type &&
+                      user?.membership?.type === interval
                         ? "Purchased"
                         : `Choose ${name}`}
                     </button>
@@ -209,6 +237,39 @@ const Pricing = ({ description, button1, button2 }: PricingProps) => {
                 )
               )}
         </div>
+
+        {/* Cancel btn */}
+        {isCancel && user?.membership?.status === "active" && (
+          <div className="mt-10 border border-[#274F45] rounded-lg p-6 max-w-[850px] mx-auto">
+            <p className="text-[#2D2D2D] font-semibold text-2xl capitalize mb-4">
+              {user?.membership?.membership_type}
+            </p>
+            <p className="text-[#2D2D2D] mb-6">
+              Cancel or upgrade to Pro by choosing premium above. Refunds will
+              not be issued for canceled memberships, however we will prorate
+              the Pro membership if you are upgrading from Basic.
+            </p>
+
+            <div className="flex justify-end gap-4">
+              <button
+                disabled={isPending}
+                onClick={() => cancelMembership()}
+                className={`px-6 py-2 bg-red-500 rounded-lg shadow hover:bg-red-600 text-white font-semibold text-[16px] ${
+                  isPending ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
+              >
+                {isPending ? (
+                  <p className="flex gap-2 items-center justify-center">
+                    <CgSpinnerTwo className="animate-spin text-xl" />
+                    <span>Please wait....</span>
+                  </p>
+                ) : (
+                  "Cancel"
+                )}
+              </button>
+            </div>
+          </div>
+        )}
       </Container>
 
       <Modal open={isOpen} onClose={() => setOpen(false)}>

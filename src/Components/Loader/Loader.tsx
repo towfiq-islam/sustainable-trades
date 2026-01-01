@@ -677,3 +677,19 @@ export const OrderTrackSkeleton = () => {
     </div>
   );
 };
+
+export const NotificationSkeleton = () => {
+  return (
+    <div className="border-b border-[#E5E5E5] flex justify-between p-2.5 md:p-5 items-center animate-pulse">
+      <div className="flex gap-2.5 md:gap-x-5 items-center">
+        <div className="rounded-full size-[50px] md:size-[65px] bg-gray-300" />
+        <div className="space-y-2">
+          <div className="h-4 w-40 bg-gray-300 rounded" />
+          <div className="h-4 w-64 bg-gray-200 rounded" />
+        </div>
+      </div>
+
+      <div className="h-3 w-16 bg-gray-200 rounded" />
+    </div>
+  );
+};

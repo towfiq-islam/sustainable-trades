@@ -537,3 +537,17 @@ export const useCancelMembership = () => {
     },
   });
 };
+
+// Get Orders
+export const getOrders = (status: string) => {
+  return useClientApi({
+    method: "get",
+    key: ["get-orders", status],
+    isPrivate: true,
+    endpoint: "/api/orders",
+    params: { status },
+    queryOptions: {
+      retry: false,
+    },
+  });
+};

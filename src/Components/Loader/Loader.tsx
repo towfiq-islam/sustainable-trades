@@ -693,3 +693,44 @@ export const NotificationSkeleton = () => {
     </div>
   );
 };
+
+export const OrderRowSkeleton = () => {
+  return (
+    <tr className="border-b border-gray-300 animate-pulse">
+      <td className="py-4 px-4">
+        <div className="h-4 w-24 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-4 w-20 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="flex flex-col gap-2">
+          <div className="h-4 w-28 bg-gray-200 rounded" />
+          <div className="h-3 w-36 bg-gray-200 rounded" />
+        </div>
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-4 w-10 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-4 w-16 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-6 w-24 bg-gray-200 rounded-full" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-4 w-20 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4 text-center">
+        <div className="h-5 w-5 mx-auto bg-gray-200 rounded-full" />
+      </td>
+    </tr>
+  );
+};

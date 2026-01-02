@@ -2,9 +2,11 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getOrders } from "@/Hooks/api/dashboard_api";
+import { getOrders, useUpdateOrderStatus } from "@/Hooks/api/dashboard_api";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
+import useAuth from "@/Hooks/useAuth";
+import Link from "next/link";
 
 type orderItem = {
   id: number;
@@ -25,14 +27,15 @@ type orderItem = {
 
 const page = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const [isActive, setIsActive] = useState("orders");
   const [status, setStatus] = useState<string>("");
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<number | null>(null);
-  console.log(orderId);
   const tabs = ["orders", "pending", "confirmed", "delivered", "cancelled"];
   const { data: myOrders, isLoading } = getOrders(status);
-  console.log(myOrders?.data);
+  const { mutate: updateStatusMutation, isPending } =
+    useUpdateOrderStatus(orderId);
 
   useEffect(() => {
     const handleWindowClick = () => {
@@ -53,7 +56,7 @@ const page = () => {
           Orders
         </h2>
 
-        {/* <div className="flex flex-wrap gap-2.5  md:gap-x-4 items-center">
+        {/* <div className="flex flex-wrap gap-2.5 md:gap-x-4 items-center">
           <button
             className="px-6 w-full md:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer
                       duration-300 ease-in-out flex gap-x-2 items-center h-[50px] hover:translate-y-1"
@@ -170,33 +173,53 @@ const page = () => {
                       {order?.shipping_option}
                     </td>
 
-                    <td className="py-4 px-4 flex justify-center items-center text-center relative border">
+                    <td className="py-4 px-4 flex justify-center items-center relative">
                       <button
                         onClick={e => {
-                          setOpenPopup(true);
-                          setOrderId(1);
+                          e.stopPropagation();
+                          setOrderId(order?.id);
+                          setOpenPopup(!openPopup);
                         }}
-                        className="cursor-pointer border"
+                        className="cursor-pointer"
                       >
-                        <BsThreeDotsVertical className="" />
+                        <BsThreeDotsVertical />
                       </button>
 
-                      {/* Popover */}
                       <div
                         onClick={e => e.stopPropagation()}
-                        className={`${
-                          openPopup && orderId === order?.id
-                            ? "opacity-100 scale-100"
-                            : "opacity-0 scale-90"
-                        } absolute duration-300 transition-all top-5 right-10 2xl:right-14 3xl:right-22 p-3 border border-gray-100 bg-white rounded-lg shadow-lg space-y-2.5 z-40 w-[150px] text-sm ${
-                          i === myOrders?.data?.length - 1 && "!-top-22"
-                        }`}
+                        className={`absolute top-8 right-16 px-1 py-2 w-[120px] bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-200 ${
+                          openPopup && orderId === order.id
+                            ? "opacity-100 scale-100 visible"
+                            : "opacity-0 scale-95 invisible"
+                        } ${i === myOrders?.data?.length - 1 ? "-top-24" : ""}
+    `}
                       >
-                        <button className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                        <Link
+                          href={`/dashboard/${user?.membership?.membership_type}/orders/${order?.id}`}
+                          className="w-full text-left px-3 py-1.5 hover:bg-gray-100 cursor-pointer block"
+                        >
                           View Details
-                        </button>
-                        <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500 cursor-pointer">
-                          Canceled
+                        </Link>
+
+                        <button
+                          disabled={isPending}
+                          onClick={() =>
+                            updateStatusMutation(
+                              { status: "cancelled" },
+                              {
+                                onSuccess: () => {
+                                  setOpenPopup(false);
+                                },
+                              }
+                            )
+                          }
+                          className={`w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block ${
+                            isPending
+                              ? "cursor-not-allowed opacity-85"
+                              : "cursor-pointer"
+                          }`}
+                        >
+                          {isPending ? "Cancelling..." : " Cancel Order"}
                         </button>
                       </div>
                     </td>

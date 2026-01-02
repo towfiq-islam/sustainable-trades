@@ -551,3 +551,33 @@ export const getOrders = (status: string) => {
     },
   });
 };
+
+// Update Order Status
+export const useUpdateOrderStatus = (order_id: number | null) => {
+  const queryClient = useQueryClient();
+  return useClientApi({
+    method: "post",
+    key: ["update-order-status", order_id],
+    isPrivate: true,
+    endpoint: `/api/order-status-update/${order_id}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        queryClient.invalidateQueries("get-orders" as any);
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get Single Order
+export const getSingleOrder = (order_id: number | null) => {
+  return useClientApi({
+    method: "get",
+    isPrivate: true,
+    key: ["get-single-order", order_id],
+    endpoint: `/api/order/${order_id}`,
+  });
+};

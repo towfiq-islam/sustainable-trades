@@ -553,13 +553,12 @@ export const getOrders = (status: string) => {
 };
 
 // Update Order Status
-export const useUpdateOrderStatus = (order_id: number | null) => {
+export const useUpdateOrderStatus = () => {
   const queryClient = useQueryClient();
   return useClientApi({
     method: "post",
-    key: ["update-order-status", order_id],
+    key: ["update-order-status"],
     isPrivate: true,
-    endpoint: `/api/order-status-update/${order_id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
         queryClient.invalidateQueries("get-orders" as any);

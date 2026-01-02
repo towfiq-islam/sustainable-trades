@@ -34,8 +34,7 @@ const page = () => {
   const [orderId, setOrderId] = useState<number | null>(null);
   const tabs = ["orders", "pending", "confirmed", "delivered", "cancelled"];
   const { data: myOrders, isLoading } = getOrders(status);
-  const { mutate: updateStatusMutation, isPending } =
-    useUpdateOrderStatus(orderId);
+  const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();
 
   useEffect(() => {
     const handleWindowClick = () => {
@@ -51,7 +50,7 @@ const page = () => {
 
   return (
     <>
-      <div className="flex flex-wrap justify-between items-center gap-3.5 lg:gap-0">
+      <div className="flex flex-wrap justify-between items-center gap-3.5 lg:gap-0 mb-7">
         <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000]">
           Orders
         </h2>
@@ -205,7 +204,10 @@ const page = () => {
                           disabled={isPending}
                           onClick={() =>
                             updateStatusMutation(
-                              { status: "cancelled" },
+                              {
+                                endpoint: `/api/order-status-update/${order?.id}`,
+                                status: "cancelled",
+                              },
                               {
                                 onSuccess: () => {
                                   setOpenPopup(false);

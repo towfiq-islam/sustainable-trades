@@ -1,5 +1,5 @@
 "use client";
-
+import { useParams } from "next/navigation";
 import { FaAngleDown } from "react-icons/fa";
 import { Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
@@ -7,26 +7,36 @@ import React, { useEffect, useRef, useState } from "react";
 import EditOrderModal from "@/Components/Modals/EditOrderModal";
 import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
 import Proorderproduct from "@/Components/Prodashboardcomponents/Proorderproduct";
+import {
+  getSingleOrder,
+  useUpdateOrderStatus,
+} from "@/Hooks/api/dashboard_api";
+import { PuffLoader } from "react-spinners";
 // import EditOrderModal from "@/Components/Modals/EditOrderModal";
 // import SendMessageModal from "@/Components/Modals/SendMessageModal";
 
 const Page = () => {
-  const [status, setStatus] = useState("Order Confirmed");
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const params = useParams();
+  const order_id = Number(params.id);
+  const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();
+  const { data: singleOrder, isLoading } = getSingleOrder(order_id);
+  const orderHistory = singleOrder?.data?.order_status_history ?? [];
+  const currentStep = orderHistory.length - 1;
+  console.log(singleOrder?.data);
 
+  const steps = [
+    { label: "Order Confirmed", path: "confirmed" },
+    { label: "Order Processing", path: "processing" },
+    { label: "Order Shipped", path: "shipped" },
+    { label: "Order Delivered", path: "delivered" },
+    { label: "Order Cancelled", path: "cancelled" },
+  ];
+
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   // Separate modal states
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [messageModalOpen, setMessageModalOpen] = useState(false);
-
-  const steps = [
-    { label: "Order Confirmed", date: "25 Jun 2024" },
-    { label: "Order Packaged", date: "25 Jun 2024" },
-    { label: "Package Shipped", date: "" },
-    { label: "Package Delivered", date: "" },
-  ];
-
-  const currentStep = steps.findIndex((step) => step.label === status);
 
   // refs for sidebar accordion
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -99,6 +109,14 @@ const Page = () => {
     },
   ];
 
+  if (isLoading) {
+    return (
+      <div className="h-[80vh] flex justify-center items-center">
+        <PuffLoader color="#274f45" />
+      </div>
+    );
+  }
+
   return (
     <div className="2xl:px-6 py-4 ">
       {/* Header */}
@@ -111,17 +129,6 @@ const Page = () => {
           >
             Track Package
           </button>
-          <button
-            className="py-4 px-6 rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45]duration-300 ease-in-out flex gap-x-1 items-center"
-            onClick={() => {
-              if (!editModalOpen) {
-                setEditModalOpen(true);
-                document.body.style.overflow = "hidden";
-              }
-            }}
-          >
-            <Pen /> Edit Order
-          </button>
         </div>
       </div>
 
@@ -133,13 +140,18 @@ const Page = () => {
           <h4 className="text-[#000] font-bold text-[16px]">Order Status</h4>
           <div className="relative my-3">
             <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              onChange={e => {
+                updateStatusMutation({
+                  endpoint: `/api/order-status-update/${order_id}`,
+                  status: e.target.value,
+                });
+              }}
               className="border border-[#A7A39C] rounded-[8px] cursor-pointer appearance-none outline-0 px-2 py-[10px] w-[190px] text-[#274F45] text-[14px] font-normal"
             >
-              {steps.map((step) => (
-                <option key={step.label} value={step.label}>
-                  {step.label}
+              <option disabled>Choose status</option>
+              {steps?.map(step => (
+                <option key={step.label} value={step?.path}>
+                  {step?.label}
                 </option>
               ))}
             </select>
@@ -147,54 +159,46 @@ const Page = () => {
           </div>
 
           {/* Progress Bar */}
-          <div className="flex items-center my-6">
-            {steps.map((step, index) => (
-              <React.Fragment key={step.label}>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start mt-6">
+            {orderHistory.map((step: any, index: number) => (
+              <div key={index} className="flex flex-col items-center relative">
+                {/* Connector */}
+                {index !== 0 && (
+                  <div
+                    className={`absolute top-3 -left-1/2 w-full border-t border-dashed ${
+                      index <= currentStep
+                        ? "border-[#274F45]"
+                        : "border-[#A7A39C]"
+                    }`}
+                  />
+                )}
+
+                {/* Circle */}
                 <div
-                  className={`p-[1px] w-6 h-6 border-2 rounded-full flex justify-center items-center ${
+                  className={`z-10 size-6 rounded-full border-2 flex items-center justify-center ${
                     index <= currentStep
                       ? "border-[#274F45]"
                       : "border-[#A7A39C]"
                   }`}
                 >
                   <div
-                    className={`w-4 h-4 rounded-full ${
+                    className={`size-4 rounded-full ${
                       index <= currentStep ? "bg-[#274F45]" : "bg-[#A7A39C]"
                     }`}
-                  ></div>
+                  />
                 </div>
-                {index !== steps.length - 1 && (
-                  <div
-                    className={`border-dashed border-t xxs:w-[60px] xs:w-[100px] sm:w-[150px] md:w-[190px] ${
-                      index < currentStep
-                        ? "border-[#274F45]"
-                        : "border-[#A7A39C]"
-                    }`}
-                  ></div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
 
-          {/* Step Labels */}
-          <div className="flex gap-x-[35px] md:gap-x-[70px]">
-            {steps.map((step) => (
-              <div key={step.label}>
-                <h5 className="xxs:text-[12px] xs:text-[14px] sm:text-[16px] font-normal text-[#000] font-sans">
-                  {step.label}
+                {/* Label */}
+                <h5 className="mt-3 text-center text-[14px] font-medium text-[#000] capitalize">
+                  {step?.content?.trim()?.split(/\s+/)?.pop()}
                 </h5>
-                {step.date && (
-                  <p className="xxs:text-[12px] xs:text-[14px] sm:text-[16px] font-normal text-[#4B4A47]">
-                    {step.date}
-                  </p>
-                )}
               </div>
             ))}
           </div>
 
           {/* Products */}
           <div className="mt-6">
-            <Proorderproduct />
+            <Proorderproduct data={singleOrder?.data} />
           </div>
 
           {/* Step Buttons */}

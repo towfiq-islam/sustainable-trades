@@ -1,6 +1,7 @@
 import Thumbnail from "../../Assets/Thumbnail.png";
 import Image from "next/image";
 import moment from "moment";
+import { useDownloadInvoice } from "@/Hooks/api/dashboard_api";
 
 type orderItem = {
   order_id: number;
@@ -17,9 +18,31 @@ type OrderProps = {
     created_at: string;
     order_items: orderItem[];
   };
+  order_id: number;
 };
 
-const Proorderproduct = ({ data }: OrderProps) => {
+const Proorderproduct = ({ data, order_id }: OrderProps) => {
+  const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
+
+  // Func for download Invoice pdf
+  const handleDownloadInvoice = (order_id: number) => {
+    downloadInvoicePdf(
+      { endpoint: `/api/invoice-generate/${order_id}` },
+      {
+        onSuccess: async (res: any) => {
+          const url = window.URL.createObjectURL(res);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "invoice.pdf");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        },
+      }
+    );
+  };
+
   return (
     <div className="pt-10 pb-6">
       <div className="flex flex-col-reverse md:flex-row justify-between">
@@ -36,8 +59,23 @@ const Proorderproduct = ({ data }: OrderProps) => {
           </p>
         </div>
         <div className="flex gap-x-1 items-center w-full md:w-fit mb-3.5 md:mb-0">
-          <button className="py-2 px-4 rounded-[8px] w-full md:w-fit border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-green-500 duration-300 ease-in-out">
-            View Invoice
+          <button
+            disabled={isPending}
+            onClick={() => {
+              handleDownloadInvoice(order_id);
+            }}
+            className={`text-[#1F4038] font-sans font-bold ${
+              isPending ? "cursor-not-allowed" : "cursor-pointer underline"
+            }`}
+          >
+            {isPending ? (
+              <>
+                <span className="inline-block animate-spin">⏳</span>{" "}
+                Downloading
+              </>
+            ) : (
+              "View Invoice"
+            )}
           </button>
         </div>
       </div>

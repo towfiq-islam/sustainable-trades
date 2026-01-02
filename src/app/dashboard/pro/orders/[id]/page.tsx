@@ -1,25 +1,27 @@
 "use client";
 import { useParams } from "next/navigation";
 import { FaAngleDown } from "react-icons/fa";
+import { PuffLoader } from "react-spinners";
 import { Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
-import React, { useEffect, useRef, useState } from "react";
-import EditOrderModal from "@/Components/Modals/EditOrderModal";
+import { useEffect, useRef, useState } from "react";
 import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
 import Proorderproduct from "@/Components/Prodashboardcomponents/Proorderproduct";
 import {
   getSingleOrder,
   useUpdateOrderStatus,
 } from "@/Hooks/api/dashboard_api";
-import { PuffLoader } from "react-spinners";
-// import EditOrderModal from "@/Components/Modals/EditOrderModal";
-// import SendMessageModal from "@/Components/Modals/SendMessageModal";
+import Modal from "@/Components/Common/Modal";
+import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 
 const Page = () => {
   const params = useParams();
   const order_id = Number(params.id);
-  const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();
+  const [open, isOpen] = useState<boolean>(false);
+  const { mutate: updateStatusMutation, isPending: isCancelling } =
+    useUpdateOrderStatus();
   const { data: singleOrder, isLoading } = getSingleOrder(order_id);
+
   const orderHistory = singleOrder?.data?.order_status_history ?? [];
   const currentStep = orderHistory.length - 1;
   console.log(singleOrder?.data);
@@ -125,7 +127,7 @@ const Page = () => {
         <div className="flex gap-x-3">
           <button
             className="py-4 px-6 rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out"
-            onClick={() => setMessageModalOpen(true)}
+            onClick={() => isOpen(true)}
           >
             Track Package
           </button>
@@ -198,30 +200,28 @@ const Page = () => {
 
           {/* Products */}
           <div className="mt-6">
-            <Proorderproduct data={singleOrder?.data} />
+            <Proorderproduct data={singleOrder?.data} order_id={order_id} />
           </div>
 
           {/* Step Buttons */}
-          {status === "Package Delivered" && (
-            <div className="my-6 flex flex-wrap md:flex-nowrap  stepbutton gap-3">
-              <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out">
-                Track Package
-              </button>
-              <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out ">
-                Return or replace
-              </button>
-              <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out ">
-                Get Help
-              </button>
-              <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out">
-                Request a Review
-              </button>
-            </div>
-          )}
+          {/* <div className="my-6 flex flex-wrap md:flex-nowrap  stepbutton gap-3">
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out">
+              Track Package
+            </button>
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out ">
+              Return or replace
+            </button>
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out ">
+              Get Help
+            </button>
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out">
+              Request a Review
+            </button>
+          </div> */}
 
           {/* Order Summary */}
           <div className="hidden lg:block mt-20">
-            <OrderSummary />
+            <OrderSummary data={singleOrder?.data} />
           </div>
         </div>
 
@@ -292,8 +292,16 @@ const Page = () => {
             ""
           ) : (
             <div className="mt-12">
-              <button className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] text-[16px] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full">
-                Cancel Order
+              <button
+                onClick={() =>
+                  updateStatusMutation({
+                    endpoint: `/api/order-status-update/${order_id}`,
+                    status: "cancelled",
+                  })
+                }
+                className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] text-[16px] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full"
+              >
+                {isCancelling ? "Cancelling...." : "Cancel Order"}
               </button>
             </div>
           )}
@@ -301,7 +309,7 @@ const Page = () => {
       </div>
       {/* Order Summary */}
       <div className="block lg:hidden mt-20">
-        <OrderSummary />
+        <OrderSummary data={singleOrder?.data} />
       </div>
       {/* Modals */}
       <OrderNote
@@ -309,7 +317,7 @@ const Page = () => {
         onClose={() => setNoteModalOpen(false)}
         note="This is the detailed order note info."
       />
-      <EditOrderModal
+      {/* <EditOrderModal
         isOpen={editModalOpen}
         onClose={() => {
           if (editModalOpen) {
@@ -317,11 +325,15 @@ const Page = () => {
             document.body.style.overflow = "visible";
           }
         }}
-      />
+      /> */}
       {/* <SendMessageModal
         isOpen={messageModalOpen}
         onClose={() => setMessageModalOpen(false)}
       /> */}
+
+      <Modal open={open} onClose={() => isOpen(false)}>
+        <TrackPackageModal order_id={order_id} />
+      </Modal>
     </div>
   );
 };

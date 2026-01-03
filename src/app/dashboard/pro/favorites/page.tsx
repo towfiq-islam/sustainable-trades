@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import Shop from "@/Components/Common/Shop";
 import Product from "@/Components/Common/Product";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
@@ -25,16 +25,12 @@ type ShopItem = {
 const Favourites = () => {
   const tabs: string[] = ["Follow ShopLists", "WishLists"];
   const [isActive, setIsActive] = useState("Follow ShopLists");
-
-  // Fetch wishlists (favorite products)
   const { data: followlist, isLoading: wishlistLoading } = getAllFollowList();
-  console.log(followlist);
-
-  // Fetch followed shops
   const { data: shopFollowList, isLoading: shoplistLoading } = getAllShoplist();
 
   const followShops = shopFollowList?.data || [];
   const wishlistProducts = followlist?.data || [];
+
   return (
     <>
       <DashBoardHeader

@@ -1,61 +1,123 @@
-import React from "react";
-import Thumbnail from "../../Assets/Thumbnail.png";
-import Thumbnail1 from "../../Assets/Thumbnail (1).png";
+"use client";
 import Image from "next/image";
+import moment from "moment";
+import { useDownloadInvoice } from "@/Hooks/api/dashboard_api";
 
-const Proorderproduct = () => {
+type OrderImage = {
+  image: string;
+};
+
+type orderItem = {
+  order_id: number;
+  quantity: number;
+  product: {
+    product_name: string;
+    product_price: number;
+    images: OrderImage[];
+  };
+};
+
+type OrderProps = {
+  data: {
+    order_number: number;
+    created_at: string;
+    order_items: orderItem[];
+  };
+  order_id: number;
+};
+
+const Proorderproduct = ({ data, order_id }: OrderProps) => {
+  const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
+
+  // Func for download Invoice pdf
+  const handleDownloadInvoice = (order_id: number) => {
+    downloadInvoicePdf(
+      { endpoint: `/api/invoice-generate/${order_id}` },
+      {
+        onSuccess: async (res: any) => {
+          const url = window.URL.createObjectURL(res);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "invoice.pdf");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        },
+      }
+    );
+  };
+
   return (
     <div className="pt-10 pb-6">
       <div className="flex flex-col-reverse md:flex-row justify-between">
         <div className="flex gap-x-1 items-center">
-          <h5 className="text-[16px] font-bold text-[#67645F]">Amy Woods</h5>
-          <p className="text-[14px] font-normal text-[#000]">#155496</p>
+          <h5 className="text-[16px] font-bold text-[#67645F]">Order ID</h5>
+          <p className="text-[14px] font-normal text-[#000]">
+            {data?.order_number}
+          </p>
         </div>
         <div className="flex gap-x-1 items-center">
           <h5 className="text-[16px] font-bold text-[#67645F]">Date Ordered</h5>
-          <p className="text-[14px] font-normal text-[#000]">Jun 25, 2024</p>
+          <p className="text-[14px] font-normal text-[#000]">
+            {moment(data?.created_at).format("ll")}
+          </p>
         </div>
         <div className="flex gap-x-1 items-center w-full md:w-fit mb-3.5 md:mb-0">
-          <button className="py-2 px-4 rounded-[8px] w-full md:w-fit border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-green-500 duration-300 ease-in-out">
-            View Invoice
+          <button
+            disabled={isPending}
+            onClick={() => {
+              handleDownloadInvoice(order_id);
+            }}
+            className={`text-[#1F4038] font-sans font-bold ${
+              isPending ? "cursor-not-allowed" : "cursor-pointer underline"
+            }`}
+          >
+            {isPending ? (
+              <>
+                <span className="inline-block animate-spin">⏳</span>{" "}
+                Downloading
+              </>
+            ) : (
+              "View Invoice"
+            )}
           </button>
         </div>
       </div>
-      <div className="mt-6 border border-[#CCCED0]">
+
+      <div className="mt-6 border border-[#CCCED0] rounded">
         <div className="flex flex-col">
-          <div className="flex flex-col md:flex-row justify-between md:items-center  px-6 py-4">
-            <div className="flex flex-col md:flex-row gap-x-6 md:items-center">
-              <Image src={Thumbnail} alt="Thumbnail" unoptimized />
-              <h3 className="text-[20px] font-semibold text-[#13141D]">
-                Handmade Cocoa Butter
-              </h3>
+          {data?.order_items?.map(order => (
+            <div
+              key={order?.order_id}
+              className="flex flex-col md:flex-row justify-between md:items-center border-b border-gray-300 px-6 py-4"
+            >
+              <div className="flex flex-col md:flex-row gap-x-6 md:items-center">
+                <figure className="w-36 h-28 rounded border border-gray-100 relative">
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${order?.product?.images?.[0]?.image}`}
+                    alt="Thumbnail"
+                    unoptimized
+                    fill
+                    className="w-full h-full object-cover rounded"
+                  />
+                </figure>
+
+                <h3 className="text-[20px] font-semibold text-[#13141D] truncate">
+                  {order?.product?.product_name}
+                </h3>
+              </div>
+
+              <div>
+                <h3 className="text-[20px] font-semibold text-[#13141D] pb-1">
+                  ${order?.product?.product_price}
+                </h3>
+                <h4 className="text-[18px] font-semibold text-[#13141D]">
+                  Qty: {order?.quantity}
+                </h4>
+              </div>
             </div>
-            <div className="">
-              <h3 className="text-[20px] font-semibold text-[#13141D] pb-1">
-                $8.46
-              </h3>
-              <h4 className="text-[18px] font-semibold text-[#13141D]">
-                Qty: 2
-              </h4>
-            </div>
-          </div>
-          <div className="border border-[#CCCED0]"></div>
-          <div className="flex flex-col md:flex-row justify-between md:items-center  px-6 py-4">
-            <div className="flex flex-col md:flex-row gap-x-6 md:items-center">
-              <Image src={Thumbnail1} alt="Thumbnail" unoptimized />
-              <h3 className="text-[20px] font-semibold text-[#13141D]">
-                Lavender Soap Bars
-              </h3>
-            </div>
-            <div className="">
-              <h3 className="text-[20px] font-semibold text-[#13141D] pb-1">
-                $8.46
-              </h3>
-              <h4 className="text-[18px] font-semibold text-[#13141D]">
-                Qty: 2
-              </h4>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

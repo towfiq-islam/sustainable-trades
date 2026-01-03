@@ -3,13 +3,13 @@ import Link from "next/link";
 import { FaSearch } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
 import Image, { StaticImageData } from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getallListings } from "@/Hooks/api/dashboard_api";
-import { Export, Import } from "@/Components/Svg/SvgContainer";
 import {
   statusColorsinventory,
   visibilityColors,
 } from "@/Components/Data/data";
+import { ProductRowSkeleton } from "@/Components/Loader/Loader";
 
 type Product = {
   id: number;
@@ -25,7 +25,7 @@ type Product = {
 
 export default function Page() {
   const [search, setSearch] = useState("");
-  const { data: allListings } = getallListings();
+  const { data: allListings, isLoading } = getallListings();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -68,19 +68,12 @@ export default function Page() {
     );
   };
 
-  const selectAll = () => setSelected(products.map(p => p.id));
-  const deselectAll = () => setSelected([]);
-  const deleteSelected = () => {
-    setProducts(products.filter(p => !selected.includes(p.id)));
-    setSelected([]);
-  };
-
   const filteredProducts = products.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="">
+    <>
       {/* Top Bar */}
       <div className="flex flex-col lg:flex-row gap-5 justify-between items-start md:items-center ">
         <div className="relative w-full lg:max-w-[500px] ">
@@ -108,171 +101,141 @@ export default function Page() {
               Add Product
             </button>
           </Link>
-          <button className="flex w-full lg:w-fit items-center justify-center gap-x-2 border border-[#274F45] text-[#274F45] px-6 h-[45px] lg:h-[50px] rounded-lg text-[16px]">
+
+          {/* <button className="flex w-full lg:w-fit items-center justify-center gap-x-2 border border-[#274F45] text-[#274F45] px-6 h-[45px] lg:h-[50px] rounded-lg text-[16px]">
             Export
             <Export />
           </button>
           <button className="flex w-full lg:w-fit items-center justify-center gap-x-2 bg-[#274F45] text-white px-6 h-[45px] lg:h-[50px] rounded-lg text-[16px]">
             Import
             <Import />
-          </button>
+          </button> */}
         </div>
       </div>
-
-      {/* Bulk Action Bar */}
-      {selected.length > 0 && (
-        <div className="flex flex-col lg:flex-row justify-between items-start md:items-center bg-[#F0EEE9] py-4 px-6 mb-6 mt-6 rounded gap-4">
-          <span className="flex items-center gap-x-3 font-bold text-[#274F45] text-[14px]">
-            <input
-              type="checkbox"
-              checked={selected.length === products.length}
-              onChange={e => (e.target.checked ? selectAll() : deselectAll())}
-            />
-            {selected.length} Selected
-          </span>
-          <div className="flex flex-wrap gap-x-6 gap-y-2">
-            <button
-              onClick={deselectAll}
-              className="font-bold text-[#274F45]/50 text-[14px]"
-            >
-              Deselect All
-            </button>
-            <button
-              onClick={selectAll}
-              className="font-bold text-[#274F45]/50 text-[14px]"
-            >
-              Select All
-            </button>
-            <button className="font-bold text-[#274F45]/50 text-[14px]">
-              Export
-            </button>
-            <button
-              onClick={deleteSelected}
-              className="font-bold text-[#274F45] text-[14px]"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Desktop Table */}
       <div className="hidden lg:block mt-10">
         <table className="w-full border-collapse">
           <thead>
             <tr className="text-left border-b border-[#A7A39C]">
-              <th />
-              <th className="text-[#13141D] font-semibold text-[16px]">
+              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
                 Product
               </th>
-              <th className="text-[#13141D] font-semibold text-[16px]">
+              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
                 Approval Status
               </th>
-              <th className="text-[#13141D] font-semibold text-[16px]">SKU</th>
-              <th className="text-[#13141D] font-semibold text-[16px]">
+              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
+                SKU
+              </th>
+              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
                 Stock
               </th>
-              <th className="text-[#13141D] font-semibold text-[16px]">
+              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
                 Price
               </th>
-              <th className="text-[#13141D] font-semibold text-[16px]">Cost</th>
-              <th className="text-[#13141D] font-semibold text-[16px]">
+              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
+                Cost
+              </th>
+              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
                 Visibility
               </th>
               <th />
             </tr>
           </thead>
-          <tbody>
-            {filteredProducts.map(p => (
-              <tr
-                key={p.id}
-                className="border-b border-[#A7A39C] hover:bg-gray-50"
-              >
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(p.id)}
-                    onChange={() => toggleSelect(p.id)}
-                  />
-                </td>
-                <td className="py-5 text-[#13141D] font-semibold text-[14px]">
-                  <div className="flex items-center gap-10">
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_SITE_URL}/${p.image}`}
-                      alt={p.name}
-                      height={60}
-                      width={60}
-                      unoptimized
-                      className="h-[80px] w-[100px] rounded-lg"
-                    />
-                    {p.name}
-                  </div>
-                </td>
-                <td>
-                  <span
-                    className={`px-3 py-2 rounded-full text-sm ${
-                      statusColorsinventory[p.status]
-                    }`}
-                  >
-                    {p.status}
-                  </span>
-                </td>
-                <td className="text-[#13141D] font-semibold text-[14px]">
-                  {p.sku}
-                </td>
-                <td className="text-[#13141D] font-semibold text-[14px]">
-                  {p.stock}
-                </td>
-                <td className="text-[#13141D] font-semibold text-[14px]">
-                  ${p.price.toFixed(2)}
-                </td>
-                <td className="text-[#13141D] font-semibold text-[14px]">
-                  ${p.cost.toFixed(2)}
-                </td>
-                <td>
-                  <span
-                    className={`px-3 py-2 rounded-full text-sm ${
-                      visibilityColors[p.visibility]
-                    }`}
-                  >
-                    {p.visibility}
-                  </span>
-                </td>
-                <td className="relative">
-                  <button
-                    className="cursor-pointer"
-                    onClick={() => setOpenMenu(openMenu === p.id ? null : p.id)}
-                  >
-                    <FiMoreVertical />
-                  </button>
-                  {openMenu === p.id && (
-                    <div
-                      ref={menuRef}
-                      className="product-menu absolute right-0 mt-2 bg-white border rounded shadow-lg w-40 z-10"
-                    >
-                      <Link href={`/dashboard/pro/view-listing/${p.id}`}>
-                        <button
-                          onClick={() => setOpenMenu(null)}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        >
-                          Edit
-                        </button>
-                      </Link>
 
-                      <button
-                        onClick={() => {
-                          setProducts(products.filter(x => x.id !== p.id));
-                          setOpenMenu(null);
-                        }}
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 cursor-pointer"
+          <tbody>
+            {isLoading
+              ? Array.from({ length: 3 }).map((_, idx) => (
+                  <ProductRowSkeleton key={idx} />
+                ))
+              : filteredProducts?.map(p => (
+                  <tr
+                    key={p.id}
+                    className="border-b border-[#A7A39C] hover:bg-gray-50"
+                  >
+                    <td className="py-3 text-[#13141D] font-semibold text-[14px]">
+                      <div className="flex items-center gap-5">
+                        <figure className="h-[80px] w-[100px] rounded-lg relative">
+                          <Image
+                            src={`${process.env.NEXT_PUBLIC_SITE_URL}/${p.image}`}
+                            alt={p.name}
+                            fill
+                            unoptimized
+                            className="h-full w-full rounded-lg"
+                          />
+                        </figure>
+
+                        <span>{p?.name}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span
+                        className={`px-4 py-2 rounded-full text-sm ${
+                          statusColorsinventory[p.status]
+                        }`}
                       >
-                        Delete
+                        {p.status}
+                      </span>
+                    </td>
+                    <td className="text-[#13141D] font-semibold text-[14px]">
+                      {p.sku}
+                    </td>
+                    <td className="text-[#13141D] font-semibold text-[14px]">
+                      {p.stock}
+                    </td>
+                    <td className="text-[#13141D] font-semibold text-[14px]">
+                      ${p.price.toFixed(2)}
+                    </td>
+                    <td className="text-[#13141D] font-semibold text-[14px]">
+                      ${p.cost.toFixed(2)}
+                    </td>
+                    <td>
+                      <span
+                        className={`px-3 py-2 rounded-full text-sm ${
+                          visibilityColors[p.visibility]
+                        }`}
+                      >
+                        {p.visibility}
+                      </span>
+                    </td>
+
+                    <td className="relative">
+                      <button
+                        className="cursor-pointer"
+                        onClick={() =>
+                          setOpenMenu(openMenu === p.id ? null : p.id)
+                        }
+                      >
+                        <FiMoreVertical />
                       </button>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
+                      {openMenu === p.id && (
+                        <div
+                          ref={menuRef}
+                          className="product-menu absolute right-0 mt-2 bg-white border border-gray-400 rounded shadow-lg w-28 z-10"
+                        >
+                          <Link href={`/dashboard/pro/view-listing/${p.id}`}>
+                            <button
+                              onClick={() => setOpenMenu(null)}
+                              className="block w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                            >
+                              Edit
+                            </button>
+                          </Link>
+
+                          <button
+                            onClick={() => {
+                              setProducts(products.filter(x => x.id !== p.id));
+                              setOpenMenu(null);
+                            }}
+                            className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 cursor-pointer"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </div>
@@ -350,20 +313,6 @@ export default function Page() {
           </div>
         ))}
       </div>
-
-      {/* Pagination */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-2 mt-6 text-sm">
-        <span className="text-[#13141D] font-semibold text-[14px]">
-          {filteredProducts.length} of {products.length} products
-        </span>
-        <div className="flex gap-2 text-[#13141D] font-semibold text-[14px]">
-          <button>{"<<"}</button>
-          <button>{"<"}</button>
-          <span>Page 1 of 1</span>
-          <button>{">"}</button>
-          <button>{">>"}</button>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }

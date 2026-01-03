@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@paypal/react-paypal-js": "^8.9.2",
     "@react-google-maps/api": "^2.20.7",
     "@tanstack/react-query": "^5.80.2",
     "aos": "^2.3.4",

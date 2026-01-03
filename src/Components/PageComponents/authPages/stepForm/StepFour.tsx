@@ -221,7 +221,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
             }
           }}
           className={`auth-secondary-btn w-full sm:w-auto ${
-            isPending && "cursor-not-allowed"
+            isPending && "!cursor-not-allowed"
           }`}
         >
           {isPending ? (

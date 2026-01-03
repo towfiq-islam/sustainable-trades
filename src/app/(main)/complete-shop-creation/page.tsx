@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
@@ -8,6 +7,7 @@ import Container from "@/Components/Common/Container";
 
 const page = () => {
   const { user } = useAuth();
+  console.log(user);
 
   return (
     <div className="lg:pt-20 pt-10 lg:pb-[200px] pb-[50px]">

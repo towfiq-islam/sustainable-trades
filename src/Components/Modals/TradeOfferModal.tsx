@@ -103,12 +103,12 @@ const TradeOfferModal = ({
 
   return (
     <>
-      <h3 className="text-light-green font-semibold text-lg mb-2">
+      <h3 className="text-light-green font-semibold text-lg md:mb-2">
         Trade Offer
       </h3>
 
       {/* Shop Name */}
-      <h4 className="text-2xl font-semibold text-secondary-black mb-2">
+      <h4 className="text-xl md:text-2xl font-semibold text-secondary-black mb-2">
         {shopInfo?.shop?.shop_name}
       </h4>
 
@@ -129,8 +129,11 @@ const TradeOfferModal = ({
 
       {/* ---------- My Offer Section ---------- */}
       <div className="border border-gray-200 shadow rounded-xl p-3 mb-4">
-        {offeredItems.map((item, index) => (
-          <div key={index} className="flex items-center gap-3 mb-3">
+        {offeredItems?.map((item, index) => (
+          <div
+            key={index}
+            className="flex flex-col md:flex-row items-center gap-3 mb-3"
+          >
             <select
               value={item?.product_id}
               onChange={e => {
@@ -138,12 +141,14 @@ const TradeOfferModal = ({
                 updated[index].product_id = Number(e.target.value);
                 setOfferedItems(updated);
               }}
-              className="border border-gray-300 rounded-md p-2 flex-1"
+              className="border border-gray-300 rounded-md p-2 w-full md:w-[370px] truncate"
             >
               <option value="">Select Product</option>
               {tradeProducts?.data.map((p: any) => (
                 <option key={p?.id} value={p?.id}>
-                  {p?.product_name}
+                  {p?.product_name?.length > 50
+                    ? `${p?.product_name?.slice(0, 50)}...`
+                    : p?.product_name}
                 </option>
               ))}
             </select>
@@ -156,11 +161,11 @@ const TradeOfferModal = ({
                 updated[index].quantity = Number(e.target.value);
                 setOfferedItems(updated);
               }}
-              className="border border-gray-300 rounded-md p-2 w-20 text-center"
+              className="border border-gray-300 rounded-md p-2 w-full md:w-20 text-center shrink-0"
             />
 
             <input
-              className="border border-gray-300 rounded-md p-2 w-24 text-center"
+              className="border border-gray-300 rounded-md p-2 w-full md:w-24 text-center shrink-0"
               value={
                 (tradeProducts?.data?.find(
                   (p: any) => p?.id === item.product_id
@@ -176,7 +181,7 @@ const TradeOfferModal = ({
               }}
               className="cursor-pointer"
             >
-              <RiDeleteBin6Line className="text-red-600 text-2xl" />
+              <RiDeleteBin6Line className="text-red-600 text-2xl shrink-0" />
             </button>
           </div>
         ))}
@@ -196,7 +201,7 @@ const TradeOfferModal = ({
       </div>
 
       {/* hr */}
-      <div className="flex gap-x-5 items-center my-4">
+      <div className="flex gap-x-5 items-center mb-2 md:my-4">
         <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
         <div className="inline-block">
           <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
@@ -207,7 +212,10 @@ const TradeOfferModal = ({
       {/* ---------- Their Offer Section ---------- */}
       <div className="border border-gray-200 shadow rounded-xl p-3 mb-5">
         {requestedItems?.map((item, index) => (
-          <div key={index} className="flex items-center gap-3 mb-3">
+          <div
+            key={index}
+            className="flex flex-col md:flex-row items-center gap-3 mb-3"
+          >
             <select
               value={item?.product_id || ""}
               onChange={e => {
@@ -215,12 +223,14 @@ const TradeOfferModal = ({
                 updated[index].product_id = Number(e.target.value);
                 setRequestedItems(updated);
               }}
-              className="border border-gray-300 rounded-md p-2 flex-1"
+              className="border border-gray-300 rounded-md p-2 w-full md:w-[370px] truncate"
             >
               <option value="">Select Product</option>
               {myTradeProducts?.data.map((p: any) => (
                 <option key={p?.id} value={p?.id}>
-                  {p?.product_name}
+                  {p?.product_name?.length > 50
+                    ? `${p?.product_name?.slice(0, 50)}...`
+                    : p?.product_name}
                 </option>
               ))}
             </select>
@@ -233,11 +243,11 @@ const TradeOfferModal = ({
                 updated[index].quantity = Number(e.target.value);
                 setRequestedItems(updated);
               }}
-              className="border border-gray-300 rounded-md p-2 w-20 text-center"
+              className="border border-gray-300 rounded-md p-2 w-full md:w-20 text-center shrink-0"
             />
 
             <input
-              className="border border-gray-300 rounded-md p-2 w-24 text-center"
+              className="border border-gray-300 rounded-md p-2 w-full md:w-24 text-center shrink-0"
               value={
                 (myTradeProducts?.data?.find(
                   (p: any) => p?.id === item.product_id
@@ -253,7 +263,7 @@ const TradeOfferModal = ({
               }}
               className="cursor-pointer"
             >
-              <RiDeleteBin6Line className="text-red-600 text-2xl" />
+              <RiDeleteBin6Line className="text-red-600 text-2xl shrink-0" />
             </button>
           </div>
         ))}

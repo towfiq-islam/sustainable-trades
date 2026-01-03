@@ -1,7 +1,6 @@
 "use client";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { getOrders, useUpdateOrderStatus } from "@/Hooks/api/dashboard_api";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
@@ -26,7 +25,6 @@ type orderItem = {
 };
 
 const page = () => {
-  const router = useRouter();
   const { user } = useAuth();
   const [isActive, setIsActive] = useState("orders");
   const [status, setStatus] = useState<string>("");
@@ -161,7 +159,7 @@ const page = () => {
                             : order?.status === "pending"
                             ? "bg-blue-500"
                             : order?.status === "cancelled"
-                            ? "bg-red-500"
+                            ? "bg-primary-red"
                             : "bg-gray-500"
                         }`}
                       >

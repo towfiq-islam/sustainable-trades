@@ -181,7 +181,7 @@ const Page = () => {
 
           {/* Progress Bar */}
           <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start mt-6">
-            {orderHistory.map((step: any, index: number) => (
+            {orderHistory?.map((step: any, index: number) => (
               <div key={index} className="flex flex-col items-center relative">
                 {/* Connector */}
                 {index !== 0 && (
@@ -321,7 +321,17 @@ const Page = () => {
                 </button>
 
                 <Link
-                  href={`/dashboard/customer/messages/inbox/${singleOrder?.data?.user_id}`}
+                  href={`/dashboard/${
+                    singleOrder?.data?.user?.role === "vendor" &&
+                    singleOrder?.data?.user?.membership?.membership_type ===
+                      "pro"
+                      ? "pro"
+                      : singleOrder?.data?.user?.role === "vendor" &&
+                        singleOrder?.data?.user?.membership?.membership_type ===
+                          "basic"
+                      ? "basic"
+                      : "customer"
+                  }/messages/inbox/${singleOrder?.data?.user_id}`}
                   className="auth-primary-btn !text-center"
                 >
                   Go to Messages

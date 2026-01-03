@@ -182,46 +182,48 @@ const page = () => {
                         <BsThreeDotsVertical />
                       </button>
 
-                      <div
-                        onClick={e => e.stopPropagation()}
-                        className={`absolute top-8 right-16 px-1 py-2 w-[120px] bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-200 ${
-                          openPopup && orderId === order.id
-                            ? "opacity-100 scale-100 visible"
-                            : "opacity-0 scale-95 invisible"
-                        } ${i === myOrders?.data?.length - 1 ? "-top-24" : ""}
-    `}
-                      >
-                        <Link
-                          href={`/dashboard/${user?.membership?.membership_type}/orders/${order?.id}`}
-                          className="w-full text-left px-3 py-1.5 hover:bg-gray-100 cursor-pointer block"
-                        >
-                          View Details
-                        </Link>
-
-                        <button
-                          disabled={isPending}
-                          onClick={() =>
-                            updateStatusMutation(
-                              {
-                                endpoint: `/api/order-status-update/${order?.id}`,
-                                status: "cancelled",
-                              },
-                              {
-                                onSuccess: () => {
-                                  setOpenPopup(false);
-                                },
-                              }
-                            )
+                      {openPopup && orderId === order.id && (
+                        <div
+                          onClick={e => e.stopPropagation()}
+                          className={`absolute right-16 px-1 py-2 w-[120px] bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-200 ${
+                            i === myOrders?.data?.length - 1
+                              ? "-top-20"
+                              : "top-8"
                           }
-                          className={`w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block ${
-                            isPending
-                              ? "cursor-not-allowed opacity-85"
-                              : "cursor-pointer"
-                          }`}
+    `}
                         >
-                          {isPending ? "Cancelling..." : " Cancel Order"}
-                        </button>
-                      </div>
+                          <Link
+                            href={`/dashboard/${user?.membership?.membership_type}/orders/${order?.id}`}
+                            className="w-full text-left px-3 py-1.5 hover:bg-gray-100 cursor-pointer block"
+                          >
+                            View Details
+                          </Link>
+
+                          <button
+                            disabled={isPending}
+                            onClick={() =>
+                              updateStatusMutation(
+                                {
+                                  endpoint: `/api/order-status-update/${order?.id}`,
+                                  status: "cancelled",
+                                },
+                                {
+                                  onSuccess: () => {
+                                    setOpenPopup(false);
+                                  },
+                                }
+                              )
+                            }
+                            className={`w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block ${
+                              isPending
+                                ? "cursor-not-allowed opacity-85"
+                                : "cursor-pointer"
+                            }`}
+                          >
+                            {isPending ? "Cancelling..." : " Cancel Order"}
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))

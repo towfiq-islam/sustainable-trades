@@ -768,3 +768,28 @@ export const ProductRowSkeleton = () => {
     </tr>
   );
 };
+
+export const PaymentRowSkeleton = () => {
+  return (
+    <tr className="border-b border-gray-300 animate-pulse">
+      <td className="py-4 px-4">
+        <div className="h-4 w-28 bg-gray-200 rounded" />
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-4 w-24 bg-gray-200 rounded" />
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-4 w-36 bg-gray-200 rounded" />
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-4 w-20 bg-gray-200 rounded" />
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-4 w-24 bg-gray-200 rounded capitalize" />
+      </td>
+      <td className="py-4 px-4">
+        <div className="min-w-[25px] h-7 bg-gray-200 rounded-full" />
+      </td>
+    </tr>
+  );
+};

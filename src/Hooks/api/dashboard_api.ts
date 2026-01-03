@@ -597,3 +597,35 @@ export const useOrderNote = (order_id: number) => {
     },
   });
 };
+
+// Onboarding
+export const useOnboarding = () => {
+  return useClientApi({
+    method: "post",
+    key: ["onboarding"],
+    isPrivate: true,
+    endpoint: "/api/paypal/onboard",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get Payments
+export const getPayments = (status: string) => {
+  return useClientApi({
+    method: "get",
+    key: ["get-payments", status],
+    isPrivate: true,
+    endpoint: "/api/payment-report",
+    params: { status },
+    queryOptions: {
+      retry: false,
+    },
+  });
+};

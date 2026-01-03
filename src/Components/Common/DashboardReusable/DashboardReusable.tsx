@@ -7,27 +7,14 @@ import Activity from "../../../Assets/activity.png";
 import Inventory from "../../../Assets/inventory.png";
 import ProDashboardMessage from "./ProDashboardMessage";
 import ProdashboardStatistics from "./ProdashboardStatistics";
-import { FaAngleDown, FaAngleRight, FaSearch } from "react-icons/fa";
+import { FaAngleDown, FaAngleRight } from "react-icons/fa";
 
 const DashboardReusable = () => {
   const { user } = useAuth();
 
   return (
-    <div>
-      <div className="flex gap-x-4 items-center">
-        <div className="relative w-full">
-          <input
-            placeholder={"Search..."}
-            type="search"
-            className="py-[10px] pl-4 outline-0 border border-[#274F45] rounded-[8px] text-[16px] text-[#67645F] font-normal w-full"
-          />
-          <div className="absolute top-4 right-3">
-            <FaSearch />
-          </div>
-          <div className="absolute top-0 right-10 w-[2px] bg-[#274F45] h-[45px]"></div>
-        </div>
-      </div>
-      <div className="py-9  flex flex-col  md:flex-row justify-between md:items-center gap-[32px] md:gap-0">
+    <>
+      <div className="pb-9  flex flex-col  md:flex-row justify-between md:items-center gap-[32px] md:gap-0">
         <div className="text-[20px] md:text-[24px] flex flex-col gap-y-2">
           <h3 className=" font-semibold text-[#13141D] tracking-[2.4px]">
             Hi {user?.first_name},
@@ -36,6 +23,7 @@ const DashboardReusable = () => {
             Here’s your store: {user?.shop_info?.shop_name}
           </h3>
         </div>
+
         <Link
           href={`/shop-details?view=${"owner"}&id=${
             user?.shop_info?.user_id
@@ -266,7 +254,7 @@ const DashboardReusable = () => {
       <div className="">
         <ProdashboardStatistics />
       </div>
-    </div>
+    </>
   );
 };
 

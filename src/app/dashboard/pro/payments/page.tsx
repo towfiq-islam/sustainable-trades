@@ -35,7 +35,7 @@ const page = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="mt-10">
         <ul className="flex gap-5 md:gap-x-10">
           {tabs.map(tab => (
@@ -52,6 +52,7 @@ const page = () => {
             </li>
           ))}
         </ul>
+
         <div className="mt-8">
           {isactive === "All Payments" && <AllPaymentTable />}
           {isactive === "Pending" && <PendingPaymnet />}

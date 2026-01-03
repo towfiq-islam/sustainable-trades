@@ -168,7 +168,6 @@ export const useCancel = () => {
 };
 
 //  single trade
-
 export const useSingleTradeOffer = (id: any) => {
   return useClientApi({
     method: "get",

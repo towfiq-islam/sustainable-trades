@@ -734,3 +734,37 @@ export const OrderRowSkeleton = () => {
     </tr>
   );
 };
+
+export const ProductRowSkeleton = () => {
+  return (
+    <tr className="border-b border-gray-300 animate-pulse">
+      <td className="py-3">
+        <div className="flex items-center gap-5">
+          <div className="h-[80px] w-[100px] rounded-lg bg-gray-200" />
+          <div className="h-4 w-40 bg-gray-200 rounded" />
+        </div>
+      </td>
+      <td>
+        <div className="h-8 w-24 bg-gray-200 rounded-full" />
+      </td>
+      <td>
+        <div className="h-4 w-20 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-4 w-12 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-4 w-16 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-4 w-16 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-8 w-24 bg-gray-200 rounded-full" />
+      </td>
+      <td>
+        <div className="h-5 w-5 bg-gray-200 rounded-full mx-auto" />
+      </td>
+    </tr>
+  );
+};

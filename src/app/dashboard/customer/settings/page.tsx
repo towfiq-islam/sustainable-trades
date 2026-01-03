@@ -5,7 +5,6 @@ import { useDeleteAccount } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import React, { useState, useEffect } from "react";
 
-
 const Settings = () => {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState(false);
@@ -122,9 +121,8 @@ const Settings = () => {
         </div>
 
         {/* Right Toggles */}
-        <div className="flex justify-end shrink-0">
+        {/* <div className="flex justify-end shrink-0">
           <div className="w-full mt-5 lg:mt-20 flex flex-col gap-y-5 lg:gap-y-10">
-            {/* Push Notifications */}
             <Toggle
               label="Push Notifications"
               left="OFF"
@@ -133,7 +131,6 @@ const Settings = () => {
               onToggle={() => setNotifications(!notifications)}
             />
 
-            {/* Language */}
             <Toggle
               label="Language"
               left="English"
@@ -142,7 +139,6 @@ const Settings = () => {
               onToggle={() => setLanguage(!language)}
             />
 
-            {/* Cookies */}
             <Toggle
               label="Enable Cookies"
               left="OFF"
@@ -151,7 +147,7 @@ const Settings = () => {
               onToggle={() => setCookies(!cookies)}
             />
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Bottom Buttons */}

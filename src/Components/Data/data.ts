@@ -113,39 +113,39 @@ export const shopdata = [
   },
 ];
 
-export const testimonial = [
-  {
-    id: 1,
-    type: "product",
-    productId: 101,
-    productName: "Wireless Headphones",
-    rating: 2,
-    avatar: p1,
-    review:
-      "I really enjoyed the sound quality and the comfort of these headphones.",
-    date: "2025-08-20",
-  },
-  {
-    id: 2,
-    type: "shop",
-    shopId: 501,
-    shopName: "TechWave Store",
-    rating: 4,
-    review: "Great store with helpful staff. Delivery was quick too!",
-    date: "2025-08-22",
-    avatar: p1,
-  },
-  {
-    id: 3,
-    type: "product",
-    productId: 102,
-    productName: "Smart Watch",
-    avatar: p1,
-    rating: 3,
-    review: "Decent watch with nice features, but battery drains too fast.",
-    date: "2025-08-24",
-  },
-];
+// export const testimonial = [
+//   {
+//     id: 1,
+//     type: "product",
+//     productId: 101,
+//     productName: "Wireless Headphones",
+//     rating: 2,
+//     avatar: p1,
+//     review:
+//       "I really enjoyed the sound quality and the comfort of these headphones.",
+//     date: "2025-08-20",
+//   },
+//   {
+//     id: 2,
+//     type: "shop",
+//     shopId: 501,
+//     shopName: "TechWave Store",
+//     rating: 4,
+//     review: "Great store with helpful staff. Delivery was quick too!",
+//     date: "2025-08-22",
+//     avatar: p1,
+//   },
+//   {
+//     id: 3,
+//     type: "product",
+//     productId: 102,
+//     productName: "Smart Watch",
+//     avatar: p1,
+//     rating: 3,
+//     review: "Decent watch with nice features, but battery drains too fast.",
+//     date: "2025-08-24",
+//   },
+// ];
 
 interface Order {
   id: string;
@@ -562,22 +562,22 @@ export const tradetabs = [
   {
     id: 1,
     label: "Pending",
-    count: tradeRequests.filter((ln) => ln.status === "Pending").length,
+    count: tradeRequests.filter(ln => ln.status === "Pending").length,
   },
   {
     id: 2,
     label: "Sent",
-    count: tradeRequests.filter((ln) => ln.status === "Sent").length,
+    count: tradeRequests.filter(ln => ln.status === "Sent").length,
   },
   {
     id: 3,
     label: "Approved",
-    count: tradeRequests.filter((ln) => ln.status === "Approved").length,
+    count: tradeRequests.filter(ln => ln.status === "Approved").length,
   },
   {
     id: 4,
     label: "Canceled",
-    count: tradeRequests.filter((ln) => ln.status === "Canceled").length,
+    count: tradeRequests.filter(ln => ln.status === "Canceled").length,
   },
 ];
 

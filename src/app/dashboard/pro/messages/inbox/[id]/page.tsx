@@ -5,7 +5,7 @@ import echo from "@/lib/echo";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { ImSpinner9 } from "react-icons/im";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { PuffLoader } from "react-spinners";
 import { useQueryClient } from "@tanstack/react-query";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
@@ -25,9 +25,10 @@ type messageItem = {
   };
 };
 
-const page = ({ params }: any) => {
+const page = () => {
   // Hooks
-  const { id } = params;
+  const params = useParams();
+  const id = Number(params.id);
   const { user } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();

@@ -4,20 +4,24 @@ import {
   useUpdateCart,
 } from "@/Hooks/api/cms_api";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { LocationTwoSvg, MinSvg } from "@/Components/Svg/SvgContainer";
 import Modal from "@/Components/Common/Modal";
 import SuccessModal from "@/Components/Modals/SuccessModal";
 import ShippingAddress from "@/Components/Modals/ShippingAddress";
 import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 
 const CartItem = ({ item }: any) => {
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
   const [shippingAddressOpen, setShippingAddressOpen] =
     useState<boolean>(false);
-  const [successOpen, setSuccessOpen] = useState<boolean>(false);
+  const [formData, setFormData] = useState<any>([]);
+  const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
+  // const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
   const { mutate: removeCartItemMutation, isPending: cartItemPending } =
@@ -61,7 +65,9 @@ const CartItem = ({ item }: any) => {
         <div className="flex gap-2 items-center">
           <LocationTwoSvg />
           <p className="text-primary-green font-semibold">
-            {item?.shop?.address?.address_line_1}
+            {item?.shop?.address?.display_my_address
+              ? item?.shop?.address?.address_line_1
+              : `${item?.shop?.address?.city}, ${item?.shop?.address?.state}`}
           </p>
         </div>
 
@@ -72,17 +78,16 @@ const CartItem = ({ item }: any) => {
             setCartId(item?.id);
             removeCartMutation();
           }}
-          className={`absolute right-2 top-2 px-3 py-1 text-sm grid place-items-center rounded-full font-semibold bg-accent-red text-white ${
+          className={`absolute right-2 top-2 size-8 text-sm grid place-items-center rounded-full font-semibold bg-accent-red text-white ${
             cartPending ? "cursor-not-allowed" : "cursor-pointer"
           }`}
         >
           {cartPending && cartId === item?.id ? (
             <p className="flex gap-2 items-center justify-center">
               <CgSpinnerTwo className="animate-spin" />
-              <span>Deleting...</span>
             </p>
           ) : (
-            "Delete cart"
+            <RiDeleteBin6Line className="text-lg" />
           )}
         </button>
       </div>
@@ -171,7 +176,10 @@ const CartItem = ({ item }: any) => {
       {/* Add to cart */}
       <div className="flex justify-end">
         <button
-          onClick={() => setShippingOptionsOpen(true)}
+          onClick={() => {
+            setShippingOptionsOpen(true);
+            setCartId(item?.id);
+          }}
           className="bg-primary-green text-white cursor-pointer font-semibold rounded !w-fit px-4 !py-2 !text-sm"
         >
           Proceed to Checkout
@@ -191,8 +199,9 @@ const CartItem = ({ item }: any) => {
           }}
           onSuccess={() => {
             setShippingOptionsOpen(false);
-            setSuccessOpen(true);
+            // setSuccessOpen(true);
           }}
+          onClose={() => setShippingOptionsOpen(false)}
         />
       </Modal>
 
@@ -200,11 +209,17 @@ const CartItem = ({ item }: any) => {
         open={shippingAddressOpen}
         onClose={() => setShippingAddressOpen(false)}
       >
-        <ShippingAddress />
+        <ShippingAddress
+          setFormData={setFormData}
+          onNext={() => {
+            setShippingAddressOpen(false);
+            setPaypalOpen(true);
+          }}
+        />
       </Modal>
 
-      <Modal open={successOpen} onClose={() => setSuccessOpen(false)}>
-        <SuccessModal />
+      <Modal open={paypalOpen} onClose={() => setPaypalOpen(false)}>
+        <CheckoutPaypalModal cart_id={cartId} formData={formData} />
       </Modal>
     </div>
   );

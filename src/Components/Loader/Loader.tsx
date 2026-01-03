@@ -608,3 +608,188 @@ export const ShopCardSkeleton = () => {
     </div>
   );
 };
+
+const OrderCardSkeleton = () => {
+  return (
+    <div className="border border-gray-300 rounded-[8px] animate-pulse">
+      {/* Top section */}
+      <div className="px-3 md:px-6 py-2 md:py-4">
+        <div className="flex flex-col sm:flex-row gap-6">
+          <div>
+            <div className="h-4 w-28 bg-gray-300 rounded mb-2" />
+            <div className="h-5 w-32 bg-gray-200 rounded" />
+          </div>
+          <div className="h-5 w-24 bg-gray-200 rounded self-center" />
+        </div>
+      </div>
+
+      <div className="w-full bg-gray-300 h-[1px]" />
+
+      {/* Bottom section */}
+      <div className="pt-2 px-4 pb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
+          <div className="w-full">
+            <div className="h-6 w-48 bg-gray-300 rounded mb-3" />
+            <div className="h-4 w-64 bg-gray-200 rounded mb-4" />
+
+            <div className="flex gap-x-3 mb-4">
+              <div className="h-[117px] w-[115px] bg-gray-300 rounded" />
+              <div className="flex flex-col gap-3">
+                <div className="h-5 w-40 bg-gray-300 rounded" />
+                <div className="h-4 w-28 bg-gray-200 rounded" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OrderCardSkeleton;
+
+export const CustomerReviewCardSkeleton = () => {
+  return (
+    <div className="border border-gray-300 rounded-xl p-6 shadow-md bg-white flex flex-col items-center text-center animate-pulse">
+      <div className="size-16 rounded-full mb-4 bg-gray-200" />
+      <div className="h-5 w-40 bg-gray-200 rounded mb-2" />
+      <div className="h-4 w-24 bg-gray-200 rounded mb-4" />
+      <div className="space-y-2 w-full">
+        <div className="h-4 w-full bg-gray-200 rounded" />
+        <div className="h-4 w-5/6 bg-gray-200 rounded mx-auto" />
+      </div>
+      <div className="flex gap-1 mt-4">
+        {[1, 2, 3, 4, 5].map(i => (
+          <div key={i} className="h-4 w-4 bg-gray-200 rounded" />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const OrderTrackSkeleton = () => {
+  return (
+    <div className="mb-5 ml-4 animate-pulse">
+      <div className="bg-white p-4 rounded-lg border border-gray-300">
+        <p className="h-4 bg-gray-300 rounded w-3/4 mb-2" />
+        <p className="h-3 bg-gray-200 rounded w-1/2" />
+      </div>
+    </div>
+  );
+};
+
+export const NotificationSkeleton = () => {
+  return (
+    <div className="border-b border-[#E5E5E5] flex justify-between p-2.5 md:p-5 items-center animate-pulse">
+      <div className="flex gap-2.5 md:gap-x-5 items-center">
+        <div className="rounded-full size-[50px] md:size-[65px] bg-gray-300" />
+        <div className="space-y-2">
+          <div className="h-4 w-40 bg-gray-300 rounded" />
+          <div className="h-4 w-64 bg-gray-200 rounded" />
+        </div>
+      </div>
+
+      <div className="h-3 w-16 bg-gray-200 rounded" />
+    </div>
+  );
+};
+
+export const OrderRowSkeleton = () => {
+  return (
+    <tr className="border-b border-gray-300 animate-pulse">
+      <td className="py-4 px-4">
+        <div className="h-4 w-24 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-4 w-20 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="flex flex-col gap-2">
+          <div className="h-4 w-28 bg-gray-200 rounded" />
+          <div className="h-3 w-36 bg-gray-200 rounded" />
+        </div>
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-4 w-10 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-4 w-16 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-6 w-24 bg-gray-200 rounded-full" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-4 w-20 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4 text-center">
+        <div className="h-5 w-5 mx-auto bg-gray-200 rounded-full" />
+      </td>
+    </tr>
+  );
+};
+
+export const ProductRowSkeleton = () => {
+  return (
+    <tr className="border-b border-gray-300 animate-pulse">
+      <td className="py-3">
+        <div className="flex items-center gap-5">
+          <div className="h-[80px] w-[100px] rounded-lg bg-gray-200" />
+          <div className="h-4 w-40 bg-gray-200 rounded" />
+        </div>
+      </td>
+      <td>
+        <div className="h-8 w-24 bg-gray-200 rounded-full" />
+      </td>
+      <td>
+        <div className="h-4 w-20 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-4 w-12 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-4 w-16 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-4 w-16 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-8 w-24 bg-gray-200 rounded-full" />
+      </td>
+      <td>
+        <div className="h-5 w-5 bg-gray-200 rounded-full mx-auto" />
+      </td>
+    </tr>
+  );
+};
+
+export const PaymentRowSkeleton = () => {
+  return (
+    <tr className="border-b border-gray-300 animate-pulse">
+      <td className="py-4 px-4">
+        <div className="h-4 w-28 bg-gray-200 rounded" />
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-4 w-24 bg-gray-200 rounded" />
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-4 w-36 bg-gray-200 rounded" />
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-4 w-20 bg-gray-200 rounded" />
+      </td>
+      <td className="py-4 px-4">
+        <div className="h-4 w-24 bg-gray-200 rounded capitalize" />
+      </td>
+      <td className="py-4 px-4">
+        <div className="min-w-[25px] h-7 bg-gray-200 rounded-full" />
+      </td>
+    </tr>
+  );
+};

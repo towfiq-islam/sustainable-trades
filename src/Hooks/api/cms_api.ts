@@ -643,3 +643,23 @@ export const getAllProducts = (search: string, lat: number, lng: number) => {
     },
   });
 };
+
+// Checkout
+export const useCheckout = (cart_id: number | null) => {
+  const queryClient = useQueryClient();
+  return useClientApi({
+    method: "post",
+    key: ["checkout", cart_id],
+    isPrivate: true,
+    endpoint: `/api/checkout/${cart_id}`,
+    onSuccess: (data: any) => {
+      if (data?.status || data?.success) {
+        queryClient.invalidateQueries("get-product-cart" as any);
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};

@@ -13,15 +13,30 @@ import {
 } from "@/Hooks/api/dashboard_api";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
+import { useForm } from "react-hook-form";
+import { useSendMessage } from "@/Hooks/api/chat_api";
+import { CgSpinnerTwo } from "react-icons/cg";
+import toast from "react-hot-toast";
+import Link from "next/link";
+
+interface FormValues {
+  message: string;
+}
 
 const Page = () => {
   const params = useParams();
   const order_id = Number(params.id);
   const [open, isOpen] = useState<boolean>(false);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [noteModalOpen, setNoteModalOpen] = useState(false);
+  const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [heights, setHeights] = useState<Array<string>>([]);
   const { mutate: updateStatusMutation, isPending: isCancelling } =
     useUpdateOrderStatus();
+  const { mutate: sendMessageMutation, isPending: isSending } =
+    useSendMessage();
   const { data: singleOrder, isLoading } = getSingleOrder(order_id);
-
+  const { register, handleSubmit, reset } = useForm<FormValues>();
   const orderHistory = singleOrder?.data?.order_status_history ?? [];
   const currentStep = orderHistory.length - 1;
   console.log(singleOrder?.data);
@@ -34,15 +49,21 @@ const Page = () => {
     { label: "Order Cancelled", path: "cancelled" },
   ];
 
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-  // Separate modal states
-  const [noteModalOpen, setNoteModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [messageModalOpen, setMessageModalOpen] = useState(false);
+  const onSubmit = async (data: FormValues) => {
+    const payload = {
+      ...data,
+      receiver_id: singleOrder?.data?.user_id,
+    };
 
-  // refs for sidebar accordion
-  const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [heights, setHeights] = useState<Array<string>>([]);
+    await sendMessageMutation(payload, {
+      onSuccess: (data: any) => {
+        if (data?.success) {
+          toast.success(data?.message);
+          reset();
+        }
+      },
+    });
+  };
 
   useEffect(() => {
     const newHeights = contentRefs.current.map((ref, idx) => {
@@ -58,16 +79,11 @@ const Page = () => {
       content: (
         <div className="text-[#4B4A47] text-[14px] py-2">
           <p>
-            <strong>Name:</strong> John Doe
+            <strong>Name:</strong> {singleOrder?.data?.user?.first_name}{" "}
+            {singleOrder?.data?.user?.last_name}
           </p>
           <p>
-            <strong>Email:</strong> john@example.com
-          </p>
-          <p>
-            <strong>Phone:</strong> +1234567890
-          </p>
-          <p>
-            <strong>Address:</strong> 123 Street, City, Country
+            <strong>Email:</strong> {singleOrder?.data?.user?.email}
           </p>
         </div>
       ),
@@ -77,33 +93,36 @@ const Page = () => {
       content: (
         <div className="text-[#4B4A47] text-[14px] py-2">
           <p>
-            <strong>Name:</strong> John Doe
+            <strong>Name:</strong>{" "}
+            {singleOrder?.data?.shipping_address?.first_name}{" "}
+            {singleOrder?.data?.shipping_address?.last_name}
           </p>
           <p>
-            <strong>Phone:</strong> +1234567890
+            <strong>Phone:</strong> {singleOrder?.data?.shipping_address?.phone}
           </p>
           <p>
-            <strong>Address:</strong> 123 Street, City, Country
+            <strong>Address:</strong>{" "}
+            {singleOrder?.data?.shipping_address?.address}
           </p>
         </div>
       ),
     },
-    {
-      title: "Billing Address",
-      content: (
-        <div className="text-[#4B4A47] text-[14px] py-2">
-          <p>
-            <strong>Name:</strong> John Doe
-          </p>
-          <p>
-            <strong>Phone:</strong> +1234567890
-          </p>
-          <p>
-            <strong>Address:</strong> 456 Street, City, Country
-          </p>
-        </div>
-      ),
-    },
+    // {
+    //   title: "Billing Address",
+    //   content: (
+    //     <div className="text-[#4B4A47] text-[14px] py-2">
+    //       <p>
+    //         <strong>Name:</strong> John Doe
+    //       </p>
+    //       <p>
+    //         <strong>Phone:</strong> +1234567890
+    //       </p>
+    //       <p>
+    //         <strong>Address:</strong> 456 Street, City, Country
+    //       </p>
+    //     </div>
+    //   ),
+    // },
     {
       title: "Order Note",
       content: <></>,
@@ -227,7 +246,7 @@ const Page = () => {
 
         {/* Right Sidebar */}
         <div className="w-full lg:w-[35%] 2xl:w-[25%] space-y-4">
-          {accordionData.map((item, idx) => (
+          {accordionData?.map((item, idx) => (
             <div
               key={item.title}
               className="border border-[#E1E2E2] rounded-lg overflow-hidden"
@@ -261,62 +280,76 @@ const Page = () => {
                   style={{ maxHeight: heights[idx] }}
                   className="overflow-hidden transition-all duration-500 ease-in-out px-3"
                 >
-                  {item.content}
+                  {item?.content}
                 </div>
               )}
             </div>
           ))}
-          <div className="border p-4 rounded-lg">
+
+          <div className="border border-gray-300 p-4 rounded-lg">
             <h2 className="text-[24px] font-normal text-[#000]">
               Message to Buyer
             </h2>
-            <div className="pt-5">
-              <h4 className="text-[16px] font-semibold text-[#000]">
-                Amy Woods
-              </h4>
-              <h5 className="text-[16px] font-semibold text-[#000]">
-                Order Number: #155796{" "}
-              </h5>
-            </div>
-            <textarea
-              placeholder="Enter Message"
-              className="py-2 px-3 rounded-[8px] border border-[#8E2F2F]  text-[16px] font-normal text-[#000] cursor-pointer hover:border-green-500 duration-300 ease-in-out w-full mt-5 h-[280px]"
-            />
-            <div className="flex flex-col gap-y-3 mt-5">
-              <button className="auth-secondary-btn">Send Messages</button>
-              <button className="auth-primary-btn">Go to Messages</button>
-            </div>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <textarea
+                placeholder="Enter Message"
+                className="py-2 px-3 rounded-[8px] border border-gray-300 cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full mt-5 h-[280px]"
+                {...register("message", {
+                  required: "Message is required",
+                })}
+              />
+
+              <div className="flex flex-col gap-y-3 mt-5">
+                <button
+                  type="submit"
+                  disabled={isSending}
+                  className={`auth-secondary-btn w-full ${
+                    isSending
+                      ? "!cursor-not-allowed opacity-85"
+                      : "cursor-pointer"
+                  }`}
+                >
+                  {isSending ? (
+                    <p className="flex gap-2 items-center justify-center">
+                      <CgSpinnerTwo className="animate-spin text-xl" />
+                      <span>Please wait....</span>
+                    </p>
+                  ) : (
+                    "Send Messages"
+                  )}
+                </button>
+
+                <Link
+                  href={`/dashboard/customer/messages/inbox/${singleOrder?.data?.user_id}`}
+                  className="auth-primary-btn !text-center"
+                >
+                  Go to Messages
+                </Link>
+              </div>
+            </form>
           </div>
 
-          {status === "Package Delivered" ? (
-            ""
-          ) : (
-            <div className="mt-12">
-              <button
-                onClick={() =>
-                  updateStatusMutation({
-                    endpoint: `/api/order-status-update/${order_id}`,
-                    status: "cancelled",
-                  })
-                }
-                className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] text-[16px] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full"
-              >
-                {isCancelling ? "Cancelling...." : "Cancel Order"}
-              </button>
-            </div>
-          )}
+          <div className="mt-12">
+            <button
+              onClick={() =>
+                updateStatusMutation({
+                  endpoint: `/api/order-status-update/${order_id}`,
+                  status: "cancelled",
+                })
+              }
+              className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] text-[16px] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full"
+            >
+              {isCancelling ? "Cancelling...." : "Cancel Order"}
+            </button>
+          </div>
         </div>
       </div>
       {/* Order Summary */}
       <div className="block lg:hidden mt-20">
         <OrderSummary data={singleOrder?.data} />
       </div>
-      {/* Modals */}
-      <OrderNote
-        isOpen={noteModalOpen}
-        onClose={() => setNoteModalOpen(false)}
-        note="This is the detailed order note info."
-      />
+
       {/* <EditOrderModal
         isOpen={editModalOpen}
         onClose={() => {
@@ -326,10 +359,13 @@ const Page = () => {
           }
         }}
       /> */}
-      {/* <SendMessageModal
-        isOpen={messageModalOpen}
-        onClose={() => setMessageModalOpen(false)}
-      /> */}
+
+      <Modal open={noteModalOpen} onClose={() => setNoteModalOpen(false)}>
+        <OrderNote
+          order_id={order_id}
+          onClose={() => setNoteModalOpen(false)}
+        />
+      </Modal>
 
       <Modal open={open} onClose={() => isOpen(false)}>
         <TrackPackageModal order_id={order_id} />

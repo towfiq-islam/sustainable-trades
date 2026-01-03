@@ -1,7 +1,11 @@
-import Thumbnail from "../../Assets/Thumbnail.png";
+"use client";
 import Image from "next/image";
 import moment from "moment";
 import { useDownloadInvoice } from "@/Hooks/api/dashboard_api";
+
+type OrderImage = {
+  image: string;
+};
 
 type orderItem = {
   order_id: number;
@@ -9,6 +13,7 @@ type orderItem = {
   product: {
     product_name: string;
     product_price: number;
+    images: OrderImage[];
   };
 };
 
@@ -88,9 +93,16 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
               className="flex flex-col md:flex-row justify-between md:items-center border-b border-gray-300 px-6 py-4"
             >
               <div className="flex flex-col md:flex-row gap-x-6 md:items-center">
-                <figure>
-                  <Image src={Thumbnail} alt="Thumbnail" unoptimized />
+                <figure className="w-36 h-28 rounded border border-gray-100 relative">
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${order?.product?.images?.[0]?.image}`}
+                    alt="Thumbnail"
+                    unoptimized
+                    fill
+                    className="w-full h-full object-cover rounded"
+                  />
                 </figure>
+
                 <h3 className="text-[20px] font-semibold text-[#13141D] truncate">
                   {order?.product?.product_name}
                 </h3>

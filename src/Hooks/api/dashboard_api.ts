@@ -580,3 +580,21 @@ export const getSingleOrder = (order_id: number | null) => {
     endpoint: `/api/order/${order_id}`,
   });
 };
+
+// Add Order Note
+export const useOrderNote = (order_id: number) => {
+  return useClientApi({
+    method: "post",
+    key: ["add-order-note", order_id],
+    isPrivate: true,
+    endpoint: `/api/order-note/${order_id}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};

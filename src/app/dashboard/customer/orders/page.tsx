@@ -162,14 +162,17 @@ const page = () => {
 
                     <button
                       disabled={isPending}
-                      onClick={() => handleDownloadInvoice(order?.id)}
+                      onClick={() => {
+                        handleDownloadInvoice(order?.id);
+                        setOrderId(order?.id);
+                      }}
                       className={`text-[#1F4038] font-sans font-bold ${
                         isPending
                           ? "cursor-not-allowed"
                           : "cursor-pointer underline"
                       }`}
                     >
-                      {isPending ? (
+                      {isPending && order?.id === orderId ? (
                         <>
                           <span className="inline-block animate-spin">⏳</span>{" "}
                           Downloading

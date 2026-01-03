@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosSecure } from "../useAxiosSecure";
 
 // Add Product
@@ -168,7 +168,6 @@ export const useCancel = () => {
 };
 
 //  single trade
-
 export const useSingleTradeOffer = (id: any) => {
   return useClientApi({
     method: "get",
@@ -515,5 +514,118 @@ export const getOrderHistory = (order_id: number | null) => {
     isPrivate: true,
     key: ["get-order-history", order_id],
     endpoint: `/api/my-order/${order_id}/history`,
+  });
+};
+
+// Cancel Membership
+export const useCancelMembership = () => {
+  const queryClient = useQueryClient();
+  return useClientApi({
+    method: "post",
+    key: ["cancel-membership"],
+    isPrivate: true,
+    endpoint: "/api/paypal/cancel-membership",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        queryClient.invalidateQueries("get-pricing" as any);
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get Orders
+export const getOrders = (status: string) => {
+  return useClientApi({
+    method: "get",
+    key: ["get-orders", status],
+    isPrivate: true,
+    endpoint: "/api/orders",
+    params: { status },
+    queryOptions: {
+      retry: false,
+    },
+  });
+};
+
+// Update Order Status
+export const useUpdateOrderStatus = () => {
+  const queryClient = useQueryClient();
+  return useClientApi({
+    method: "post",
+    key: ["update-order-status"],
+    isPrivate: true,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        queryClient.invalidateQueries("get-orders" as any);
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get Single Order
+export const getSingleOrder = (order_id: number | null) => {
+  return useClientApi({
+    method: "get",
+    isPrivate: true,
+    key: ["get-single-order", order_id],
+    endpoint: `/api/order/${order_id}`,
+  });
+};
+
+// Add Order Note
+export const useOrderNote = (order_id: number) => {
+  return useClientApi({
+    method: "post",
+    key: ["add-order-note", order_id],
+    isPrivate: true,
+    endpoint: `/api/order-note/${order_id}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Onboarding
+export const useOnboarding = () => {
+  return useClientApi({
+    method: "post",
+    key: ["onboarding"],
+    isPrivate: true,
+    endpoint: "/api/paypal/onboard",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get Payments
+export const getPayments = (status: string) => {
+  return useClientApi({
+    method: "get",
+    key: ["get-payments", status],
+    isPrivate: true,
+    endpoint: "/api/payment-report",
+    params: { status },
+    queryOptions: {
+      retry: false,
+    },
   });
 };

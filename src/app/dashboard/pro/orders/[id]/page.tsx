@@ -1,36 +1,87 @@
 "use client";
-
+import { useParams, useRouter } from "next/navigation";
 import { FaAngleDown } from "react-icons/fa";
-import { Pen } from "@/Components/Svg/SvgContainer";
+import { PuffLoader } from "react-spinners";
+import { GoBackSvg, Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
-import React, { useEffect, useRef, useState } from "react";
-import EditOrderModal from "@/Components/Modals/EditOrderModal";
+import { useEffect, useRef, useState } from "react";
 import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
 import Proorderproduct from "@/Components/Prodashboardcomponents/Proorderproduct";
-// import EditOrderModal from "@/Components/Modals/EditOrderModal";
-// import SendMessageModal from "@/Components/Modals/SendMessageModal";
+import {
+  getSingleOrder,
+  useUpdateOrderStatus,
+} from "@/Hooks/api/dashboard_api";
+import Modal from "@/Components/Common/Modal";
+import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
+import { useForm } from "react-hook-form";
+import { useSendMessage } from "@/Hooks/api/chat_api";
+import { CgSpinnerTwo } from "react-icons/cg";
+import toast from "react-hot-toast";
+import Link from "next/link";
+
+interface FormValues {
+  message: string;
+}
 
 const Page = () => {
-  const [status, setStatus] = useState("Order Confirmed");
+  const router = useRouter();
+  const params = useParams();
+  const order_id = Number(params.id);
+  const [open, isOpen] = useState<boolean>(false);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  // Separate modal states
   const [noteModalOpen, setNoteModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [messageModalOpen, setMessageModalOpen] = useState(false);
-
-  const steps = [
-    { label: "Order Confirmed", date: "25 Jun 2024" },
-    { label: "Order Packaged", date: "25 Jun 2024" },
-    { label: "Package Shipped", date: "" },
-    { label: "Package Delivered", date: "" },
-  ];
-
-  const currentStep = steps.findIndex((step) => step.label === status);
-
-  // refs for sidebar accordion
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
+  const { mutate: updateStatusMutation, isPending: isCancelling } =
+    useUpdateOrderStatus();
+  const { mutate: sendMessageMutation, isPending: isSending } =
+    useSendMessage();
+  const { data: singleOrder, isLoading } = getSingleOrder(order_id);
+  const { register, handleSubmit, reset } = useForm<FormValues>();
+  const orderHistory = singleOrder?.data?.order_status_history ?? [];
+  console.log(singleOrder?.data);
+
+  const steps = [
+    { label: "Order Confirmed", key: "confirmed" },
+    { label: "Order Processing", key: "processing" },
+    { label: "Order Shipped", key: "shipped" },
+    { label: "Order Delivered", key: "delivered" },
+    { label: "Order Cancelled", key: "cancelled" },
+  ];
+
+  const normalizeStatus = (content: string) => {
+    const text = content.toLowerCase();
+
+    if (text.includes("confirmed")) return "confirmed";
+    if (text.includes("processed") || text.includes("processing"))
+      return "processing";
+    if (text.includes("shipped")) return "shipped";
+    if (text.includes("delivered")) return "delivered";
+    if (text.includes("cancelled") || text.includes("canceled"))
+      return "cancelled";
+
+    return null;
+  };
+
+  const enabledSteps = orderHistory
+    ?.map((item: any) => normalizeStatus(item.content))
+    .filter(Boolean);
+
+  const onSubmit = async (data: FormValues) => {
+    const payload = {
+      ...data,
+      receiver_id: singleOrder?.data?.user_id,
+    };
+
+    await sendMessageMutation(payload, {
+      onSuccess: (data: any) => {
+        if (data?.success) {
+          toast.success(data?.message);
+          reset();
+        }
+      },
+    });
+  };
 
   useEffect(() => {
     const newHeights = contentRefs.current.map((ref, idx) => {
@@ -46,16 +97,11 @@ const Page = () => {
       content: (
         <div className="text-[#4B4A47] text-[14px] py-2">
           <p>
-            <strong>Name:</strong> John Doe
+            <strong>Name:</strong> {singleOrder?.data?.user?.first_name}{" "}
+            {singleOrder?.data?.user?.last_name}
           </p>
           <p>
-            <strong>Email:</strong> john@example.com
-          </p>
-          <p>
-            <strong>Phone:</strong> +1234567890
-          </p>
-          <p>
-            <strong>Address:</strong> 123 Street, City, Country
+            <strong>Email:</strong> {singleOrder?.data?.user?.email}
           </p>
         </div>
       ),
@@ -65,33 +111,36 @@ const Page = () => {
       content: (
         <div className="text-[#4B4A47] text-[14px] py-2">
           <p>
-            <strong>Name:</strong> John Doe
+            <strong>Name:</strong>{" "}
+            {singleOrder?.data?.shipping_address?.first_name}{" "}
+            {singleOrder?.data?.shipping_address?.last_name}
           </p>
           <p>
-            <strong>Phone:</strong> +1234567890
+            <strong>Phone:</strong> {singleOrder?.data?.shipping_address?.phone}
           </p>
           <p>
-            <strong>Address:</strong> 123 Street, City, Country
+            <strong>Address:</strong>{" "}
+            {singleOrder?.data?.shipping_address?.address}
           </p>
         </div>
       ),
     },
-    {
-      title: "Billing Address",
-      content: (
-        <div className="text-[#4B4A47] text-[14px] py-2">
-          <p>
-            <strong>Name:</strong> John Doe
-          </p>
-          <p>
-            <strong>Phone:</strong> +1234567890
-          </p>
-          <p>
-            <strong>Address:</strong> 456 Street, City, Country
-          </p>
-        </div>
-      ),
-    },
+    // {
+    //   title: "Billing Address",
+    //   content: (
+    //     <div className="text-[#4B4A47] text-[14px] py-2">
+    //       <p>
+    //         <strong>Name:</strong> John Doe
+    //       </p>
+    //       <p>
+    //         <strong>Phone:</strong> +1234567890
+    //       </p>
+    //       <p>
+    //         <strong>Address:</strong> 456 Street, City, Country
+    //       </p>
+    //     </div>
+    //   ),
+    // },
     {
       title: "Order Note",
       content: <></>,
@@ -99,28 +148,36 @@ const Page = () => {
     },
   ];
 
+  if (isLoading) {
+    return (
+      <div className="h-[80vh] flex justify-center items-center">
+        <PuffLoader color="#274f45" />
+      </div>
+    );
+  }
+
   return (
-    <div className="2xl:px-6 py-4 ">
+    <>
+      {/* Back Btn */}
+      <button
+        onClick={() => router.back()}
+        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
+      >
+        <span className="group-hover:-translate-x-1 duration-300 transition-transform">
+          <GoBackSvg />
+        </span>
+        <span>Back</span>
+      </button>
+
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between">
         <h3 className="text-[40px] font-semibold text-[#000]">Order Details</h3>
         <div className="flex gap-x-3">
           <button
             className="py-4 px-6 rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out"
-            onClick={() => setMessageModalOpen(true)}
+            onClick={() => isOpen(true)}
           >
             Track Package
-          </button>
-          <button
-            className="py-4 px-6 rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45]duration-300 ease-in-out flex gap-x-1 items-center"
-            onClick={() => {
-              if (!editModalOpen) {
-                setEditModalOpen(true);
-                document.body.style.overflow = "hidden";
-              }
-            }}
-          >
-            <Pen /> Edit Order
           </button>
         </div>
       </div>
@@ -133,13 +190,20 @@ const Page = () => {
           <h4 className="text-[#000] font-bold text-[16px]">Order Status</h4>
           <div className="relative my-3">
             <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              onChange={e => {
+                if (e.target.value) {
+                  updateStatusMutation({
+                    endpoint: `/api/order-status-update/${order_id}`,
+                    status: e.target.value,
+                  });
+                }
+              }}
               className="border border-[#A7A39C] rounded-[8px] cursor-pointer appearance-none outline-0 px-2 py-[10px] w-[190px] text-[#274F45] text-[14px] font-normal"
             >
-              {steps.map((step) => (
-                <option key={step.label} value={step.label}>
-                  {step.label}
+              <option value="">Choose status</option>
+              {steps?.map(step => (
+                <option key={step.label} value={step?.key}>
+                  {step?.label}
                 </option>
               ))}
             </select>
@@ -147,83 +211,80 @@ const Page = () => {
           </div>
 
           {/* Progress Bar */}
-          <div className="flex items-center my-6">
-            {steps.map((step, index) => (
-              <React.Fragment key={step.label}>
-                <div
-                  className={`p-[1px] w-6 h-6 border-2 rounded-full flex justify-center items-center ${
-                    index <= currentStep
-                      ? "border-[#274F45]"
-                      : "border-[#A7A39C]"
-                  }`}
-                >
-                  <div
-                    className={`w-4 h-4 rounded-full ${
-                      index <= currentStep ? "bg-[#274F45]" : "bg-[#A7A39C]"
-                    }`}
-                  ></div>
-                </div>
-                {index !== steps.length - 1 && (
-                  <div
-                    className={`border-dashed border-t xxs:w-[60px] xs:w-[100px] sm:w-[150px] md:w-[190px] ${
-                      index < currentStep
-                        ? "border-[#274F45]"
-                        : "border-[#A7A39C]"
-                    }`}
-                  ></div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start mt-6">
+            {steps.map((step, index) => {
+              const isCompleted = enabledSteps.includes(step.key);
 
-          {/* Step Labels */}
-          <div className="flex gap-x-[35px] md:gap-x-[70px]">
-            {steps.map((step) => (
-              <div key={step.label}>
-                <h5 className="xxs:text-[12px] xs:text-[14px] sm:text-[16px] font-normal text-[#000] font-sans">
-                  {step.label}
-                </h5>
-                {step.date && (
-                  <p className="xxs:text-[12px] xs:text-[14px] sm:text-[16px] font-normal text-[#4B4A47]">
-                    {step.date}
-                  </p>
-                )}
-              </div>
-            ))}
+              return (
+                <div
+                  key={step.key}
+                  className="flex flex-col items-center relative"
+                >
+                  {/* Connector */}
+                  {index !== 0 && (
+                    <div
+                      className={`absolute top-3 -left-1/2 w-full border-t border-dashed ${
+                        isCompleted ? "border-[#274F45]" : "border-[#A7A39C]"
+                      }`}
+                    />
+                  )}
+
+                  {/* Circle */}
+                  <div
+                    className={`z-10 size-6 rounded-full border-2 flex items-center justify-center ${
+                      isCompleted ? "border-[#274F45]" : "border-[#A7A39C]"
+                    }`}
+                  >
+                    <div
+                      className={`size-4 rounded-full ${
+                        isCompleted ? "bg-[#274F45]" : "bg-[#A7A39C]"
+                      }`}
+                    />
+                  </div>
+
+                  {/* Label */}
+                  <h5
+                    className={`mt-3 text-center text-[14px] font-medium ${
+                      isCompleted ? "text-[#000]" : "text-[#A7A39C]"
+                    }`}
+                  >
+                    {step.label}
+                  </h5>
+                </div>
+              );
+            })}
           </div>
 
           {/* Products */}
           <div className="mt-6">
-            <Proorderproduct />
+            <Proorderproduct data={singleOrder?.data} order_id={order_id} />
           </div>
 
           {/* Step Buttons */}
-          {status === "Package Delivered" && (
-            <div className="my-6 flex flex-wrap md:flex-nowrap  stepbutton gap-3">
-              <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out">
-                Track Package
-              </button>
-              <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out ">
-                Return or replace
-              </button>
-              <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out ">
-                Get Help
-              </button>
-              <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out">
-                Request a Review
-              </button>
-            </div>
-          )}
+          {/* <div className="my-6 flex flex-wrap md:flex-nowrap  stepbutton gap-3">
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out">
+              Track Package
+            </button>
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out ">
+              Return or replace
+            </button>
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out ">
+              Get Help
+            </button>
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out">
+              Request a Review
+            </button>
+          </div> */}
 
           {/* Order Summary */}
           <div className="hidden lg:block mt-20">
-            <OrderSummary />
+            <OrderSummary data={singleOrder?.data} />
           </div>
         </div>
 
         {/* Right Sidebar */}
         <div className="w-full lg:w-[35%] 2xl:w-[25%] space-y-4">
-          {accordionData.map((item, idx) => (
+          {accordionData?.map((item, idx) => (
             <div
               key={item.title}
               className="border border-[#E1E2E2] rounded-lg overflow-hidden"
@@ -257,55 +318,87 @@ const Page = () => {
                   style={{ maxHeight: heights[idx] }}
                   className="overflow-hidden transition-all duration-500 ease-in-out px-3"
                 >
-                  {item.content}
+                  {item?.content}
                 </div>
               )}
             </div>
           ))}
-          <div className="border p-4 rounded-lg">
+
+          <div className="border border-gray-300 p-4 rounded-lg">
             <h2 className="text-[24px] font-normal text-[#000]">
               Message to Buyer
             </h2>
-            <div className="pt-5">
-              <h4 className="text-[16px] font-semibold text-[#000]">
-                Amy Woods
-              </h4>
-              <h5 className="text-[16px] font-semibold text-[#000]">
-                Order Number: #155796{" "}
-              </h5>
-            </div>
-            <textarea
-              placeholder="Enter Message"
-              className="py-2 px-3 rounded-[8px] border border-[#8E2F2F]  text-[16px] font-normal text-[#000] cursor-pointer hover:border-green-500 duration-300 ease-in-out w-full mt-5 h-[280px]"
-            />
-            <div className="flex flex-col gap-y-3 mt-5">
-              <button className="auth-secondary-btn">Send Messages</button>
-              <button className="auth-primary-btn">Go to Messages</button>
-            </div>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <textarea
+                placeholder="Enter Message"
+                className="py-2 px-3 rounded-[8px] border border-gray-300 cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full mt-5 h-[280px]"
+                {...register("message", {
+                  required: "Message is required",
+                })}
+              />
+
+              <div className="flex flex-col gap-y-3 mt-5">
+                <button
+                  type="submit"
+                  disabled={isSending}
+                  className={`auth-secondary-btn w-full ${
+                    isSending
+                      ? "!cursor-not-allowed opacity-85"
+                      : "cursor-pointer"
+                  }`}
+                >
+                  {isSending ? (
+                    <p className="flex gap-2 items-center justify-center">
+                      <CgSpinnerTwo className="animate-spin text-xl" />
+                      <span>Please wait....</span>
+                    </p>
+                  ) : (
+                    "Send Messages"
+                  )}
+                </button>
+
+                <Link
+                  href={`/dashboard/${
+                    singleOrder?.data?.user?.role === "vendor" &&
+                    singleOrder?.data?.user?.membership?.membership_type ===
+                      "pro"
+                      ? "pro"
+                      : singleOrder?.data?.user?.role === "vendor" &&
+                        singleOrder?.data?.user?.membership?.membership_type ===
+                          "basic"
+                      ? "basic"
+                      : "customer"
+                  }/messages/inbox/${singleOrder?.data?.user_id}`}
+                  className="auth-primary-btn !text-center"
+                >
+                  Go to Messages
+                </Link>
+              </div>
+            </form>
           </div>
 
-          {status === "Package Delivered" ? (
-            ""
-          ) : (
-            <div className="mt-12">
-              <button className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] text-[16px] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full">
-                Cancel Order
-              </button>
-            </div>
-          )}
+          <div className="mt-12">
+            <button
+              onClick={() =>
+                updateStatusMutation({
+                  endpoint: `/api/order-status-update/${order_id}`,
+                  status: "cancelled",
+                })
+              }
+              className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] text-[16px] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full"
+            >
+              {isCancelling ? "Cancelling...." : "Cancel Order"}
+            </button>
+          </div>
         </div>
       </div>
       {/* Order Summary */}
       <div className="block lg:hidden mt-20">
-        <OrderSummary />
+        <OrderSummary data={singleOrder?.data} />
       </div>
-      {/* Modals */}
-      <OrderNote
-        isOpen={noteModalOpen}
-        onClose={() => setNoteModalOpen(false)}
-        note="This is the detailed order note info."
-      />
-      <EditOrderModal
+
+      {/* <EditOrderModal
         isOpen={editModalOpen}
         onClose={() => {
           if (editModalOpen) {
@@ -313,12 +406,19 @@ const Page = () => {
             document.body.style.overflow = "visible";
           }
         }}
-      />
-      {/* <SendMessageModal
-        isOpen={messageModalOpen}
-        onClose={() => setMessageModalOpen(false)}
       /> */}
-    </div>
+
+      <Modal open={noteModalOpen} onClose={() => setNoteModalOpen(false)}>
+        <OrderNote
+          order_id={order_id}
+          onClose={() => setNoteModalOpen(false)}
+        />
+      </Modal>
+
+      <Modal open={open} onClose={() => isOpen(false)}>
+        <TrackPackageModal order_id={order_id} />
+      </Modal>
+    </>
   );
 };
 

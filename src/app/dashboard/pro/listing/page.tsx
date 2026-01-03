@@ -3,9 +3,8 @@ import Link from "next/link";
 import { FaSearch } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
 import Image, { StaticImageData } from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getallListings } from "@/Hooks/api/dashboard_api";
-import { Export, Import } from "@/Components/Svg/SvgContainer";
 import {
   statusColorsinventory,
   visibilityColors,
@@ -68,13 +67,6 @@ export default function Page() {
     );
   };
 
-  const selectAll = () => setSelected(products.map(p => p.id));
-  const deselectAll = () => setSelected([]);
-  const deleteSelected = () => {
-    setProducts(products.filter(p => !selected.includes(p.id)));
-    setSelected([]);
-  };
-
   const filteredProducts = products.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -108,60 +100,23 @@ export default function Page() {
               Add Product
             </button>
           </Link>
-          <button className="flex w-full lg:w-fit items-center justify-center gap-x-2 border border-[#274F45] text-[#274F45] px-6 h-[45px] lg:h-[50px] rounded-lg text-[16px]">
+
+          {/* <button className="flex w-full lg:w-fit items-center justify-center gap-x-2 border border-[#274F45] text-[#274F45] px-6 h-[45px] lg:h-[50px] rounded-lg text-[16px]">
             Export
             <Export />
           </button>
           <button className="flex w-full lg:w-fit items-center justify-center gap-x-2 bg-[#274F45] text-white px-6 h-[45px] lg:h-[50px] rounded-lg text-[16px]">
             Import
             <Import />
-          </button>
+          </button> */}
         </div>
       </div>
-
-      {/* Bulk Action Bar */}
-      {selected.length > 0 && (
-        <div className="flex flex-col lg:flex-row justify-between items-start md:items-center bg-[#F0EEE9] py-4 px-6 mb-6 mt-6 rounded gap-4">
-          <span className="flex items-center gap-x-3 font-bold text-[#274F45] text-[14px]">
-            <input
-              type="checkbox"
-              checked={selected.length === products.length}
-              onChange={e => (e.target.checked ? selectAll() : deselectAll())}
-            />
-            {selected.length} Selected
-          </span>
-          <div className="flex flex-wrap gap-x-6 gap-y-2">
-            <button
-              onClick={deselectAll}
-              className="font-bold text-[#274F45]/50 text-[14px]"
-            >
-              Deselect All
-            </button>
-            <button
-              onClick={selectAll}
-              className="font-bold text-[#274F45]/50 text-[14px]"
-            >
-              Select All
-            </button>
-            <button className="font-bold text-[#274F45]/50 text-[14px]">
-              Export
-            </button>
-            <button
-              onClick={deleteSelected}
-              className="font-bold text-[#274F45] text-[14px]"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Desktop Table */}
       <div className="hidden lg:block mt-10">
         <table className="w-full border-collapse">
           <thead>
             <tr className="text-left border-b border-[#A7A39C]">
-              <th />
               <th className="text-[#13141D] font-semibold text-[16px]">
                 Product
               </th>
@@ -183,18 +138,11 @@ export default function Page() {
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.map(p => (
+            {filteredProducts?.map(p => (
               <tr
                 key={p.id}
                 className="border-b border-[#A7A39C] hover:bg-gray-50"
               >
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(p.id)}
-                    onChange={() => toggleSelect(p.id)}
-                  />
-                </td>
                 <td className="py-5 text-[#13141D] font-semibold text-[14px]">
                   <div className="flex items-center gap-10">
                     <Image
@@ -238,6 +186,7 @@ export default function Page() {
                     {p.visibility}
                   </span>
                 </td>
+                
                 <td className="relative">
                   <button
                     className="cursor-pointer"
@@ -349,20 +298,6 @@ export default function Page() {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Pagination */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-2 mt-6 text-sm">
-        <span className="text-[#13141D] font-semibold text-[14px]">
-          {filteredProducts.length} of {products.length} products
-        </span>
-        <div className="flex gap-2 text-[#13141D] font-semibold text-[14px]">
-          <button>{"<<"}</button>
-          <button>{"<"}</button>
-          <span>Page 1 of 1</span>
-          <button>{">"}</button>
-          <button>{">>"}</button>
-        </div>
       </div>
     </div>
   );

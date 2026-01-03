@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { getStatusColor, PaymentData } from "@/Components/Data/data";
 
 type paymentdataprops = {
@@ -18,7 +17,6 @@ const PaymentTableReusable: React.FC<paymentdataprops> = ({
   const [openRow, setOpenRow] = useState<number | null>(null);
   const router = useRouter();
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedData = data.slice(startIndex, startIndex + itemsPerPage);
 
@@ -151,38 +149,6 @@ const PaymentTableReusable: React.FC<paymentdataprops> = ({
           </div>
         ))}
       </div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-between items-center mt-4">
-          <p className="text-sm text-gray-600">
-            {startIndex + 1}-{Math.min(startIndex + itemsPerPage, data.length)}{" "}
-            of {data.length} orders
-          </p>
-
-          <div className="flex items-center gap-3">
-            <button
-              className="px-2 py-1 text-gray-600 disabled:opacity-50 cursor-pointer"
-              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              <FaAngleDoubleLeft />
-            </button>
-
-            <span className="text-sm">
-              Page {currentPage} of {totalPages}
-            </span>
-
-            <button
-              className="px-2 py-1 text-gray-600 disabled:opacity-50 cursor-pointer"
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              disabled={currentPage === totalPages}
-            >
-              <FaAngleDoubleRight />
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

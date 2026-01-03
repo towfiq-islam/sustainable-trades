@@ -1,8 +1,8 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { FaAngleDown } from "react-icons/fa";
 import { PuffLoader } from "react-spinners";
-import { Pen } from "@/Components/Svg/SvgContainer";
+import { GoBackSvg, Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
 import { useEffect, useRef, useState } from "react";
 import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
@@ -24,6 +24,7 @@ interface FormValues {
 }
 
 const Page = () => {
+  const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);
   const [open, isOpen] = useState<boolean>(false);
@@ -38,16 +39,33 @@ const Page = () => {
   const { data: singleOrder, isLoading } = getSingleOrder(order_id);
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const orderHistory = singleOrder?.data?.order_status_history ?? [];
-  const currentStep = orderHistory.length - 1;
   console.log(singleOrder?.data);
 
   const steps = [
-    { label: "Order Confirmed", path: "confirmed" },
-    { label: "Order Processing", path: "processing" },
-    { label: "Order Shipped", path: "shipped" },
-    { label: "Order Delivered", path: "delivered" },
-    { label: "Order Cancelled", path: "cancelled" },
+    { label: "Order Confirmed", key: "confirmed" },
+    { label: "Order Processing", key: "processing" },
+    { label: "Order Shipped", key: "shipped" },
+    { label: "Order Delivered", key: "delivered" },
+    { label: "Order Cancelled", key: "cancelled" },
   ];
+
+  const normalizeStatus = (content: string) => {
+    const text = content.toLowerCase();
+
+    if (text.includes("confirmed")) return "confirmed";
+    if (text.includes("processed") || text.includes("processing"))
+      return "processing";
+    if (text.includes("shipped")) return "shipped";
+    if (text.includes("delivered")) return "delivered";
+    if (text.includes("cancelled") || text.includes("canceled"))
+      return "cancelled";
+
+    return null;
+  };
+
+  const enabledSteps = orderHistory
+    ?.map((item: any) => normalizeStatus(item.content))
+    .filter(Boolean);
 
   const onSubmit = async (data: FormValues) => {
     const payload = {
@@ -139,7 +157,18 @@ const Page = () => {
   }
 
   return (
-    <div className="2xl:px-6 py-4 ">
+    <>
+      {/* Back Btn */}
+      <button
+        onClick={() => router.back()}
+        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
+      >
+        <span className="group-hover:-translate-x-1 duration-300 transition-transform">
+          <GoBackSvg />
+        </span>
+        <span>Back</span>
+      </button>
+
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between">
         <h3 className="text-[40px] font-semibold text-[#000]">Order Details</h3>
@@ -162,16 +191,18 @@ const Page = () => {
           <div className="relative my-3">
             <select
               onChange={e => {
-                updateStatusMutation({
-                  endpoint: `/api/order-status-update/${order_id}`,
-                  status: e.target.value,
-                });
+                if (e.target.value) {
+                  updateStatusMutation({
+                    endpoint: `/api/order-status-update/${order_id}`,
+                    status: e.target.value,
+                  });
+                }
               }}
               className="border border-[#A7A39C] rounded-[8px] cursor-pointer appearance-none outline-0 px-2 py-[10px] w-[190px] text-[#274F45] text-[14px] font-normal"
             >
-              <option disabled>Choose status</option>
+              <option value="">Choose status</option>
               {steps?.map(step => (
-                <option key={step.label} value={step?.path}>
+                <option key={step.label} value={step?.key}>
                   {step?.label}
                 </option>
               ))}
@@ -181,40 +212,47 @@ const Page = () => {
 
           {/* Progress Bar */}
           <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start mt-6">
-            {orderHistory?.map((step: any, index: number) => (
-              <div key={index} className="flex flex-col items-center relative">
-                {/* Connector */}
-                {index !== 0 && (
-                  <div
-                    className={`absolute top-3 -left-1/2 w-full border-t border-dashed ${
-                      index <= currentStep
-                        ? "border-[#274F45]"
-                        : "border-[#A7A39C]"
-                    }`}
-                  />
-                )}
+            {steps.map((step, index) => {
+              const isCompleted = enabledSteps.includes(step.key);
 
-                {/* Circle */}
+              return (
                 <div
-                  className={`z-10 size-6 rounded-full border-2 flex items-center justify-center ${
-                    index <= currentStep
-                      ? "border-[#274F45]"
-                      : "border-[#A7A39C]"
-                  }`}
+                  key={step.key}
+                  className="flex flex-col items-center relative"
                 >
-                  <div
-                    className={`size-4 rounded-full ${
-                      index <= currentStep ? "bg-[#274F45]" : "bg-[#A7A39C]"
-                    }`}
-                  />
-                </div>
+                  {/* Connector */}
+                  {index !== 0 && (
+                    <div
+                      className={`absolute top-3 -left-1/2 w-full border-t border-dashed ${
+                        isCompleted ? "border-[#274F45]" : "border-[#A7A39C]"
+                      }`}
+                    />
+                  )}
 
-                {/* Label */}
-                <h5 className="mt-3 text-center text-[14px] font-medium text-[#000] capitalize">
-                  {step?.content?.trim()?.split(/\s+/)?.pop()}
-                </h5>
-              </div>
-            ))}
+                  {/* Circle */}
+                  <div
+                    className={`z-10 size-6 rounded-full border-2 flex items-center justify-center ${
+                      isCompleted ? "border-[#274F45]" : "border-[#A7A39C]"
+                    }`}
+                  >
+                    <div
+                      className={`size-4 rounded-full ${
+                        isCompleted ? "bg-[#274F45]" : "bg-[#A7A39C]"
+                      }`}
+                    />
+                  </div>
+
+                  {/* Label */}
+                  <h5
+                    className={`mt-3 text-center text-[14px] font-medium ${
+                      isCompleted ? "text-[#000]" : "text-[#A7A39C]"
+                    }`}
+                  >
+                    {step.label}
+                  </h5>
+                </div>
+              );
+            })}
           </div>
 
           {/* Products */}
@@ -380,7 +418,7 @@ const Page = () => {
       <Modal open={open} onClose={() => isOpen(false)}>
         <TrackPackageModal order_id={order_id} />
       </Modal>
-    </div>
+    </>
   );
 };
 

@@ -21,7 +21,7 @@ const TrackPackageModal = ({ order_id }: { order_id: number | null }) => {
           <OrderTrackSkeleton key={idx} />
         ))
       ) : orderHistory?.data?.length === 0 ? (
-        <p className="text-center text-red-500">
+        <p className="text-center text-primary-red">
           No tracking history available
         </p>
       ) : (
@@ -29,7 +29,7 @@ const TrackPackageModal = ({ order_id }: { order_id: number | null }) => {
           {orderHistory?.data?.map((item: OrderItem) => (
             <li key={item.id} className="mb-4 ml-4">
               {/* Dot */}
-              <span className="absolute -left-1.5 flex items-center justify-center size-3 bg-green-500 rounded-full ring-4 ring-white" />
+              <span className="absolute -left-1.5 flex items-center justify-center size-3 bg-accent-red rounded-full ring-4 ring-white" />
 
               {/* Content */}
               <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-300">

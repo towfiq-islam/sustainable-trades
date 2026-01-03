@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import PaidPayments from "@/Components/Common/DashboardReusable/PaidPayments";
 import FailedPayment from "@/Components/Common/DashboardReusable/FailedPayment";
@@ -16,6 +16,7 @@ const page = () => {
         <h2 className="text-[40px] font-lato font-semibold text-[#000]">
           Payments
         </h2>
+
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <div className="relative w-full sm:w-[300px]">
             <div className="flex items-center border border-[#BFBEBE] rounded-[8px] overflow-hidden">
@@ -32,19 +33,12 @@ const page = () => {
               </button>
             </div>
           </div>
-
-          <button
-            className="relative w-full sm:w-fit cursor-pointer py-[10px] border px-9 rounded-md text-[#274F45] font-lato font-semibold overflow-hidden
-              hover:scale-110 duration-500 ease-in-out
-              after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-0 after:bg-[#274F45] after:transition-all after:duration-500 hover:after:h-full hover:after:left-0 hover:text-white"
-          >
-            <span className="relative z-10">Manage Methods</span>
-          </button>
         </div>
       </div>
+      
       <div className="mt-10">
         <ul className="flex gap-5 md:gap-x-10">
-          {tabs.map((tab) => (
+          {tabs.map(tab => (
             <li
               key={tab}
               onClick={() => setisActive(tab)}

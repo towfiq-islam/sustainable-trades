@@ -4,7 +4,7 @@ import SpotlightButton from "./_Components/SpotlightButton";
 const page = () => {
   return (
     <>
-      <SpotlightButton />
+      <SpotlightButton isPro={true} />
       <Community />
     </>
   );

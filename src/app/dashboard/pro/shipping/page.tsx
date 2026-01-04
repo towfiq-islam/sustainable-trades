@@ -340,7 +340,7 @@ const Page = () => {
                   <td className="px-5 text-right">
                     <button
                       onClick={() => handleDeleteRange(range.id)}
-                      className="text-gray-500 hover:text-red-600 opacity-0 group-hover:opacity-100 transition"
+                      className="text-red-600 opacity-0 group-hover:opacity-100 transition cursor-pointer"
                     >
                       <MdDelete />
                     </button>

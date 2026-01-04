@@ -1,11 +1,6 @@
-import React from "react";
 import CreateDiscount from "../page";
 
 const page = () => {
-  return (
-    <div>
-      <CreateDiscount />
-    </div>
-  );
+  return <CreateDiscount />;
 };
 export default page;

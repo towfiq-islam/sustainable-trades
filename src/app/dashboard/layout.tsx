@@ -65,12 +65,12 @@ const proNavLinks = [
       },
     ],
   },
-  {
-    id: 6,
-    label: "Accounting",
-    path: "/dashboard/pro/accounting",
-    icon: <PSixSvg />,
-  },
+  // {
+  //   id: 6,
+  //   label: "Accounting",
+  //   path: "/dashboard/pro/accounting",
+  //   icon: <PSixSvg />,
+  // },
   {
     id: 7,
     label: "Membership",

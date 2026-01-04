@@ -793,3 +793,21 @@ export const PaymentRowSkeleton = () => {
     </tr>
   );
 };
+
+export const DiscountSkeleton = () => {
+  return (
+    <div className="py-10 flex flex-col md:flex-row md:items-start md:justify-between animate-pulse border-b border-gray-300">
+      <div className="flex gap-3">
+        <div className="mt-2 w-4 h-4 rounded bg-gray-300" />
+        <div className="space-y-3">
+          <div className="h-5 w-64 bg-gray-300 rounded" />
+          <div className="h-4 w-80 bg-gray-200 rounded" />
+        </div>
+      </div>
+      <div className="flex items-end w-full md:w-fit md:justify-end flex-col space-y-2">
+        <div className="h-4 w-24 bg-gray-300 rounded" />
+        <div className="h-6 w-20 bg-gray-200 rounded" />
+      </div>
+    </div>
+  );
+};

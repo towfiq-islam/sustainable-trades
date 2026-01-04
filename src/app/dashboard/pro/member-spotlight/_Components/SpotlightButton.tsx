@@ -3,7 +3,7 @@ import { useState } from "react";
 import Modal from "@/Components/Common/Modal";
 import MembershipApplicationModal from "@/Components/Modals/MembershipApplicationModal";
 
-const SpotlightButton = () => {
+const SpotlightButton = ({ isPro }: { isPro: boolean }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
 
   return (
@@ -13,12 +13,14 @@ const SpotlightButton = () => {
           Member Spotlight
         </h3>
 
-        <button
-          onClick={() => setOpen(true)}
-          className="py-2 sm:py-4 px-6 bg-[#D4E2CB] rounded-[8px] border border-[#77978F] text-[13px] md:text-[16px] font-semibold text-[#13141D] cursor-pointer hover:translate-y-1 duration-300 ease-in-out h-[40px] md:h-[50px] w-full sm:w-fit flex items-center justify-center"
-        >
-          Apply for Community Member Spotlight
-        </button>
+        {isPro && (
+          <button
+            onClick={() => setOpen(true)}
+            className="py-2 sm:py-4 px-6 bg-[#D4E2CB] rounded-[8px] border border-[#77978F] text-[13px] md:text-[16px] font-semibold text-[#13141D] cursor-pointer hover:translate-y-1 duration-300 ease-in-out h-[40px] md:h-[50px] w-full sm:w-fit flex items-center justify-center"
+          >
+            Apply for Community Member Spotlight
+          </button>
+        )}
       </div>
 
       {/* Modal */}

@@ -258,13 +258,17 @@ export const useTaxes = () => {
   });
 };
 
-// Getdiscount Hooks
-export const useDiscountget = () => {
+// Get Discount
+export const getDiscount = (status: string) => {
   return useClientApi({
     method: "get",
-    key: ["get-discount"],
+    key: ["get-discount", status],
     isPrivate: true,
+    params: { status },
     endpoint: "/api/discounts",
+    queryOptions: {
+      retry: false,
+    },
   });
 };
 

@@ -1,23 +1,26 @@
 "use client";
-
 import Link from "next/link";
 import { FaSearch } from "react-icons/fa";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Delete, Pen } from "@/Components/Svg/SvgContainer";
 import {
   useDiscountget,
   useBulkDeleteDiscount,
   useDiscountStatusChange,
 } from "@/Hooks/api/dashboard_api";
+import { DiscountSkeleton } from "@/Components/Loader/Loader";
 
 const DiscountsPage = () => {
   const [activeTab, setActiveTab] = useState("Active");
   const [selected, setSelected] = useState<string[]>([]);
   const [discounts, setDiscounts] = useState<any[]>([]);
   const [singleDiscountId, setSingleDiscountId] = useState(null);
-  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({});
+  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>(
+    {}
+  );
 
-  const { data: getdiscountdata, refetch } = useDiscountget();
+  const { data: getdiscountdata, refetch, isLoading } = useDiscountget();
+  console.log(getdiscountdata);
 
   const bulkDelete = useBulkDeleteDiscount();
   const discountStatusChange = useDiscountStatusChange(singleDiscountId);
@@ -86,9 +89,6 @@ const DiscountsPage = () => {
 
   const handleDelete = () => {
     if (selected.length === 0) return;
-
-    console.log(selected);
-
     bulkDelete.mutate(
       { ids: selected },
       {
@@ -126,7 +126,6 @@ const DiscountsPage = () => {
     { label: "Inactive" },
     { label: "", icon: <Delete className="w-5 h-5" />, action: handleDelete },
   ];
-  
 
   return (
     <div className="space-y-6">
@@ -142,7 +141,7 @@ const DiscountsPage = () => {
             <input
               placeholder={"Search..."}
               type="search"
-              className="py-[10px] pl-4 outline-0 border border-[#274F45] rounded-[8px] text-[16px] text-[#67645F] font-normal w-full md:w-[300px]"
+              className="py-1.5 md:py-3 pl-4 outline-0 border border-[#274F45] rounded-[8px] text-[16px] text-[#67645F] font-normal w-full md:w-[300px]"
             />
             <div className="absolute top-4 right-3">
               <FaSearch />
@@ -152,7 +151,7 @@ const DiscountsPage = () => {
 
           {/* Create button */}
           <Link href="/dashboard/pro/discounts/create-discount">
-            <button className="hover:border-[#D4E2CB] hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-3 px-5 text-[18px] md:text-[20px] font-semibold cursor-pointer w-full md:w-fit bg-[#D4E2CB] text-[#274F45] duration-500 ease-in-out">
+            <button className="hover:border-[#D4E2CB] hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2 px-5 text-[178px] md:text-[20px] font-semibold cursor-pointer w-full md:w-fit bg-[#D4E2CB] text-[#274F45] duration-500 ease-in-out">
               Create Discount
             </button>
           </Link>
@@ -179,16 +178,18 @@ const DiscountsPage = () => {
       </div>
 
       {/* Discounts list */}
-      <div className="divide-y">
-        {filtered.length === 0 ? (
-          <div className="py-6 text-center text-gray-500">
-            No discounts in {activeTab}.
-          </div>
+      <div>
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, i) => <DiscountSkeleton key={i} />)
+        ) : filtered?.length === 0 ? (
+          <p className="py-6 text-center text-red-500 font-semibold">
+            No discounts found in {activeTab}.
+          </p>
         ) : (
-          filtered.map((d: any) => (
+          filtered?.map((d: any) => (
             <div
               key={d.id}
-              className="py-4 flex flex-col md:flex-row md:items-start md:justify-between"
+              className="py-4 flex flex-col md:flex-row md:items-start md:justify-between border-b border-gray-300"
             >
               {/* Left side */}
               <div className="flex gap-3">
@@ -198,22 +199,25 @@ const DiscountsPage = () => {
                   onChange={() => {
                     toggleSelect(d.id);
                   }}
-                  className="mt-2"
+                  className="self-start mt-2 scale-110"
                 />
                 <div>
                   <h3 className="text-[18px] md:text-[20px] font-bold text-[#13141D]">
-                    {d.title}
+                    Discount Name: {d.title}
                   </h3>
+
                   <p className="text-[#67645F] font-bold text-[16px]">
                     {d.description}
                   </p>
-                  <div className="mt-3 md:mt-7 text-[14px] md:text-[18px]">
+
+                  <div className="mt-3 md:mt-7 text-[14px] md:text-[16px] flex gap-1 items-center">
                     <span className="font-bold text-[12px] md:text-[16px] text-[#13141D]">
-                      STARTS
-                    </span>{" "}
-                    {d.starts}{" "}
-                    <span className="sm:ml-4 font-bold text-[14px] md:text-[18px] text-[#13141D]">
-                      ENDS
+                      STARTS:
+                    </span>
+                    {d.starts}
+
+                    <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-[#13141D]">
+                      ENDS:
                     </span>
                     {d.ends}
                   </div>
@@ -226,11 +230,11 @@ const DiscountsPage = () => {
                   {d.code}
                 </div>
 
-                <div className="flex justify-end my-0.5 md:my-2">
+                <div className="flex justify-end my-0.5 md:my-1">
                   <Link
                     href={`/dashboard/pro/discounts/create-discount/${d.id}`}
                   >
-                    <button className="py-1.5 px-3 md:p-3 md:text-sm rounded bg-[#D4E2CB] text-[#274F45] cursor-pointer flex gap-x-2 font-semibold">
+                    <button className="py-2 px-2 md:text-sm rounded bg-[#D4E2CB] text-[#274F45] cursor-pointer flex gap-x-2 font-semibold">
                       <Pen />
                       Edit
                     </button>

@@ -6,8 +6,7 @@ import {
   useDiscountUpdate,
 } from "@/Hooks/api/dashboard_api";
 import { useParams, useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
-import toast from "react-hot-toast";
+import { useState, useEffect } from "react";
 import { FaAngleLeft } from "react-icons/fa";
 import { FiCalendar, FiClock } from "react-icons/fi";
 
@@ -40,17 +39,23 @@ interface DiscountData {
 }
 
 const CreateDiscount = () => {
+  // Hook
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string | undefined;
   const isEditMode = !!id;
 
+  // Mutation & Query
   const { mutate: createMutate, isPending: isCreating } = useCreateDiscount();
   const { mutate: updateMutate, isPending: isUpdating } = useDiscountUpdate(id);
   const { data: discountData, isLoading: isFetching } = useDiscountGetById(id);
+  const { data: productlist }: { data: ListingsResponse | undefined } =
+    getallListings();
+
+  // States
+  const [name, setName] = useState("");
   const [discountType, setDiscountType] = useState("code");
   const [appliesTo, setAppliesTo] = useState("Any Order");
-  const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [promoType, setPromoType] = useState("Percent Off");
   const [amount, setAmount] = useState("");
@@ -63,8 +68,9 @@ const CreateDiscount = () => {
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
   const [neverExpires, setNeverExpires] = useState(false);
-  const { data: productlist }: { data: ListingsResponse | undefined } =
-    getallListings();
+
+  // Error State
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const isPending = isCreating || isUpdating;
 
@@ -102,29 +108,41 @@ const CreateDiscount = () => {
 
   const handleGenerateCode = () => {
     setCode(generateRandomCode());
+    setErrors(prev => ({ ...prev, code: "" }));
   };
 
   const handleSave = () => {
-    if (!name.trim()) {
-      toast.error("Discount name is required.");
-      return;
+    const newErrors: { [key: string]: string } = {};
+
+    if (!name.trim()) newErrors.name = "Discount name is required.";
+    if (!amount.trim()) newErrors.amount = "Discount amount is required.";
+    if (!startDate) newErrors.startDate = "Start date is required.";
+
+    if (!startDate) newErrors.startDate = "Start date is required.";
+    if (!startTime) newErrors.startTime = "Start time is required.";
+
+    if (!neverExpires) {
+      if (!endDate) newErrors.endDate = "End date is required.";
+      if (!endTime) newErrors.endTime = "End time is required.";
     }
-    if (!amount.trim()) {
-      toast.error("Discount amount is required.");
-      return;
+
+    if (discountType === "code" && !code.trim()) {
+      newErrors.code = "Discount code is required.";
     }
-    if (!startDate) {
-      toast.error("Start date is required.");
-      return;
-    }
+
     if (appliesTo === "Single Product" && !selectedProduct) {
-      toast.error("Please select a product.");
-      return;
+      newErrors.selectedProduct = "Please select a product.";
     }
     if (totalUsesLimit && !totalUses.trim()) {
-      toast.error("Please enter total usage limit.");
+      newErrors.totalUses = "Please enter total usage limit.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
+
+    setErrors({}); // Clear errors
 
     const finalCode =
       discountType === "code"
@@ -223,14 +241,23 @@ const CreateDiscount = () => {
         <h4 className="text-[16px] md:text-[20px] font-normal text-[#13141D]">
           Name
         </h4>
+
         <input
           type="text"
           placeholder="Example: 15% Off Order"
           value={name}
-          onChange={e => setName(e.target.value)}
-          className="px-4 py-2.5 md:py-5 border-2 border-[#67645F] rounded-[8px] text-[16px] font-bold text-[#67645F] my-3 w-full lg:w-[750px]"
+          onChange={e => {
+            setName(e.target.value);
+            if (errors.name) setErrors({ ...errors, name: "" });
+          }}
+          className={`px-4 py-2.5 md:py-5 border-2 rounded-[8px] text-[16px] font-bold text-[#67645F] mt-3 w-full lg:w-[750px] ${
+            errors.name ? "border-red-500" : "border-[#67645F]"
+          }`}
         />
-        <p className="text-[13px] md:text-[16px] font-bold text-[#13141D]">
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1 mb-2">{errors.name}</p>
+        )}
+        <p className="text-[13px] md:text-[16px] font-bold text-[#13141D] mt-1">
           The name that shoppers will see at checkout.
         </p>
       </div>
@@ -275,8 +302,13 @@ const CreateDiscount = () => {
               type="text"
               placeholder="Discount Code (Ex. SALE15)"
               value={code}
-              onChange={e => setCode(e.target.value)}
-              className="px-4 py-2.5 md:py-5 border-2 border-[#67645F] rounded-[8px] text-[13px] md:text-[16px] font-bold text-[#67645F] my-3 w-full md:w-[750px]"
+              onChange={e => {
+                setCode(e.target.value);
+                if (errors.code) setErrors({ ...errors, code: "" });
+              }}
+              className={`px-4 py-2.5 md:py-5 border-2 rounded-[8px] text-[13px] md:text-[16px] font-bold text-[#67645F] my-3 w-full md:w-[750px] ${
+                errors.code ? "border-red-500" : "border-[#67645F]"
+              }`}
             />
             <button
               onClick={handleGenerateCode}
@@ -285,6 +317,10 @@ const CreateDiscount = () => {
               Generate Code
             </button>
           </div>
+          {/* Error message display */}
+          {errors.code && (
+            <p className="text-red-500 text-sm mb-2">{errors.code}</p>
+          )}
           <p className="text-[13px] md:text-[16px] font-bold text-[#13141D]">
             Shoppers enter this code at checkout.
           </p>
@@ -296,7 +332,11 @@ const CreateDiscount = () => {
         <h4 className="text-[16px] md:text-[20px] font-normal text-[#13141D]">
           Promotion
         </h4>
-        <div className="flex mt-3  w-full lg:w-[750px] border border-[#67645F]  rounded-md ">
+        <div
+          className={`flex mt-3 w-full lg:w-[750px] border rounded-md ${
+            errors.amount ? "border-red-500" : "border-[#67645F]"
+          }`}
+        >
           <select
             className="px-4 py-2.5 md:py-5 w-full bg-[#D4E2CB] rounded-l-md text-[#5C7F60] font-bold text-[13px] md:text-[16px] outline-0"
             value={promoType}
@@ -311,10 +351,16 @@ const CreateDiscount = () => {
             step="0.01"
             placeholder={promoType === "Percent Off" ? "0%" : "0"}
             value={amount}
-            onChange={e => setAmount(e.target.value)}
+            onChange={e => {
+              setAmount(e.target.value);
+              if (errors.amount) setErrors({ ...errors, amount: "" });
+            }}
             className="rounded-r-md px-4 py-2 flex-1 text-[#13141D] font-bold text-[13px] md:text-[16px] outline-0"
           />
         </div>
+        {errors.amount && (
+          <p className="text-red-500 text-sm mt-1">{errors.amount}</p>
+        )}
       </div>
 
       {/* Applies To */}
@@ -325,7 +371,10 @@ const CreateDiscount = () => {
         <select
           className="mt-3 border border-[#3D3D3D] rounded-md px-4 py-2.5 md:py-5  w-full lg:w-[750px] bg-[#D4E2CB] text-[13px] md:text-[16px] font-bold text-[#274F45]"
           value={appliesTo}
-          onChange={e => setAppliesTo(e.target.value)}
+          onChange={e => {
+            setAppliesTo(e.target.value);
+            setErrors({ ...errors, selectedProduct: "" });
+          }}
         >
           <option value="Any Order">Any Order</option>
           <option value="Single Product">Single Product</option>
@@ -339,8 +388,14 @@ const CreateDiscount = () => {
             </h5>
             <select
               value={selectedProduct}
-              onChange={e => setSelectedProduct(e.target.value)}
-              className="w-full border border-[#67645F] rounded-md px-4 py-5 text-[16px] font-bold text-[#13141D]"
+              onChange={e => {
+                setSelectedProduct(e.target.value);
+                if (errors.selectedProduct)
+                  setErrors({ ...errors, selectedProduct: "" });
+              }}
+              className={`w-full border rounded-md px-4 py-5 text-[16px] font-bold text-[#13141D] ${
+                errors.selectedProduct ? "border-red-500" : "border-[#67645F]"
+              }`}
             >
               <option value="">Select a product</option>
               {productlist?.data?.map(product => (
@@ -349,6 +404,11 @@ const CreateDiscount = () => {
                 </option>
               ))}
             </select>
+            {errors.selectedProduct && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.selectedProduct}
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -373,7 +433,10 @@ const CreateDiscount = () => {
               type="checkbox"
               className="w-3 h-3 md:w-4 md:h-4 "
               checked={totalUsesLimit}
-              onChange={e => setTotalUsesLimit(e.target.checked)}
+              onChange={e => {
+                setTotalUsesLimit(e.target.checked);
+                if (!e.target.checked) setErrors({ ...errors, totalUses: "" });
+              }}
             />
             Limit number of times this discount can be used in total
           </label>
@@ -382,10 +445,18 @@ const CreateDiscount = () => {
             min="1"
             placeholder="Enter usage limit (ex: 5)"
             value={totalUses}
-            onChange={e => setTotalUses(e.target.value)}
+            onChange={e => {
+              setTotalUses(e.target.value);
+              if (errors.totalUses) setErrors({ ...errors, totalUses: "" });
+            }}
             disabled={!totalUsesLimit}
-            className="px-4 py-2.5 md:py-5 border border-[#3D3D3D] rounded-[8px] text-[16px] font-bold text-[#67645F] my-1  w-full lg:w-[750px]"
+            className={`px-4 py-2.5 md:py-5 border rounded-[8px] text-[16px] font-bold text-[#67645F] my-1  w-full lg:w-[750px] ${
+              errors.totalUses ? "border-red-500" : "border-[#3D3D3D]"
+            }`}
           />
+          {errors.totalUses && (
+            <p className="text-red-500 text-sm">{errors.totalUses}</p>
+          )}
         </div>
       </div>
 
@@ -394,35 +465,59 @@ const CreateDiscount = () => {
         <h4 className="text-[16px] md:text-[20px] font-normal text-[#13141D]">
           Active Dates
         </h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 mt-3  w-full lg:w-[750px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 mt-3 w-full lg:w-[750px]">
           {/* Start Date */}
           <div>
             <label className="block text-[14px] md:text-[16px] font-normal text-[#13141D] mb-1 md:mb-2">
               Start Date
             </label>
-            <div className="flex items-center border border-[#67645F] rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4]">
+            <div
+              className={`flex items-center border rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4] ${
+                errors.startDate ? "border-red-500" : "border-[#67645F]"
+              }`}
+            >
               <FiCalendar />
               <input
                 type="date"
                 value={startDate}
-                onChange={e => setStartDate(e.target.value)}
+                onChange={e => {
+                  setStartDate(e.target.value);
+                  if (errors.startDate)
+                    setErrors(prev => ({ ...prev, startDate: "" }));
+                }}
                 className="flex-1 bg-transparent outline-none"
               />
             </div>
+            {errors.startDate && (
+              <p className="text-red-500 text-sm mt-1">{errors.startDate}</p>
+            )}
           </div>
+
+          {/* Start Time */}
           <div>
             <label className="block text-[14px] md:text-[16px] font-normal text-[#13141D] mb-2">
               Start Time (PDT)
             </label>
-            <div className="flex items-center border border-[#67645F] rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4]">
+            <div
+              className={`flex items-center border rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4] ${
+                errors.startTime ? "border-red-500" : "border-[#67645F]"
+              }`}
+            >
               <FiClock />
               <input
                 type="time"
                 value={startTime}
-                onChange={e => setStartTime(e.target.value)}
+                onChange={e => {
+                  setStartTime(e.target.value);
+                  if (errors.startTime)
+                    setErrors(prev => ({ ...prev, startTime: "" }));
+                }}
                 className="flex-1 bg-transparent outline-none"
               />
             </div>
+            {errors.startTime && (
+              <p className="text-red-500 text-sm mt-1">{errors.startTime}</p>
+            )}
           </div>
 
           {/* End Date */}
@@ -430,31 +525,59 @@ const CreateDiscount = () => {
             <label className="block text-[14px] md:text-[16px] font-normal text-[#13141D] mb-2">
               End Date
             </label>
-            <div className="flex items-center border border-[#67645F] rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4]">
+            <div
+              className={`flex items-center border rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4] ${
+                !neverExpires && errors.endDate
+                  ? "border-red-500"
+                  : "border-[#67645F]"
+              } ${neverExpires ? "opacity-50" : ""}`}
+            >
               <FiCalendar />
               <input
                 type="date"
                 value={endDate}
-                onChange={e => setEndDate(e.target.value)}
+                onChange={e => {
+                  setEndDate(e.target.value);
+                  if (errors.endDate)
+                    setErrors(prev => ({ ...prev, endDate: "" }));
+                }}
                 disabled={neverExpires}
                 className="flex-1 bg-transparent outline-none"
               />
             </div>
+            {!neverExpires && errors.endDate && (
+              <p className="text-red-500 text-sm mt-1">{errors.endDate}</p>
+            )}
           </div>
+
+          {/* End Time */}
           <div>
             <label className="block text-[14px] md:text-[16px] font-normal text-[#13141D] mb-2">
               End Time (PDT)
             </label>
-            <div className="flex items-center border border-[#67645F] rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4]">
+            <div
+              className={`flex items-center border rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4] ${
+                !neverExpires && errors.endTime
+                  ? "border-red-500"
+                  : "border-[#67645F]"
+              } ${neverExpires ? "opacity-50" : ""}`}
+            >
               <FiClock />
               <input
                 type="time"
                 value={endTime}
-                onChange={e => setEndTime(e.target.value)}
+                onChange={e => {
+                  setEndTime(e.target.value);
+                  if (errors.endTime)
+                    setErrors(prev => ({ ...prev, endTime: "" }));
+                }}
                 disabled={neverExpires}
                 className="flex-1 bg-transparent outline-none"
               />
             </div>
+            {!neverExpires && errors.endTime && (
+              <p className="text-red-500 text-sm mt-1">{errors.endTime}</p>
+            )}
           </div>
         </div>
         <label className="flex items-center text-[13px] md:text-base  gap-2 mt-1.5 md:mt-3">

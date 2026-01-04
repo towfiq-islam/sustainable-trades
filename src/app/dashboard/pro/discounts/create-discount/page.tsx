@@ -9,6 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaAngleLeft } from "react-icons/fa";
 import { FiCalendar, FiClock } from "react-icons/fi";
+import { PuffLoader } from "react-spinners";
 
 interface Product {
   id: number;
@@ -212,19 +213,14 @@ const CreateDiscount = () => {
 
   if (isFetching && isEditMode) {
     return (
-      <div className="p-4 lg:p-8 flex justify-center items-center h-64">
-        <div className="text-[#13141D]">Loading discount...</div>
+      <div className="h-[80vh] flex justify-center items-center">
+        <PuffLoader color="#274f45" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 lg:p-8">
-      {/* Title */}
-      <h2 className="text-[30px] md:text-[40px] font-semibold text-[#13141D]">
-        {isEditMode ? "Edit Discount" : "Create Discount"}
-      </h2>
-
+    <>
       {/* Back */}
       <div className="border-b border-gray-300">
         <h4
@@ -235,6 +231,11 @@ const CreateDiscount = () => {
           Back
         </h4>
       </div>
+
+      {/* Title */}
+      <h2 className="text-[30px] md:text-[40px] font-semibold text-[#13141D]">
+        {isEditMode ? "Edit Discount" : "Create Discount"}
+      </h2>
 
       {/* Name */}
       <div className="pt-4 md:pt-8 pb-6 md:pb-12">
@@ -610,7 +611,7 @@ const CreateDiscount = () => {
             : "Save Discount"}
         </button>
       </div>
-    </div>
+    </>
   );
 };
 

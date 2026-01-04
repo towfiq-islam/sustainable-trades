@@ -796,7 +796,7 @@ export const PaymentRowSkeleton = () => {
 
 export const DiscountSkeleton = () => {
   return (
-    <div className="py-4 flex flex-col md:flex-row md:items-start md:justify-between animate-pulse border-b border-gray-300">
+    <div className="py-10 flex flex-col md:flex-row md:items-start md:justify-between animate-pulse border-b border-gray-300">
       <div className="flex gap-3">
         <div className="mt-2 w-4 h-4 rounded bg-gray-300" />
         <div className="space-y-3">

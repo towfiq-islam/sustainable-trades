@@ -1,85 +1,32 @@
 "use client";
 import Link from "next/link";
+import moment from "moment";
 import { FaSearch } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Delete, Pen } from "@/Components/Svg/SvgContainer";
 import {
-  useDiscountget,
   useBulkDeleteDiscount,
   useDiscountStatusChange,
+  getDiscount,
 } from "@/Hooks/api/dashboard_api";
 import { DiscountSkeleton } from "@/Components/Loader/Loader";
+import toast from "react-hot-toast";
+import { CgSpinnerTwo } from "react-icons/cg";
 
 const DiscountsPage = () => {
-  const [activeTab, setActiveTab] = useState("Active");
+  const [status, setStatus] = useState<string>("active");
   const [selected, setSelected] = useState<string[]>([]);
-  const [discounts, setDiscounts] = useState<any[]>([]);
   const [singleDiscountId, setSingleDiscountId] = useState(null);
+  const tabs = [{ label: "active" }, { label: "inactive" }];
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>(
     {}
   );
 
-  const { data: getdiscountdata, refetch, isLoading } = useDiscountget();
-  console.log(getdiscountdata);
-
-  const bulkDelete = useBulkDeleteDiscount();
-  const discountStatusChange = useDiscountStatusChange(singleDiscountId);
-
-  const formatDate = (dateStr: string | null): string => {
-    if (!dateStr) return "";
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-
-  useEffect(() => {
-    if (getdiscountdata?.data) {
-      const mapped = getdiscountdata.data.map((item: any) => {
-        let desc = "";
-        if (item.promotion_type === "percentage") {
-          desc = `${item.amount}% off`;
-        } else {
-          desc = `$${parseFloat(item.amount).toFixed(2)} off`;
-        }
-        if (item.applies === "any_order") {
-          desc += " the shopper’s entire order";
-        } else {
-          const productName = item.product?.product_name || "selected product";
-          desc += ` ${productName}`;
-        }
-
-        const status =
-          item.status.charAt(0).toUpperCase() + item.status.slice(1);
-
-        const ends =
-          item.never_expires || !item.end_date
-            ? "Never Expires"
-            : `${formatDate(item.end_date)} at ${item.end_time || "00:00:00"}`;
-
-        const uses =
-          item.discount_limits === 0
-            ? "Unlimited Uses"
-            : `0 of ${item.discount_limits} Uses`;
-
-        return {
-          id: item.id.toString(),
-          title: item.name,
-          description: desc,
-          starts: `${formatDate(item.start_date)} at ${item.start_time}`,
-          ends,
-          code: item.code,
-          uses,
-          status,
-        };
-      });
-      setDiscounts(mapped);
-    }
-  }, [getdiscountdata]);
-
-  const filtered = discounts.filter((d: any) => d.status === activeTab);
+  // Mutation & Query
+  const { mutate, isPending } = useBulkDeleteDiscount();
+  const { mutate: discountStatusChange, isPending: isChanging } =
+    useDiscountStatusChange(singleDiscountId);
+  const { data: discountData, refetch, isLoading } = getDiscount(status);
 
   const toggleSelect = (id: string) => {
     setSelected(prev =>
@@ -87,13 +34,16 @@ const DiscountsPage = () => {
     );
   };
 
+  // For Delete
   const handleDelete = () => {
-    if (selected.length === 0) return;
-    bulkDelete.mutate(
+    if (selected?.length === 0) {
+      return toast.error("Please select any discount");
+    }
+
+    mutate(
       { ids: selected },
       {
         onSuccess: () => {
-          setDiscounts(prev => prev.filter(d => !selected.includes(d.id)));
           setSelected([]);
           refetch();
         },
@@ -105,27 +55,18 @@ const DiscountsPage = () => {
     setOpenDropdowns(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // Status change function uses the hook properly
+  // For status change
   const handleChangeStatus = (id: string, newStatus: string) => {
-    discountStatusChange.mutate(
+    discountStatusChange(
       { id, status: newStatus.toLowerCase() },
       {
         onSuccess: () => {
-          setDiscounts(prev =>
-            prev.map(d => (d.id === id ? { ...d, status: newStatus } : d))
-          );
           toggleOpen(id);
           refetch();
         },
       }
     );
   };
-
-  const tabs = [
-    { label: "Active" },
-    { label: "Inactive" },
-    { label: "", icon: <Delete className="w-5 h-5" />, action: handleDelete },
-  ];
 
   return (
     <div className="space-y-6">
@@ -160,33 +101,46 @@ const DiscountsPage = () => {
 
       {/* Tabs */}
       <div className="flex gap-2 flex-wrap border-t border-b border-[#BFBEBE] py-4">
-        {tabs.map((tab, idx) => (
+        {tabs?.map((tab, idx) => (
           <button
             key={idx}
-            onClick={() =>
-              tab.action ? tab.action() : setActiveTab(tab.label)
-            }
-            className={`flex items-center justify-center gap-2 border-2 font-semibold border-[#274F45] rounded-[6px] px-4 py-1 text-[13px] text-base md:py-2 duration-300 cursor-pointer ${
-              activeTab === tab.label
+            onClick={() => setStatus(tab?.label)}
+            className={`flex items-center justify-center gap-2 border-2 border-[#274F45] rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 cursor-pointer font-semibold capitalize ${
+              status === tab?.label
                 ? "bg-[#D4E2CB] text-[#274F45]"
                 : "text-[#274F45] hover:bg-[#D4E2CB]"
             }`}
           >
-            {tab.icon ? tab.icon : tab.label}
+            {tab?.label}
           </button>
         ))}
+
+        {/* For Delete */}
+        <button
+          onClick={handleDelete}
+          disabled={isPending}
+          className={`flex items-center justify-center gap-2 border-2 border-[#274F45] text-[#274F45] hover:bg-[#D4E2CB] rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 font-semibold capitalize ${
+            isPending ? "cursor-not-allowed" : "cursor-pointer"
+          }`}
+        >
+          {isPending ? (
+            <CgSpinnerTwo className="text-lg animate-spin" />
+          ) : (
+            <Delete className="size-5" />
+          )}
+        </button>
       </div>
 
       {/* Discounts list */}
       <div>
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => <DiscountSkeleton key={i} />)
-        ) : filtered?.length === 0 ? (
+        ) : discountData?.data?.length === 0 ? (
           <p className="py-6 text-center text-red-500 font-semibold">
-            No discounts found in {activeTab}.
+            No discounts found
           </p>
         ) : (
-          filtered?.map((d: any) => (
+          discountData?.data?.map((d: any) => (
             <div
               key={d.id}
               className="py-4 flex flex-col md:flex-row md:items-start md:justify-between border-b border-gray-300"
@@ -195,18 +149,29 @@ const DiscountsPage = () => {
               <div className="flex gap-3">
                 <input
                   type="checkbox"
-                  checked={selected.includes(d.id)}
+                  checked={selected.includes(d?.id)}
                   onChange={() => {
-                    toggleSelect(d.id);
+                    toggleSelect(d?.id);
                   }}
                   className="self-start mt-2 scale-110"
                 />
                 <div>
                   <h3 className="text-[18px] md:text-[20px] font-bold text-[#13141D]">
-                    Discount Name: {d.title}
+                    Discount Name: {d?.name}
                   </h3>
 
                   <p className="text-[#67645F] font-bold text-[16px]">
+                    {d?.promotion_type === "percentage"
+                      ? `${d?.amount}% off ${
+                          d?.applies === "any_order"
+                            ? "the shopper’s entire order"
+                            : d?.product?.product_name
+                        }`
+                      : `${parseFloat(d?.amount).toFixed(2)} off ${
+                          d?.applies === "any_order"
+                            ? "the shopper’s entire order"
+                            : d?.product?.product_name
+                        }`}
                     {d.description}
                   </p>
 
@@ -214,12 +179,20 @@ const DiscountsPage = () => {
                     <span className="font-bold text-[12px] md:text-[16px] text-[#13141D]">
                       STARTS:
                     </span>
-                    {d.starts}
+                    <span className="text-gray-600">{`${moment(
+                      d?.start_date
+                    ).format("ll")} at ${d?.start_time}`}</span>
 
                     <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-[#13141D]">
                       ENDS:
                     </span>
-                    {d.ends}
+                    <span className="text-gray-600">
+                      {d?.never_expires || !d?.end_date
+                        ? "Never Expires"
+                        : `${moment(d?.end_date).format("ll")} at ${
+                            d?.end_time
+                          }`}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -227,12 +200,12 @@ const DiscountsPage = () => {
               {/* Right side */}
               <div className="flex items-end w-full md:w-fit md:justify-end flex-col space-y-2 relative">
                 <div className="text-[15px] md:text-[20px] font-bold text-[#13141D]">
-                  {d.code}
+                  {d?.code}
                 </div>
 
                 <div className="flex justify-end my-0.5 md:my-1">
                   <Link
-                    href={`/dashboard/pro/discounts/create-discount/${d.id}`}
+                    href={`/dashboard/pro/discounts/create-discount/${d?.id}`}
                   >
                     <button className="py-2 px-2 md:text-sm rounded bg-[#D4E2CB] text-[#274F45] cursor-pointer flex gap-x-2 font-semibold">
                       <Pen />
@@ -242,39 +215,44 @@ const DiscountsPage = () => {
                 </div>
 
                 <div className="text-[16px] text-[#13141D] font-bold">
-                  {d.uses}
+                  {d?.discount_limits === 0
+                    ? "Unlimited Uses"
+                    : `0 of ${d?.discount_limits} Uses`}
                 </div>
 
                 {/* Status Dropdown */}
                 <div className="relative">
                   <button
                     onClick={() => {
-                      setSingleDiscountId(d.id);
-                      toggleOpen(d.id);
+                      setSingleDiscountId(d?.id);
+                      toggleOpen(d?.id);
                     }}
-                    className={`px-2 py-1 rounded text-sm font-semibold cursor-pointer ${
-                      d.status.toLowerCase() === "active"
+                    className={`px-2 py-1 rounded text-sm font-semibold cursor-pointer capitalize ${
+                      d?.status.toLowerCase() === "active"
                         ? "bg-green-100 text-green-800"
                         : "bg-red-100 text-red-800"
                     }`}
                   >
-                    {d.status}
+                    {d?.status}
                   </button>
 
-                  {openDropdowns[d.id] && (
-                    <div className="absolute right-0 mt-1 w-32 bg-white border rounded shadow-lg z-10">
-                      <div
-                        className="px-4 py-2 cursor-pointer hover:bg-green-100"
-                        onClick={() => handleChangeStatus(d.id, "Active")}
+                  {openDropdowns[d?.id] && (
+                    <div className="absolute right-0 mt-1 w-24 bg-white border border-gray-300 rounded shadow-lg z-10">
+                      <button
+                        disabled={isChanging}
+                        className="px-4 py-1.5 cursor-pointer hover:bg-green-100 rounded block w-full text-left disabled:cursor-not-allowed"
+                        onClick={() => handleChangeStatus(d?.id, "Active")}
                       >
                         Active
-                      </div>
-                      <div
-                        className="px-4 py-2 cursor-pointer hover:bg-red-100"
-                        onClick={() => handleChangeStatus(d.id, "Inactive")}
+                      </button>
+
+                      <button
+                        disabled={isChanging}
+                        className="px-4 py-1.5 cursor-pointer hover:bg-red-100 rounded block w-full text-left disabled:cursor-not-allowed"
+                        onClick={() => handleChangeStatus(d?.id, "Inactive")}
                       >
                         Inactive
-                      </div>
+                      </button>
                     </div>
                   )}
                 </div>

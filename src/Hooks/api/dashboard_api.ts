@@ -53,12 +53,16 @@ export const useDeleteProduct = (id: string | number) => {
 };
 
 // Get All Listings
-export const getallListings = () => {
+export const getallListings = (status?: string, short_by?: string) => {
   return useClientApi({
     method: "get",
-    key: ["get-all-listings"],
     isPrivate: true,
-    endpoint: "api/products?short_by=a-z",
+    key: ["get-all-listings", status, short_by],
+    params: { status, short_by },
+    endpoint: "/api/products",
+    queryOptions: {
+      retry: false,
+    },
   });
 };
 

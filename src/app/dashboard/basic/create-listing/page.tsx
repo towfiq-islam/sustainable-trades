@@ -153,7 +153,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
   };
 
   return (
-    <div>
+    <>
       <Header />
       <MembershipNotice isBasicMember={isBasicMember} />
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -304,7 +304,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
         </div>
         <FormActions isPending={isPending} />
       </form>
-    </div>
+    </>
   );
 };
 

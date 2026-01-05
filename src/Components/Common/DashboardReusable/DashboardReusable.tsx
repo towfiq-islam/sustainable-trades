@@ -212,9 +212,13 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
               Upgrade at anytime to pro! All you have to do is pay the
               difference for the remainder of the year.
             </p>
-            <button className="min-w-[250px] md:min-w-[300px] py-2 md:py-4 rounded-[8px] bg-transparent text-[14px] md:text-[18px] font-semibold text-[#13141D] cursor-pointer hover:bg-[#E48872]  duration-500 ease-in-out border border-[#E48872]">
+
+            <Link
+              href="/dashboard/basic/membership"
+              className="min-w-[250px] md:min-w-[300px] py-2 md:py-4 rounded-[8px] bg-transparent text-[14px] md:text-[18px] font-semibold text-[#13141D] cursor-pointer hover:bg-[#E48872]  duration-500 ease-in-out border border-[#E48872]"
+            >
               Upgrade To Pro
-            </button>
+            </Link>
           </div>
         )}
       </div>

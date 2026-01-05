@@ -463,7 +463,7 @@ const CounterTrades = ({ id }: any) => {
       />
 
       {/* Action buttons */}
-      <div className="pb-6 border-b border-[#BFBEBE] rounded-lg mt-6">
+      <div className="pb-6  rounded-lg mt-6">
         <div className="flex gap-2.5 lg:gap-5 flex-wrap mt-6">
           {actionButtons.map((btn, i) => {
             const style = actionButtonStyles[btn];
@@ -487,15 +487,15 @@ const CounterTrades = ({ id }: any) => {
           })}
         </div>
 
-        <li className="text-[#13141D] font-normal text-[16px] list-disc pt-4">
+        {/* <li className="text-[#13141D] font-normal text-[16px] list-disc pt-4">
           Sending a message with a counter offer gives you a better chance of
           getting it accepted.
-        </li>
+        </li> */}
       </div>
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <CounterBottom />
-      </div>
+      </div> */}
     </div>
   );
 };

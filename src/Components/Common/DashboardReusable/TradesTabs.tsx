@@ -165,15 +165,15 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                 <div key={idx}>
                   <div className=" flex justify-between items-end">
                     <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
-                      {item.product?.images?.map((img) => (
-                        <Image
-                          src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
-                          alt={item?.product?.product_name}
-                          height={100}
-                          width={100}
-                          className="h-[100px] object-cover rounded-md"
-                        />
-                      ))}
+                      {/* {item.product?.images?.map((img) => ( */}
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item.product?.images[0]?.image}`}
+                        alt={item?.product?.product_name}
+                        height={100}
+                        width={100}
+                        className="h-[100px] object-cover rounded-md"
+                      />
+                      {/* ))} */}
 
                       <div className="flex flex-col">
                         <h3 className="text-[18px] sm:text-[20px] font-semibold text-[#13141D]">
@@ -232,7 +232,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                           onClick={() => {
                             if (btn === "Counter") {
                               router.push(
-                                `/dashboard/basic/trades/counter/${trade?.id}`
+                                `/dashboard/${user?.membership?.membership_type}/trades/counter/${trade?.id}`
                               );
                             } else {
                               handleTrade(btn, trade?.id);
@@ -248,11 +248,11 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                       );
                     })}
                 </div>
-                <Link href={`/dashboard/basic/trades/${trade.id}`}>
+                {/* <Link href={`/dashboard/basic/trades/${trade.id}`}>
                   <div className="bg-gray-200 px-3 py-2 cursor-pointer flex items-center justify-center">
                     <FaAnglesRight />
                   </div>
-                </Link>
+                </Link> */}
               </div>
             </div>
           ))}

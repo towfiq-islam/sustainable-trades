@@ -266,7 +266,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
     setShowDeleteModal(false);
     deleteProduct.mutate(null, {
       onSuccess: () => {
-        router.push("/dashboard/basic/view-listing");
+        router.push("/dashboard/basic/listing");
       },
       onError: (error: DeleteProductError) => {
         console.error("Delete failed:", error);

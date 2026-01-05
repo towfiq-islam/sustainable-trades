@@ -49,7 +49,7 @@ const ReuseableNotification = () => {
                     <figure className="rounded-full size-[50px] md:size-[65px] grid place-items-center bg-accent-red text-white text-xl font-semibold">
                       {notification?.user?.avatar ? (
                         <Image
-                          src={notification?.user?.avatar}
+                          src={`${process.env.NEXT_PUBLIC_SITE_URL}/${notification?.user?.avatar}`}
                           alt="profile"
                           height={500}
                           width={500}

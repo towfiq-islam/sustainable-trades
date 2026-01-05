@@ -6,12 +6,15 @@ import { useParams, useRouter } from "next/navigation";
 import TradeDetaillsBottom from "./TradeDetaillsBottom";
 import { FaAngleDown, FaRegStar } from "react-icons/fa6";
 import { LocationSvg1, Reload } from "@/Components/Svg/SvgContainer";
+import { useSingleTradeOffer } from "@/Hooks/api/dashboard_api";
+import moment from "moment";
+import { getShopDetails } from "@/Hooks/api/cms_api";
 
 const TradeDetailsReusable = () => {
   const params = useParams();
   const router = useRouter();
   const tradeId = params?.id;
-  const [isOpen, setIsOpen] = useState(false);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const actionButtons = ["Approve", "Counter", "Deny"];
   const actionButtonStyles: Record<
     string,
@@ -35,15 +38,44 @@ const TradeDetailsReusable = () => {
     },
   };
 
+  const { data: tradeSingleData, isLoading: tradeLoading } =
+    useSingleTradeOffer(tradeId);
+
+  const senderUserId = tradeSingleData?.data?.sender?.shop_info?.user_id;
+
+  console.log(senderUserId);
+
+  const { data: tradeSenderShopData, isLoading: shopLoading } =
+    getShopDetails(senderUserId);
+
+  const tradeSenderProduct = tradeSingleData?.data?.items?.find(
+    (item: any) => item?.product?.shop?.user_id === +senderUserId
+  );
+ 
+  console.log(tradeSenderProduct);
+
+  if (tradeLoading || shopLoading) {
+    return <div className="p-10 text-center">Loading Trade Details...</div>;
+  }
+
+  if (!tradeSingleData) {
+    return <div className="p-10 text-center">No trade found.</div>;
+  }
+
   return (
     <div>
       <div className="flex gap-x-5 items-center mt-6">
         <h3 className="text-[16px] text-[#274F45] font-semibold">
           Trade Details
         </h3>
-        <h4 className="text-[16px] text-[#A7A39C] font-semibold">11/28/2023</h4>
+        <h4 className="text-[16px] text-[#A7A39C] font-semibold">
+          {" "}
+          {moment(tradeSingleData?.data?.created_at).format(
+            "MMMM Do YYYY, h:mm:ss a"
+          )}
+        </h4>
         <h5 className="text-[16px] text-[#A7A39C] font-semibold">
-          Inquiry <span># 378</span>
+          Inquiry <span># {tradeSingleData?.data?.inquiry}</span>
         </h5>
       </div>
       <div className="flex justify-between my-10">
@@ -57,10 +89,10 @@ const TradeDetailsReusable = () => {
           />
           <div className="flex flex-col gap-y-1">
             <h3 className="text-[20px] font-semibold text-[#13141D]">
-              8oz Watermelon Sustainable Bar Soap
+              {tradeSenderProduct?.product?.product_name}
             </h3>
             <h4 className="text-[20px] font-normal text-[#4B4A47] flex gap-x-5 items-center">
-              The Soap Shop
+              {tradeSenderProduct?.product?.shop?.shop_name}
               <span className="text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
                 View Shop
               </span>
@@ -94,75 +126,75 @@ const TradeDetailsReusable = () => {
             </ul>
           </div>
         </div>
-        <div className="">
+        <div className="flex flex-col gap-1">
           <h4 className="text-[20px] font-semibold text-[#274F45]">
-            Organic Bath Soaps
+            {tradeSenderShopData?.data?.first_name}{" "}
+            {tradeSenderShopData?.data?.last_name}
           </h4>
-          <h3 className="text-[32px] font-semibold text-[#000] py-3">
-            Coconut Bar Soap
-          </h3>
-          <ul>
-            <li className="text-[20px] font-semibold text-[#274F45]">
-              Product Description
-            </li>
-            <li className="text-[16px] font-semibold text-[#13141D] list-disc ml-5">
-              Made with 100% organic coconut oil, ensuring a natural and
-              chemical-free cleansing experience.
-            </li>
-            <li className="text-[16px] font-semibold text-[#13141D] list-disc ml-5">
-              Free from synthetic additives, parabens, and harsh chemicals for a
-              gentle and nourishing bath.
-            </li>
-          </ul>
+
           <div className="flex gap-x-2 mt-4 items-center">
             <h4 className="text-[14px] font-bold text-[#000] underline">
-              Organic Bath Soaps
+              {tradeSenderShopData?.data?.shop_info?.shop_name}
             </h4>
-            <div className="flex gap-x-[2px]">
-              <FaRegStar className="fill-green-950" />
-              <FaRegStar className="fill-green-950" />
-              <FaRegStar className="fill-green-950" />
-              <FaRegStar className="fill-green-950" />
-              <FaRegStar className="fill-green-950" />
-            </div>
+            {Array.from({
+              length: 6 - +tradeSenderShopData?.data?.rating_avg,
+            }).map((_, index) => (
+              <FaRegStar
+                key={index}
+                className="text-primary-green text-xs md:text-sm"
+              />
+            ))}
           </div>
           <div className="flex gap-x-2 items-center mt-1">
             <LocationSvg1 />
             <h5 className="text-[14px] underline cursor-pointer text-[#000] font-lato">
-              13 mi. away -
-            </h5>
-            <h5 className="text-[14px] underline cursor-pointer text-[#000] font-lato">
-              Denver, CO
+              {tradeSenderShopData?.data?.shop_info?.address?.display_my_address
+                ? tradeSenderShopData?.data?.shop_info?.address?.address_line_1
+                : `${tradeSenderShopData?.data?.shop_info?.address?.city}, ${tradeSenderShopData?.data?.shop_info?.address?.state}`}
             </h5>
           </div>
-          <div className="border-b">
-            {/* Header */}
-            <div
-              className="flex justify-between py-4 cursor-pointer items-center"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <h5 className="text-[20px] font-normal text-[#274F45]">
-                Shop FAQ
-              </h5>
-              <FaAngleDown
-                className={`transform transition-transform duration-300 ${
-                  isOpen ? "rotate-180" : "rotate-0"
-                }`}
-              />
-            </div>
+          <div className="flex flex-col">
+            <h4 className="text-[16px] text-[#274F45] font-semibold">
+              Shop description
+            </h4>
+            <p className="text-[14px] max-w-[400px]">
+              {tradeSenderShopData?.data?.shop_info?.about?.our_story}
+            </p>
+          </div>
+          <div className="">
+            {/* faq */}
+            {tradeSenderShopData?.data?.shop_info?.faqs?.map(
+              (faq: any, index: number) => {
+                const isOpen = openIndex === index;
 
-            {/* Content with smooth transition */}
-            <div
-              className={`overflow-hidden transition-[max-height] duration-500 ease-in-out ${
-                isOpen ? "max-h-40" : "max-h-0"
-              }`}
-            >
-              <p className="pb-4 text-gray-600">
-                You can shop from our store anytime. Orders are usually
-                processed within 24 hours. Shipping times vary based on your
-                location.
-              </p>
-            </div>
+                return (
+                  <div key={index}>
+                    <div
+                      className="flex justify-between py-4 cursor-pointer items-center"
+                      onClick={() => setOpenIndex(isOpen ? null : index)}
+                    >
+                      <h5 className="text-[15px] font-normal text-[#274F45]">
+                        {faq?.question}
+                      </h5>
+
+                      <FaAngleDown
+                        className={`transform transition-transform duration-300 ${
+                          isOpen ? "rotate-180" : "rotate-0"
+                        }`}
+                      />
+                    </div>
+
+                    <div
+                      className={`overflow-hidden transition-[max-height] max-w-[500px] duration-500 ease-in-out ${
+                        isOpen ? "max-h-40" : "max-h-0"
+                      }`}
+                    >
+                      <p className="pb-4">{faq?.answer}</p>
+                    </div>
+                  </div>
+                );
+              }
+            )}
           </div>
         </div>
       </div>

@@ -1,12 +1,12 @@
-"use client"
+"use client";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
 import { MdArrowOutward } from "react-icons/md";
 
 const Header = () => {
   const { user } = useAuth();
-   const membershipType = user?.membership?.membership_type || "basic";
-   const isBasicMember = membershipType.toLowerCase() === "basic";
+  const membershipType = user?.membership?.membership_type || "basic";
+  const isBasicMember = membershipType.toLowerCase() === "basic";
   return (
     <div className="flex items-center justify-between flex-wrap gap-4">
       {/* Left Section */}
@@ -26,7 +26,7 @@ const Header = () => {
       <Link
         href={
           isBasicMember
-            ? "/dashboard/basic/view-listing"
+            ? "/dashboard/basic/listing"
             : "/dashboard/pro/view-listing"
         }
       >

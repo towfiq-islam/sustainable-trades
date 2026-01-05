@@ -85,6 +85,8 @@ const actionButtonStyles: Record<
 const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
   const { user } = useAuth();
 
+  console.log(user);
+
   const router = useRouter();
   const approveTradeMutation = useApproveTrade();
   const cancleTradeMutation = useCancel();
@@ -232,7 +234,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                           onClick={() => {
                             if (btn === "Counter") {
                               router.push(
-                                `/dashboard/basic/trades/counter/${trade?.id}`
+                                `/dashboard/${user?.membership?.membership_type}/trades/counter/${trade?.id}`
                               );
                             } else {
                               handleTrade(btn, trade?.id);
@@ -248,11 +250,11 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                       );
                     })}
                 </div>
-                <Link href={`/dashboard/basic/trades/${trade.id}`}>
+                {/* <Link href={`/dashboard/basic/trades/${trade.id}`}>
                   <div className="bg-gray-200 px-3 py-2 cursor-pointer flex items-center justify-center">
                     <FaAnglesRight />
                   </div>
-                </Link>
+                </Link> */}
               </div>
             </div>
           ))}

@@ -147,7 +147,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
         setPreviewImages([]);
         setVideo(null);
         setMetaTags([]);
-        router.push("/dashboard/basic/listings");
+        router.push("/dashboard/basic/listing");
       },
     });
   };

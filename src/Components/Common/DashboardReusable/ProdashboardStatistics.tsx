@@ -13,7 +13,7 @@ const ProdashboardStatistics = () => {
   const { data: visitorData, isLoading: visitorLoading } = getVisitorData();
 
   return (
-    <div className="border border-[#A7A39C] rounded-[8px] pt-5 px-6">
+    <div className="border border-[#A7A39C] rounded-[8px] pt-5 px-6 mt-10">
       <h3 className="text-[#13141D] text-[16px] font-semibold">
         Order/Store Statistics
       </h3>
@@ -38,6 +38,7 @@ const ProdashboardStatistics = () => {
                 {listingData?.data?.active_listings}
               </h6>
             </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
                 Expired
@@ -157,7 +158,7 @@ const ProdashboardStatistics = () => {
                 Total Visits
               </h5>
               <h6 className="text-[14px] text-[#000] font-semibold">
-                {tradeData?.data?.total_visits}
+                {visitorData?.data?.total_visits}
               </h6>
             </div>
 

@@ -137,7 +137,7 @@ const basicNavLinks = [
   {
     id: 17,
     label: "Listings",
-    path: "/dashboard/basic/listings",
+    path: "/dashboard/basic/listing",
     icon: <PSixteenSvg />,
   },
   {

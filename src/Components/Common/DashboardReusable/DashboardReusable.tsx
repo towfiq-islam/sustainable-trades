@@ -10,6 +10,10 @@ import {
   useNotification,
 } from "@/Hooks/api/dashboard_api";
 import moment from "moment";
+import {
+  InventoryItemSkeleton,
+  NotificationSkeleton,
+} from "@/Components/Loader/Loader";
 
 type ImageItem = {
   image: string;
@@ -38,7 +42,12 @@ type NotificationItem = {
   };
 };
 
-const DashboardReusable = () => {
+type HomeProps = {
+  isStatistics: boolean;
+  isPackage?: boolean;
+};
+
+const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
   const { user } = useAuth();
   const { data: homeData, isLoading: homeDataLoading } = getDashboardHomeData();
   const { data: latestProductsData, isLoading: latestProductsLoading } =
@@ -77,7 +86,11 @@ const DashboardReusable = () => {
               Orders
             </p>
             <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
-              {homeData?.data?.total_orders}
+              {homeDataLoading ? (
+                <p className="w-10 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+              ) : (
+                homeData?.data?.total_orders
+              )}
             </h4>
           </div>
           <div className="px-[40px] md:px-[65px]">
@@ -85,7 +98,11 @@ const DashboardReusable = () => {
               Trades
             </p>
             <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
-              {homeData?.data?.total_trades}
+              {homeDataLoading ? (
+                <p className="w-14 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+              ) : (
+                homeData?.data?.total_trades
+              )}
             </h4>
           </div>
           <div className="px-[40px] md:px-[65px]">
@@ -93,7 +110,13 @@ const DashboardReusable = () => {
               Revenue
             </p>
             <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
-              ${homeData?.data?.total_revenue}
+              {homeDataLoading ? (
+                <p className="w-20 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+              ) : (
+                `${homeData?.data?.total_revenue ? "$" : ""}${
+                  homeData?.data?.total_revenue
+                }`
+              )}
             </h4>
           </div>
           <div className="px-[40px] md:px-[65px]">
@@ -101,67 +124,99 @@ const DashboardReusable = () => {
               Visits
             </p>
             <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
-              {homeData?.data?.total_visits}
+              {homeDataLoading ? (
+                <p className="w-10 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+              ) : (
+                homeData?.data?.total_visits
+              )}
             </h4>
           </div>
         </div>
       </div>
 
-      {/* Latest Products */}
-      <div className="pt-[30px] md:pt-[77px] pb-8">
-        <div className="border border-[#A7A39C] rounded-[10px] w-full md:w-[380px]">
-          <div className="p-3">
-            <div className="flex justify-between">
-              <h5 className="text-[16px] text-[#000] font-semibold text-center">
-                Inventory
-              </h5>
+      <div className="flex flex-col gap-[20px] lg:flex-row justify-between py-10">
+        {/* Latest Products */}
+        <div className="pt-[30px] md:pt-[77px] pb-8">
+          <div className="border border-[#A7A39C] rounded-[10px] w-full md:w-[380px]">
+            <div className="p-3">
+              <div className="flex justify-between">
+                <h5 className="text-[16px] text-[#000] font-semibold text-center">
+                  Inventory
+                </h5>
 
-              <Link
-                href="/dashboard/pro/listing"
-                className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer"
-              >
-                More
-                <FaAngleRight />
-              </Link>
-            </div>
-
-            {latestProductsData?.data?.map((item: ItemData) => (
-              <div
-                key={item?.id}
-                className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300"
-              >
-                <figure className="relative w-[100px] h-[80px] rounded-lg">
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.images?.[0]?.image}`}
-                    alt="Inventory"
-                    fill
-                    className="shrink-0 w-full h-full object-cover rounded-lg"
-                  />
-                </figure>
-
-                <div className="w-full">
-                  <div className="flex w-full justify-between items-center">
-                    <h4 className="text-[14px] text-[#000] font-semibold">
-                      {item?.product_name}
-                    </h4>
-
-                    <h4 className="text-[14px] text-[#274F45] font-semibold">
-                      {`${item?.product_quantity} items left`}
-                    </h4>
-                  </div>
-
-                  <p className="text-sm text-[#000] font-normal py-1 truncate">
-                    {item?.selling_option}
-                  </p>
-
-                  <h6 className="text-[12px] text-[#000] font-semibold">
-                    {item?.out_of_stock ? "Out of stock" : "In Stock"}
-                  </h6>
-                </div>
+                <Link
+                  href={`/dashboard/${user?.membership?.membership_type}/listing`}
+                  className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+                >
+                  More
+                  <FaAngleRight />
+                </Link>
               </div>
-            ))}
+
+              {latestProductsLoading ? (
+                Array.from({ length: 3 }).map((_, idx) => (
+                  <InventoryItemSkeleton key={idx} />
+                ))
+              ) : latestProductsData?.data?.length > 0 ? (
+                latestProductsData?.data?.map((item: ItemData) => (
+                  <div
+                    key={item?.id}
+                    className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300"
+                  >
+                    <figure className="relative w-[100px] h-[80px] rounded-lg">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.images?.[0]?.image}`}
+                        alt="Inventory"
+                        fill
+                        className="shrink-0 w-full h-full object-cover rounded-lg"
+                      />
+                    </figure>
+
+                    <div className="w-full">
+                      <div className="flex w-full justify-between items-center">
+                        <h4 className="text-[14px] text-[#000] font-semibold">
+                          {item?.product_name}
+                        </h4>
+
+                        <h4 className="text-[14px] text-[#274F45] font-semibold">
+                          {`${item?.product_quantity} items left`}
+                        </h4>
+                      </div>
+
+                      <p className="text-sm text-[#000] font-normal py-1 truncate">
+                        {item?.selling_option}
+                      </p>
+
+                      <h6 className="text-[12px] text-[#000] font-semibold">
+                        {item?.out_of_stock ? "Out of stock" : "In Stock"}
+                      </h6>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="font-semibold text-red-500 mt-5">
+                  No inventory found
+                </p>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Popup */}
+        {isPackage && (
+          <div className="border border-[#A7A39C] rounded-[8px] p-4 lg:w-1/3 text-center flex flex-col justify-center items-center">
+            <h3 className="text-[16px] md:text-[20px] font-semibold text-[#13141D">
+              Want more admin access?
+            </h3>
+            <p className="text-[13px] md:text-[16px] font-normal text-[#13141D] max-w-[280px] pt-[10px] pb-2.5 lg:pb-5">
+              Upgrade at anytime to pro! All you have to do is pay the
+              difference for the remainder of the year.
+            </p>
+            <button className="min-w-[250px] md:min-w-[300px] py-2 md:py-4 rounded-[8px] bg-transparent text-[14px] md:text-[18px] font-semibold text-[#13141D] cursor-pointer hover:bg-[#E48872]  duration-500 ease-in-out border border-[#E48872]">
+              Upgrade To Pro
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Recent Activity */}
@@ -172,7 +227,7 @@ const DashboardReusable = () => {
           </h5>
 
           <Link
-            href="/dashboard/pro/notification"
+            href={`/dashboard/${user?.membership?.membership_type}/notification`}
             className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer"
           >
             More
@@ -180,48 +235,58 @@ const DashboardReusable = () => {
           </Link>
         </div>
 
-        {notificationsData?.data?.notifications?.map(
-          (item: NotificationItem) => (
-            <div
-              key={item?.id}
-              className="border-b last:border-b-0 border-[#A7A39C] py-4"
-            >
-              <div className="flex flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
-                <div className="flex gap-x-2 items-center">
-                  <figure className="rounded-full size-[50px] grid place-items-center bg-accent-red text-white text-lg font-semibold relative">
-                    {item?.user?.avatar ? (
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.user?.avatar}`}
-                        alt="profile"
-                        fill
-                        className="rounded-full size-full object-cover"
-                      />
-                    ) : (
-                      <h3>{item?.user?.name?.at(0)}</h3>
-                    )}
-                  </figure>
+        {notificationLoading ? (
+          Array.from({ length: 3 }).map((_, idx) => (
+            <NotificationSkeleton key={idx} />
+          ))
+        ) : notificationsData?.data?.notifications?.length > 0 ? (
+          notificationsData?.data?.notifications?.map(
+            (item: NotificationItem) => (
+              <div
+                key={item?.id}
+                className="border-b last:border-b-0 border-[#A7A39C] py-4"
+              >
+                <div className="flex flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
+                  <div className="flex gap-x-2 items-center">
+                    <figure className="rounded-full size-[50px] grid place-items-center bg-accent-red text-white text-lg font-semibold relative">
+                      {item?.user?.avatar ? (
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.user?.avatar}`}
+                          alt="profile"
+                          fill
+                          className="rounded-full size-full object-cover"
+                        />
+                      ) : (
+                        <h3>{item?.user?.name?.at(0)}</h3>
+                      )}
+                    </figure>
 
-                  <div className="">
+                    <div className="">
+                      <h5 className="text-[14px] text-[#000] font-semibold">
+                        {item?.user?.name}
+                      </h5>
+                      <p className="text-[14px] text-[#67645F] font-normal">
+                        {`Sent ${moment(item?.created_at).fromNow()}`}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
                     <h5 className="text-[14px] text-[#000] font-semibold">
-                      {item?.user?.name}
+                      {item?.data?.subject}
                     </h5>
-                    <p className="text-[14px] text-[#67645F] font-normal">
-                      {`Sent ${moment(item?.created_at).fromNow()}`}
+                    <p className="text-[14px] text-[#67645F] font-normal truncate">
+                      {item?.data?.message}
                     </p>
                   </div>
                 </div>
-
-                <div>
-                  <h5 className="text-[14px] text-[#000] font-semibold">
-                    {item?.data?.subject}
-                  </h5>
-                  <p className="text-[14px] text-[#67645F] font-normal truncate">
-                    {item?.data?.message}
-                  </p>
-                </div>
               </div>
-            </div>
+            )
           )
+        ) : (
+          <p className="font-semibold text-red-500 mt-2 ps-3 pb-3">
+            No activity found yet
+          </p>
         )}
       </div>
 
@@ -230,9 +295,7 @@ const DashboardReusable = () => {
       </div> */}
 
       {/* Statistics */}
-      <div className="mt-10">
-        <ProdashboardStatistics />
-      </div>
+      {isStatistics && <ProdashboardStatistics />}
     </>
   );
 };

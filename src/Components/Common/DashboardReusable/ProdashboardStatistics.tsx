@@ -1,7 +1,17 @@
-import React from "react";
+import {
+  getListingData,
+  getOrderData,
+  getTradesData,
+  getVisitorData,
+} from "@/Hooks/api/dashboard_api";
 import { FaAngleRight } from "react-icons/fa";
 
 const ProdashboardStatistics = () => {
+  const { data: listingData, isLoading: listingLoading } = getListingData();
+  const { data: tradeData, isLoading: tradeLoading } = getTradesData();
+  const { data: orderData, isLoading: orderLoading } = getOrderData();
+  const { data: visitorData, isLoading: visitorLoading } = getVisitorData();
+
   return (
     <div className="border border-[#A7A39C] rounded-[8px] pt-5 px-6">
       <h3 className="text-[#13141D] text-[16px] font-semibold">
@@ -19,26 +29,36 @@ const ProdashboardStatistics = () => {
                 <FaAngleRight />
               </h6>
             </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
                 Active
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">4</h6>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {listingData?.data?.active_listings}
+              </h6>
             </div>
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
                 Expired
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">2</h6>
+
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {listingData?.data?.inactive_listings}
+              </h6>
             </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
                 Sold out
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">0</h6>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {listingData?.data?.sold_out_listings}
+              </h6>
             </div>
           </div>
         </div>
+
         <div className="border border-[#A7A39C] p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
             <div className="flex justify-between">
@@ -50,26 +70,36 @@ const ProdashboardStatistics = () => {
                 <FaAngleRight />
               </h6>
             </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
                 New
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">4</h6>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {orderData?.data?.new_orders}
+              </h6>
             </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
                 Shipped
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">2</h6>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {orderData?.data?.shipped_orders}
+              </h6>
             </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
                 Completed
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">0</h6>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {orderData?.data?.completed_orders}
+              </h6>
             </div>
           </div>
         </div>
+
         <div className="border border-[#A7A39C] p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
             <div className="flex justify-between">
@@ -81,26 +111,35 @@ const ProdashboardStatistics = () => {
                 <FaAngleRight />
               </h6>
             </div>
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
-                New
-              </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">4</h6>
-            </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
                 Pending
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">2</h6>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {tradeData?.data?.pending_trades}
+              </h6>
             </div>
+            <div className="flex justify-between">
+              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+                Accepted
+              </h5>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {tradeData?.data?.accepted_trades}
+              </h6>
+            </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
                 Completed
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">0</h6>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {tradeData?.data?.completed_trades}
+              </h6>
             </div>
           </div>
         </div>
+
         <div className="border border-[#A7A39C] p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
             <div className="flex justify-between">
@@ -112,23 +151,32 @@ const ProdashboardStatistics = () => {
                 <FaAngleRight />
               </h6>
             </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
-                New
+                Total Visits
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">4</h6>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {tradeData?.data?.total_visits}
+              </h6>
             </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
-                Returning
+                Today's visit
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">2</h6>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {visitorData?.data?.today_visits}
+              </h6>
             </div>
+
             <div className="flex justify-between">
               <h5 className="text-[14px] text-[#000] font-semibold text-center">
-                Last Visit Before July
+                Last Month Visit
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">0</h6>
+              <h6 className="text-[14px] text-[#000] font-semibold">
+                {visitorData?.data?.last_month_visits}
+              </h6>
             </div>
           </div>
         </div>

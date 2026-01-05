@@ -1,19 +1,54 @@
 "use client";
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
-import Activity from "../../../Assets/activity.png";
-import Inventory from "../../../Assets/inventory.png";
-import ProDashboardMessage from "./ProDashboardMessage";
 import ProdashboardStatistics from "./ProdashboardStatistics";
-import { FaAngleDown, FaAngleRight } from "react-icons/fa";
+import { FaAngleRight } from "react-icons/fa";
+import {
+  getDashboardHomeData,
+  getLatestProducts,
+  useNotification,
+} from "@/Hooks/api/dashboard_api";
+import moment from "moment";
+
+type ImageItem = {
+  image: string;
+};
+
+type ItemData = {
+  id: number;
+  product_name: string;
+  unlimited_stock: boolean;
+  product_quantity: string;
+  selling_option: string;
+  out_of_stock: boolean;
+  images: ImageItem[];
+};
+
+type NotificationItem = {
+  id: number;
+  created_at: string;
+  user: {
+    avatar: string;
+    name: string;
+  };
+  data: {
+    subject: string;
+    message: string;
+  };
+};
 
 const DashboardReusable = () => {
   const { user } = useAuth();
+  const { data: homeData, isLoading: homeDataLoading } = getDashboardHomeData();
+  const { data: latestProductsData, isLoading: latestProductsLoading } =
+    getLatestProducts();
+  const { data: notificationsData, isLoading: notificationLoading } =
+    useNotification();
 
   return (
     <>
+      {/* Top Section */}
       <div className="pb-9  flex flex-col  md:flex-row justify-between md:items-center gap-[32px] md:gap-0">
         <div className="text-[20px] md:text-[24px] flex flex-col gap-y-2">
           <h3 className=" font-semibold text-[#13141D] tracking-[2.4px]">
@@ -33,6 +68,8 @@ const DashboardReusable = () => {
           Edit Shop
         </Link>
       </div>
+
+      {/* Upper section */}
       <div className="border border-[#A7A39C] py-3 rounded-[8px]">
         <div className="flex flex-wrap justify-between items-center">
           <div className="px-[40px] md:px-[65px]">
@@ -40,7 +77,7 @@ const DashboardReusable = () => {
               Orders
             </p>
             <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
-              12
+              {homeData?.data?.total_orders}
             </h4>
           </div>
           <div className="px-[40px] md:px-[65px]">
@@ -48,7 +85,7 @@ const DashboardReusable = () => {
               Trades
             </p>
             <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
-              4
+              {homeData?.data?.total_trades}
             </h4>
           </div>
           <div className="px-[40px] md:px-[65px]">
@@ -56,7 +93,7 @@ const DashboardReusable = () => {
               Revenue
             </p>
             <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
-              $458.32
+              ${homeData?.data?.total_revenue}
             </h4>
           </div>
           <div className="px-[40px] md:px-[65px]">
@@ -64,194 +101,136 @@ const DashboardReusable = () => {
               Visits
             </p>
             <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
-              32
+              {homeData?.data?.total_visits}
             </h4>
           </div>
         </div>
       </div>
+
+      {/* Latest Products */}
       <div className="pt-[30px] md:pt-[77px] pb-8">
-        <div className="border border-[#A7A39C] rounded-[10px] w-full md:w-fit">
+        <div className="border border-[#A7A39C] rounded-[10px] w-full md:w-[380px]">
           <div className="p-3">
             <div className="flex justify-between">
               <h5 className="text-[16px] text-[#000] font-semibold text-center">
                 Inventory
               </h5>
-              <h6 className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer">
+
+              <Link
+                href="/dashboard/pro/listing"
+                className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+              >
                 More
                 <FaAngleRight />
-              </h6>
+              </Link>
             </div>
-            <div className="pt-6 pb-3 flex flex-col md:flex-row gap-x-2 md:items-center">
-              <Image
-                src={Inventory}
-                alt="Inventory"
-                height={60}
-                width={80}
-                className="shrink-0"
-              />
-              <div className="">
-                <div className="flex justify-between shrink-0">
-                  <h4 className="text-[14px] text-[#000] font-semibold">
-                    Lavender Soap Bars
-                  </h4>
-                  <h4 className="text-[14px] text-[#274F45] font-semibold">
-                    134 items
-                  </h4>
-                </div>
-                <p className="text-[12px] text-[#000] font-normal py-1">
-                  Handmade soap bars infused with lavender essential oils...
-                </p>
-                <h6 className="text-[10px] text-[#000] font-semibold">
-                  In Stock
-                </h6>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-b border-[#C8C8C8]">
-            <div className="p-3 w-full">
-              <div className="flex flex-col md:flex-row gap-x-2">
-                <Image
-                  src={Inventory}
-                  alt="Inventory"
-                  height={60}
-                  width={80}
-                  className="shrink-0"
-                />
+
+            {latestProductsData?.data?.map((item: ItemData) => (
+              <div
+                key={item?.id}
+                className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300"
+              >
+                <figure className="relative w-[100px] h-[80px] rounded-lg">
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.images?.[0]?.image}`}
+                    alt="Inventory"
+                    fill
+                    className="shrink-0 w-full h-full object-cover rounded-lg"
+                  />
+                </figure>
+
                 <div className="w-full">
-                  <div className="flex justify-between shrink-0 w-full">
+                  <div className="flex w-full justify-between items-center">
                     <h4 className="text-[14px] text-[#000] font-semibold">
-                      LHandmade Cocoa Butter
+                      {item?.product_name}
                     </h4>
+
                     <h4 className="text-[14px] text-[#274F45] font-semibold">
-                      2 items left
+                      {`${item?.product_quantity} items left`}
                     </h4>
                   </div>
 
-                  <h6 className="text-[10px] text-[#000] font-semibold pt-2 md:pt-10">
-                    In Stock
+                  <p className="text-sm text-[#000] font-normal py-1 truncate">
+                    {item?.selling_option}
+                  </p>
+
+                  <h6 className="text-[12px] text-[#000] font-semibold">
+                    {item?.out_of_stock ? "Out of stock" : "In Stock"}
                   </h6>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="p-3 w-full">
-            <div className="flex flex-col md:flex-row gap-x-2">
-              <Image
-                src={Inventory}
-                alt="Inventory"
-                height={60}
-                width={80}
-                className="shrink-0"
-              />
-              <div className="w-full">
-                <div className="flex justify-between shrink-0 w-full">
-                  <h4 className="text-[14px] text-[#000] font-semibold">
-                    Cold-pressed Rosemary Oil
-                  </h4>
-                  <h4 className="text-[14px] text-[#274F45] font-semibold">
-                    76 items
-                  </h4>
-                </div>
-
-                <h6 className="text-[10px] text-[#E48872] font-semibold md:mt-10">
-                  Running Low
-                </h6>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
+
+      {/* Recent Activity */}
       <div className="border border-[#A7A39C] rounded-[8px]">
         <div className="flex justify-between p-4">
           <h5 className="text-[16px] text-[#000] font-semibold text-center">
             Recent Activity
           </h5>
-          <div className="relative">
-            <select
-              name=""
-              id=""
-              className="border border-[#A7A39C] rounded-[8px] cursor-pointer appearance-none outline-0 px-2 w-[90px]"
+
+          <Link
+            href="/dashboard/pro/notification"
+            className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+          >
+            More
+            <FaAngleRight />
+          </Link>
+        </div>
+
+        {notificationsData?.data?.notifications?.map(
+          (item: NotificationItem) => (
+            <div
+              key={item?.id}
+              className="border-b last:border-b-0 border-[#A7A39C] py-4"
             >
-              <option value="">All</option>
-            </select>
-            <FaAngleDown className="absolute top-1 right-3" />
-          </div>
-        </div>
-        <div className="border-t border-b border-[#A7A39C] py-4">
-          <div className="flex flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
-            <div className="flex gap-x-2 items-center">
-              <Image src={Activity} alt="Activity" width={40} height={40} />
-              <div className="">
-                <h5 className="text-[14px] text-[#000] font-semibold">You</h5>
-                <p className="text-[14px] text-[#67645F] font-normal">
-                  Sent 2 hours ago{" "}
-                </p>
+              <div className="flex flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
+                <div className="flex gap-x-2 items-center">
+                  <figure className="rounded-full size-[50px] grid place-items-center bg-accent-red text-white text-lg font-semibold relative">
+                    {item?.user?.avatar ? (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.user?.avatar}`}
+                        alt="profile"
+                        fill
+                        className="rounded-full size-full object-cover"
+                      />
+                    ) : (
+                      <h3>{item?.user?.name?.at(0)}</h3>
+                    )}
+                  </figure>
+
+                  <div className="">
+                    <h5 className="text-[14px] text-[#000] font-semibold">
+                      {item?.user?.name}
+                    </h5>
+                    <p className="text-[14px] text-[#67645F] font-normal">
+                      {`Sent ${moment(item?.created_at).fromNow()}`}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <h5 className="text-[14px] text-[#000] font-semibold">
+                    {item?.data?.subject}
+                  </h5>
+                  <p className="text-[14px] text-[#67645F] font-normal truncate">
+                    {item?.data?.message}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="">
-              <h5 className="text-[14px] text-[#000] font-semibold">
-                Trade: You began a trade with Rebecca Bennett
-              </h5>
-              <p className="text-[14px] text-[#67645F] font-normal">
-                {" "}
-                Rebecca Bennett: So glad that we agreed on ....
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="py-4">
-          <div className="flex  flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
-            <div className="flex gap-x-2 items-center">
-              <Image src={Activity} alt="Activity" width={40} height={40} />
-              <div className="">
-                <h5 className="text-[14px] text-[#000] font-semibold">
-                  Taylor Lesnicki
-                </h5>
-                <p className="text-[14px] text-[#67645F] font-normal">
-                  Sent 3 hours ago
-                </p>
-              </div>
-            </div>
-            <div className="">
-              <h5 className="text-[14px] text-[#000] font-semibold">
-                Trade: You began a trade with Rebecca Bennett
-              </h5>
-              <p className="text-[14px] text-[#67645F] font-normal">
-                {" "}
-                Rebecca Bennett: So glad that we agreed on ....
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="py-4 border-t border-[#A7A39C]">
-          <div className="flex  flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
-            <div className="flex gap-x-2 items-center">
-              <Image src={Activity} alt="Activity" width={40} height={40} />
-              <div className="">
-                <h5 className="text-[14px] text-[#000] font-semibold">
-                  Audrey Leitner
-                </h5>
-                <p className="text-[14px] text-[#67645F] font-normal">
-                  Sent 2 hours ago{" "}
-                </p>
-              </div>
-            </div>
-            <div className="">
-              <h5 className="text-[14px] text-[#000] font-semibold">
-                Trade: You began a trade with Rebecca Bennett
-              </h5>
-              <p className="text-[14px] text-[#67645F] font-normal">
-                {" "}
-                Rebecca Bennett: So glad that we agreed on ....
-              </p>
-            </div>
-          </div>
-        </div>
+          )
+        )}
       </div>
-      <div className="pt-8 pb-8 lg:pb-16">
+
+      {/* <div className="pt-8 pb-8 lg:pb-16">
         <ProDashboardMessage />
-      </div>
-      <div className="">
+      </div> */}
+
+      {/* Statistics */}
+      <div className="mt-10">
         <ProdashboardStatistics />
       </div>
     </>

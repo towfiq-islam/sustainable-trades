@@ -633,3 +633,78 @@ export const getPayments = (status: string) => {
     },
   });
 };
+
+// Dashboard Home Data
+export const getDashboardHomeData = () => {
+  return useClientApi({
+    method: "get",
+    key: ["dashboard-home-data"],
+    isPrivate: true,
+    endpoint: "/api/vendor/dashboard",
+    queryOptions: {
+      retry: false,
+    },
+  });
+};
+
+// Visitor Data
+export const getVisitorData = () => {
+  return useClientApi({
+    method: "get",
+    key: ["visitor-data"],
+    isPrivate: true,
+    endpoint: "/api/vendor/dashboard/visits",
+    queryOptions: {
+      retry: false,
+    },
+  });
+};
+
+// Order Data
+export const getOrderData = () => {
+  return useClientApi({
+    method: "get",
+    key: ["order-data"],
+    isPrivate: true,
+    endpoint: "/api/vendor/dashboard/order",
+    queryOptions: {
+      retry: false,
+    },
+  });
+};
+
+// Listing Data
+export const getListingData = () => {
+  return useClientApi({
+    method: "get",
+    key: ["listing-data"],
+    isPrivate: true,
+    endpoint: "/api/vendor/dashboard/listings",
+    queryOptions: {
+      retry: false,
+    },
+  });
+};
+
+// Trade Data
+export const getTradesData = () => {
+  return useClientApi({
+    method: "get",
+    key: ["trades-data"],
+    isPrivate: true,
+    endpoint: "/api/vendor/dashboard/trades",
+    queryOptions: {
+      retry: false,
+    },
+  });
+};
+
+// Latest Products
+export const getLatestProducts = () => {
+  return useClientApi({
+    method: "get",
+    key: ["latest-products"],
+    isPrivate: true,
+    endpoint: "/api/latest-products",
+  });
+};

@@ -85,8 +85,6 @@ const actionButtonStyles: Record<
 const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
   const { user } = useAuth();
 
-  console.log(user);
-
   const router = useRouter();
   const approveTradeMutation = useApproveTrade();
   const cancleTradeMutation = useCancel();
@@ -167,15 +165,15 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                 <div key={idx}>
                   <div className=" flex justify-between items-end">
                     <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
-                      {item.product?.images?.map((img) => (
-                        <Image
-                          src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
-                          alt={item?.product?.product_name}
-                          height={100}
-                          width={100}
-                          className="h-[100px] object-cover rounded-md"
-                        />
-                      ))}
+                      {/* {item.product?.images?.map((img) => ( */}
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item.product?.images[0]?.image}`}
+                        alt={item?.product?.product_name}
+                        height={100}
+                        width={100}
+                        className="h-[100px] object-cover rounded-md"
+                      />
+                      {/* ))} */}
 
                       <div className="flex flex-col">
                         <h3 className="text-[18px] sm:text-[20px] font-semibold text-[#13141D]">

@@ -1,5 +1,6 @@
 "use client";
 import { useCheckout } from "@/Hooks/api/cms_api";
+import useAuth from "@/Hooks/useAuth";
 import { getItem } from "@/lib/localStorage";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import toast from "react-hot-toast";
@@ -12,6 +13,7 @@ const CheckoutPaypalModal = ({
   cart_id: number | null;
   formData: any;
 }) => {
+  const { user } = useAuth();
   const { mutateAsync: checkoutMutation, isPending } = useCheckout(cart_id);
   const token = getItem("token");
   const initialOptions = {
@@ -31,7 +33,7 @@ const CheckoutPaypalModal = ({
       { ...formData, payment_method: "cash_on_delivery" },
       {
         onSuccess: (data: any) => {
-          if (data?.success) {
+          if (data?.success && user?.role === "customer") {
             window.location.href = `${window.location.origin}/dashboard/customer/orders`;
           }
         },

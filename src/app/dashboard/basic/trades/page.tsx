@@ -118,7 +118,7 @@ const Page = () => {
         <CanceledTrades canceledTradeData={tradeData?.data} />
       )}
 
-      <div className="w-2/5 mt-10 border border-gray-300 rounded-lg p-6 ml-5">
+      {/* <div className="w-2/5 mt-10 border border-gray-300 rounded-lg p-6 ml-5">
         <h3 className="text-[#13141D] text-[16px] font-semibold">
           Tips for Trading
         </h3>
@@ -150,7 +150,7 @@ const Page = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

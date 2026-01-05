@@ -147,13 +147,13 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
         setPreviewImages([]);
         setVideo(null);
         setMetaTags([]);
-        router.push("/dashboard/basic/listings");
+        router.push("/dashboard/basic/listing");
       },
     });
   };
 
   return (
-    <div>
+    <>
       <Header />
       <MembershipNotice isBasicMember={isBasicMember} />
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -304,7 +304,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
         </div>
         <FormActions isPending={isPending} />
       </form>
-    </div>
+    </>
   );
 };
 

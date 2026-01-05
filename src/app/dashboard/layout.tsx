@@ -65,12 +65,12 @@ const proNavLinks = [
       },
     ],
   },
-  // {
-  //   id: 6,
-  //   label: "Accounting",
-  //   path: "/dashboard/pro/accounting",
-  //   icon: <PSixSvg />,
-  // },
+  {
+    id: 6,
+    label: "Accounting",
+    path: "/dashboard/pro/accounting",
+    icon: <PSixSvg />,
+  },
   {
     id: 7,
     label: "Membership",
@@ -137,7 +137,7 @@ const basicNavLinks = [
   {
     id: 17,
     label: "Listings",
-    path: "/dashboard/basic/listings",
+    path: "/dashboard/basic/listing",
     icon: <PSixteenSvg />,
   },
   {
@@ -151,6 +151,12 @@ const basicNavLinks = [
     label: "Membership",
     path: "/dashboard/basic/membership",
     icon: <PSevenSvg />,
+  },
+  {
+    id: 55,
+    label: "Payment Integration",
+    path: "/dashboard/basic/payment-method",
+    icon: <PFiveSvg />,
   },
   {
     id: 20,

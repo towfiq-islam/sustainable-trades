@@ -811,3 +811,20 @@ export const DiscountSkeleton = () => {
     </div>
   );
 };
+
+export function InventoryItemSkeleton() {
+  return (
+    <div className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300 animate-pulse">
+      <div className="w-[100px] h-[80px] bg-gray-300 rounded-lg" />
+
+      <div className="w-full">
+        <div className="flex w-full justify-between items-center">
+          <div className="h-[14px] w-[40%] bg-gray-300 rounded" />
+          <div className="h-[14px] w-[25%] bg-gray-300 rounded" />
+        </div>
+        <div className="h-[14px] w-[60%] bg-gray-300 rounded mt-2" />
+        <div className="h-[12px] w-[20%] bg-gray-300 rounded mt-2" />
+      </div>
+    </div>
+  );
+}

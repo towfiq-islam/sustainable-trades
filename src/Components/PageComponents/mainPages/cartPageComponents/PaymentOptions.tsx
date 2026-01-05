@@ -8,7 +8,7 @@ import { CartItemSkeleton } from "@/Components/Loader/Loader";
 const PaymentOptions = () => {
   // Mutation + Query
   const { data: cartData, isLoading } = getProductCart();
-  const { mutate: clearCartMutation, isPending } = useClearCart();
+  const { mutate: clearCartMutation, isPending, refetch } = useClearCart();
 
   return (
     <section className="mb-20">
@@ -16,14 +16,17 @@ const PaymentOptions = () => {
         <h3 className="section_sub_title">
           {cartData?.data?.total_cart_items
             ? `${cartData?.data?.total_cart_items} Items In Your Cart`
-            : "Card is empty"}
+            : "Cart is empty"}
         </h3>
 
         {cartData?.data && (
           <button
             disabled={isPending}
-            onClick={() => clearCartMutation()}
-            className={`px-3 py-1.5 text-sm rounded-full font-semibold bg-red-500 text-white flex gap-1 items-center ${
+            onClick={() => {
+              clearCartMutation();
+              refetch();
+            }}
+            className={`px-3 py-1.5 text-sm rounded-full font-semibold bg-primary-red text-white flex gap-1 items-center ${
               isPending ? "cursor-not-allowed" : "cursor-pointer"
             }`}
           >

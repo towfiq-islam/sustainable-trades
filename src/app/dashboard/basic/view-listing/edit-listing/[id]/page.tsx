@@ -451,8 +451,8 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   ];
 
   return (
-    <div>
-      <div className="flex justify-between items-center">
+    <>
+      <div className="flex justify-between items-center gap-3">
         <div>
           <h3 className="text-[30px] md:text-[40px] font-semibold text-[#13141D]">
             {productName}
@@ -463,7 +463,8 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             <h5 className="text-[16px] text-[#13141D]">Edit Listing</h5>
           </div>
         </div>
-        <Link href="/dashboard/basic/listing">
+
+        <Link href="/dashboard/basic/listing" className="block shrink-0">
           <button className="text-[#000] text-[16px] font-semibold flex gap-x-1 items-center border-2 border-[#13141D] rounded-lg py-1.5 md:py-3 px-6 hover:bg-[#E48872] hover:text-white justify-center duration-300 cursor-pointer">
             <MdArrowOutward />
             View Listings
@@ -907,7 +908,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

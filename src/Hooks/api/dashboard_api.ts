@@ -342,12 +342,26 @@ export const useTradeCounterProduct = (id: any) => {
 };
 
 // Get Notifications  Hooks
-export const useNotification = () => {
+export const useNotification = (page?: string) => {
   return useClientApi({
     method: "get",
-    key: ["get-notifications"],
+    key: ["get-notifications", page],
     isPrivate: true,
     endpoint: "/api/notifications",
+    params: { page },
+    queryOptions: {
+      retry: false,
+    },
+  });
+};
+
+// Get Todays Notifications
+export const useTodaysNotification = () => {
+  return useClientApi({
+    method: "get",
+    key: ["get-todays-notifications"],
+    isPrivate: true,
+    endpoint: "/api/notifications/today",
   });
 };
 
@@ -710,5 +724,25 @@ export const getLatestProducts = () => {
     key: ["latest-products"],
     isPrivate: true,
     endpoint: "/api/latest-products",
+  });
+};
+
+// Delete all notifications
+export const useDeleteAllNotifications = () => {
+  const queryClient = useQueryClient();
+  return useClientApi({
+    method: "delete",
+    key: ["delete-all-notifications"],
+    isPrivate: true,
+    endpoint: "/api/notifications/clear-all",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        queryClient.invalidateQueries("get-notifications" as any);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
   });
 };

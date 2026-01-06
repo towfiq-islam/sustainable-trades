@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import CounterBottom from "./CounterBottom";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { FaRegStar } from "react-icons/fa";
+import { FaRegStar, FaStar } from "react-icons/fa";
 import { LocationSvg1, Reload } from "@/Components/Svg/SvgContainer";
 import {
   useCancel,
@@ -295,12 +295,32 @@ const CounterTrades = ({ id }: any) => {
                           View Shop
                         </Link>
                       </h4>
-                      <div className="flex gap-x-[2px]">
-                        {[...Array(product?.product?.rating || 5)].map(
-                          (_, i) => (
-                            <FaRegStar key={i} className="fill-green-950" />
-                          )
-                        )}
+                      {/* <div className="flex gap-x-[2px]">
+                        {[
+                          ...Array(product?.product?.reviews_avg_rating || 5),
+                        ].map((_, i) => (
+                          <FaRegStar key={i} className="fill-green-950" />
+                        ))}
+                        
+                      </div> */}
+                      <div className="flex gap-1 items-center py-2">
+                        {Array.from({
+                          length: +product?.product?.reviews_avg_rating,
+                        }).map((_, index) => (
+                          <FaStar
+                            key={index}
+                            className="text-primary-green text-sm"
+                          />
+                        ))}
+
+                        {Array.from({
+                          length: 5 - +product?.product?.reviews_avg_rating,
+                        }).map((_, index) => (
+                          <FaRegStar
+                            key={index}
+                            className="text-primary-green text-sm"
+                          />
+                        ))}
                       </div>
                       <div className="flex gap-x-2 items-center">
                         <LocationSvg1 />

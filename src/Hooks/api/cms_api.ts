@@ -341,6 +341,7 @@ export const getProductCart = () => {
 
 // Add To Cart
 export const useAddToCart = (product_id: any) => {
+  const queryClient = useQueryClient();
   return useClientApi({
     method: "post",
     key: ["add-to-cart"],
@@ -349,6 +350,7 @@ export const useAddToCart = (product_id: any) => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
+        queryClient.invalidateQueries("get-product-cart" as any);
       }
     },
     onError: (err: any) => {

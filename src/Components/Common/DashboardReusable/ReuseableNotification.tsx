@@ -1,8 +1,13 @@
 "use client";
 import moment from "moment";
 import Image from "next/image";
-import { useNotification } from "@/Hooks/api/dashboard_api";
+import { useState } from "react";
+import {
+  useDeleteAllNotifications,
+  useNotification,
+} from "@/Hooks/api/dashboard_api";
 import { NotificationSkeleton } from "@/Components/Loader/Loader";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 type notificationItem = {
   id: number;
@@ -18,27 +23,42 @@ type notificationItem = {
 };
 
 const ReuseableNotification = () => {
-  const { data: notificationsData, isLoading } = useNotification();
+  const [page, setPage] = useState<string>("");
+  const { data: notificationsData, isLoading } = useNotification(page);
+  const { mutate: deleteAllNotifications, isPending } =
+    useDeleteAllNotifications();
 
   return (
     <>
       <div className="bg-[#FFF] rounded-lg w-full mx-auto shadow-lg">
-        <div className="border-b border-[#E5E5E5]">
-          <h3 className="text-[30px] md:text-[36px] font-semibold text-[#000] flex items-center gap-x-2 p-3 md:p-5">
+        <div className="border-b border-[#E5E5E5] flex gap-3 items-center justify-between p-3 md:p-5">
+          <h3 className="text-[30px] md:text-[36px] font-semibold text-[#000] flex items-center gap-x-2">
             Notifications
           </h3>
+
+          <button
+            disabled={isPending}
+            onClick={() => deleteAllNotifications()}
+            className="size-10 grid place-items-center rounded-lg cursor-pointer bg-primary-red disabled:cursor-not-allowed disabled:opacity-85"
+          >
+            {isPending ? (
+              <span className="inline-block animate-spin">⏳</span>
+            ) : (
+              <RiDeleteBin6Line className="text-xl text-white" />
+            )}
+          </button>
         </div>
 
         {isLoading ? (
           Array.from({ length: 3 }).map((_, idx) => (
             <NotificationSkeleton key={idx} />
           ))
-        ) : notificationsData?.data?.notifications?.length === 0 ? (
+        ) : notificationsData?.data?.notifications?.data?.length === 0 ? (
           <div className="p-5 text-center text-red-500">
             No notifications found
           </div>
         ) : (
-          notificationsData?.data?.notifications?.map(
+          notificationsData?.data?.notifications?.data?.map(
             (notification: notificationItem) => {
               return (
                 <div
@@ -77,6 +97,27 @@ const ReuseableNotification = () => {
               );
             }
           )
+        )}
+
+        {/* Pagination */}
+        {!isLoading && (
+          <div className="py-8 flex justify-center items-center gap-2 flex-wrap">
+            {notificationsData?.data?.notifications?.links?.map(
+              (item: any, idx: number) => (
+                <button
+                  key={idx}
+                  onClick={() => item.url && setPage(item.url.split("=")[1])}
+                  className={`px-3 py-1 rounded border transition-all duration-200 
+        ${
+          item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"
+        } 
+        ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                  disabled={!item.url}
+                  dangerouslySetInnerHTML={{ __html: item.label }}
+                />
+              )
+            )}
+          </div>
         )}
       </div>
     </>

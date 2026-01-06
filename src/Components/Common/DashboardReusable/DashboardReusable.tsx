@@ -7,7 +7,7 @@ import { FaAngleRight } from "react-icons/fa";
 import {
   getDashboardHomeData,
   getLatestProducts,
-  useNotification,
+  useTodaysNotification,
 } from "@/Hooks/api/dashboard_api";
 import moment from "moment";
 import {
@@ -53,7 +53,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
   const { data: latestProductsData, isLoading: latestProductsLoading } =
     getLatestProducts();
   const { data: notificationsData, isLoading: notificationLoading } =
-    useNotification();
+    useTodaysNotification();
 
   return (
     <>
@@ -161,9 +161,9 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                 latestProductsData?.data?.map((item: ItemData) => (
                   <div
                     key={item?.id}
-                    className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300"
+                    className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300 overflow-hidden"
                   >
-                    <figure className="relative w-[100px] h-[80px] rounded-lg">
+                    <figure className="relative w-[80px] h-[80px] rounded-lg shrink-0">
                       <Image
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.images?.[0]?.image}`}
                         alt="Inventory"
@@ -174,7 +174,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
 
                     <div className="w-full">
                       <div className="flex w-full justify-between items-center">
-                        <h4 className="text-[14px] text-[#000] font-semibold">
+                        <h4 className="text-[14px] text-[#000] font-semibold truncate w-40">
                           {item?.product_name}
                         </h4>
 
@@ -243,50 +243,48 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
           Array.from({ length: 3 }).map((_, idx) => (
             <NotificationSkeleton key={idx} />
           ))
-        ) : notificationsData?.data?.notifications?.length > 0 ? (
-          notificationsData?.data?.notifications?.map(
-            (item: NotificationItem) => (
-              <div
-                key={item?.id}
-                className="border-b last:border-b-0 border-[#A7A39C] py-4"
-              >
-                <div className="flex flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
-                  <div className="flex gap-x-2 items-center">
-                    <figure className="rounded-full size-[50px] grid place-items-center bg-accent-red text-white text-lg font-semibold relative">
-                      {item?.user?.avatar ? (
-                        <Image
-                          src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.user?.avatar}`}
-                          alt="profile"
-                          fill
-                          className="rounded-full size-full object-cover"
-                        />
-                      ) : (
-                        <h3>{item?.user?.name?.at(0)}</h3>
-                      )}
-                    </figure>
+        ) : notificationsData?.data?.data?.length > 0 ? (
+          notificationsData?.data?.data?.map((item: NotificationItem) => (
+            <div
+              key={item?.id}
+              className="border-b last:border-b-0 border-[#A7A39C] py-4"
+            >
+              <div className="flex flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
+                <div className="flex gap-x-2 items-center">
+                  <figure className="rounded-full size-[50px] grid place-items-center bg-accent-red text-white text-lg font-semibold relative">
+                    {item?.user?.avatar ? (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.user?.avatar}`}
+                        alt="profile"
+                        fill
+                        className="rounded-full size-full object-cover"
+                      />
+                    ) : (
+                      <h3>{item?.user?.name?.at(0)}</h3>
+                    )}
+                  </figure>
 
-                    <div className="">
-                      <h5 className="text-[14px] text-[#000] font-semibold">
-                        {item?.user?.name}
-                      </h5>
-                      <p className="text-[14px] text-[#67645F] font-normal">
-                        {`Sent ${moment(item?.created_at).fromNow()}`}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
+                  <div className="">
                     <h5 className="text-[14px] text-[#000] font-semibold">
-                      {item?.data?.subject}
+                      {item?.user?.name}
                     </h5>
-                    <p className="text-[14px] text-[#67645F] font-normal truncate">
-                      {item?.data?.message}
+                    <p className="text-[14px] text-[#67645F] font-normal">
+                      {`Sent ${moment(item?.created_at).fromNow()}`}
                     </p>
                   </div>
                 </div>
+
+                <div>
+                  <h5 className="text-[14px] text-[#000] font-semibold">
+                    {item?.data?.subject}
+                  </h5>
+                  <p className="text-[14px] text-[#67645F] font-normal truncate">
+                    {item?.data?.message}
+                  </p>
+                </div>
               </div>
-            )
-          )
+            </div>
+          ))
         ) : (
           <p className="font-semibold text-red-500 mt-2 ps-3 pb-3">
             No activity found yet

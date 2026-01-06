@@ -153,22 +153,10 @@ const basicNavLinks = [
     icon: <PSevenSvg />,
   },
   {
-    id: 55,
-    label: "Payment Integration",
-    path: "/dashboard/basic/payment-method",
-    icon: <PFiveSvg />,
-  },
-  {
     id: 20,
     label: "Favorites",
     path: "/dashboard/basic/favorites",
     icon: <PTenSvg />,
-  },
-  {
-    id: 21,
-    label: "Member Spotlight",
-    path: "/dashboard/basic/member-spotlight",
-    icon: <PElevenSvg />,
   },
   {
     id: 22,

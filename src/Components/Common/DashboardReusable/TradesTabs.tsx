@@ -18,6 +18,7 @@ export type TradeItem = {
   store: string;
   quantity: string;
   totalAmount: number;
+  type: string;
 };
 
 export type shopData = {
@@ -33,6 +34,7 @@ export type productInfo = {
   product_price: number;
   images: ImageArr[];
   shop: shopData;
+  shop_info_id: string;
 };
 
 export type ImageArr = {
@@ -123,6 +125,9 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
       });
     }
   };
+
+  console.log(tradeRequests);
+
   return (
     <>
       {tradeRequests?.length === 0 ? (
@@ -161,55 +166,70 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                 </button>
               </div>
 
-              {trade?.items?.map((item, idx) => (
-                <div key={idx}>
-                  <div className=" flex justify-between items-end">
-                    <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
-                      {/* {item.product?.images?.map((img) => ( */}
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item.product?.images[0]?.image}`}
-                        alt={item?.product?.product_name}
-                        height={100}
-                        width={100}
-                        className="h-[100px] object-cover rounded-md"
-                      />
-                      {/* ))} */}
-
-                      <div className="flex flex-col">
-                        <h3 className="text-[18px] sm:text-[20px] font-semibold text-[#13141D]">
-                          {item?.product?.product_name}
-                        </h3>
-                        <h4 className="text-[16px] sm:text-[20px] font-normal text-[#4B4A47]">
-                          {item?.product?.shop?.shop_name}
-                        </h4>
-                        <h5 className="text-[#13141D] font-normal text-[13px] sm:text-[16px] mt-3">
-                          Qty: {item?.quantity}
-                        </h5>
+              {trade?.items?.map((item, idx) => {
+                const dividerIndex = trade?.items?.findIndex(
+                  (item) => item?.type?.trim() === "requested"
+                );
+                return (
+                  <div key={idx}>
+                    {/* 🔹 Divider between offered & requested */}
+                    {idx === dividerIndex && dividerIndex !== 0 && (
+                      <div className="flex gap-x-5 items-center mt-4 mb-4">
+                        <div className="bg-[#BFBEBE] w-full h-[1px]" />
+                        <div className="inline-block">
+                          <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
+                        </div>
+                        <div className="bg-[#BFBEBE] w-full h-[1px]" />
                       </div>
+                    )}
+                    <div className=" flex justify-between items-end">
+                      <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
+                        {/* {item.product?.images?.map((img) => ( */}
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item.product?.images[0]?.image}`}
+                          alt={item?.product?.product_name}
+                          height={100}
+                          width={100}
+                          className="h-[100px] object-cover rounded-md"
+                        />
+                        {/* ))} */}
+
+                        <div className="flex flex-col">
+                          <h3 className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-[#13141D]">
+                            {item?.product?.product_name}
+                          </h3>
+                          <h4 className="text-[16px] sm:text-[18px] font-normal text-[#4B4A47]">
+                            Visit Shop:{" "}
+                            <Link
+                              href={`/shop-details?view=${"customer"}&id=${
+                                item?.product?.shop?.user_id
+                              }&listing_id=${item?.product?.shop_info_id}`}
+                            >
+                              {item?.product?.shop?.shop_name}
+                            </Link>
+                          </h4>
+                          <h5 className="text-[#13141D] font-normal text-[13px] sm:text-[14px] ">
+                            Qty: {item?.quantity}
+                          </h5>
+                          <h6 className="text-[#13141D] font-normal text-[13px] sm:text-[14px] ">
+                            Unit Price : {`$ ${item?.product?.product_price}`}
+                          </h6>
+                        </div>
+                      </div>
+                      <h2 className="text-[16px] sm:text-[20px]  font-normal text-[#4B4A47]">
+                        Total amount:{" "}
+                        <span className="font-semibold text-[#13141D]">
+                          $
+                          {totalAmount(
+                            +item?.quantity,
+                            +item?.product?.product_price
+                          )}
+                        </span>
+                      </h2>
                     </div>
-                    <h2 className="text-[16px] sm:text-[20px]  font-normal text-[#4B4A47]">
-                      Total amount:{" "}
-                      <span className="font-semibold text-[#13141D]">
-                        $
-                        {totalAmount(
-                          +item?.quantity,
-                          +item?.product?.product_price
-                        )}
-                      </span>
-                    </h2>
                   </div>
-
-                  {idx < trade.items.length - 1 && (
-                    <div className="flex gap-x-5 items-center mt-4 mb-2">
-                      <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
-                      <div className="inline-block">
-                        <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
-                      </div>
-                      <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                );
+              })}
 
               <div className="flex flex-wrap gap-3.5 md:gap-0 justify-between items-end border-t border-[#BFBEBE] pt-3">
                 <div className="flex gap-2.5 md:gap-5 flex-wrap">

@@ -161,9 +161,9 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                 latestProductsData?.data?.map((item: ItemData) => (
                   <div
                     key={item?.id}
-                    className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300"
+                    className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300 overflow-hidden"
                   >
-                    <figure className="relative w-[100px] h-[80px] rounded-lg">
+                    <figure className="relative w-[80px] h-[80px] rounded-lg shrink-0">
                       <Image
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.images?.[0]?.image}`}
                         alt="Inventory"
@@ -174,7 +174,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
 
                     <div className="w-full">
                       <div className="flex w-full justify-between items-center">
-                        <h4 className="text-[14px] text-[#000] font-semibold">
+                        <h4 className="text-[14px] text-[#000] font-semibold truncate w-40">
                           {item?.product_name}
                         </h4>
 

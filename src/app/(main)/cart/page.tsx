@@ -5,7 +5,6 @@ import Container from "@/Components/Common/Container";
 import PaymentOptions from "@/Components/PageComponents/mainPages/cartPageComponents/PaymentOptions";
 import ShopLocation from "@/Components/PageComponents/mainPages/cartPageComponents/ShopLocation";
 
-
 const page = () => {
   const { data: cartData } = getProductCart();
 

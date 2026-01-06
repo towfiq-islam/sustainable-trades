@@ -12,7 +12,7 @@ import {
 } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 import { useLogout } from "@/Hooks/api/auth_api";
-import { getSiteSettingsClient } from "@/Hooks/api/cms_api";
+import { getProductCart, getSiteSettingsClient } from "@/Hooks/api/cms_api";
 
 const navLins = [
   { id: 1, label: "Home", path: "/" },
@@ -31,6 +31,7 @@ interface DashboardHeaderProps {
 const DashboardHeader = ({ setOpen }: DashboardHeaderProps) => {
   const { user } = useAuth();
   const pathname = usePathname();
+  const { data: cartData } = getProductCart();
   const { data: siteSettings } = getSiteSettingsClient();
   const { mutate: logoutMutation, isPending } = useLogout();
   const [showPopover, setShowPopover] = useState<boolean>(false);
@@ -133,7 +134,12 @@ const DashboardHeader = ({ setOpen }: DashboardHeaderProps) => {
           )}
 
           {/* Cart */}
-          <Link href="/cart" className="cursor-pointer">
+          <Link href="/cart" className="cursor-pointer relative">
+            <button className="absolute -top-4 -right-4 size-5 font-semibold text-xs grid place-items-center rounded-full bg-accent-red text-white cursor-pointer">
+              {cartData?.data?.total_cart_items
+                ? cartData?.data?.total_cart_items
+                : 0}
+            </button>
             <CartSvg2 />
           </Link>
 

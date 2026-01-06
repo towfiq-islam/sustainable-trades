@@ -19,10 +19,12 @@ import {
   NotificationSvg,
 } from "@/Components/Svg/SvgContainer";
 import Sidebar from "@/Components/Common/Sidebar";
-import { getSiteSettingsClient } from "@/Hooks/api/cms_api";
+import { getProductCart, getSiteSettingsClient } from "@/Hooks/api/cms_api";
 
 const BasicNavbar = ({ dynamicPage }: any) => {
   const { data: siteSettings } = getSiteSettingsClient();
+  const { data: cartData } = getProductCart();
+
   const navLins = [
     { id: 1, label: "Home", path: "/" },
     { id: 2, label: "Shop", path: "/shop" },
@@ -257,7 +259,10 @@ const BasicNavbar = ({ dynamicPage }: any) => {
             )}
 
             {/* Cart */}
-            <Link href="/cart" className="cursor-pointer">
+            <Link href="/cart" className="cursor-pointer relative">
+              <button className="absolute -top-4 -right-4 size-5 font-semibold text-xs grid place-items-center rounded-full bg-accent-red text-white cursor-pointer">
+                {cartData?.data?.total_cart_items}
+              </button>
               <CartSvg2 />
             </Link>
 

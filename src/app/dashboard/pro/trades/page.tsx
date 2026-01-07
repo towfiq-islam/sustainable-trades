@@ -15,7 +15,7 @@ type TradeLayoutProps = {
 
 const Page = () => {
   const { data } = useTradeCounts();
-  const { data: tradeData } = useTradesdata("");
+  const { data: tradeData, isLoading } = useTradesdata("");
 
   const [activeTab, setActiveTab] = useState("Pending");
 
@@ -36,22 +36,22 @@ const Page = () => {
     {
       id: 1,
       label: "Pending",
-      count: data?.data?.pending_count,
+      count: data?.data?.pending_count ? data?.data?.pending_count : 0,
     },
     {
       id: 2,
       label: "Sent",
-      count: data?.data?.sent_count,
+      count: data?.data?.sent_count ? data?.data?.sent_count : 0,
     },
     {
       id: 3,
       label: "Approved",
-      count: data?.data?.accepted_count,
+      count: data?.data?.accepted_count ? data?.data?.accepted_count : 0,
     },
     {
       id: 4,
       label: "Canceled",
-      count: data?.data?.cancelled_count,
+      count: data?.data?.cancelled_count ? data?.data?.cancelled_count : 0,
     },
   ];
 
@@ -77,7 +77,7 @@ const Page = () => {
       {/* Tabs */}
       <div className="mt-14">
         <ul className="flex justify-between relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:p-[3px] after:border after:border-[#A7A39C] after:rounded-lg">
-          {tradetabs.map((tab) => (
+          {tradetabs?.map(tab => (
             <li
               key={tab.label}
               onClick={() => setActiveTab(tab.label)}
@@ -105,17 +105,26 @@ const Page = () => {
       </div>
 
       {activeTab === "Pending" && (
-        <PendingTrades pendingTradeData={tradeData?.data} />
+        <PendingTrades
+          pendingTradeData={tradeData?.data}
+          isLoading={isLoading}
+        />
       )}
 
       {activeTab === "Sent" && <SentTrades />}
 
       {activeTab === "Approved" && (
-        <PreviousTrades approveTradeData={tradeData?.data} />
+        <PreviousTrades
+          approveTradeData={tradeData?.data}
+          isLoading={isLoading}
+        />
       )}
 
       {activeTab === "Canceled" && (
-        <CanceledTrades canceledTradeData={tradeData?.data} />
+        <CanceledTrades
+          canceledTradeData={tradeData?.data}
+          isLoading={isLoading}
+        />
       )}
 
       {/* <div className="w-2/5 mt-10 border border-gray-300 rounded-lg p-6 ml-5">

@@ -828,3 +828,52 @@ export function InventoryItemSkeleton() {
     </div>
   );
 }
+
+export const TradeRequestSkeleton = () => {
+  return (
+    <div className="border border-[#BFBEBE] p-3 md:p-6 rounded-[8px] flex flex-col gap-4 animate-pulse mt-10">
+      <div className="flex flex-col sm:flex-row justify-between gap-3 pb-4 border-b border-[#BFBEBE]">
+        <div className="flex flex-wrap gap-x-5 items-center">
+          <div className="h-4 w-32 bg-gray-300 rounded" />
+          <div className="h-4 w-44 bg-gray-300 rounded" />
+          <div className="h-4 w-28 bg-gray-300 rounded" />
+        </div>
+        <div className="h-8 w-[100px] bg-gray-300 rounded" />
+      </div>
+
+      {[...Array(2)].map((_, idx) => (
+        <div key={idx}>
+          {idx === 1 && (
+            <div className="flex gap-x-5 items-center my-4">
+              <div className="bg-gray-300 w-full h-[1px]" />
+              <div className="h-6 w-6 bg-gray-300 rounded-full" />
+              <div className="bg-gray-300 w-full h-[1px]" />
+            </div>
+          )}
+
+          <div className="flex justify-between items-end">
+            <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
+              <div className="h-[100px] w-[100px] bg-gray-300 rounded-md" />
+              <div className="flex flex-col gap-2">
+                <div className="h-5 w-64 bg-gray-300 rounded" />
+                <div className="h-4 w-48 bg-gray-300 rounded" />
+                <div className="h-4 w-20 bg-gray-300 rounded" />
+                <div className="h-4 w-32 bg-gray-300 rounded" />
+              </div>
+            </div>
+            <div className="h-5 w-40 bg-gray-300 rounded" />
+          </div>
+        </div>
+      ))}
+      <div className="flex flex-wrap justify-between items-end border-t border-[#BFBEBE] pt-3">
+        <div className="flex gap-3">
+          {Array(3)
+            .fill(null)
+            .map((_, i) => (
+              <div key={i} className="h-10 w-24 bg-gray-300 rounded-md" />
+            ))}
+        </div>
+      </div>
+    </div>
+  );
+};

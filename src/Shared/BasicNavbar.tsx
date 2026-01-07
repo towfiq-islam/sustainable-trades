@@ -9,7 +9,7 @@ import h5 from "@/Assets/h5.svg";
 import useAuth from "@/Hooks/useAuth";
 import { usePathname } from "next/navigation";
 import { useLogout } from "@/Hooks/api/auth_api";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "@/Components/Common/Container";
 import {
   CartSvg2,
@@ -261,7 +261,9 @@ const BasicNavbar = ({ dynamicPage }: any) => {
             {/* Cart */}
             <Link href="/cart" className="cursor-pointer relative">
               <button className="absolute -top-4 -right-4 size-5 font-semibold text-xs grid place-items-center rounded-full bg-accent-red text-white cursor-pointer">
-                {cartData?.data?.total_cart_items}
+                {cartData?.data?.total_cart_items
+                  ? cartData?.data?.total_cart_items
+                  : 0}
               </button>
               <CartSvg2 />
             </Link>

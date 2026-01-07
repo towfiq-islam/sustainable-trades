@@ -11,6 +11,11 @@ import { useApproveTrade, useCancel } from "@/Hooks/api/dashboard_api";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
+import { TradeRequestSkeleton } from "@/Components/Loader/Loader";
+import Modal from "../Modal";
+import MessageShopOwner from "@/Components/Modals/MessageShopOwner";
+import { useState } from "react";
+import { ImSpinner9 } from "react-icons/im";
 
 export type TradeItem = {
   image: StaticImageData | string;
@@ -50,10 +55,12 @@ export type TradeRequest = {
   status: "pending" | "sent" | "accepted" | "cancelled";
   items: TradeItem[];
   sender_id: number;
+  receiver_id: number;
 };
 
 type TradesTabsProps = {
   tradeRequests: TradeRequest[];
+  isLoading: any;
 };
 
 const actionButtons: Record<TradeRequest["status"], string[]> = {
@@ -84,16 +91,22 @@ const actionButtonStyles: Record<
   },
 };
 
-const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
+const TradesTabs: React.FC<TradesTabsProps> = ({
+  tradeRequests,
+  isLoading,
+}) => {
   const { user } = useAuth();
-
-  const router = useRouter();
-  const approveTradeMutation = useApproveTrade();
-  const cancleTradeMutation = useCancel();
   const queryClient = useQueryClient();
+  const [userId, setUserId] = useState<number | null>(null);
+  const [msgOpen, setMsgOpen] = useState<boolean>(false);
+  const router = useRouter();
+  const { mutate: approveTradeMutation, isPending: isApproving } =
+    useApproveTrade();
+  const { mutate: cancleTradeMutation, isPending: isCancelling } = useCancel();
+
   const handleTrade = (btn: any, id: any) => {
     if (btn === "Approve") {
-      approveTradeMutation.mutate(id, {
+      approveTradeMutation(id, {
         onSuccess: (data: any) => {
           toast.success(data?.message);
           queryClient.invalidateQueries({
@@ -103,13 +116,14 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
             queryKey: ["get-count"],
           });
         },
-        onError: (error) => {
+        onError: error => {
           toast.error("This is not your offer");
         },
       });
     }
+
     if (btn === "Deny") {
-      cancleTradeMutation.mutate(id, {
+      cancleTradeMutation(id, {
         onSuccess: (data: any) => {
           toast.success(data?.message);
           queryClient.invalidateQueries({
@@ -124,20 +138,28 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
         },
       });
     }
+
+    if (btn === "Message") {
+      setMsgOpen(true);
+    }
   };
 
   console.log(tradeRequests);
 
   return (
     <>
-      {tradeRequests?.length === 0 ? (
+      {isLoading ? (
+        Array.from({ length: 1 }).map((_, i) => (
+          <TradeRequestSkeleton key={i} />
+        ))
+      ) : tradeRequests?.length === 0 ? (
         <p className="text-center mt-5 h-[300px]">No Offered Found</p>
       ) : (
         <div className="h-[600px] overflow-y-auto mt-2 sm:p-6 flex flex-col gap-6">
-          {tradeRequests?.map((trade) => (
+          {tradeRequests?.map((trade: TradeRequest) => (
             <div
               key={trade.id}
-              className="border border-[#BFBEBE] p-3 md:p-6 rounded-[8px] flex flex-col gap-4"
+              className="border border-[#BFBEBE] p-3 md:p-5 rounded-[8px] flex flex-col gap-4"
             >
               <div className="flex flex-col gap-3.5 sm:gap-0 sm:flex-row justify-between pb-4 border-b border-[#BFBEBE]">
                 <div className="flex flex-wrap sm:flex-nowrap  gap-x-5 items-center">
@@ -152,7 +174,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                   </h5>
                 </div>
                 <button
-                  className={`px-2 py-1 rounded-[8px] min-w-[100px] inline-block  cursor-pointer ${
+                  className={`px-2 py-1 rounded-[8px] min-w-[100px] inline-block  cursor-pointer capitalize font-semibold ${
                     trade.status === "pending"
                       ? "bg-[#E48872] text-white"
                       : trade.status === "sent"
@@ -166,9 +188,9 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                 </button>
               </div>
 
-              {trade?.items?.map((item, idx) => {
+              {trade?.items?.map((item: any, idx: number) => {
                 const dividerIndex = trade?.items?.findIndex(
-                  (item) => item?.type?.trim() === "requested"
+                  (item: any) => item?.type?.trim() === "requested"
                 );
                 return (
                   <div key={idx}>
@@ -184,7 +206,6 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                     )}
                     <div className=" flex justify-between items-end">
                       <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
-                        {/* {item.product?.images?.map((img) => ( */}
                         <Image
                           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item.product?.images[0]?.image}`}
                           alt={item?.product?.product_name}
@@ -192,13 +213,16 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                           width={100}
                           className="h-[100px] object-cover rounded-md"
                         />
-                        {/* ))} */}
 
                         <div className="flex flex-col">
-                          <h3 className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-[#13141D]">
+                          <Link
+                            href={`/product-details/${item?.product_id}`}
+                            className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-[#13141D] hover:underline"
+                          >
                             {item?.product?.product_name}
-                          </h3>
-                          <h4 className="text-[16px] sm:text-[18px] font-normal text-[#4B4A47]">
+                          </Link>
+
+                          <h4 className="text-[16px] sm:text-[17px] font-normal text-[#4B4A47] hover:underline">
                             Visit Shop:{" "}
                             <Link
                               href={`/shop-details?view=${"customer"}&id=${
@@ -208,9 +232,11 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                               {item?.product?.shop?.shop_name}
                             </Link>
                           </h4>
+
                           <h5 className="text-[#13141D] font-normal text-[13px] sm:text-[14px] ">
                             Qty: {item?.quantity}
                           </h5>
+
                           <h6 className="text-[#13141D] font-normal text-[13px] sm:text-[14px] ">
                             Unit Price : {`$ ${item?.product?.product_price}`}
                           </h6>
@@ -234,12 +260,12 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
               <div className="flex flex-wrap gap-3.5 md:gap-0 justify-between items-end border-t border-[#BFBEBE] pt-3">
                 <div className="flex gap-2.5 md:gap-5 flex-wrap">
                   {actionButtons[trade.status]
-                    ?.filter((btn) => {
+                    ?.filter((btn: any) => {
                       if (btn === "Approve" && trade?.sender_id === user?.id)
                         return false;
                       return true;
                     })
-                    .map((btn, i) => {
+                    .map((btn: any, i: number) => {
                       const style = actionButtonStyles[btn] || {
                         bg: "bg-gray-200",
                         border: "border-gray-400",
@@ -255,19 +281,28 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
                                 `/dashboard/${user?.membership?.membership_type}/trades/counter/${trade?.id}`
                               );
                             } else {
+                              setUserId(trade?.receiver_id);
                               handleTrade(btn, trade?.id);
                             }
                           }}
-                          className={`relative cursor-pointer py-[10px] border px-4 rounded-md font-lato font-semibold overflow-hidden
-          hover:scale-110 duration-500 ease-in-out
-          ${style.bg || ""} ${style.border || "border-2"} ${style.text}
-        `}
+                          className={`relative cursor-pointer py-[10px] border px-4 rounded-md font-lato font-semibold overflow-hidden hover:scale-110 duration-500 ease-in-out ${
+                            style.bg || ""
+                          } ${style.border || "border-2"} ${style.text}`}
                         >
-                          <span className="relative z-10">{btn}</span>
+                          <span className="relative z-10">
+                            {btn === "Deny" && isCancelling ? (
+                              <ImSpinner9 className="animate-spin inline-block text-lg" />
+                            ) : btn === "Approve" && isApproving ? (
+                              <ImSpinner9 className="animate-spin inline-block text-lg" />
+                            ) : (
+                              btn
+                            )}
+                          </span>
                         </button>
                       );
                     })}
                 </div>
+
                 {/* <Link href={`/dashboard/basic/trades/${trade.id}`}>
                   <div className="bg-gray-200 px-3 py-2 cursor-pointer flex items-center justify-center">
                     <FaAnglesRight />
@@ -278,6 +313,10 @@ const TradesTabs: React.FC<TradesTabsProps> = ({ tradeRequests }) => {
           ))}
         </div>
       )}
+
+      <Modal open={msgOpen} onClose={() => setMsgOpen(false)}>
+        <MessageShopOwner id={userId} setMsgOpen={setMsgOpen} />
+      </Modal>
     </>
   );
 };

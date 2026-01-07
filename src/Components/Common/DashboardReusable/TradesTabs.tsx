@@ -11,11 +11,11 @@ import { useApproveTrade, useCancel } from "@/Hooks/api/dashboard_api";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
-import { TradeRequestSkeleton } from "@/Components/Loader/Loader";
 import Modal from "../Modal";
 import MessageShopOwner from "@/Components/Modals/MessageShopOwner";
 import { useState } from "react";
 import { ImSpinner9 } from "react-icons/im";
+import { TradeRequestSkeleton } from "@/Components/Loader/Loader";
 
 export type TradeItem = {
   image: StaticImageData | string;
@@ -116,7 +116,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
             queryKey: ["get-count"],
           });
         },
-        onError: error => {
+        onError: (error) => {
           toast.error("This is not your offer");
         },
       });
@@ -144,7 +144,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
     }
   };
 
-  console.log(tradeRequests);
+  console.log("tradeRequest", tradeRequests);
 
   return (
     <>
@@ -188,74 +188,140 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                 </button>
               </div>
 
-              {trade?.items?.map((item: any, idx: number) => {
-                const dividerIndex = trade?.items?.findIndex(
+              {(() => {
+                const requestedItems = trade?.items?.filter(
                   (item: any) => item?.type?.trim() === "requested"
                 );
+
+                const offeredItems = trade?.items?.filter(
+                  (item: any) => item?.type?.trim() === "offered"
+                );
+
                 return (
-                  <div key={idx}>
-                    {/* 🔹 Divider between offered & requested */}
-                    {idx === dividerIndex && dividerIndex !== 0 && (
-                      <div className="flex gap-x-5 items-center mt-4 mb-4">
-                        <div className="bg-[#BFBEBE] w-full h-[1px]" />
-                        <div className="inline-block">
+                  <>
+                    {/*  REQUESTED PRODUCTS (TOP) */}
+                    {requestedItems?.map((item: any, idx: number) => (
+                      <div key={`requested-${idx}`} className="mb-4">
+                        <div className="flex justify-between items-end">
+                          <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images?.[0]?.image}`}
+                              alt={item?.product?.product_name}
+                              height={100}
+                              width={100}
+                              className="h-[100px] object-cover rounded-md"
+                            />
+
+                            <div className="flex flex-col">
+                              <Link
+                                href={`/product-details/${item?.product_id}`}
+                                className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-[#13141D] hover:underline"
+                              >
+                                {item?.product?.product_name}
+                              </Link>
+
+                              <h4 className="text-[16px] sm:text-[17px] font-normal text-[#4B4A47]">
+                                Visit Shop:{" "}
+                                <Link
+                                  href={`/shop-details?view=customer&id=${item?.product?.shop?.user_id}&listing_id=${item?.product?.shop_info_id}`}
+                                  className="hover:underline"
+                                >
+                                  {item?.product?.shop?.shop_name}
+                                </Link>
+                              </h4>
+
+                              <h5 className="text-[#13141D] text-[13px] sm:text-[14px]">
+                                Qty: {item?.quantity}
+                              </h5>
+
+                              <h6 className="text-[#13141D] text-[13px] sm:text-[14px]">
+                                Unit Price: $ {item?.product?.product_price}
+                              </h6>
+                            </div>
+                          </div>
+
+                          <h2 className="text-[16px] sm:text-[20px] font-normal text-[#4B4A47]">
+                            Total amount:{" "}
+                            <span className="font-semibold text-[#13141D]">
+                              $
+                              {totalAmount(
+                                +item?.quantity,
+                                +item?.product?.product_price
+                              )}
+                            </span>
+                          </h2>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/*  DIVIDER */}
+                    {requestedItems?.length > 0 && offeredItems?.length > 0 && (
+                      <div className="flex gap-x-5 items-center my-8">
+                        <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                        <div className="inline-block bg-white">
                           <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
                         </div>
-                        <div className="bg-[#BFBEBE] w-full h-[1px]" />
+                        <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
                       </div>
                     )}
-                    <div className=" flex justify-between items-end">
-                      <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
-                        <Image
-                          src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item.product?.images[0]?.image}`}
-                          alt={item?.product?.product_name}
-                          height={100}
-                          width={100}
-                          className="h-[100px] object-cover rounded-md"
-                        />
 
-                        <div className="flex flex-col">
-                          <Link
-                            href={`/product-details/${item?.product_id}`}
-                            className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-[#13141D] hover:underline"
-                          >
-                            {item?.product?.product_name}
-                          </Link>
+                    {/*  OFFERED PRODUCTS (BOTTOM) */}
+                    {offeredItems?.map((item: any, idx: number) => (
+                      <div key={`offered-${idx}`} className="mb-4">
+                        <div className="flex justify-between items-end">
+                          <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images?.[0]?.image}`}
+                              alt={item?.product?.product_name}
+                              height={100}
+                              width={100}
+                              className="h-[100px] object-cover rounded-md"
+                            />
 
-                          <h4 className="text-[16px] sm:text-[17px] font-normal text-[#4B4A47] hover:underline">
-                            Visit Shop:{" "}
-                            <Link
-                              href={`/shop-details?view=${"customer"}&id=${
-                                item?.product?.shop?.user_id
-                              }&listing_id=${item?.product?.shop_info_id}`}
-                            >
-                              {item?.product?.shop?.shop_name}
-                            </Link>
-                          </h4>
+                            <div className="flex flex-col">
+                              <Link
+                                href={`/product-details/${item?.product_id}`}
+                                className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-[#13141D] hover:underline"
+                              >
+                                {item?.product?.product_name}
+                              </Link>
 
-                          <h5 className="text-[#13141D] font-normal text-[13px] sm:text-[14px] ">
-                            Qty: {item?.quantity}
-                          </h5>
+                              <h4 className="text-[16px] sm:text-[17px] font-normal text-[#4B4A47]">
+                                Visit Shop:{" "}
+                                <Link
+                                  href={`/shop-details?view=customer&id=${item?.product?.shop?.user_id}&listing_id=${item?.product?.shop_info_id}`}
+                                  className="hover:underline"
+                                >
+                                  {item?.product?.shop?.shop_name}
+                                </Link>
+                              </h4>
 
-                          <h6 className="text-[#13141D] font-normal text-[13px] sm:text-[14px] ">
-                            Unit Price : {`$ ${item?.product?.product_price}`}
-                          </h6>
+                              <h5 className="text-[#13141D] text-[13px] sm:text-[14px]">
+                                Qty: {item?.quantity}
+                              </h5>
+
+                              <h6 className="text-[#13141D] text-[13px] sm:text-[14px]">
+                                Unit Price: $ {item?.product?.product_price}
+                              </h6>
+                            </div>
+                          </div>
+
+                          <h2 className="text-[16px] sm:text-[20px] font-normal text-[#4B4A47]">
+                            Total amount:{" "}
+                            <span className="font-semibold text-[#13141D]">
+                              $
+                              {totalAmount(
+                                +item?.quantity,
+                                +item?.product?.product_price
+                              )}
+                            </span>
+                          </h2>
                         </div>
                       </div>
-                      <h2 className="text-[16px] sm:text-[20px]  font-normal text-[#4B4A47]">
-                        Total amount:{" "}
-                        <span className="font-semibold text-[#13141D]">
-                          $
-                          {totalAmount(
-                            +item?.quantity,
-                            +item?.product?.product_price
-                          )}
-                        </span>
-                      </h2>
-                    </div>
-                  </div>
+                    ))}
+                  </>
                 );
-              })}
+              })()}
 
               <div className="flex flex-wrap gap-3.5 md:gap-0 justify-between items-end border-t border-[#BFBEBE] pt-3">
                 <div className="flex gap-2.5 md:gap-5 flex-wrap">

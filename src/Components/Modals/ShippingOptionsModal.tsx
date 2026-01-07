@@ -11,6 +11,7 @@ type formData = {
 
 type ShippingOptionsProps = {
   userId: any;
+  fulfillmentType: string;
   onProceed: () => void;
   onSuccess: () => void;
   onClose: () => void;
@@ -18,10 +19,18 @@ type ShippingOptionsProps = {
 
 const ShippingOptionsModal = ({
   userId,
+  fulfillmentType,
   onProceed,
   onClose,
 }: ShippingOptionsProps) => {
-  const [shippingMethod, setShippingMethod] = useState("proceed");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [shippingMethod, setShippingMethod] = useState(
+    fulfillmentType === "Shipping" ||
+      fulfillmentType === "Arrange Local Pickup and Shipping"
+      ? "proceed"
+      : "local"
+  );
+
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
 
   const {
@@ -31,6 +40,7 @@ const ShippingOptionsModal = ({
   } = useForm<formData>();
 
   const onSubmit = async (data: formData) => {
+    setShippingMethod("");
     const payload = {
       receiver_id: userId,
       type: "order",
@@ -54,19 +64,41 @@ const ShippingOptionsModal = ({
         Shipping Options
       </h3>
 
+      {/* Dynamic Error Message */}
+      {errorMessage && (
+        <div className="mb-4 px-2 py-3 bg-red-500/10 border border-red-500 rounded-lg text-red-500 text-sm">
+          {errorMessage}
+        </div>
+      )}
+
       <p className="text-secondary-gray font-semibold mb-3">
         Select the option that works best for you!
       </p>
 
       <div className="space-y-3">
-        <p className="flex gap-3 items-center">
+        <p
+          className={`flex gap-3 items-center mb-3 ${
+            fulfillmentType === "Arrange Local Pickup" ? "opacity-80" : ""
+          }`}
+        >
           <input
             type="radio"
             className="scale-150"
             name="shipping"
             value="proceed"
             checked={shippingMethod === "proceed"}
-            onChange={e => setShippingMethod(e.target.value)}
+            onChange={e => {
+              if (fulfillmentType === "Arrange Local Pickup") {
+                return setErrorMessage(
+                  "This vendor only offers Local Pickup for this product. Please select 'Arrange Local Pickup' to continue."
+                );
+              } else if (fulfillmentType === "Both") {
+                return setErrorMessage(
+                  "One or more items in your cart are only available for local pickup. You can message the seller to arrange shipping for the other item if needed, but checkout will continue with local pickup for this order. If you prefer, you can cancel and place separate orders , one for pickup and one for shipping."
+                );
+              }
+              setShippingMethod(e.target.value);
+            }}
           />
 
           <span className="text-secondary-gray font-semibold">
@@ -80,14 +112,25 @@ const ShippingOptionsModal = ({
           </button>
         )}
 
-        <p className="flex gap-3 items-center mb-3">
+        <p
+          className={`flex gap-3 items-center mb-3 ${
+            fulfillmentType === "Shipping" ? "opacity-80" : ""
+          }`}
+        >
           <input
             type="radio"
             className="scale-150"
             name="shipping"
             value="local"
             checked={shippingMethod === "local"}
-            onChange={e => setShippingMethod(e.target.value)}
+            onChange={e => {
+              if (fulfillmentType === "Shipping") {
+                return setErrorMessage(
+                  "This vendor only offers Shipping for this product. Please select 'Shipping' to continue."
+                );
+              }
+              setShippingMethod(e.target.value);
+            }}
           />
 
           <span className="text-secondary-gray font-semibold">

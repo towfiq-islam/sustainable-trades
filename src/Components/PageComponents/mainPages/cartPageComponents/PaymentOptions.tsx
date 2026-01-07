@@ -8,8 +8,6 @@ import { CartItemSkeleton } from "@/Components/Loader/Loader";
 const PaymentOptions = () => {
   // Mutation + Query
   const { data: cartData, isLoading } = getProductCart();
-  console.log(cartData);
-  // console.log(cartData?.data?.fulfillment_type);
   const { mutate: clearCartMutation, isPending, refetch } = useClearCart();
 
   return (

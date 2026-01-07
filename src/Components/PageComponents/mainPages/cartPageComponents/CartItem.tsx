@@ -17,6 +17,7 @@ import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 interface CartProps {
   item: {
     id: number;
+    fulfillment_type: string;
     shop: {
       user_id: number;
       shop_name: string;
@@ -52,6 +53,7 @@ const CartItem = ({ item }: CartProps) => {
   // const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
+  const [fulfillmentType, setFulfillmentType] = useState<string>("");
 
   // Query + Mutation
   const { mutate: removeCartItemMutation, isPending: cartItemPending } =
@@ -207,6 +209,7 @@ const CartItem = ({ item }: CartProps) => {
       <div className="flex justify-end">
         <button
           onClick={() => {
+            setFulfillmentType(item?.fulfillment_type);
             setShippingOptionsOpen(true);
             setCartId(item?.id);
           }}
@@ -223,6 +226,7 @@ const CartItem = ({ item }: CartProps) => {
       >
         <ShippingOptionsModal
           userId={item?.shop?.user_id}
+          fulfillmentType={fulfillmentType}
           onProceed={() => {
             setShippingOptionsOpen(false);
             setShippingAddressOpen(true);

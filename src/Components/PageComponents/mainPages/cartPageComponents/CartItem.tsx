@@ -14,7 +14,35 @@ import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 
-const CartItem = ({ item }: any) => {
+interface CartProps {
+  item: {
+    id: number;
+    shop: {
+      user_id: number;
+      shop_name: string;
+      shop_image: string;
+      address: {
+        display_my_address: boolean;
+        address_line_1: string;
+        city: string;
+        state: string;
+      };
+    };
+    cart_items: {
+      id: number;
+      quantity: number;
+      product: {
+        images: { image: string }[];
+        product_name: string;
+        product_price: string;
+      };
+    }[];
+  };
+}
+
+const CartItem = ({ item }: CartProps) => {
+  console.log(item);
+  // States
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
   const [shippingAddressOpen, setShippingAddressOpen] =
@@ -24,6 +52,8 @@ const CartItem = ({ item }: any) => {
   // const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
+
+  // Query + Mutation
   const { mutate: removeCartItemMutation, isPending: cartItemPending } =
     useRemoveFromCart(cartItemId);
   const { mutate: updateCartItemMutation, isPending: updateItemPending } =
@@ -94,9 +124,9 @@ const CartItem = ({ item }: any) => {
 
       {/* Product Info */}
       <div className="space-y-6">
-        {item?.cart_items?.map((cart: any) => (
+        {item?.cart_items?.map(cart => (
           <div
-            key={cart.id}
+            key={cart?.id}
             className="flex flex-col sm:flex-row gap-5 border-b last:border-b-0 border-gray-300 pb-7 last:pb-0"
           >
             {/* Product Image */}

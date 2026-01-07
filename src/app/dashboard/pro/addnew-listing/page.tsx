@@ -284,7 +284,7 @@ const CreateListing = () => {
                     <option value="">Select Fulfillment</option>
                     <option>Arrange Local Pickup</option>
                     <option>Shipping</option>
-                    <option>Arrange Local Pickup or Shipping</option>
+                    <option>Arrange Local Pickup and Shipping</option>
                   </select>
                 )}
               />

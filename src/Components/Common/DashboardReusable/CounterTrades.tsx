@@ -17,6 +17,8 @@ import { toast } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { PuffLoader } from "react-spinners";
+import { ImSpinner9 } from "react-icons/im";
 
 const CounterTrades = ({ id }: any) => {
   const [selectedProducts, setSelectedProducts] = useState<
@@ -30,7 +32,7 @@ const CounterTrades = ({ id }: any) => {
   console.log(data);
 
   // API mutation
-  const { mutate, isLoading } = useTradeSendProduct(id);
+  const { mutate, isPending } = useTradeSendProduct(id);
 
   const isUserSender =
     data?.data?.sender?.shop_info?.id === user?.shop_info?.id;
@@ -45,9 +47,11 @@ const CounterTrades = ({ id }: any) => {
     ? data?.data?.receiver?.shop_info?.id
     : data?.data?.sender?.shop_info?.id;
 
-  const { data: offerShopProduct } = useTradeShopProduct(myShopId);
+  const { data: offerShopProduct, isLoading: offerLoading } =
+    useTradeShopProduct(myShopId);
 
-  const { data: requestedShopProduct } = useTradeShopProduct(otherShopId);
+  const { data: requestedShopProduct, isLoading: requestLoading } =
+    useTradeShopProduct(otherShopId);
 
   const queryClient = useQueryClient();
   const cancleTradeMutation = useCancel();
@@ -76,22 +80,22 @@ const CounterTrades = ({ id }: any) => {
 
   // main product quantity
   const handleSelectChange = (itemId: number, newProductId: number) => {
-    setSelectedProducts((prev) => ({ ...prev, [itemId]: newProductId }));
+    setSelectedProducts(prev => ({ ...prev, [itemId]: newProductId }));
   };
 
   const handleIncrement = (itemId: number) => {
-    setQuantities((prev) => ({ ...prev, [itemId]: (prev[itemId] || 1) + 1 }));
+    setQuantities(prev => ({ ...prev, [itemId]: (prev[itemId] || 1) + 1 }));
   };
 
   const handleDecrement = (itemId: number) => {
-    setQuantities((prev) => ({
+    setQuantities(prev => ({
       ...prev,
       [itemId]: Math.max(1, (prev[itemId] || 1) - 1),
     }));
   };
   // addon
   const addAddonProduct = (itemId: number) => {
-    setAddonProducts((prev) => ({
+    setAddonProducts(prev => ({
       ...prev,
       [itemId]: [...(prev[itemId] || []), { productId: 0, quantity: 1 }],
     }));
@@ -102,7 +106,7 @@ const CounterTrades = ({ id }: any) => {
     index: number,
     productId: number
   ) => {
-    setAddonProducts((prev) => ({
+    setAddonProducts(prev => ({
       ...prev,
       [itemId]: prev[itemId].map((a, i) =>
         i === index ? { ...a, productId } : a
@@ -115,7 +119,7 @@ const CounterTrades = ({ id }: any) => {
     index: number,
     quantity: number
   ) => {
-    setAddonProducts((prev) => ({
+    setAddonProducts(prev => ({
       ...prev,
       [itemId]: prev[itemId].map((a, i) =>
         i === index ? { ...a, quantity: Math.max(1, quantity) } : a
@@ -160,7 +164,7 @@ const CounterTrades = ({ id }: any) => {
       const addons = addonProducts[item.id] || [];
 
       if (addons.length > 0) {
-        addons.forEach((a) => {
+        addons.forEach(a => {
           if (a.productId && a.quantity > 0) {
             const addonItem = {
               product_id: a.productId,
@@ -220,7 +224,7 @@ const CounterTrades = ({ id }: any) => {
   };
 
   const removeAddonProduct = (itemId: number, index: number) => {
-    setAddonProducts((prev) => {
+    setAddonProducts(prev => {
       const updated = { ...prev };
       updated[itemId] = prev[itemId].filter((_, i) => i !== index);
       if (updated[itemId].length === 0) delete updated[itemId];
@@ -228,7 +232,7 @@ const CounterTrades = ({ id }: any) => {
     });
   };
 
-  const actionButtons = ["Go Back", "Cancel", "Send Counter"];
+  const actionButtons = ["Go Back", "Send Counter"];
   const actionButtonStyles: Record<
     string,
     { bg?: string; border?: string; text: string }
@@ -238,6 +242,13 @@ const CounterTrades = ({ id }: any) => {
     "Send Counter": { bg: "bg-[#E48872]", text: "text-white" },
   };
 
+  if (offerLoading || requestLoading) {
+    return (
+      <div className="h-[80vh] flex justify-center items-center">
+        <PuffLoader color="#274f45" />
+      </div>
+    );
+  }
   return (
     <div className="mb-16">
       <h3 className="text-[#13141D] font-semibold text-[20px] pb-4">
@@ -281,10 +292,14 @@ const CounterTrades = ({ id }: any) => {
                     />
 
                     <div className="flex flex-col gap-y-1">
-                      <h3 className="text-base lg:text-[20px] max-w-[500px] truncate font-semibold text-[#13141D]">
+                      <Link
+                        href={`/product-details/${product?.product_id}`}
+                        className="text-base lg:text-lg max-w-[500px] truncate font-semibold text-[#13141D] hover:underline"
+                      >
                         {product.product?.product_name}
-                      </h3>
-                      <h4 className="text-[14px] lg:text-[20px] text-[#4B4A47] flex flex-col 2xl:flex-row gap-x-5 2xl:items-center">
+                      </Link>
+
+                      <h4 className="text-[14px] lg:text-base text-[#4B4A47] flex flex-col 2xl:flex-row gap-3 2xl:items-center">
                         {product?.product?.shop?.shop_name}
                         <Link
                           href={`/shop-details?view=${"coustomer"}&id=${
@@ -295,15 +310,8 @@ const CounterTrades = ({ id }: any) => {
                           View Shop
                         </Link>
                       </h4>
-                      {/* <div className="flex gap-x-[2px]">
-                        {[
-                          ...Array(product?.product?.reviews_avg_rating || 5),
-                        ].map((_, i) => (
-                          <FaRegStar key={i} className="fill-green-950" />
-                        ))}
-                        
-                      </div> */}
-                      <div className="flex gap-1 items-center py-2">
+
+                      <div className="flex gap-1 items-center py-1">
                         {Array.from({
                           length: +product?.product?.reviews_avg_rating,
                         }).map((_, index) => (
@@ -352,7 +360,7 @@ const CounterTrades = ({ id }: any) => {
                         </h4>
                         <select
                           value={selectedProducts[itemId] || ""}
-                          onChange={(e) =>
+                          onChange={e =>
                             handleSelectChange(itemId, Number(e.target.value))
                           }
                           className="px-4 py-2 rounded-[10px] border border-[#A7A39C] w-full sm:w-[300px] xl:w-[500px]"
@@ -413,7 +421,7 @@ const CounterTrades = ({ id }: any) => {
                       >
                         <select
                           value={addon.productId}
-                          onChange={(e) =>
+                          onChange={e =>
                             updateAddonProduct(
                               itemId,
                               idx,
@@ -531,7 +539,7 @@ const CounterTrades = ({ id }: any) => {
       <textarea
         placeholder="Add your message..."
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={e => setMessage(e.target.value)}
         className="border border-gray-300 rounded-md p-3 mt-6 w-full"
         rows={3}
       />
@@ -544,18 +552,22 @@ const CounterTrades = ({ id }: any) => {
             return (
               <button
                 key={i}
-                disabled={isLoading}
+                disabled={isPending}
                 onClick={() => {
-                  if (btn === "Go Back") router.push(`/dashboard/basic/trades`);
-                  else if (btn === "Cancel") handleCancleCounter();
-                  else if (btn === "Send Counter") handleSendCounter();
+                  if (btn === "Go Back") {
+                    router.back();
+                  } else if (btn === "Send Counter") handleSendCounter();
                 }}
                 className={`relative cursor-pointer py-[8px] px-6 rounded-md font-lato font-semibold overflow-hidden
                 hover:scale-105 duration-300 ease-in-out text-sm md:text-base
                 ${style.bg || ""} ${style.border || "border-2"} ${style.text}
                 border-2 disabled:opacity-50`}
               >
-                {btn}
+                {btn === "Send Counter" && isPending ? (
+                  <ImSpinner9 className="animate-spin inline-block text-lg" />
+                ) : (
+                  btn
+                )}
               </button>
             );
           })}

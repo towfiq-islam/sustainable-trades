@@ -9,7 +9,7 @@ import { useSendMessage } from "@/Hooks/api/chat_api";
 
 type messageProps = {
   id: number | null;
-  data: {
+  data?: {
     rating_avg: string;
     shop_info: {
       shop_name: string;
@@ -54,19 +54,25 @@ const MessageShopOwner = ({ id, data, setMsgOpen }: messageProps) => {
 
   return (
     <>
-      <h3 className="text-light-green font-semibold text-lg mb-2">Message</h3>
+      {data && (
+        <h3 className="text-light-green font-semibold text-lg mb-2">Message</h3>
+      )}
 
-      {/* Shop Name */}
-      <h4 className="text-2xl font-semibold text-secondary-black mb-2">
-        {data?.shop_info?.shop_name}
-      </h4>
+      {data && (
+        <div>
+          {/* Shop Name */}
+          <h4 className="text-2xl font-semibold text-secondary-black mb-2">
+            {data?.shop_info?.shop_name}
+          </h4>
 
-      {/* Shop Review */}
-      <div className="flex gap-1 items-center mb-3">
-        {Array.from({ length: +data?.rating_avg }).map((_, index) => (
-          <FaStar key={index} className="text-primary-green text-sm" />
-        ))}
-      </div>
+          {/* Shop Review */}
+          <div className="flex gap-1 items-center mb-3">
+            {Array.from({ length: +data?.rating_avg }).map((_, index) => (
+              <FaStar key={index} className="text-primary-green text-sm" />
+            ))}
+          </div>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-5">

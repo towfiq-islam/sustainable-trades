@@ -215,7 +215,7 @@ const CreateListing = () => {
             <input
               type="text"
               value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
+              onChange={e => setQuantity(e.target.value)}
               className="w-full md:w-[350px] border border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 text-[20px] text-[#13141D] font-normal outline-0"
             />
             <div className="flex flex-col gap-4 mt-2">
@@ -299,7 +299,7 @@ const CreateListing = () => {
                   {showPlayButton && (
                     <button
                       className="h-24 w-24 bg-[#626161] text-white rounded-full absolute cursor-pointer top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex justify-center items-center"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         handlePlay();
                       }}
@@ -381,13 +381,13 @@ const CreateListing = () => {
             <select
               className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
               value={category}
-              onChange={(e) => {
+              onChange={e => {
                 setCategory(e.target.value);
                 setSubcategory("");
               }}
             >
               <option value="">Select Category</option>
-              {Object.keys(categories).map((cat) => (
+              {Object.keys(categories).map(cat => (
                 <option key={cat} value={cat}>
                   {cat}
                 </option>
@@ -403,10 +403,10 @@ const CreateListing = () => {
                 <select
                   className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
                   value={subcategory}
-                  onChange={(e) => setSubcategory(e.target.value)}
+                  onChange={e => setSubcategory(e.target.value)}
                 >
                   <option value="">Select Subcategory</option>
-                  {categories[category].map((sub) => (
+                  {categories[category].map(sub => (
                     <option key={sub} value={sub}>
                       {sub}
                     </option>
@@ -423,7 +423,7 @@ const CreateListing = () => {
               <option>Select Fulfillment</option>
               <option>Arrange Local Pickup</option>
               <option>Shipping</option>
-              <option>Arrange Local Pickup or Shipping</option>
+              <option>Arrange Local Pickup and Shipping</option>
             </select>
           </div>
 
@@ -446,7 +446,7 @@ const CreateListing = () => {
               <input
                 type="text"
                 value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
+                onChange={e => setNewTag(e.target.value)}
                 className="flex-1  border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 pl-10 "
               />
               <button

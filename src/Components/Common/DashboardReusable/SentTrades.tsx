@@ -3,10 +3,11 @@ import { useTradesdata } from "@/Hooks/api/dashboard_api";
 import TradesTabs from "./TradesTabs";
 
 const SentTrades = () => {
-  const { data: tradeData } = useTradesdata("sent");
+  const { data: tradeData, isLoading } = useTradesdata("sent");
+
   return (
     <>
-      <TradesTabs tradeRequests={tradeData?.data} />
+      <TradesTabs tradeRequests={tradeData?.data} isLoading={isLoading} />
     </>
   );
 };

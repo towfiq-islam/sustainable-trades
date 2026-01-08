@@ -14,35 +14,37 @@ import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 
-interface CartProps {
-  item: {
-    id: number;
-    fulfillment_type: string;
-    shop: {
-      user_id: number;
-      shop_name: string;
-      shop_image: string;
-      address: {
-        display_my_address: boolean;
-        address_line_1: string;
-        city: string;
-        state: string;
-      };
+interface CartItem {
+  id: number;
+  fulfillment_type: string;
+  shop: {
+    user_id: number;
+    shop_name: string;
+    shop_image: string;
+    address: {
+      display_my_address: boolean;
+      address_line_1: string;
+      city: string;
+      state: string;
     };
-    cart_items: {
-      id: number;
-      quantity: number;
-      product: {
-        images: { image: string }[];
-        product_name: string;
-        product_price: string;
-      };
-    }[];
   };
+  cart_items: {
+    id: number;
+    quantity: number;
+    product: {
+      images: { image: string }[];
+      product_name: string;
+      product_price: string;
+    };
+  }[];
 }
 
-const CartItem = ({ item }: CartProps) => {
-  console.log(item);
+interface CartProps {
+  item: CartItem;
+  setCartList?: React.Dispatch<React.SetStateAction<any[]>>;
+}
+
+const CartItem = ({ item, setCartList }: CartProps) => {
   // States
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
@@ -108,7 +110,12 @@ const CartItem = ({ item }: CartProps) => {
           disabled={cartPending}
           onClick={() => {
             setCartId(item?.id);
-            removeCartMutation();
+            removeCartMutation(undefined, {
+              onSuccess: () => {
+                window.location.reload();
+                // setCartList(prev => prev.filter(cart => cart.id !== item.id));
+              },
+            });
           }}
           className={`absolute right-2 top-2 size-8 text-sm grid place-items-center rounded-full font-semibold bg-accent-red text-white ${
             cartPending ? "cursor-not-allowed" : "cursor-pointer"
@@ -185,7 +192,21 @@ const CartItem = ({ item }: CartProps) => {
                 disabled={cartItemPending}
                 onClick={() => {
                   setCartItemId(cart?.id);
-                  removeCartItemMutation();
+                  removeCartItemMutation(cart.id, {
+                    onSuccess: () => {
+                      window.location.reload();
+                      // setCartList(prev =>
+                      //   prev
+                      //     .map(shop => ({
+                      //       ...shop,
+                      //       cart_items: shop.cart_items.filter(
+                      //         (i: any) => i.id !== cart.id
+                      //       ),
+                      //     }))
+                      //     .filter(shop => shop.cart_items.length > 0)
+                      // );
+                    },
+                  });
                 }}
                 className={`font-semibold text-primary-green cursor-pointer text-[15px] ${
                   cartItemPending ? "cursor-not-allowed" : "cursor-pointer"

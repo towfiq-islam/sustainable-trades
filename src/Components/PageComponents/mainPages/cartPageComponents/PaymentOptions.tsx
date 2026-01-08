@@ -8,9 +8,15 @@ import { CartItemSkeleton } from "@/Components/Loader/Loader";
 const PaymentOptions = () => {
   // Mutation + Query
   const { data: cartData, isLoading } = getProductCart();
-  console.log(cartData);
-  // console.log(cartData?.data?.fulfillment_type);
-  const { mutate: clearCartMutation, isPending, refetch } = useClearCart();
+  const { mutate: clearCartMutation, isPending } = useClearCart();
+
+  // const [cartList, setCartList] = useState<any[]>([]);
+  // Store API data in state
+  // useEffect(() => {
+  //   if (cartData?.data?.cart) {
+  //     setCartList(cartData.data.cart);
+  //   }
+  // }, [cartData]);
 
   return (
     <section className="mb-20">
@@ -25,8 +31,11 @@ const PaymentOptions = () => {
           <button
             disabled={isPending}
             onClick={() => {
-              clearCartMutation();
-              refetch();
+              clearCartMutation(undefined, {
+                onSuccess: () => {
+                  window.location.reload();
+                },
+              });
             }}
             className={`px-3 py-1.5 text-sm rounded-full font-semibold bg-primary-red text-white flex gap-1 items-center ${
               isPending ? "cursor-not-allowed" : "cursor-pointer"
@@ -56,6 +65,15 @@ const PaymentOptions = () => {
               <CartItem key={item?.id} item={item} />
             ))}
       </div>
+      {/* <div className="space-y-7">
+        {isLoading
+          ? [1, 2].map((_, idx) => <CartItemSkeleton key={idx} />)
+          : cartList.length === 0
+          ? "No Cart Found"
+          : cartList.map(item => (
+              <CartItem key={item.id} item={item} setCartList={setCartList} />
+            ))}
+      </div> */}
     </section>
   );
 };

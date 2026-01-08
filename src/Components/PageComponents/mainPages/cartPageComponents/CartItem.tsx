@@ -14,34 +14,37 @@ import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 
-interface CartProps {
-  item: {
-    id: number;
-    shop: {
-      user_id: number;
-      shop_name: string;
-      shop_image: string;
-      address: {
-        display_my_address: boolean;
-        address_line_1: string;
-        city: string;
-        state: string;
-      };
+interface CartItem {
+  id: number;
+  fulfillment_type: string;
+  shop: {
+    user_id: number;
+    shop_name: string;
+    shop_image: string;
+    address: {
+      display_my_address: boolean;
+      address_line_1: string;
+      city: string;
+      state: string;
     };
-    cart_items: {
-      id: number;
-      quantity: number;
-      product: {
-        images: { image: string }[];
-        product_name: string;
-        product_price: string;
-      };
-    }[];
   };
+  cart_items: {
+    id: number;
+    quantity: number;
+    product: {
+      images: { image: string }[];
+      product_name: string;
+      product_price: string;
+    };
+  }[];
 }
 
-const CartItem = ({ item }: CartProps) => {
-  console.log(item);
+interface CartProps {
+  item: CartItem;
+  setCartList?: React.Dispatch<React.SetStateAction<any[]>>;
+}
+
+const CartItem = ({ item, setCartList }: CartProps) => {
   // States
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
@@ -52,6 +55,7 @@ const CartItem = ({ item }: CartProps) => {
   // const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
+  const [fulfillmentType, setFulfillmentType] = useState<string>("");
 
   // Query + Mutation
   const { mutate: removeCartItemMutation, isPending: cartItemPending } =
@@ -81,7 +85,7 @@ const CartItem = ({ item }: CartProps) => {
               alt="shop_image"
               fill
               unoptimized
-              className="size-full rounded-full"
+              className="size-full rounded-full object-cover"
             />
           </figure>
 
@@ -106,7 +110,12 @@ const CartItem = ({ item }: CartProps) => {
           disabled={cartPending}
           onClick={() => {
             setCartId(item?.id);
-            removeCartMutation();
+            removeCartMutation(undefined, {
+              onSuccess: () => {
+                window.location.reload();
+                // setCartList(prev => prev.filter(cart => cart.id !== item.id));
+              },
+            });
           }}
           className={`absolute right-2 top-2 size-8 text-sm grid place-items-center rounded-full font-semibold bg-accent-red text-white ${
             cartPending ? "cursor-not-allowed" : "cursor-pointer"
@@ -157,22 +166,26 @@ const CartItem = ({ item }: CartProps) => {
               {/* Product Quantity */}
               <div className="flex gap-3 items-center border rounded-lg px-7 py-2 font-semibold border-primary-green w-fit mb-3">
                 <button
+                  disabled={updateItemPending}
                   onClick={() => {
                     setCartItemId(cart?.id);
                     handleUpdateCart(cart?.quantity, "decrease");
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer disabled:cursor-not-allowed"
                 >
                   <MinSvg />
                 </button>
+
                 <p>Qty:</p>
                 <p>{cart?.quantity}</p>
+
                 <button
+                  disabled={updateItemPending}
                   onClick={() => {
                     setCartItemId(cart?.id);
                     handleUpdateCart(cart?.quantity, "increase");
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer disabled:cursor-not-allowed"
                 >
                   +
                 </button>
@@ -183,7 +196,21 @@ const CartItem = ({ item }: CartProps) => {
                 disabled={cartItemPending}
                 onClick={() => {
                   setCartItemId(cart?.id);
-                  removeCartItemMutation();
+                  removeCartItemMutation(cart.id, {
+                    onSuccess: () => {
+                      window.location.reload();
+                      // setCartList(prev =>
+                      //   prev
+                      //     .map(shop => ({
+                      //       ...shop,
+                      //       cart_items: shop.cart_items.filter(
+                      //         (i: any) => i.id !== cart.id
+                      //       ),
+                      //     }))
+                      //     .filter(shop => shop.cart_items.length > 0)
+                      // );
+                    },
+                  });
                 }}
                 className={`font-semibold text-primary-green cursor-pointer text-[15px] ${
                   cartItemPending ? "cursor-not-allowed" : "cursor-pointer"
@@ -207,6 +234,7 @@ const CartItem = ({ item }: CartProps) => {
       <div className="flex justify-end">
         <button
           onClick={() => {
+            setFulfillmentType(item?.fulfillment_type);
             setShippingOptionsOpen(true);
             setCartId(item?.id);
           }}
@@ -222,7 +250,9 @@ const CartItem = ({ item }: CartProps) => {
         onClose={() => setShippingOptionsOpen(false)}
       >
         <ShippingOptionsModal
+          cart_id={cartId}
           userId={item?.shop?.user_id}
+          fulfillmentType={fulfillmentType}
           onProceed={() => {
             setShippingOptionsOpen(false);
             setShippingAddressOpen(true);

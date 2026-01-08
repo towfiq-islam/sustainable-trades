@@ -74,7 +74,7 @@ body {
 }
 
 .form-input {
-  @apply w-full block mt-2 px-2 md:px-4 py-1.5 md:py-2  lg:py-3 rounded-[5px] border md:border-2 border-[#67645f];
+  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2  lg:py-2.5 rounded-[5px] border md:border-2 border-[#67645f];
 }
 
 .form-error {

@@ -225,6 +225,7 @@ const CartItem = ({ item }: CartProps) => {
         onClose={() => setShippingOptionsOpen(false)}
       >
         <ShippingOptionsModal
+          cart_id={cartId}
           userId={item?.shop?.user_id}
           fulfillmentType={fulfillmentType}
           onProceed={() => {

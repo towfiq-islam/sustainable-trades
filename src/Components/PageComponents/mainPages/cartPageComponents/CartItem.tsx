@@ -85,7 +85,7 @@ const CartItem = ({ item, setCartList }: CartProps) => {
               alt="shop_image"
               fill
               unoptimized
-              className="size-full rounded-full"
+              className="size-full rounded-full object-cover"
             />
           </figure>
 
@@ -166,22 +166,26 @@ const CartItem = ({ item, setCartList }: CartProps) => {
               {/* Product Quantity */}
               <div className="flex gap-3 items-center border rounded-lg px-7 py-2 font-semibold border-primary-green w-fit mb-3">
                 <button
+                  disabled={updateItemPending}
                   onClick={() => {
                     setCartItemId(cart?.id);
                     handleUpdateCart(cart?.quantity, "decrease");
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer disabled:cursor-not-allowed"
                 >
                   <MinSvg />
                 </button>
+
                 <p>Qty:</p>
                 <p>{cart?.quantity}</p>
+
                 <button
+                  disabled={updateItemPending}
                   onClick={() => {
                     setCartItemId(cart?.id);
                     handleUpdateCart(cart?.quantity, "increase");
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer disabled:cursor-not-allowed"
                 >
                   +
                 </button>

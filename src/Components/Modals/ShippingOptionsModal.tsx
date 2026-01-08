@@ -56,12 +56,12 @@ const ShippingOptionsModal = ({
 
     localPickupMutation(data, {
       onSuccess: () => {
+        console.log(data);
         sendMessageMutation(payload, {
           onSuccess: (res: any) => {
-            if (res?.success) {
-              toast.success(res.message);
-              onClose();
-            }
+            toast.success(res.message);
+            onClose();
+            window.location.reload();
           },
         });
       },

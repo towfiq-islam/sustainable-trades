@@ -368,10 +368,8 @@ export const useRemoveFromCart = (cart_Item_id: number | null) => {
     isPrivate: true,
     endpoint: `/api/cart/item/remove/${cart_Item_id}`,
     onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-product-cart" as any);
-        toast.success(data?.message);
-      }
+      queryClient.invalidateQueries("get-product-cart" as any);
+      toast.success(data?.message);
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
@@ -388,10 +386,8 @@ export const useRemoveCart = (cart_id: number | null) => {
     isPrivate: true,
     endpoint: `/api/cart/remove/${cart_id}`,
     onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-product-cart" as any);
-        toast.success(data?.message);
-      }
+      queryClient.invalidateQueries("get-product-cart" as any);
+      toast.success(data?.message);
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);

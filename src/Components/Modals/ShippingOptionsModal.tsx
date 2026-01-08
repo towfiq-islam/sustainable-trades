@@ -4,12 +4,17 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useSendMessage } from "@/Hooks/api/chat_api";
+import { useLocalPickup } from "@/Hooks/api/dashboard_api";
 
 type formData = {
+  name: string;
+  email: string;
+  phone: string;
   message: string;
 };
 
 type ShippingOptionsProps = {
+  cart_id: number | null;
   userId: any;
   fulfillmentType: string;
   onProceed: () => void;
@@ -18,6 +23,7 @@ type ShippingOptionsProps = {
 };
 
 const ShippingOptionsModal = ({
+  cart_id,
   userId,
   fulfillmentType,
   onProceed,
@@ -32,6 +38,8 @@ const ShippingOptionsModal = ({
   );
 
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
+  const { mutate: localPickupMutation, isPending: isPickupPending } =
+    useLocalPickup(cart_id);
 
   const {
     register,
@@ -40,22 +48,24 @@ const ShippingOptionsModal = ({
   } = useForm<formData>();
 
   const onSubmit = async (data: formData) => {
-    setShippingMethod("");
     const payload = {
       receiver_id: userId,
       type: "order",
-      ...data,
+      message: data?.message,
     };
 
-    await sendMessageMutation(payload, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          toast.success(data?.message);
-          onClose();
-        }
+    localPickupMutation(data, {
+      onSuccess: () => {
+        console.log(data);
+        sendMessageMutation(payload, {
+          onSuccess: (res: any) => {
+            toast.success(res.message);
+            onClose();
+            window.location.reload();
+          },
+        });
       },
     });
-    // onSuccess();
   };
 
   return (
@@ -78,7 +88,10 @@ const ShippingOptionsModal = ({
       <div className="space-y-3">
         <p
           className={`flex gap-3 items-center mb-3 ${
-            fulfillmentType === "Arrange Local Pickup" ? "opacity-80" : ""
+            fulfillmentType === "Arrange Local Pickup" ||
+            fulfillmentType === "Mixed"
+              ? "opacity-80"
+              : ""
           }`}
         >
           <input
@@ -92,7 +105,7 @@ const ShippingOptionsModal = ({
                 return setErrorMessage(
                   "This vendor only offers Local Pickup for this product. Please select 'Arrange Local Pickup' to continue."
                 );
-              } else if (fulfillmentType === "Both") {
+              } else if (fulfillmentType === "Mixed") {
                 return setErrorMessage(
                   "One or more items in your cart are only available for local pickup. You can message the seller to arrange shipping for the other item if needed, but checkout will continue with local pickup for this order. If you prefer, you can cancel and place separate orders , one for pickup and one for shipping."
                 );
@@ -149,7 +162,52 @@ const ShippingOptionsModal = ({
               location for pickup.
             </p>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Name */}
+              <div>
+                <label className="form-label">Name</label>
+                <input
+                  className="form-input"
+                  placeholder="Your name"
+                  {...register("name", { required: "Name is required" })}
+                />
+                {errors.name && (
+                  <span className="form-error">{errors.name.message}</span>
+                )}
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="form-label">Email</label>
+                <input
+                  type="email"
+                  className="form-input"
+                  placeholder="Your email"
+                  {...register("email", {
+                    required: "Email is required",
+                  })}
+                />
+                {errors.email && (
+                  <span className="form-error">{errors.email.message}</span>
+                )}
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label className="form-label">Phone</label>
+                <input
+                  type="number"
+                  className="form-input"
+                  placeholder="Your phone number"
+                  {...register("phone", {
+                    required: "Phone number is required",
+                  })}
+                />
+                {errors.phone && (
+                  <span className="form-error">{errors.phone.message}</span>
+                )}
+              </div>
+
               {/* Message */}
               <div>
                 <label htmlFor="message" className="form-label">
@@ -171,14 +229,14 @@ const ShippingOptionsModal = ({
 
               {/* Submit btn */}
               <button
-                disabled={isPending}
+                disabled={isPending || isPickupPending}
                 className={`primary_btn ${
-                  isPending
+                  isPending || isPickupPending
                     ? "!cursor-not-allowed opacity-85 hover:!bg-primary-green hover:!text-white"
                     : "cursor-pointer"
                 } `}
               >
-                {isPending ? (
+                {isPending || isPickupPending ? (
                   <span className="flex gap-2 items-center justify-center">
                     <CgSpinnerTwo className="animate-spin text-xl" />
                     <span>Please wait....</span>

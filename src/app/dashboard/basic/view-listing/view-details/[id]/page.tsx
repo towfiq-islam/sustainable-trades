@@ -639,7 +639,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               <option value="Arrange Local Pickup">Arrange Local Pickup</option>
               <option value="Shipping">Shipping</option>
               <option value="Arrange Local Pickup or Shipping">
-                Arrange Local Pickup or Shipping
+                Arrange Local Pickup and Shipping
               </option>
             </select>
           </div>

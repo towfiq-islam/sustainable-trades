@@ -746,3 +746,22 @@ export const useDeleteAllNotifications = () => {
     },
   });
 };
+
+// Local Pickup
+export const useLocalPickup = (id: number | null) => {
+  const queryClient = useQueryClient();
+  return useClientApi({
+    method: "post",
+    key: ["local-pickup", id],
+    isPrivate: true,
+    endpoint: `/api/arrange-local-pickup/${id}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        queryClient.invalidateQueries("get-product-cart" as any);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};

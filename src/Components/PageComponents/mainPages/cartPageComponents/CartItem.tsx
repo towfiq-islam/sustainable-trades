@@ -14,7 +14,38 @@ import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 
-const CartItem = ({ item }: any) => {
+interface CartItem {
+  id: number;
+  fulfillment_type: string;
+  shop: {
+    user_id: number;
+    shop_name: string;
+    shop_image: string;
+    address: {
+      display_my_address: boolean;
+      address_line_1: string;
+      city: string;
+      state: string;
+    };
+  };
+  cart_items: {
+    id: number;
+    quantity: number;
+    product: {
+      images: { image: string }[];
+      product_name: string;
+      product_price: string;
+    };
+  }[];
+}
+
+interface CartProps {
+  item: CartItem;
+  setCartList?: React.Dispatch<React.SetStateAction<any[]>>;
+}
+
+const CartItem = ({ item, setCartList }: CartProps) => {
+  // States
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
   const [shippingAddressOpen, setShippingAddressOpen] =
@@ -24,6 +55,9 @@ const CartItem = ({ item }: any) => {
   // const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
+  const [fulfillmentType, setFulfillmentType] = useState<string>("");
+
+  // Query + Mutation
   const { mutate: removeCartItemMutation, isPending: cartItemPending } =
     useRemoveFromCart(cartItemId);
   const { mutate: updateCartItemMutation, isPending: updateItemPending } =
@@ -51,7 +85,7 @@ const CartItem = ({ item }: any) => {
               alt="shop_image"
               fill
               unoptimized
-              className="size-full rounded-full"
+              className="size-full rounded-full object-cover"
             />
           </figure>
 
@@ -76,7 +110,12 @@ const CartItem = ({ item }: any) => {
           disabled={cartPending}
           onClick={() => {
             setCartId(item?.id);
-            removeCartMutation();
+            removeCartMutation(undefined, {
+              onSuccess: () => {
+                window.location.reload();
+                // setCartList(prev => prev.filter(cart => cart.id !== item.id));
+              },
+            });
           }}
           className={`absolute right-2 top-2 size-8 text-sm grid place-items-center rounded-full font-semibold bg-accent-red text-white ${
             cartPending ? "cursor-not-allowed" : "cursor-pointer"
@@ -94,9 +133,9 @@ const CartItem = ({ item }: any) => {
 
       {/* Product Info */}
       <div className="space-y-6">
-        {item?.cart_items?.map((cart: any) => (
+        {item?.cart_items?.map(cart => (
           <div
-            key={cart.id}
+            key={cart?.id}
             className="flex flex-col sm:flex-row gap-5 border-b last:border-b-0 border-gray-300 pb-7 last:pb-0"
           >
             {/* Product Image */}
@@ -127,22 +166,26 @@ const CartItem = ({ item }: any) => {
               {/* Product Quantity */}
               <div className="flex gap-3 items-center border rounded-lg px-7 py-2 font-semibold border-primary-green w-fit mb-3">
                 <button
+                  disabled={updateItemPending}
                   onClick={() => {
                     setCartItemId(cart?.id);
                     handleUpdateCart(cart?.quantity, "decrease");
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer disabled:cursor-not-allowed"
                 >
                   <MinSvg />
                 </button>
+
                 <p>Qty:</p>
                 <p>{cart?.quantity}</p>
+
                 <button
+                  disabled={updateItemPending}
                   onClick={() => {
                     setCartItemId(cart?.id);
                     handleUpdateCart(cart?.quantity, "increase");
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer disabled:cursor-not-allowed"
                 >
                   +
                 </button>
@@ -153,7 +196,21 @@ const CartItem = ({ item }: any) => {
                 disabled={cartItemPending}
                 onClick={() => {
                   setCartItemId(cart?.id);
-                  removeCartItemMutation();
+                  removeCartItemMutation(cart.id, {
+                    onSuccess: () => {
+                      window.location.reload();
+                      // setCartList(prev =>
+                      //   prev
+                      //     .map(shop => ({
+                      //       ...shop,
+                      //       cart_items: shop.cart_items.filter(
+                      //         (i: any) => i.id !== cart.id
+                      //       ),
+                      //     }))
+                      //     .filter(shop => shop.cart_items.length > 0)
+                      // );
+                    },
+                  });
                 }}
                 className={`font-semibold text-primary-green cursor-pointer text-[15px] ${
                   cartItemPending ? "cursor-not-allowed" : "cursor-pointer"
@@ -177,6 +234,7 @@ const CartItem = ({ item }: any) => {
       <div className="flex justify-end">
         <button
           onClick={() => {
+            setFulfillmentType(item?.fulfillment_type);
             setShippingOptionsOpen(true);
             setCartId(item?.id);
           }}
@@ -192,7 +250,9 @@ const CartItem = ({ item }: any) => {
         onClose={() => setShippingOptionsOpen(false)}
       >
         <ShippingOptionsModal
+          cart_id={cartId}
           userId={item?.shop?.user_id}
+          fulfillmentType={fulfillmentType}
           onProceed={() => {
             setShippingOptionsOpen(false);
             setShippingAddressOpen(true);

@@ -459,7 +459,7 @@ export const useImageDelete = (id: any) => {
 };
 
 // Get My Orders
-export const getMyOrders = (status: string) => {
+export const getMyOrders = (status?: string) => {
   return useClientApi({
     method: "get",
     key: ["get-my-orders", status],

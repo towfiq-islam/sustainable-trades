@@ -179,7 +179,9 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                         </h4>
 
                         <h4 className="text-[14px] text-[#274F45] font-semibold">
-                          {`${item?.product_quantity} items left`}
+                          {item?.unlimited_stock
+                            ? "Unlimited Stock"
+                            : `${item?.product_quantity} items left`}
                         </h4>
                       </div>
 

@@ -35,6 +35,7 @@ const page = () => {
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [showNote, setShowNote] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<number | null>(null);
+  const [page, setPage] = useState<string>("");
   const tabs = [
     "orders",
     "pending",
@@ -43,7 +44,7 @@ const page = () => {
     "cancelled",
     "purchased from another member",
   ];
-  const { data: myOrders, isLoading } = getOrders(status);
+  const { data: allOrders, isLoading } = getOrders(status, page);
   const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();
 
   useEffect(() => {
@@ -148,11 +149,11 @@ const page = () => {
                   [1, 2, 3, 4, 5].map((_, idx) => (
                     <OrderRowSkeleton key={idx} />
                   ))
-                ) : myOrders?.data?.length > 0 ? (
-                  myOrders?.data?.map((order: orderItem, i: number) => (
+                ) : allOrders?.data?.data?.length > 0 ? (
+                  allOrders?.data?.data?.map((order: orderItem, i: number) => (
                     <tr
                       key={i}
-                      className="border-b border-gray-300 text-[#13141D] text-[14px] font-semibold"
+                      className="border-b border-gray-300 text-[#13141D] text-[14px] font-semibold last:border-b-0 hover:bg-gray-100 duration-200 transition-all"
                     >
                       <td className="py-4 px-4">{order?.order_number}</td>
                       <td className="py-4 px-4">
@@ -226,7 +227,8 @@ const page = () => {
                           <div
                             onClick={e => e.stopPropagation()}
                             className={`absolute right-16 px-1 py-2 w-[120px] bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-200 ${
-                              i === myOrders?.data?.length - 1
+                              i === allOrders?.data?.data?.length - 1 &&
+                              allOrders?.data?.data?.length > 5
                                 ? "-top-20"
                                 : "top-8"
                             }`}
@@ -273,6 +275,29 @@ const page = () => {
                 )}
               </tbody>
             </table>
+
+            {/* Pagination */}
+            {!isLoading && (
+              <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">
+                {allOrders?.data?.links?.map((item: any, idx: number) => (
+                  <button
+                    key={idx}
+                    disabled={!item.url}
+                    dangerouslySetInnerHTML={{ __html: item.label }}
+                    onClick={() => item.url && setPage(item.url.split("=")[1])}
+                    className={`px-3 py-1 rounded border transition-all duration-200  ${
+                      item.active
+                        ? "bg-primary-green text-white"
+                        : "bg-white text-gray-700"
+                    } ${
+                      !item.url
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Mobile Card */}

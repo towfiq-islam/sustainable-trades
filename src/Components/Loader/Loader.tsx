@@ -696,7 +696,7 @@ export const NotificationSkeleton = () => {
 
 export const OrderRowSkeleton = () => {
   return (
-    <tr className="border-b border-gray-300 animate-pulse">
+    <tr className="border-b border-gray-300 animate-pulse last:border-b-0">
       <td className="py-4 px-4">
         <div className="h-4 w-24 bg-gray-200 rounded" />
       </td>

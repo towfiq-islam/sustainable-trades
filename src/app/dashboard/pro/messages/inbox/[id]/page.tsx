@@ -219,7 +219,7 @@ const page = () => {
                 </figure>
               )}
 
-              <p
+              <div
                 className={`relative text-[15px] font-lato leading-[160%] py-3 px-3.5 rounded-[6px] max-w-[550px] shadow ${
                   msg?.status === "sending"
                     ? "bg-gray-50 opacity-80"
@@ -229,14 +229,17 @@ const page = () => {
                 }
                 `}
               >
-                {msg?.message}
-                <br />
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: (msg?.message).replace(/\n/g, "<br />"),
+                  }}
+                />
 
                 {/* Time */}
                 <span className="text-xs text-gray-500 text-end block mt-1">
                   {moment(msg?.created_at).format("LT")}
                 </span>
-              </p>
+              </div>
             </div>
           ))
         )}

@@ -7,6 +7,7 @@ import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
 import VendorOrders from "./_Components/VendorOrders";
+import Modal from "@/Components/Common/Modal";
 
 type orderItem = {
   id: number;
@@ -17,6 +18,7 @@ type orderItem = {
   total_amount: string;
   status: string;
   shipping_option: string;
+  note: string;
   user: {
     first_name: string;
     last_name: string;
@@ -29,7 +31,9 @@ const page = () => {
   const { user } = useAuth();
   const [isActive, setIsActive] = useState("orders");
   const [status, setStatus] = useState<string>("");
+  const [note, setNote] = useState<string>("");
   const [openPopup, setOpenPopup] = useState<boolean>(false);
+  const [showNote, setShowNote] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<number | null>(null);
   const tabs = [
     "orders",
@@ -37,7 +41,7 @@ const page = () => {
     "confirmed",
     "delivered",
     "cancelled",
-    "purchased from another Member",
+    "purchased from another member",
   ];
   const { data: myOrders, isLoading } = getOrders(status);
   const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();
@@ -118,7 +122,7 @@ const page = () => {
         ))}
       </div>
 
-      {isActive === "purchased from another shop" ? (
+      {isActive === "purchased from another member" ? (
         <VendorOrders />
       ) : (
         <div className="w-full pt-10">
@@ -134,6 +138,7 @@ const page = () => {
                   <th className="py-3 px-4 text-left">Amount</th>
                   <th className="py-3 px-4 text-left">Status</th>
                   <th className="py-3 px-4 text-left">FullFillment</th>
+                  <th className="py-3 px-4 text-left">Notes</th>
                   <th className="py-3 px-4 text-center">Action</th>
                 </tr>
               </thead>
@@ -183,8 +188,26 @@ const page = () => {
                           {order?.status}
                         </span>
                       </td>
+
                       <td className="py-4 px-4 capitalize">
                         {order?.shipping_option}
+                      </td>
+
+                      <td className="py-4 px-4 capitalize">
+                        <button
+                          disabled={!order?.note}
+                          onClick={() => {
+                            setNote(order?.note);
+                            setShowNote(true);
+                          }}
+                          className={`px-2.5 py-1 text-xs font-semibold rounded-full border-2 text-accent-red ${
+                            order?.note
+                              ? "border-accent-red cursor-pointer hover:bg-accent-red hover:text-white duration-300 transition-all"
+                              : "opacity-70 bg-gray-200 cursor-not-allowed"
+                          }`}
+                        >
+                          View
+                        </button>
                       </td>
 
                       <td className="py-4 px-4 flex justify-center items-center relative">
@@ -206,8 +229,7 @@ const page = () => {
                               i === myOrders?.data?.length - 1
                                 ? "-top-20"
                                 : "top-8"
-                            }
-    `}
+                            }`}
                           >
                             <Link
                               href={`/dashboard/${user?.membership?.membership_type}/orders/${order?.id}`}
@@ -332,6 +354,13 @@ const page = () => {
                </div> */}
         </div>
       )}
+
+      <Modal open={showNote} onClose={() => setShowNote(false)}>
+        <h3 className="text-xl font-semibold text-primary-green mb-2">
+          Order Note
+        </h3>
+        <p className="leading-[164%] text-gray-700">"{note}"</p>
+      </Modal>
     </>
   );
 };

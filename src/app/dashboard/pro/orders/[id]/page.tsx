@@ -18,12 +18,15 @@ import { useSendMessage } from "@/Hooks/api/chat_api";
 import { CgSpinnerTwo } from "react-icons/cg";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import useAuth from "@/Hooks/useAuth";
 
 interface FormValues {
   message: string;
 }
 
 const Page = () => {
+  const { user } = useAuth();
+  console.log(user);
   const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);
@@ -68,8 +71,21 @@ const Page = () => {
     .filter(Boolean);
 
   const onSubmit = async (data: FormValues) => {
+    const customizedData =
+      `This message is sent from ${user?.shop_info?.shop_name} shop.\n` +
+      `Shop owner: ${user?.first_name} ${
+        user?.last_name && user?.last_name
+      }\n` +
+      `Order Number: ${singleOrder?.data?.order_number}\n` +
+      `Order Details: <a href="${
+        user?.role === "customer"
+          ? `https://sustainable-trades.vercel.app/dashboard/customer/orders/${order_id}`
+          : `https://sustainable-trades.vercel.app/dashboard/pro/orders/${order_id}`
+      }"  target="_blank" style="text-decoration: underline">Click here</a>\n` +
+      `Message: ${data?.message}`;
+
     const payload = {
-      ...data,
+      message: customizedData,
       receiver_id: singleOrder?.data?.user_id,
     };
 

@@ -1,12 +1,7 @@
 "use client";
 import React from "react";
-import {
-  BackSvg,
-  LocationTwoSvg,
-  MessageSvg,
-} from "@/Components/Svg/SvgContainer";
+import { BackSvg, MessageSvg } from "@/Components/Svg/SvgContainer";
 import toast from "react-hot-toast";
-import { FaStar } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useSendMessage } from "@/Hooks/api/chat_api";
@@ -60,38 +55,13 @@ const MessageToSellerModal = ({ id, shopInfo, setMsgOpen }: messageProps) => {
   return (
     <>
       <h3 className="text-light-green font-semibold text-lg mb-2">
-        Trade Offer
+        Send Message
       </h3>
 
       {/* Shop Name */}
       <h4 className="text-2xl font-semibold text-secondary-black mb-2">
         {shopInfo?.shop?.shop_name}
       </h4>
-
-      {/* Shop Review */}
-      <div className="flex gap-1 items-center mb-3">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <FaStar key={index} className="text-primary-green text-sm" />
-        ))}
-      </div>
-
-      {/* Shop Location */}
-      <div className="flex gap-1 items-center">
-        <LocationTwoSvg />
-        <span className="text-light-green">
-          {shopInfo?.shop?.address?.address_line_1}
-        </span>
-      </div>
-
-      <hr className="my-3 text-gray-300" />
-
-      <div className="flex justify-between items-center mb-2 text-lg font-semibold text-secondary-black">
-        {/* Product Name */}
-        <p>{shopInfo?.product_name}</p>
-
-        {/* Product Price */}
-        <p>${shopInfo?.product_price}</p>
-      </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-5">

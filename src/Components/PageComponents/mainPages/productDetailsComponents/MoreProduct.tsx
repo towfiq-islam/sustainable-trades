@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import Product from "@/Components/Common/Product";
 import { AiOutlineFileUnknown } from "react-icons/ai";
@@ -19,7 +18,6 @@ interface moreProductProps {
 }
 
 const MoreProduct = ({ data }: moreProductProps) => {
-  console.log(data);
   return (
     <section className="my-10 md:my-20">
       {/* Title */}

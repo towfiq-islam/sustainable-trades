@@ -34,7 +34,7 @@ const ProductReviews = ({
           Array.from({ length: 3 }).map((_, idx) => (
             <ReviewCardSkeleton key={idx} />
           ))
-        ) : data?.length > 0 ? (
+        ) : data?.data?.length > 0 ? (
           data?.data?.map((item: any) => (
             <div
               key={item?.id}

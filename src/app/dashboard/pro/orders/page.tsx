@@ -37,7 +37,7 @@ const page = () => {
     "confirmed",
     "delivered",
     "cancelled",
-    "purchased from another shop",
+    "purchased from another Member",
   ];
   const { data: myOrders, isLoading } = getOrders(status);
   const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();

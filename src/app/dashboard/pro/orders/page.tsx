@@ -6,6 +6,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
+import VendorOrders from "./_Components/VendorOrders";
 
 type orderItem = {
   id: number;
@@ -30,7 +31,14 @@ const page = () => {
   const [status, setStatus] = useState<string>("");
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<number | null>(null);
-  const tabs = ["orders", "pending", "confirmed", "delivered", "cancelled"];
+  const tabs = [
+    "orders",
+    "pending",
+    "confirmed",
+    "delivered",
+    "cancelled",
+    "purchased from another Member",
+  ];
   const { data: myOrders, isLoading } = getOrders(status);
   const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();
 
@@ -93,7 +101,11 @@ const page = () => {
             key={tab}
             onClick={() => {
               setIsActive(tab);
-              setStatus(tab === "orders" ? "" : tab);
+              setStatus(
+                tab === "orders" || tab === "purchased from another shop"
+                  ? ""
+                  : tab
+              );
             }}
             className={`cursor-pointer px-3 capitalize text-[16px] md:text-[20px] font-semibold ${
               isActive === tab
@@ -106,138 +118,143 @@ const page = () => {
         ))}
       </div>
 
-      <div className="w-full pt-10">
-        {/* Desktop Table */}
-        <div className="hidden lg:block overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b-2 border-gray-300 text-[#13141D] text-[15px] xl:text-[16px] font-semibold">
-                <th className="py-3 px-4 text-left">Order #</th>
-                <th className="py-3 px-4 text-left">Order Date</th>
-                <th className="py-3 px-4 text-left">Customer</th>
-                <th className="py-3 px-4 text-left">Items</th>
-                <th className="py-3 px-4 text-left">Amount</th>
-                <th className="py-3 px-4 text-left">Status</th>
-                <th className="py-3 px-4 text-left">FullFillment</th>
-                <th className="py-3 px-4 text-center">Action</th>
-              </tr>
-            </thead>
+      {isActive === "purchased from another shop" ? (
+        <VendorOrders />
+      ) : (
+        <div className="w-full pt-10">
+          {/* Desktop Table */}
+          <div className="hidden lg:block overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b-2 border-gray-300 text-[#13141D] text-[15px] xl:text-[16px] font-semibold">
+                  <th className="py-3 px-4 text-left">Order #</th>
+                  <th className="py-3 px-4 text-left">Order Date</th>
+                  <th className="py-3 px-4 text-left">Customer</th>
+                  <th className="py-3 px-4 text-left">Items</th>
+                  <th className="py-3 px-4 text-left">Amount</th>
+                  <th className="py-3 px-4 text-left">Status</th>
+                  <th className="py-3 px-4 text-left">FullFillment</th>
+                  <th className="py-3 px-4 text-center">Action</th>
+                </tr>
+              </thead>
 
-            <tbody>
-              {isLoading ? (
-                [1, 2, 3, 4, 5].map((_, idx) => <OrderRowSkeleton key={idx} />)
-              ) : myOrders?.data?.length > 0 ? (
-                myOrders?.data?.map((order: orderItem, i: number) => (
-                  <tr
-                    key={i}
-                    className="border-b border-gray-300 text-[#13141D] text-[14px] font-semibold"
-                  >
-                    <td className="py-4 px-4">{order?.order_number}</td>
-                    <td className="py-4 px-4">
-                      {moment(order?.created_at).format("ll")}
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex flex-col">
-                        <span>
-                          {order?.user?.first_name} {order?.user?.last_name}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          {order?.user?.email}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="py-4 px-4">{order?.total_quantity}</td>
-                    <td className="py-4 px-4">${order?.total_amount}</td>
-                    <td className="py-4 px-4">
-                      <span
-                        className={`min-w-[100px] text-white capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
-                          order?.status === "delivered"
-                            ? "bg-primary-green"
-                            : order?.status === "pending"
-                            ? "bg-accent-red"
-                            : order?.status === "pending"
-                            ? "bg-blue-500"
-                            : order?.status === "cancelled"
-                            ? "bg-primary-red"
-                            : "bg-gray-500"
-                        }`}
-                      >
-                        {order?.status}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 capitalize">
-                      {order?.shipping_option}
-                    </td>
-
-                    <td className="py-4 px-4 flex justify-center items-center relative">
-                      <button
-                        onClick={e => {
-                          e.stopPropagation();
-                          setOrderId(order?.id);
-                          setOpenPopup(!openPopup);
-                        }}
-                        className="cursor-pointer"
-                      >
-                        <BsThreeDotsVertical />
-                      </button>
-
-                      {openPopup && orderId === order.id && (
-                        <div
-                          onClick={e => e.stopPropagation()}
-                          className={`absolute right-16 px-1 py-2 w-[120px] bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-200 ${
-                            i === myOrders?.data?.length - 1
-                              ? "-top-20"
-                              : "top-8"
-                          }
-    `}
-                        >
-                          <Link
-                            href={`/dashboard/${user?.membership?.membership_type}/orders/${order?.id}`}
-                            className="w-full text-left px-3 py-1.5 hover:bg-gray-100 cursor-pointer block"
-                          >
-                            View Details
-                          </Link>
-
-                          <button
-                            disabled={isPending}
-                            onClick={() =>
-                              updateStatusMutation(
-                                {
-                                  endpoint: `/api/order-status-update/${order?.id}`,
-                                  status: "cancelled",
-                                },
-                                {
-                                  onSuccess: () => {
-                                    setOpenPopup(false);
-                                  },
-                                }
-                              )
-                            }
-                            className={`w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block ${
-                              isPending
-                                ? "cursor-not-allowed opacity-85"
-                                : "cursor-pointer"
-                            }`}
-                          >
-                            {isPending ? "Cancelling..." : " Cancel Order"}
-                          </button>
+              <tbody>
+                {isLoading ? (
+                  [1, 2, 3, 4, 5].map((_, idx) => (
+                    <OrderRowSkeleton key={idx} />
+                  ))
+                ) : myOrders?.data?.length > 0 ? (
+                  myOrders?.data?.map((order: orderItem, i: number) => (
+                    <tr
+                      key={i}
+                      className="border-b border-gray-300 text-[#13141D] text-[14px] font-semibold"
+                    >
+                      <td className="py-4 px-4">{order?.order_number}</td>
+                      <td className="py-4 px-4">
+                        {moment(order?.created_at).format("ll")}
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex flex-col">
+                          <span>
+                            {order?.user?.first_name} {order?.user?.last_name}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            {order?.user?.email}
+                          </span>
                         </div>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <p className="text-red-500 font-semibold text-lg mt-5">
-                  No orders found
-                </p>
-              )}
-            </tbody>
-          </table>
-        </div>
+                      </td>
 
-        {/* Mobile Card */}
-        {/* <div className="lg:hidden space-y-4">
+                      <td className="py-4 px-4">{order?.total_quantity}</td>
+                      <td className="py-4 px-4">${order?.total_amount}</td>
+                      <td className="py-4 px-4">
+                        <span
+                          className={`min-w-[100px] text-white capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
+                            order?.status === "delivered"
+                              ? "bg-primary-green"
+                              : order?.status === "pending"
+                              ? "bg-accent-red"
+                              : order?.status === "pending"
+                              ? "bg-blue-500"
+                              : order?.status === "cancelled"
+                              ? "bg-primary-red"
+                              : "bg-gray-500"
+                          }`}
+                        >
+                          {order?.status}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4 capitalize">
+                        {order?.shipping_option}
+                      </td>
+
+                      <td className="py-4 px-4 flex justify-center items-center relative">
+                        <button
+                          onClick={e => {
+                            e.stopPropagation();
+                            setOrderId(order?.id);
+                            setOpenPopup(!openPopup);
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <BsThreeDotsVertical />
+                        </button>
+
+                        {openPopup && orderId === order.id && (
+                          <div
+                            onClick={e => e.stopPropagation()}
+                            className={`absolute right-16 px-1 py-2 w-[120px] bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-200 ${
+                              i === myOrders?.data?.length - 1
+                                ? "-top-20"
+                                : "top-8"
+                            }
+    `}
+                          >
+                            <Link
+                              href={`/dashboard/${user?.membership?.membership_type}/orders/${order?.id}`}
+                              className="w-full text-left px-3 py-1.5 hover:bg-gray-100 cursor-pointer block"
+                            >
+                              View Details
+                            </Link>
+
+                            <button
+                              disabled={isPending}
+                              onClick={() =>
+                                updateStatusMutation(
+                                  {
+                                    endpoint: `/api/order-status-update/${order?.id}`,
+                                    status: "cancelled",
+                                  },
+                                  {
+                                    onSuccess: () => {
+                                      setOpenPopup(false);
+                                    },
+                                  }
+                                )
+                              }
+                              className={`w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block ${
+                                isPending
+                                  ? "cursor-not-allowed opacity-85"
+                                  : "cursor-pointer"
+                              }`}
+                            >
+                              {isPending ? "Cancelling..." : " Cancel Order"}
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <p className="text-red-500 font-semibold text-lg mt-5">
+                    No orders found
+                  </p>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Card */}
+          {/* <div className="lg:hidden space-y-4">
                  {paginatedData.map((order, i) => (
                    <div key={i} className=" rounded-lg  overflow-hidden relative">
                      <div className="flex justify-between items-center  px-4 py-2">
@@ -313,7 +330,8 @@ const page = () => {
                    </div>
                  ))}
                </div> */}
-      </div>
+        </div>
+      )}
     </>
   );
 };

@@ -39,7 +39,7 @@ const OrderNote: React.FC<OrderNoteProps> = ({ order_id, onClose }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <textarea
           placeholder="Type note here..."
-          className="p-3 rounded-[8px] border border-[#8E2F2F] text-[16px] font-normal text-[#000] cursor-pointer hover:border-green-500 duration-300 ease-in-out w-full mt-5 h-[280px]"
+          className="p-3 rounded-[8px] border border-[#8E2F2F] text-[16px] font-normal text-[#000] cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full mt-5 h-[280px]"
           {...register("note", {
             required: "Note is required",
           })}

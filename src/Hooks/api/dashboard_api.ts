@@ -459,7 +459,7 @@ export const useImageDelete = (id: any) => {
 };
 
 // Get My Orders
-export const getMyOrders = (status: string) => {
+export const getMyOrders = (status?: string) => {
   return useClientApi({
     method: "get",
     key: ["get-my-orders", status],
@@ -560,13 +560,13 @@ export const useCancelMembership = () => {
 };
 
 // Get Orders
-export const getOrders = (status: string) => {
+export const getOrders = (status: string, page: string) => {
   return useClientApi({
     method: "get",
-    key: ["get-orders", status],
+    key: ["get-orders", status, page],
     isPrivate: true,
     endpoint: "/api/orders",
-    params: { status },
+    params: { status, page },
     queryOptions: {
       retry: false,
     },

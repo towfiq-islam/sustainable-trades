@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { use, useState } from "react";
+import { use, useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Container from "@/Components/Common/Container";
 import { getProductDetails, getProductReviews } from "@/Hooks/api/cms_api";
@@ -29,10 +29,12 @@ const page = ({ params }: Props) => {
     latitude,
     longitude
   );
+
   const { data: productReviews, isLoading: reviewLoading } = getProductReviews(
     id,
     page
   );
+  console.log(productDetailsData?.data);
 
   if (isLoading) {
     return <ProductDetailsSkeleton />;

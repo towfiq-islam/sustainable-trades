@@ -186,6 +186,7 @@ const VendorOrders = () => {
                               className="rounded size-full object-cover"
                             />
                           </figure>
+
                           <div className="flex flex-col gap-1.5">
                             <h5 className="text-[16px] sm:text-[20px] font-bold text-[#000]">
                               {item?.product?.product_name}
@@ -196,7 +197,7 @@ const VendorOrders = () => {
 
                             {order?.status === "delivered" && (
                               <Link
-                                href={`/dashboard/customer/reviews/${item?.product_id}`}
+                                href={`/dashboard/pro/reviews/${item?.product_id}`}
                                 className="px-3 py-1 rounded-full cursor-pointer border text-sm w-fit font-semibold border-primary-green"
                               >
                                 Write review
@@ -220,7 +221,7 @@ const VendorOrders = () => {
                     </button>
 
                     <Link
-                      href={`/dashboard/customer/orders/${order?.id}`}
+                      href={`/dashboard/pro/orders/details/${order?.id}`}
                       className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer text-center w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
                     >
                       View Order

@@ -103,7 +103,6 @@ export default function TaxRatePage() {
 
             <div className="flex items-center border-b-2 pb-1 border-[#A7A39C]">
               <input
-                type="number"
                 {...register("rate", {
                   required: "Tax rate is required",
                   min: { value: 0, message: "Rate must be positive" },

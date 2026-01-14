@@ -80,6 +80,7 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
                         alt="author_img"
                         fill
                         unoptimized
+                        className="size-full object-cover"
                       />
                     ) : (
                       <span>{item?.user?.first_name?.at(0)}</span>
@@ -152,9 +153,9 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
                               <Image
                                 src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
                                 alt="Reviewed img"
-                                className="w-full h-full rounded-lg"
                                 fill
                                 unoptimized
+                                className="w-full h-full rounded-lg object-cover"
                               />
                             </figure>
                           </SwiperSlide>
@@ -174,9 +175,9 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
                       <Image
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images[0]?.image}`}
                         alt="product image"
-                        className="size-full rounded-lg"
                         fill
                         unoptimized
+                        className="size-full rounded-lg object-cover"
                       />
                     </figure>
 
@@ -206,16 +207,18 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
             {data?.links?.map((item: any, idx: number) => (
               <button
                 key={idx}
+                disabled={!item.url}
+                dangerouslySetInnerHTML={{ __html: item.label }}
                 onClick={() =>
                   item.url && setReviewPage(item.url.split("=")[1])
                 }
-                className={`px-3 py-1 rounded border transition-all duration-200 
-        ${
-          item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"
-        } 
-        ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                disabled={!item.url}
-                dangerouslySetInnerHTML={{ __html: item.label }}
+                className={`px-3 py-1 rounded border transition-all duration-200 ${
+                  item.active
+                    ? "bg-primary-green text-white"
+                    : "bg-white text-gray-700"
+                } ${
+                  !item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                }`}
               />
             ))}
           </div>

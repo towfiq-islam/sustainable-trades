@@ -7,6 +7,7 @@ import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
 import VendorOrders from "./_Components/VendorOrders";
+import Modal from "@/Components/Common/Modal";
 
 type orderItem = {
   id: number;
@@ -17,6 +18,7 @@ type orderItem = {
   total_amount: string;
   status: string;
   shipping_option: string;
+  note: string;
   user: {
     first_name: string;
     last_name: string;
@@ -29,17 +31,20 @@ const page = () => {
   const { user } = useAuth();
   const [isActive, setIsActive] = useState("orders");
   const [status, setStatus] = useState<string>("");
+  const [note, setNote] = useState<string>("");
   const [openPopup, setOpenPopup] = useState<boolean>(false);
+  const [showNote, setShowNote] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<number | null>(null);
+  const [page, setPage] = useState<string>("");
   const tabs = [
     "orders",
     "pending",
     "confirmed",
     "delivered",
     "cancelled",
-    "purchased from another Member",
+    "purchased from another member",
   ];
-  const { data: myOrders, isLoading } = getOrders(status);
+  const { data: allOrders, isLoading } = getOrders(status, page);
   const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();
 
   useEffect(() => {
@@ -118,7 +123,7 @@ const page = () => {
         ))}
       </div>
 
-      {isActive === "purchased from another shop" ? (
+      {isActive === "purchased from another member" ? (
         <VendorOrders />
       ) : (
         <div className="w-full pt-10">
@@ -134,6 +139,7 @@ const page = () => {
                   <th className="py-3 px-4 text-left">Amount</th>
                   <th className="py-3 px-4 text-left">Status</th>
                   <th className="py-3 px-4 text-left">FullFillment</th>
+                  <th className="py-3 px-4 text-left">Notes</th>
                   <th className="py-3 px-4 text-center">Action</th>
                 </tr>
               </thead>
@@ -143,11 +149,11 @@ const page = () => {
                   [1, 2, 3, 4, 5].map((_, idx) => (
                     <OrderRowSkeleton key={idx} />
                   ))
-                ) : myOrders?.data?.length > 0 ? (
-                  myOrders?.data?.map((order: orderItem, i: number) => (
+                ) : allOrders?.data?.data?.length > 0 ? (
+                  allOrders?.data?.data?.map((order: orderItem, i: number) => (
                     <tr
                       key={i}
-                      className="border-b border-gray-300 text-[#13141D] text-[14px] font-semibold"
+                      className="border-b border-gray-300 text-[#13141D] text-[14px] font-semibold last:border-b-0 hover:bg-gray-100 duration-200 transition-all"
                     >
                       <td className="py-4 px-4">{order?.order_number}</td>
                       <td className="py-4 px-4">
@@ -183,8 +189,26 @@ const page = () => {
                           {order?.status}
                         </span>
                       </td>
+
                       <td className="py-4 px-4 capitalize">
                         {order?.shipping_option}
+                      </td>
+
+                      <td className="py-4 px-4 capitalize">
+                        <button
+                          disabled={!order?.note}
+                          onClick={() => {
+                            setNote(order?.note);
+                            setShowNote(true);
+                          }}
+                          className={`px-2.5 py-1 text-xs font-semibold rounded-full border-2 text-accent-red ${
+                            order?.note
+                              ? "border-accent-red cursor-pointer hover:bg-accent-red hover:text-white duration-300 transition-all"
+                              : "opacity-70 bg-gray-200 cursor-not-allowed"
+                          }`}
+                        >
+                          View
+                        </button>
                       </td>
 
                       <td className="py-4 px-4 flex justify-center items-center relative">
@@ -203,11 +227,11 @@ const page = () => {
                           <div
                             onClick={e => e.stopPropagation()}
                             className={`absolute right-16 px-1 py-2 w-[120px] bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-200 ${
-                              i === myOrders?.data?.length - 1
+                              i === allOrders?.data?.data?.length - 1 &&
+                              allOrders?.data?.data?.length > 5
                                 ? "-top-20"
                                 : "top-8"
-                            }
-    `}
+                            }`}
                           >
                             <Link
                               href={`/dashboard/${user?.membership?.membership_type}/orders/${order?.id}`}
@@ -251,6 +275,29 @@ const page = () => {
                 )}
               </tbody>
             </table>
+
+            {/* Pagination */}
+            {!isLoading && (
+              <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">
+                {allOrders?.data?.links?.map((item: any, idx: number) => (
+                  <button
+                    key={idx}
+                    disabled={!item.url}
+                    dangerouslySetInnerHTML={{ __html: item.label }}
+                    onClick={() => item.url && setPage(item.url.split("=")[1])}
+                    className={`px-3 py-1 rounded border transition-all duration-200  ${
+                      item.active
+                        ? "bg-primary-green text-white"
+                        : "bg-white text-gray-700"
+                    } ${
+                      !item.url
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Mobile Card */}
@@ -332,6 +379,13 @@ const page = () => {
                </div> */}
         </div>
       )}
+
+      <Modal open={showNote} onClose={() => setShowNote(false)}>
+        <h3 className="text-xl font-semibold text-primary-green mb-2">
+          Order Note
+        </h3>
+        <p className="leading-[164%] text-gray-700">"{note}"</p>
+      </Modal>
     </>
   );
 };

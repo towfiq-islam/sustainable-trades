@@ -1,31 +1,22 @@
-import React from "react";
+"use client";
 
-type titleprops = {
+type titleProps = {
   title: string;
+  data: any;
+  isLoading: any;
 };
 
-const AccountTable: React.FC<titleprops> = ({ title }) => {
-  const data = [
-    {
-      order: "23486 +0% /mo",
-      revenue: "$83 +0% /mo",
-      profit: "$40 +0% /mo",
-      expenses: "$25",
-      shipping: "$12 +0% /mo",
-      salesTax: "$6 +0% /mo",
-      date: "10/31/23",
-    },
-    {
-      order: "23487 +0% /mo",
-      revenue: "$90 +2% /mo",
-      profit: "$45 +1% /mo",
-      expenses: "$30",
-      shipping: "$15 +0% /mo",
-      salesTax: "$7 +0% /mo",
-      date: "11/01/23",
-    },
-  ];
+type orderItem = {
+  order_number: string;
+  date: string;
+  profit: number;
+  revenue: number;
+  sales_tax: number;
+  shipping: number;
+  expenses: number;
+};
 
+const AccountTable: React.FC<titleProps> = ({ title, data, isLoading }) => {
   return (
     <div>
       {/* Header */}
@@ -33,6 +24,7 @@ const AccountTable: React.FC<titleprops> = ({ title }) => {
         <h4 className="text-[20px] sm:text-[24px] font-semibold text-[#000]">
           {title}
         </h4>
+
         <select className="w-full sm:w-[150px] border rounded-lg p-2 text-sm sm:text-base">
           <option value="30 Days">30 Days</option>
           <option value="07 Days">07 Days</option>
@@ -54,21 +46,55 @@ const AccountTable: React.FC<titleprops> = ({ title }) => {
               <th className="py-2 px-4 text-center">Date</th>
             </tr>
           </thead>
+
           <tbody>
-            {data.map((row, idx) => (
-              <tr
-                key={idx}
-                className="border-b border-gray-300 text-[#13141D] text-[14px] font-medium"
-              >
-                <td className="py-3 px-4 text-[#3470E5]">{row.order}</td>
-                <td className="py-3 px-4">{row.revenue}</td>
-                <td className="py-3 px-4">{row.profit}</td>
-                <td className="py-3 px-4">{row.expenses}</td>
-                <td className="py-3 px-4">{row.shipping}</td>
-                <td className="py-3 px-4">{row.salesTax}</td>
-                <td className="py-3 px-4 text-center">{row.date}</td>
-              </tr>
-            ))}
+            {isLoading
+              ? Array.from({ length: 5 }).map((_, idx) => (
+                  <tr
+                    key={idx}
+                    className="border-b border-gray-300 animate-pulse"
+                  >
+                    <td className="py-3 px-4">
+                      <div className="h-4 w-24 bg-gray-200 rounded" />
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="h-4 w-16 bg-gray-200 rounded" />
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="h-4 w-16 bg-gray-200 rounded" />
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="h-4 w-16 bg-gray-200 rounded" />
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="h-4 w-16 bg-gray-200 rounded" />
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="h-4 w-16 bg-gray-200 rounded" />
+                    </td>
+                    <td className="py-3 px-4 text-center">
+                      <div className="h-4 w-24 bg-gray-200 rounded mx-auto" />
+                    </td>
+                  </tr>
+                ))
+              : data?.length > 0
+                ? data?.map((row: orderItem, idx: number) => (
+                    <tr
+                      key={idx}
+                      className="border-b border-gray-300 text-[#13141D] text-[14px] font-medium"
+                    >
+                      <td className="py-3 px-4 text-[#3470E5]">
+                        {row?.order_number}
+                      </td>
+                      <td className="py-3 px-4">{row?.revenue.toFixed(2)}</td>
+                      <td className="py-3 px-4">{row?.profit.toFixed(2)}</td>
+                      <td className="py-3 px-4">{row.expenses.toFixed(2)}</td>
+                      <td className="py-3 px-4">{row?.shipping.toFixed(2)}</td>
+                      <td className="py-3 px-4">{row.sales_tax.toFixed(2)}</td>
+                      <td className="py-3 px-4 text-center">{row?.date}</td>
+                    </tr>
+                  ))
+                : "No data found"}
           </tbody>
         </table>
       </div>

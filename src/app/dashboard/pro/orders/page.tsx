@@ -1,11 +1,7 @@
 "use client";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import {
-  getOrders,
-  useCancelOrder,
-  useUpdateOrderStatus,
-} from "@/Hooks/api/dashboard_api";
+import { getOrders, useCancelOrder } from "@/Hooks/api/dashboard_api";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
@@ -49,7 +45,6 @@ const page = () => {
     "purchased from another member",
   ];
   const { data: allOrders, isLoading } = getOrders(status, page);
-  const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();
   const { mutate: cancelOrder, isPending: isCancelling } = useCancelOrder();
 
   useEffect(() => {
@@ -261,7 +256,7 @@ const page = () => {
                               }
                               className="w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block disabled:cursor-not-allowed disabled:opacity-85 cursor-pointer"
                             >
-                              {isPending ? "Cancelling..." : " Cancel Order"}
+                              {isCancelling ? "Cancelling..." : " Cancel Order"}
                             </button>
                           </div>
                         )}

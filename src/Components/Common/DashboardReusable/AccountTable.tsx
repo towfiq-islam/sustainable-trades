@@ -1,9 +1,14 @@
 "use client";
 
-type titleProps = {
+type Props = {
   title: string;
-  data: any;
-  isLoading: any;
+  data: orderItem[];
+  isLoading: boolean;
+  filter: string;
+  setFilter: (val: string) => void;
+  setDateRange: (val: { from: string; to: string }) => void;
+  year: number;
+  setYear: (val: number) => void;
 };
 
 type orderItem = {
@@ -16,7 +21,16 @@ type orderItem = {
   expenses: number;
 };
 
-const AccountTable: React.FC<titleProps> = ({ title, data, isLoading }) => {
+const AccountTable = ({
+  title,
+  data,
+  isLoading,
+  filter,
+  setFilter,
+  setDateRange,
+  year,
+  setYear,
+}: Props) => {
   return (
     <div>
       {/* Header */}
@@ -25,12 +39,47 @@ const AccountTable: React.FC<titleProps> = ({ title, data, isLoading }) => {
           {title}
         </h4>
 
-        <select className="w-full sm:w-[150px] border rounded-lg p-2 text-sm sm:text-base">
-          <option value="30 Days">30 Days</option>
-          <option value="07 Days">07 Days</option>
-          <option value="10 Days">10 Days</option>
+        <select
+          className="w-full sm:w-[200px] border rounded-lg p-2"
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
+        >
+          <option value="last_30_days">Last 30 Days</option>
+          <option value="year_to_date">Year to Date</option>
+          <option value="custom_date_range">Custom Date Range</option>
+          <option value="specific_year">Specific Year</option>
         </select>
       </div>
+
+      {/* Date range */}
+      {filter === "custom_date_range" && (
+        <div className="flex gap-2 mt-2">
+          <input
+            type="date"
+            onChange={e => setDateRange({ from: e.target.value, to: "" })}
+            className="border p-2 rounded"
+          />
+
+          <input
+            type="date"
+            onChange={e =>
+              setDateRange(prev => ({ ...prev, to: e.target.value }))
+            }
+            className="border p-2 rounded"
+          />
+        </div>
+      )}
+
+      {/* Year */}
+      {filter === "specific_year" && (
+        <input
+          type="number"
+          value={year}
+          onChange={e => setYear(Number(e.target.value))}
+          className="border p-2 rounded mt-2"
+          placeholder="Enter year (e.g. 2024)"
+        />
+      )}
 
       {/* Desktop Table */}
       <div className="overflow-x-auto mt-5">
@@ -48,53 +97,55 @@ const AccountTable: React.FC<titleProps> = ({ title, data, isLoading }) => {
           </thead>
 
           <tbody>
-            {isLoading
-              ? Array.from({ length: 5 }).map((_, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-b border-gray-300 animate-pulse"
-                  >
-                    <td className="py-3 px-4">
-                      <div className="h-4 w-24 bg-gray-200 rounded" />
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="h-4 w-16 bg-gray-200 rounded" />
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="h-4 w-16 bg-gray-200 rounded" />
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="h-4 w-16 bg-gray-200 rounded" />
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="h-4 w-16 bg-gray-200 rounded" />
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="h-4 w-16 bg-gray-200 rounded" />
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <div className="h-4 w-24 bg-gray-200 rounded mx-auto" />
-                    </td>
-                  </tr>
-                ))
-              : data?.length > 0
-                ? data?.map((row: orderItem, idx: number) => (
-                    <tr
-                      key={idx}
-                      className="border-b border-gray-300 text-[#13141D] text-[14px] font-medium"
-                    >
-                      <td className="py-3 px-4 text-[#3470E5]">
-                        {row?.order_number}
-                      </td>
-                      <td className="py-3 px-4">{row?.revenue.toFixed(2)}</td>
-                      <td className="py-3 px-4">{row?.profit.toFixed(2)}</td>
-                      <td className="py-3 px-4">{row.expenses.toFixed(2)}</td>
-                      <td className="py-3 px-4">{row?.shipping.toFixed(2)}</td>
-                      <td className="py-3 px-4">{row.sales_tax.toFixed(2)}</td>
-                      <td className="py-3 px-4 text-center">{row?.date}</td>
-                    </tr>
-                  ))
-                : "No data found"}
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, idx) => (
+                <tr
+                  key={idx}
+                  className="border-b border-gray-300 animate-pulse"
+                >
+                  <td className="py-3 px-4">
+                    <div className="h-4 w-24 bg-gray-200 rounded" />
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="h-4 w-16 bg-gray-200 rounded" />
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="h-4 w-16 bg-gray-200 rounded" />
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="h-4 w-16 bg-gray-200 rounded" />
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="h-4 w-16 bg-gray-200 rounded" />
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="h-4 w-16 bg-gray-200 rounded" />
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <div className="h-4 w-24 bg-gray-200 rounded mx-auto" />
+                  </td>
+                </tr>
+              ))
+            ) : data?.length > 0 ? (
+              data?.map((row, idx) => (
+                <tr
+                  key={idx}
+                  className="border-b border-gray-300 text-[#13141D] text-[14px] font-medium"
+                >
+                  <td className="py-3 px-4 text-[#3470E5]">
+                    {row?.order_number}
+                  </td>
+                  <td className="py-3 px-4">{row?.revenue.toFixed(2)}</td>
+                  <td className="py-3 px-4">{row?.profit.toFixed(2)}</td>
+                  <td className="py-3 px-4">{row.expenses.toFixed(2)}</td>
+                  <td className="py-3 px-4">{row?.shipping.toFixed(2)}</td>
+                  <td className="py-3 px-4">{row.sales_tax.toFixed(2)}</td>
+                  <td className="py-3 px-4 text-center">{row?.date}</td>
+                </tr>
+              ))
+            ) : (
+              <p className="text-red-500 pt-5">"No data found"</p>
+            )}
           </tbody>
         </table>
       </div>

@@ -767,13 +767,13 @@ export const useLocalPickup = (id: number | null) => {
 };
 
 // Get Accounting
-export const getAccountingData = (days: string) => {
+export const getAccountingData = (params: any) => {
   return useClientApi({
     method: "get",
-    key: ["get-accounting", days],
+    key: ["get-accounting", params],
     isPrivate: true,
     endpoint: "/api/accounting/summary",
-    params: { days },
+    params,
   });
 };
 

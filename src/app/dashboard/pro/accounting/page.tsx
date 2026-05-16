@@ -4,6 +4,7 @@ import { Download } from "@/Components/Svg/SvgContainer";
 import { FaAngleRight } from "react-icons/fa";
 import { CSVLink } from "react-csv";
 import { getAccountingData } from "@/Hooks/api/dashboard_api";
+import { useState } from "react";
 
 const headers = [
   { label: "Order#", key: "order_number" },
@@ -16,7 +17,15 @@ const headers = [
 ];
 
 const page = () => {
-  const { data: accountingData, isLoading } = getAccountingData("");
+  const [filter, setFilter] = useState("last_30_days");
+  const [dateRange, setDateRange] = useState({ from: "", to: "" });
+  const [year, setYear] = useState(2024);
+  const { data: accountingData, isLoading } = getAccountingData({
+    filter,
+    date_from: filter === "custom_date_range" ? dateRange.from : undefined,
+    date_to: filter === "custom_date_range" ? dateRange.to : undefined,
+    year: filter === "specific_year" ? year : undefined,
+  });
 
   return (
     <>
@@ -42,6 +51,11 @@ const page = () => {
           title="Sales"
           data={accountingData?.data?.orders}
           isLoading={isLoading}
+          filter={filter}
+          setFilter={setFilter}
+          setDateRange={setDateRange}
+          year={year}
+          setYear={setYear}
         />
       </div>
 

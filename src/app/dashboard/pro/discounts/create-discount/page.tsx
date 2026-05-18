@@ -78,28 +78,51 @@ const CreateDiscount = () => {
   useEffect(() => {
     if (isEditMode && discountData?.data) {
       const item: DiscountData = discountData.data;
+
       setName(item.name || "");
       setDiscountType(item.discount_type === "discount_code" ? "code" : "auto");
+
       setCode(item.code || "");
+
       setPromoType(
-        item.promotion_type === "percentage" ? "Percent Off" : "Fixed Amount"
+        item.promotion_type === "percentage" ? "Percent Off" : "Fixed Amount",
       );
+
       setAmount(item.amount?.toString() || "");
+
       setAppliesTo(
-        item.applies === "any_order" ? "Any Order" : "Single Product"
+        item.applies === "any_order" ? "Any Order" : "Single Product",
       );
+
       setSelectedProduct(item.product_id?.toString() || "");
-      setLimitPerCustomer(item.limit_one_per_shopper || false);
-      setTotalUsesLimit(!!item.discount_limits);
-      setTotalUses(item.discount_limits?.toString() || "");
+
+      // FIXED LOGIC
+      const limitValue = Number(item.discount_limits);
+
+      if (limitValue === 1) {
+        setLimitPerCustomer(true);
+        setTotalUsesLimit(false);
+        setTotalUses("1");
+      } else if (limitValue > 1) {
+        setLimitPerCustomer(false);
+        setTotalUsesLimit(true);
+        setTotalUses(limitValue.toString());
+      } else {
+        setLimitPerCustomer(false);
+        setTotalUsesLimit(false);
+        setTotalUses("");
+      }
+
       setStartDate(item.start_date || "");
       setStartTime(item.start_time ? item.start_time.substring(0, 5) : "");
+
       setEndDate(item.end_date || "");
+
       setEndTime(item.end_time ? item.end_time.substring(0, 5) : "");
+
       setNeverExpires(item.never_expires || false);
     }
   }, [isEditMode, discountData]);
-
   const generateRandomCode = () => {
     return (
       Math.random().toString(36).substring(2, 7).toUpperCase() +
@@ -158,18 +181,29 @@ const CreateDiscount = () => {
       promotion_type: promoType === "Percent Off" ? "percentage" : "fixed",
       amount: amount.trim(),
       applies: appliesTo === "Any Order" ? "any_order" : "single_product",
+
       ...(appliesTo === "Single Product" && {
         product_id: parseInt(selectedProduct),
       }),
-      limit_one_per_shopper: limitPerCustomer,
-      ...(totalUsesLimit &&
-        totalUses.trim() && { discount_limits: parseInt(totalUses.trim()) }),
+
+      // NEW LOGIC
+      ...(limitPerCustomer
+        ? { discount_limits: 1 }
+        : totalUsesLimit && totalUses.trim()
+          ? { discount_limits: parseInt(totalUses.trim()) }
+          : {}),
+
       start_date: startDate,
       start_time: startTime || null,
       never_expires: neverExpires,
+
       ...(neverExpires
         ? { end_date: null, end_time: null }
-        : { end_date: endDate || null, end_time: endTime || null }),
+        : {
+            end_date: endDate || null,
+            end_time: endTime || null,
+          }),
+
       ...(isEditMode && { id: parseInt(id!) }),
     };
 
@@ -607,8 +641,8 @@ const CreateDiscount = () => {
           {isPending
             ? "Saving..."
             : isEditMode
-            ? "Update Discount"
-            : "Save Discount"}
+              ? "Update Discount"
+              : "Save Discount"}
         </button>
       </div>
     </>

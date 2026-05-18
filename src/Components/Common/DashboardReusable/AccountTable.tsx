@@ -1,12 +1,17 @@
 "use client";
 
+type DateRange = {
+  from: string;
+  to: string;
+};
+
 type Props = {
   title: string;
   data: orderItem[];
   isLoading: boolean;
   filter: string;
   setFilter: (val: string) => void;
-  setDateRange: (val: { from: string; to: string }) => void;
+  setDateRange: React.Dispatch<React.SetStateAction<DateRange>>;
   year: number;
   setYear: (val: number) => void;
 };

@@ -115,6 +115,22 @@ export async function getSingleDynamicPage(slug: string) {
   });
 }
 
+// Blogs
+export async function getBlogs() {
+  return useServerApi({
+    endpoint: "/api/blogs",
+    revalidate: 3600,
+  });
+}
+
+// Single Blog
+export async function getSingleBlog(id: number) {
+  return useServerApi({
+    endpoint: `/api/blog/${id}`,
+    revalidate: 3600,
+  });
+}
+
 // =======================================================
 //  CSR (Client Side Rendering)
 // =======================================================
@@ -246,7 +262,7 @@ export const getAllListings = (
   sub_category_id?: string,
   short_by?: string,
   search?: string,
-  page?: string
+  page?: string,
 ) => {
   return useClientApi({
     method: "get",
@@ -545,7 +561,7 @@ export const getMembershipSpotlightClient = () => {
 export const getCategoryDetails = (
   id: number | null,
   lat: number,
-  lng: number
+  lng: number,
 ) => {
   return useClientApi({
     method: "get",

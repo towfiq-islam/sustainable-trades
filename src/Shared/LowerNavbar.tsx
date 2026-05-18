@@ -65,6 +65,11 @@ const LowerNavbar = ({ dynamicPage }: any) => {
         },
       ],
     },
+    {
+      id: 6,
+      label: "Blog",
+      path: "/blog",
+    },
   ];
 
   const pathname = usePathname();
@@ -175,8 +180,8 @@ const LowerNavbar = ({ dynamicPage }: any) => {
 
                           <span>{page_title}</span>
                         </Link>
-                      )
-                    )
+                      ),
+                    ),
                 )}
               </div>
             </div>

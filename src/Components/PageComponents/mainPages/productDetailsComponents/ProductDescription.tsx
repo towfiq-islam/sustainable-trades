@@ -114,9 +114,9 @@ const ProductDescription = ({ data }: descriptionProps) => {
         </button>
       </div>
 
-      <div className="flex gap-5 justify-between items-center mb-5">
+      <div className="flex gap-5 justify-between items-start mb-5">
         {/* Product Name */}
-        <h3 className="text-xl md:text-2xl font-semibold text-secondary-black truncate">
+        <h3 className="text-xl md:text-2xl font-semibold text-secondary-black">
           {data?.product_name}
         </h3>
 

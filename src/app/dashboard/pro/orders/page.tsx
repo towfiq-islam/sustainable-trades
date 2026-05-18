@@ -1,7 +1,7 @@
 "use client";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { getOrders, useUpdateOrderStatus } from "@/Hooks/api/dashboard_api";
+import { getOrders, useCancelOrder } from "@/Hooks/api/dashboard_api";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
@@ -45,7 +45,7 @@ const page = () => {
     "purchased from another member",
   ];
   const { data: allOrders, isLoading } = getOrders(status, page);
-  const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();
+  const { mutate: cancelOrder, isPending: isCancelling } = useCancelOrder();
 
   useEffect(() => {
     const handleWindowClick = () => {
@@ -109,7 +109,7 @@ const page = () => {
               setStatus(
                 tab === "orders" || tab === "purchased from another shop"
                   ? ""
-                  : tab
+                  : tab,
               );
             }}
             className={`cursor-pointer px-3 capitalize text-[16px] md:text-[20px] font-semibold ${
@@ -178,12 +178,12 @@ const page = () => {
                             order?.status === "delivered"
                               ? "bg-primary-green"
                               : order?.status === "pending"
-                              ? "bg-accent-red"
-                              : order?.status === "pending"
-                              ? "bg-blue-500"
-                              : order?.status === "cancelled"
-                              ? "bg-primary-red"
-                              : "bg-gray-500"
+                                ? "bg-accent-red"
+                                : order?.status === "pending"
+                                  ? "bg-blue-500"
+                                  : order?.status === "cancelled"
+                                    ? "bg-primary-red"
+                                    : "bg-gray-500"
                           }`}
                         >
                           {order?.status}
@@ -241,27 +241,22 @@ const page = () => {
                             </Link>
 
                             <button
-                              disabled={isPending}
+                              disabled={isCancelling}
                               onClick={() =>
-                                updateStatusMutation(
+                                cancelOrder(
                                   {
-                                    endpoint: `/api/order-status-update/${order?.id}`,
-                                    status: "cancelled",
+                                    endpoint: `/api/cancel-order/${order?.id}`,
                                   },
                                   {
                                     onSuccess: () => {
                                       setOpenPopup(false);
                                     },
-                                  }
+                                  },
                                 )
                               }
-                              className={`w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block ${
-                                isPending
-                                  ? "cursor-not-allowed opacity-85"
-                                  : "cursor-pointer"
-                              }`}
+                              className="w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block disabled:cursor-not-allowed disabled:opacity-85 cursor-pointer"
                             >
-                              {isPending ? "Cancelling..." : " Cancel Order"}
+                              {isCancelling ? "Cancelling..." : " Cancel Order"}
                             </button>
                           </div>
                         )}

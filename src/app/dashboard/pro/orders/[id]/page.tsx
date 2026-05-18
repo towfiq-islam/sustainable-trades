@@ -9,6 +9,7 @@ import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
 import Proorderproduct from "@/Components/Prodashboardcomponents/Proorderproduct";
 import {
   getSingleOrder,
+  useCancelOrder,
   useUpdateOrderStatus,
 } from "@/Hooks/api/dashboard_api";
 import Modal from "@/Components/Common/Modal";
@@ -26,7 +27,6 @@ interface FormValues {
 
 const Page = () => {
   const { user } = useAuth();
-  console.log(user);
   const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);
@@ -35,14 +35,14 @@ const Page = () => {
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
-  const { mutate: updateStatusMutation, isPending: isCancelling } =
-    useUpdateOrderStatus();
+  const { mutate: updateStatusMutation } = useUpdateOrderStatus();
   const { mutate: sendMessageMutation, isPending: isSending } =
     useSendMessage();
   const { data: singleOrder, isLoading } = getSingleOrder(order_id);
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const orderHistory = singleOrder?.data?.order_status_history ?? [];
-  console.log(singleOrder?.data);
+  const { mutate: cancelOrder, isPending: isCancellingOrder } =
+    useCancelOrder();
 
   const steps = [
     { label: "Order Confirmed", key: "confirmed" },
@@ -381,10 +381,10 @@ const Page = () => {
                       "pro"
                       ? "pro"
                       : singleOrder?.data?.user?.role === "vendor" &&
-                        singleOrder?.data?.user?.membership?.membership_type ===
-                          "basic"
-                      ? "basic"
-                      : "customer"
+                          singleOrder?.data?.user?.membership
+                            ?.membership_type === "basic"
+                        ? "basic"
+                        : "customer"
                   }/messages/inbox/${singleOrder?.data?.user_id}`}
                   className="auth-primary-btn !text-center"
                 >
@@ -396,15 +396,15 @@ const Page = () => {
 
           <div className="mt-12">
             <button
+              disabled={isCancellingOrder}
               onClick={() =>
-                updateStatusMutation({
-                  endpoint: `/api/order-status-update/${order_id}`,
-                  status: "cancelled",
+                cancelOrder({
+                  endpoint: `/api/cancel-order/${order_id}`,
                 })
               }
-              className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] text-[16px] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full"
+              className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
             >
-              {isCancelling ? "Cancelling...." : "Cancel Order"}
+              {isCancellingOrder ? "Cancelling...." : "Cancel Order"}
             </button>
           </div>
         </div>

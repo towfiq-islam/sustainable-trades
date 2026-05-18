@@ -297,7 +297,7 @@ export const useWeightRate = () => {
     endpoint: "/api/weight_ranges",
     onError: (err: any) => {
       toast.error(
-        err?.response?.data?.message || "Failed to create Weight rate"
+        err?.response?.data?.message || "Failed to create Weight rate",
       );
     },
   });
@@ -316,7 +316,7 @@ export const useWeightRateDelete = () => {
     },
     onError: (err: any) => {
       toast.error(
-        err?.response?.data?.message || "Failed to delete weight rate"
+        err?.response?.data?.message || "Failed to delete weight rate",
       );
     },
   });
@@ -434,7 +434,7 @@ export const useBulkDeleteDiscount = () => {
     },
     onError: (err: any) => {
       toast.error(
-        err?.response?.data?.message || "Failed to delete discount(s)"
+        err?.response?.data?.message || "Failed to delete discount(s)",
       );
     },
   });
@@ -758,6 +758,37 @@ export const useLocalPickup = (id: number | null) => {
     onSuccess: (data: any) => {
       if (data?.success) {
         queryClient.invalidateQueries("get-product-cart" as any);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get Accounting
+export const getAccountingData = (params: any) => {
+  return useClientApi({
+    method: "get",
+    key: ["get-accounting", params],
+    isPrivate: true,
+    endpoint: "/api/accounting/summary",
+    params,
+  });
+};
+
+// Cancel Order
+export const useCancelOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["cancel-order"],
+    isPrivate: true,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        queryClient.invalidateQueries("get-orders" as any);
+        toast.success(data?.message);
       }
     },
     onError: (err: any) => {

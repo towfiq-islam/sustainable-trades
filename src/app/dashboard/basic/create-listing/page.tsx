@@ -193,6 +193,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
               control={control}
               errors={errors}
               isBasicMember={isBasicMember}
+              watch={watch}
             />
             <VideoUpload
               video={video}

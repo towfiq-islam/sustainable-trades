@@ -1,21 +1,26 @@
 "use client";
 import { Paypal } from "@/Components/Svg/SvgContainer";
 import { useOnboarding } from "@/Hooks/api/dashboard_api";
+import useAuth from "@/Hooks/useAuth";
 import { CgSpinnerTwo } from "react-icons/cg";
 
 const page = () => {
+  const { user } = useAuth();
   const { mutate: onboardingMutation, isPending } = useOnboarding();
 
   const handleOnboarding = () => {
     onboardingMutation(
-      {},
+      {
+        success_url: `${window.location.origin}/dashboard/pro/payment-method`,
+        cancel_url: `${window.location.origin}/dashboard/pro/payment-method`,
+      },
       {
         onSuccess: (data: any) => {
           if (data?.success) {
             window.location.href = data?.data?.url;
           }
         },
-      }
+      },
     );
   };
 
@@ -37,17 +42,17 @@ const page = () => {
         </p>
 
         <button
-          disabled={isPending}
+          disabled={isPending || user?.onboarded}
           onClick={handleOnboarding}
-          className={`mt-5 md:mt-10 p-2 md:p-3 border border-[#274F45] rounded-md text-[12px] md:text-[14px] font-semibold text-[#274F45] hover:text-white hover:bg-[#274F45] duration-500 ease-in-out uppercase ${
-            isPending ? "cursor-not-allowed opacity-80" : "cursor-pointer"
-          }`}
+          className={`mt-5 md:mt-10 p-2 md:p-3 border border-[#274F45] rounded-md text-[12px] md:text-[14px] font-semibold text-[#274F45] enabled:hover:text-white enabled:hover:bg-[#274F45] duration-500 ease-in-out uppercase disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer`}
         >
           {isPending ? (
             <p className="flex gap-2 items-center justify-center">
               <CgSpinnerTwo className="animate-spin text-xl" />
               <span>Please wait....</span>
             </p>
+          ) : user?.onboarded ? (
+            "Connected"
           ) : (
             "Manage"
           )}

@@ -205,6 +205,7 @@ const CreateListing = () => {
             <QuantitySection
               control={control}
               errors={errors}
+              watch={watch}
               isBasicMember={isBasicMember}
             />
 

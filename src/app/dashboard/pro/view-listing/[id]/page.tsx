@@ -143,7 +143,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   });
 
   const updateLocalStateWithProductData = (
-    productData: UpdateProductResponse["data"]
+    productData: UpdateProductResponse["data"],
   ) => {
     setProductName(productData.product_name || "");
     setPrice(`$${productData.product_price || 0}`);
@@ -155,7 +155,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
     setOutOfStock(productData.out_of_stock || false);
     setFeatured(productData.is_featured || false);
     setMetaTags(
-      productData.meta_tags?.map((tag: { tag: string }) => tag.tag) || []
+      productData.meta_tags?.map((tag: { tag: string }) => tag.tag) || [],
     );
 
     const kept: KeptImage[] =
@@ -180,7 +180,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
     setVideoUrl(
       productData.video
         ? `${process.env.NEXT_PUBLIC_SITE_URL}/${productData.video}`
-        : null
+        : null,
     );
     setShowPlayButton(!productData.video);
     setVideoFile(null);
@@ -228,7 +228,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
     if (isNew) {
       // Remove from new files
       const fileIndex = imageFiles.findIndex(
-        file => URL.createObjectURL(file) === imageUrl
+        file => URL.createObjectURL(file) === imageUrl,
       );
       if (fileIndex > -1) {
         const removedFile = imageFiles[fileIndex];
@@ -294,7 +294,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               return newSet;
             });
           },
-        }
+        },
       );
     }
   };
@@ -412,7 +412,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
     setShowDeleteModal(false);
     deleteProduct.mutate(null, {
       onSuccess: () => {
-        router.push("/dashboard/basic/view-listing");
+        router.push("/dashboard/pro/view-listing");
       },
       onError: (error: DeleteProductError) => {
         console.error("Delete failed:", error);
@@ -797,7 +797,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                   ?.filter(
                     (sub: any) =>
                       String(sub.category_id) === String(category) ||
-                      String(sub.id) === String(subcategory)
+                      String(sub.id) === String(subcategory),
                   )
                   .map((sub: any) => (
                     <option key={sub.id} value={String(sub.id)}>

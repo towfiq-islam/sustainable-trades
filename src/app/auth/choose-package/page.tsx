@@ -11,7 +11,7 @@ const data = [
   {
     id: 1,
     role: "magic_maker",
-    package_name: "Magic Maker (Shop Owner)",
+    package_name: "Values-Aligned Entrepreneur (Shop Owner)",
     feathers: [
       "You want to create a shop and sell your magic to your community.",
       "You want to connect with like-minded individuals who share your passion for a sustainable future.",

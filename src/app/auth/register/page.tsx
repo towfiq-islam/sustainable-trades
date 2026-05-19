@@ -236,7 +236,7 @@ export default function page() {
                   <span>Please wait....</span>
                 </p>
               ) : selected_role === "magic_maker" ? (
-                " Join as Magic Maker"
+                " Join as Values-Aligned Entrepreneur"
               ) : (
                 " Join as Organic Shopper"
               )}

@@ -22,12 +22,14 @@ type BannerItem = {
   first_name: string;
   last_name: string;
   avatar: string;
+  trade_offers_count: number;
   shop_info: {
     id: number;
     user_id: number;
     shop_banner: string;
     shop_image: string;
     shop_name: string;
+    order_count: number;
     about: {
       statement: string;
     };
@@ -178,14 +180,18 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
                 <p className="flex justify-center items-center size-7 rounded-full bg-accent-red">
                   <DollarSvg />
                 </p>
-                <p className="text-secondary-black font-semibold">210 Sales</p>
+                <p className="text-secondary-black font-semibold">
+                  {data?.shop_info?.order_count} Sales
+                </p>
               </div>
 
               <div className="flex gap-2 items-center">
                 <p className="flex justify-center items-center size-7 rounded-full bg-[#D4E2CB]">
                   <DThreeSvg />
                 </p>
-                <p className="text-secondary-black font-semibold">460 Trades</p>
+                <p className="text-secondary-black font-semibold">
+                  {data?.trade_offers_count} Trades
+                </p>
               </div>
 
               <Link

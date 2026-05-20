@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
@@ -265,7 +265,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
                   <p className="size-5 rounded-full bg-[#D4E2CB]"></p>
                 </span>
                 <p className="text-lg text-gray-300 font-semibold">
-                  340 Trades
+                  {data?.trade_offers_count || 0} Trades
                 </p>
               </div>
 
@@ -273,7 +273,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
               <div className="flex items-center gap-2">
                 <p className="size-5 rounded-full bg-[#E48872]"></p>
                 <p className="text-lg text-gray-300 font-semibold">
-                  2,430 Sales
+                  {data?.shop_info?.order_count || 0} Sales
                 </p>
               </div>
             </div>

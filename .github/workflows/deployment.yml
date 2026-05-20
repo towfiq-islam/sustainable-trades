@@ -30,10 +30,9 @@ jobs:
 
             # 3. Ensure Environment Variables are set for the build
             # Using NODE_TLS_REJECT_UNAUTHORIZED=0 to prevent build crash
-            echo "NEXT_PUBLIC_BASE_URL=https://admin.medlockrealty.com" > .env
-            echo "NEXT_PUBLIC_API_URL=https://admin.medlockrealty.com" >> .env
+            echo "NEXT_PUBLIC_SITE_URL=https://melissabooth123.thewarriors.team" > .env
 
             # 4. Install and Build
             npm install
             NODE_TLS_REJECT_UNAUTHORIZED=0 npm run build
-            pm2 restart 9 --update-env
+            pm2 restart 0 --update-env

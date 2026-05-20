@@ -35,6 +35,10 @@ jobs:
 
             # 4. Install and Build
             npm install
-            NODE_TLS_REJECT_UNAUTHORIZED=0 npm run build
-            /home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2 restart sustainable-trades --update-env || \
-            /home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2 start npm --name "sustainable-trades" -- run start
+            NODE_ENV=production npm run build
+
+            pm2 delete sustainable-trades || true
+
+            pm2 start npm --name "sustainable-trades" -- run start
+
+            pm2 save

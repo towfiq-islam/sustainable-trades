@@ -25,7 +25,7 @@ const Page = async () => {
 
   return (
     <>
-      {/* <HomeBanner data={bannerData?.data} /> */}
+      <HomeBanner data={bannerData?.data} />
       <HowItWorks data={howItWorksData?.data} />
       <MagicMarkers />
       <FeaturedShops />

@@ -1,0 +1,39 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to VPS using password
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm use 24 || nvm install 24
+
+            # 2. Navigate and Update Code
+            cd ${{ secrets.VPS_PATH }}
+            git reset --hard origin/main
+
+            # 3. Ensure Environment Variables are set for the build
+            # Using NODE_TLS_REJECT_UNAUTHORIZED=0 to prevent build crash
+            echo "NEXT_PUBLIC_BASE_URL=https://admin.medlockrealty.com" > .env
+            echo "NEXT_PUBLIC_API_URL=https://admin.medlockrealty.com" >> .env
+
+            # 4. Install and Build
+            npm install
+            NODE_TLS_REJECT_UNAUTHORIZED=0 npm run build
+            pm2 restart 9 --update-env

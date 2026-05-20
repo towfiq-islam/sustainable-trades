@@ -21,7 +21,6 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
 
-
 interface FormValues {
   message: string;
 }

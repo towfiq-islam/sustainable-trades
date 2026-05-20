@@ -20,25 +20,22 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
 
-          script: |
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+         script: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-            nvm use 24 || nvm install 24
+          nvm use 24 || nvm install 24
 
-            export PATH=$PATH:/home/sustainabletrades/.nvm/versions/node/v24.15.0/bin
+          export PATH=$PATH:/home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2
 
-            cd /home/sustainabletrades/htdocs/sustainabletrades.org
+          cd /home/sustainabletrades/htdocs/sustainabletrades.org
 
-            rm -rf .next
+          rm -rf .next
 
-            git fetch origin
-            git reset --hard origin/main
+          npm install
 
-            npm install
+          NODE_TLS_REJECT_UNAUTHORIZED=0 npm run build
 
-            NODE_TLS_REJECT_UNAUTHORIZED=0 npm run build
+          pm2 restart sustainable-trades || pm2 start npm --name "sustainable-trades" -- start
 
-            pm2 restart sustainabletrades || pm2 start npm --name "sustainabletrades" -- start
-
-            pm2 save
+          pm2 save

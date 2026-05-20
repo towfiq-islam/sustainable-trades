@@ -25,20 +25,7 @@ const Page = async () => {
 
   return (
     <>
-      {/* <HomeBanner data={bannerData?.data} /> */}
-      <HowItWorks data={howItWorksData?.data} />
-      <MagicMarkers />
-      <FeaturedShops />
-      <ExploreProduct data={productCategories?.data} />
-      <OurMission data={missionData?.data} />
-      <CommunityMember data={spotlightData?.data} has_community={true} />
-      <Pricing
-        description="No matter how you want to manage your shop, we got you covered!"
-        button1="Annual Billing"
-        button2="Monthly Billing"
-      />
-      <Subscribe />
-      <GetUserLocation />
+     
     </>
   );
 };

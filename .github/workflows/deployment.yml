@@ -20,25 +20,21 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm use 24 || nvm install 24
+           export NVM_DIR="$HOME/.nvm"
+           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+           nvm use 24 || nvm install 24
 
-            # 2. Navigate and Update Code
-            cd ${{ secrets.VPS_PATH }}
-            git fetch origin
-            git reset --hard origin/main
+           cd ${{ secrets.VPS_PATH }}
+           git fetch origin
+           git reset --hard origin/main
 
-            # 3. Ensure Environment Variables are set for the build
-            # Using NODE_TLS_REJECT_UNAUTHORIZED=0 to prevent build crash
-            echo "NEXT_PUBLIC_SITE_URL=https://melissabooth123.thewarriors.team" > .env
+           echo "NEXT_PUBLIC_SITE_URL=https://melissabooth123.thewarriors.team" > .env
 
-            # 4. Install and Build
             npm install
             NODE_ENV=production npm run build
 
-            pm2 delete sustainable-trades || true
+            PM2_PATH=/home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2
 
-            pm2 start npm --name "sustainable-trades" -- run start
-
-            pm2 save
+            $PM2_PATH delete sustainable-trades || true
+            $PM2_PATH start npm --name "sustainable-trades" -- run start
+            $PM2_PATH save

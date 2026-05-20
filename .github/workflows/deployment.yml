@@ -10,30 +10,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Deploy to VPS using password
+      - name: Deploy
         uses: appleboy/ssh-action@v1
+
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
+
           script: |
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
             nvm use 24 || nvm install 24
 
-            # 2. Navigate and Update Code
-            cd ${{ secrets.VPS_PATH }}
+            export PATH=$PATH:/home/sustainabletrades/.nvm/versions/node/v24.15.0/bin
+
+            cd /home/sustainabletrades/htdocs/sustainabletrades.org
+
+            rm -rf .next
+
             git fetch origin
             git reset --hard origin/main
 
-            # 3. Ensure Environment Variables are set for the build
-            # Using NODE_TLS_REJECT_UNAUTHORIZED=0 to prevent build crash
-            echo "NEXT_PUBLIC_SITE_URL=https://melissabooth123.thewarriors.team" > .env
-
-            # 4. Install and Build
             npm install
+
             NODE_TLS_REJECT_UNAUTHORIZED=0 npm run build
-            pm2 restart 0 --update-env
+
+            pm2 restart sustainabletrades || pm2 start npm --name "sustainabletrades" -- start
+
+            pm2 save

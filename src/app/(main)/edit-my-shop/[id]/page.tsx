@@ -20,7 +20,6 @@ type ProfileFormValues = {
   shop_image?: File | null;
   shop_banner?: File | null;
   shop_name?: string;
-  shop_city?: string;
   email?: string;
 
   tagline: string;
@@ -62,7 +61,6 @@ const Page = ({ params }: Props) => {
     handleSubmit,
     formState: { errors },
   } = methods;
-  console.log(shopDetailsData?.data?.shop_info?.policies?.payment_methods);
 
   useEffect(() => {
     if (shopDetailsData?.data) {
@@ -73,7 +71,6 @@ const Page = ({ params }: Props) => {
         phone: shopDetailsData.data.phone || "",
         email: shopDetailsData.data.email || "",
         shop_name: shopDetailsData.data.shop_info?.shop_name || "",
-        shop_city: shopDetailsData.data.shop_info?.shop_city || "",
         tagline: shopDetailsData?.data?.shop_info?.about?.tagline || "",
         statement: shopDetailsData?.data?.shop_info?.about?.statement || "",
         our_story: shopDetailsData?.data?.shop_info?.about?.our_story || "",

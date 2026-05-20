@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 type DateRange = {
   from: string;
@@ -17,6 +18,7 @@ type Props = {
 };
 
 type orderItem = {
+  id: number;
   order_number: string;
   date: string;
   profit: number;
@@ -91,7 +93,7 @@ const AccountTable = ({
         <table className="w-full min-w-[800px] border-collapse">
           <thead>
             <tr className="bg-[#274F45] text-[#fff] text-[14px] sm:text-[16px] font-semibold">
-              <th className="py-2 px-4 text-left">Order #</th>
+              <th className="py-2 px-4 text-left"># Order</th>
               <th className="py-2 px-4 text-left">Revenue</th>
               <th className="py-2 px-4 text-left">Profit</th>
               <th className="py-2 px-4 text-left">Expenses</th>
@@ -137,8 +139,13 @@ const AccountTable = ({
                   key={idx}
                   className="border-b border-gray-300 text-[#13141D] text-[14px] font-medium"
                 >
-                  <td className="py-3 px-4 text-[#3470E5]">
-                    {row?.order_number}
+                  <td className="text-[#3470E5]">
+                    <Link
+                      href={`/dashboard/pro/orders/${row?.id}`}
+                      className="py-3 px-4 hover:underline cursor-pointer"
+                    >
+                      #{row?.order_number}
+                    </Link>
                   </td>
                   <td className="py-3 px-4">{row?.revenue.toFixed(2)}</td>
                   <td className="py-3 px-4">{row?.profit.toFixed(2)}</td>

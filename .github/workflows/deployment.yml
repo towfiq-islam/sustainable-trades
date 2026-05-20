@@ -26,6 +26,7 @@ jobs:
 
             # 2. Navigate and Update Code
             cd ${{ secrets.VPS_PATH }}
+            git fetch origin
             git reset --hard origin/main
 
             # 3. Ensure Environment Variables are set for the build

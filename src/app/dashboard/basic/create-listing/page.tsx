@@ -54,7 +54,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
   const { user } = useAuth();
   const router = useRouter();
 
-  // ✅ Separate states for files and previews
+  // Separate states for files and previews
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [video, setVideo] = useState<File | null>(null);
@@ -255,12 +255,12 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
                 render={({ field }) => (
                   <select
                     {...field}
-                    className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+                    disabled
+                    className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 disabled:opacity-60"
                   >
-                    <option value="">Select Fulfillment</option>
-                    <option>Arrange Local Pickup</option>
-                    <option>Shipping</option>
-                    <option>Arrange Local Pickup and Shipping</option>
+                    <option value="arrange_local_pickup">
+                      Arrange Local Pickup
+                    </option>
                   </select>
                 )}
               />
@@ -289,9 +289,11 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
                     className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
                   >
                     <option value="">Choose Below</option>
-                    <option>Trade/Barter</option>
-                    <option>For Sale or Trade Barter</option>
-                    <option>For Sale</option>
+                    <option value="trade/barter">Trade/Barter</option>
+                    <option value="for_sale_or_trade_barter">
+                      For Sale or Trade Barter
+                    </option>
+                    <option value="for_sale">For Sale</option>
                   </select>
                 )}
               />

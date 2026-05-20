@@ -1,7 +1,6 @@
 import { FormData } from "@/app/dashboard/basic/create-listing/page";
 import { Controller, Control, FieldErrors, FieldError } from "react-hook-form";
 
-
 interface PriceSectionProps {
   control: Control<FormData>;
   errors: FieldErrors<FormData>;
@@ -35,7 +34,7 @@ const PriceSection = ({
         }}
         render={({ field }) => (
           <input
-            type="text"
+            type="number"
             {...field}
             className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-0"
           />
@@ -66,7 +65,7 @@ const PriceSection = ({
           }}
           render={({ field }) => (
             <input
-              type="text"
+              type="number"
               {...field}
               disabled={isBasicMember}
               className={`w-full border text-[16px] md:text-[20px] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-0 ${
@@ -101,7 +100,7 @@ const PriceSection = ({
           }}
           render={({ field }) => (
             <input
-              type="text"
+              type="number"
               {...field}
               disabled={isBasicMember}
               className={`w-full border text-[16px] md:text-[20px] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-0 ${

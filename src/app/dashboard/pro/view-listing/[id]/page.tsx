@@ -1,8 +1,8 @@
 "use client";
-import React, { useRef, useState, useEffect, use } from "react";
+import { useRef, useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { FaAngleRight, FaPlay, FaPlus } from "react-icons/fa";
+import { FaPlay, FaPlus } from "react-icons/fa";
 import { MdArrowOutward, MdDelete } from "react-icons/md";
 import Preview from "../../../../../Assets/fallbackimage.png";
 import Image from "next/image";
@@ -83,12 +83,9 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { user } = useAuth();
-
   const isPro = user?.membership?.membership_type === "pro";
-
   const { id } = use(params);
   const { data: listing, isLoading } = useGetSingleListing(id);
-
   const updateProduct = useupdateProduct(id);
   const deleteProduct = useDeleteProduct(id);
 
@@ -114,16 +111,13 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const [sellingOption, setSellingOption] = useState("");
   const { data: categoriesData } = getProductCategoriesClient();
   const { data: subcategoriesData } = getProductSubCategoriesClient();
-
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [keptImages, setKeptImages] = useState<KeptImage[]>([]);
   const [keptRelativePaths, setKeptRelativePaths] = useState<string[]>([]);
   const [keptImagePaths, setKeptImagePaths] = useState<string[]>([]);
-
   const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Use the useClientApi hook for deleting image
@@ -146,8 +140,8 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
     productData: UpdateProductResponse["data"],
   ) => {
     setProductName(productData.product_name || "");
-    setPrice(`$${productData.product_price || 0}`);
-    setCost(`$${productData.cost || 0}`);
+    setPrice(`${productData.product_price || 0}`);
+    setCost(`${productData.cost || 0}`);
     setWeight(productData.weight || "");
     setDescription(productData.description || "");
     setQuantity(productData.product_quantity?.toString() || "");
@@ -251,9 +245,6 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
         console.error("Image not found in keptImages");
         return;
       }
-
-      console.log("Deleting image with ID:", img.id); // Debug log
-
       // Set deleting state
       setDeletingIds(prev => new Set([...prev, img.id]));
 
@@ -447,18 +438,13 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <div>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-5">
         <div>
           <h3 className="text-[30px] md:text-[40px] font-semibold text-[#13141D]">
             {productName}
           </h3>
-          <div className="flex gap-x-2 items-center pt-2 cursor-pointer">
-            <h4 className="text-[16px] text-[#13141D]">Listings</h4>
-            <FaAngleRight className="mt-1" />
-            <h5 className="text-[16px] text-[#13141D]">Edit Listing</h5>
-          </div>
         </div>
-        <Link href="/dashboard/pro/view-listing">
+        <Link href="/dashboard/pro/view-listing" className="shrink-0">
           <button className="text-[#000] text-[16px] font-semibold flex gap-x-1 items-center border-2 border-[#13141D] rounded-lg py-1.5 md:py-3 px-6 hover:bg-[#E48872] hover:text-white justify-center duration-300 cursor-pointer">
             <MdArrowOutward />
             View Listings
@@ -819,9 +805,9 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               aria-label="Fulfillment"
             >
               <option value="">Select Fulfillment</option>
-              <option value="Arrange Local Pickup">Arrange Local Pickup</option>
-              <option value="Shipping">Shipping</option>
-              <option value="Arrange Local Pickup or Shipping">
+              <option value="arrange_local_pickup">Arrange Local Pickup</option>
+              <option value="shipping">Shipping</option>
+              <option value="arrange_local_pickup_and_shipping">
                 Arrange Local Pickup and Shipping
               </option>
             </select>
@@ -879,11 +865,11 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               aria-label="Selling Option"
             >
               <option value="">Choose Below</option>
-              <option value="Trade/Barter">Trade/Barter</option>
-              <option value="For Sale or Trade Barter">
+              <option value="trade/barter">Trade/Barter</option>
+              <option value="for_sale_or_trade_barter">
                 For Sale or Trade Barter
               </option>
-              <option value="For Sale">For Sale</option>
+              <option value="for_sale">For Sale</option>
             </select>
           </div>
 

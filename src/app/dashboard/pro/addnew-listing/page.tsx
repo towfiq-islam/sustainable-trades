@@ -57,9 +57,6 @@ const CreateListing = () => {
   const membershipType = user?.membership?.membership_type || "basic";
   const isBasicMember = membershipType.toLowerCase() === "basic";
 
-  console.log("Current selected membershipType:", membershipType);
-  console.log("User object:", user);
-
   // Separate states for files and previews
   const [video, setVideo] = useState<File | null>(null);
   const [metaTags, setMetaTags] = useState<string[]>([]);
@@ -283,9 +280,13 @@ const CreateListing = () => {
                     className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
                   >
                     <option value="">Select Fulfillment</option>
-                    <option>Arrange Local Pickup</option>
-                    <option>Shipping</option>
-                    <option>Arrange Local Pickup and Shipping</option>
+                    <option value="arrange_local_pickup">
+                      Arrange Local Pickup
+                    </option>
+                    <option value="shipping">Shipping</option>
+                    <option value="arrange_local_pickup_and_shipping">
+                      Arrange Local Pickup and Shipping
+                    </option>
                   </select>
                 )}
               />
@@ -318,9 +319,11 @@ const CreateListing = () => {
                     className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
                   >
                     <option value="">Choose Below</option>
-                    <option>Trade/Barter</option>
-                    <option>For Sale or Trade Barter</option>
-                    <option>For Sale</option>
+                    <option value="trade/barter">Trade/Barter</option>
+                    <option value="for_sale_or_trade_barter">
+                      For Sale or Trade Barter
+                    </option>
+                    <option value="for_sale">For Sale</option>
                   </select>
                 )}
               />

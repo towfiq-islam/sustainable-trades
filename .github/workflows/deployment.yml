@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: Production Deploy (Next.js VPS)
 
 on:
   push:
@@ -10,31 +10,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Deploy to VPS using password
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
+
           script: |
+            set -e
+
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
             nvm use 24 || nvm install 24
 
-            # 2. Navigate and Update Code
+            export PATH=$PATH:/home/sustainabletrades/.nvm/versions/node/v24.15.0/bin
+
             cd ${{ secrets.VPS_PATH }}
-            git fetch origin
+
+            # ✅ ensure clean build state
+            rm -rf .next
+
+            # ✅ pull latest code safely
+            git fetch origin main
             git reset --hard origin/main
 
-            # 3. Ensure Environment Variables are set for the build
-            # Using NODE_TLS_REJECT_UNAUTHORIZED=0 to prevent build crash
+            # (optional but recommended)
+            git clean -fd
+
+            # env file
             echo "NEXT_PUBLIC_SITE_URL=https://melissabooth123.thewarriors.team" > .env
 
-            # 4. Install and Build
-            npm install
-            NODE_TLS_REJECT_UNAUTHORIZED=0 npm run build
-            /home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2 restart sustainable-trades || \
-            /home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2 start npm --name "sustainable-trades" -- start
+            # install dependencies cleanly
+            npm ci || npm install
+
+            # build production
+            NODE_ENV=production npm run build
+
+            # start / restart app safely
+            pm2 start ecosystem.config.js --env production || pm2 restart ecosystem.config.js
+
+            pm2 save

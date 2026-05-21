@@ -115,12 +115,7 @@ const CartItem = ({ item, setCartList }: CartProps) => {
           disabled={cartPending}
           onClick={() => {
             setCartId(item?.id);
-            removeCartMutation(undefined, {
-              onSuccess: () => {
-                window.location.reload();
-                // setCartList(prev => prev.filter(cart => cart.id !== item.id));
-              },
-            });
+            removeCartMutation();
           }}
           className={`absolute right-2 top-2 size-8 text-sm grid place-items-center rounded-full font-semibold bg-accent-red text-white ${
             cartPending ? "cursor-not-allowed" : "cursor-pointer"
@@ -201,21 +196,7 @@ const CartItem = ({ item, setCartList }: CartProps) => {
                 disabled={cartItemPending}
                 onClick={() => {
                   setCartItemId(cart?.id);
-                  removeCartItemMutation(cart.id, {
-                    onSuccess: () => {
-                      window.location.reload();
-                      // setCartList(prev =>
-                      //   prev
-                      //     .map(shop => ({
-                      //       ...shop,
-                      //       cart_items: shop.cart_items.filter(
-                      //         (i: any) => i.id !== cart.id
-                      //       ),
-                      //     }))
-                      //     .filter(shop => shop.cart_items.length > 0)
-                      // );
-                    },
-                  });
+                  removeCartItemMutation();
                 }}
                 className={`font-semibold text-primary-green cursor-pointer text-[15px] ${
                   cartItemPending ? "cursor-not-allowed" : "cursor-pointer"

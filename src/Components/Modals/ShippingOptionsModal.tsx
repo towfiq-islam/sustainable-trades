@@ -58,7 +58,6 @@ const ShippingOptionsModal = ({
 
     localPickupMutation(data, {
       onSuccess: () => {
-        console.log(data);
         sendMessageMutation(payload, {
           onSuccess: (res: any) => {
             toast.success(res.message);

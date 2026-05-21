@@ -15,7 +15,7 @@ const MetaTags = ({ metaTags, setMetaTags, setValue }: MetaTagsProps) => {
     if (newTag.trim() !== "") {
       const updatedTags = [...metaTags, newTag.trim()];
       setMetaTags(updatedTags);
-      setValue("tags", updatedTags); // ✅ backend expects "tags"
+      setValue("tags", updatedTags); 
       setNewTag("");
     }
   };
@@ -23,7 +23,7 @@ const MetaTags = ({ metaTags, setMetaTags, setValue }: MetaTagsProps) => {
   const handleRemoveTag = (tag: string) => {
     const updatedTags = metaTags.filter(t => t !== tag);
     setMetaTags(updatedTags);
-    setValue("tags", updatedTags); // ✅ backend expects "tags"
+    setValue("tags", updatedTags);
   };
 
   return (

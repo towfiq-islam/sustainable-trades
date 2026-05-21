@@ -18,6 +18,11 @@ interface CartItem {
   id: number;
   fulfillment_type: string;
   shop: {
+    user: {
+      membership: {
+        membership_type: string;
+      };
+    };
     user_id: number;
     shop_name: string;
     shop_image: string;
@@ -63,7 +68,7 @@ const CartItem = ({ item, setCartList }: CartProps) => {
   const { mutate: updateCartItemMutation, isPending: updateItemPending } =
     useUpdateCart(cartItemId);
   const { mutate: removeCartMutation, isPending: cartPending } = useRemoveCart(
-    item?.id
+    item?.id,
   );
 
   // Func for update cart quantity
@@ -252,6 +257,7 @@ const CartItem = ({ item, setCartList }: CartProps) => {
         <ShippingOptionsModal
           cart_id={cartId}
           userId={item?.shop?.user_id}
+          membershipType={item?.shop?.user?.membership?.membership_type}
           fulfillmentType={fulfillmentType}
           onProceed={() => {
             setShippingOptionsOpen(false);

@@ -17,6 +17,7 @@ type ShippingOptionsProps = {
   cart_id: number | null;
   userId: any;
   fulfillmentType: string;
+  membershipType: string;
   onProceed: () => void;
   onSuccess: () => void;
   onClose: () => void;
@@ -25,6 +26,7 @@ type ShippingOptionsProps = {
 const ShippingOptionsModal = ({
   cart_id,
   userId,
+  membershipType,
   fulfillmentType,
   onProceed,
   onClose,
@@ -36,7 +38,6 @@ const ShippingOptionsModal = ({
       ? "proceed"
       : "local",
   );
-  console.log(fulfillmentType);
 
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
   const { mutate: localPickupMutation, isPending: isPickupPending } =
@@ -102,7 +103,14 @@ const ShippingOptionsModal = ({
             value="proceed"
             checked={shippingMethod === "proceed"}
             onChange={e => {
-              if (fulfillmentType === "arrange_local_pickup") {
+              if (
+                fulfillmentType === "arrange_local_pickup" ||
+                membershipType === "basic"
+              ) {
+                return setErrorMessage(
+                  "Shipping is not available for this product. This is a Basic Membership store, so online payment and shipping through the platform are not supported. Please choose the “Arrange Local Pickup” option to contact the seller directly and collect the product.",
+                );
+              } else if (fulfillmentType === "arrange_local_pickup") {
                 return setErrorMessage(
                   "This vendor only offers Local Pickup for this product. Please select 'Arrange Local Pickup' to continue.",
                 );

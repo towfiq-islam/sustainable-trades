@@ -18,7 +18,7 @@ const PaymentOptions = () => {
             : "Cart is empty"}
         </h3>
 
-        {cartData?.data && (
+        {cartData?.data?.length > 0 && (
           <button
             disabled={isPending}
             onClick={() => clearCartMutation()}

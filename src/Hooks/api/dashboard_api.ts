@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosSecure } from "../useAxiosSecure";
 
 // Add Product
@@ -620,8 +620,10 @@ export const useOrderNote = (order_id: number) => {
   });
 };
 
-// Onboarding
+// Account connect Onboarding
 export const useOnboarding = () => {
+  const queryClient = useQueryClient();
+
   return useClientApi({
     method: "post",
     key: ["onboarding"],
@@ -630,6 +632,49 @@ export const useOnboarding = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
+        queryClient.invalidateQueries("user" as any);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Account Disconnect
+export const useDisconnectOnboarding = () => {
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["account-disconnect"],
+    isPrivate: true,
+    endpoint: "/api/paypal/disconnect",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        queryClient.invalidateQueries("user" as any);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Account Reconnect
+export const useReconnectOnboarding = () => {
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["account-reconnect"],
+    isPrivate: true,
+    endpoint: "/api/paypal/reconnect",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        queryClient.invalidateQueries("user" as any);
       }
     },
     onError: (err: any) => {
@@ -788,6 +833,23 @@ export const useCancelOrder = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         queryClient.invalidateQueries("get-orders" as any);
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Guest order
+export const useGuestOrder = (id: number) => {
+  return useClientApi({
+    method: "post",
+    key: ["guest-order", id],
+    endpoint: `/api/guest-local-pickup/${id}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
         toast.success(data?.message);
       }
     },

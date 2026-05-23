@@ -26,6 +26,9 @@ type orderItem = {
   sales_tax: number;
   shipping: number;
   expenses: number;
+  payment_method: string;
+  total: number;
+  discount: number;
 };
 
 const AccountTable = ({
@@ -99,6 +102,9 @@ const AccountTable = ({
               <th className="py-2 px-4 text-left">Expenses</th>
               <th className="py-2 px-4 text-left">Shipping</th>
               <th className="py-2 px-4 text-left">Sales Tax</th>
+              <th className="py-2 px-4 text-left">Discount</th>
+              <th className="py-2 px-4 text-left">Payment Method</th>
+              <th className="py-2 px-4 text-left">Total</th>
               <th className="py-2 px-4 text-center">Date</th>
             </tr>
           </thead>
@@ -112,6 +118,15 @@ const AccountTable = ({
                 >
                   <td className="py-3 px-4">
                     <div className="h-4 w-24 bg-gray-200 rounded" />
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="h-4 w-16 bg-gray-200 rounded" />
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="h-4 w-16 bg-gray-200 rounded" />
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="h-4 w-16 bg-gray-200 rounded" />
                   </td>
                   <td className="py-3 px-4">
                     <div className="h-4 w-16 bg-gray-200 rounded" />
@@ -152,6 +167,9 @@ const AccountTable = ({
                   <td className="py-3 px-4">{row.expenses.toFixed(2)}</td>
                   <td className="py-3 px-4">{row?.shipping.toFixed(2)}</td>
                   <td className="py-3 px-4">{row.sales_tax.toFixed(2)}</td>
+                  <td className="py-3 px-4">{row.discount}</td>
+                  <td className="py-3 px-4">{row.payment_method}</td>
+                  <td className="py-3 px-4">{row.total}</td>
                   <td className="py-3 px-4 text-center">{row?.date}</td>
                 </tr>
               ))

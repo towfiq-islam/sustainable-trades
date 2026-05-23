@@ -54,7 +54,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
   const { user } = useAuth();
   const router = useRouter();
 
-  // ✅ Separate states for files and previews
+  // Separate states for files and previews
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [video, setVideo] = useState<File | null>(null);
@@ -69,6 +69,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
     control,
     handleSubmit,
     watch,
+    register,
     reset,
     formState: { errors },
     setValue,
@@ -82,7 +83,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
       description: "...............",
       category_id: "",
       sub_category_id: "",
-      fulfillment: "",
+      fulfillment: "arrange_local_pickup",
       selling_option: "",
       unlimited_stock: false,
       out_of_stock: false,
@@ -119,7 +120,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
 
     data.tags.forEach(tag => formData.append("tags[]", tag));
 
-    // ✅ Use actual File objects
+    // Use actual File objects
     imageFiles.forEach(file => formData.append("product_image[]", file));
     if (video) formData.append("video", video);
 
@@ -134,7 +135,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
           description: "",
           category_id: "",
           sub_category_id: "",
-          fulfillment: "",
+          fulfillment: "arrange_local_pickup",
           selling_option: "",
           unlimited_stock: false,
           out_of_stock: false,
@@ -244,32 +245,26 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
               subcategories={subcategories}
               watch={watch}
             />
+
+            {/* Fulfillment */}
             <div>
               <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
                 Fulfillment
               </h3>
-              <Controller
-                name="fulfillment"
-                control={control}
-                rules={{ required: "Fulfillment option is required" }}
-                render={({ field }) => (
-                  <select
-                    {...field}
-                    className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
-                  >
-                    <option value="">Select Fulfillment</option>
-                    <option>Arrange Local Pickup</option>
-                    <option>Shipping</option>
-                    <option>Arrange Local Pickup and Shipping</option>
-                  </select>
-                )}
-              />
-              {errors.fulfillment && (
-                <p className="text-red-600 text-sm mt-1">
-                  {errors.fulfillment.message}
-                </p>
-              )}
+
+              <input type="hidden" {...register("fulfillment")} />
+
+              <select
+                disabled
+                value="arrange_local_pickup"
+                className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 opacity-60"
+              >
+                <option value="arrange_local_pickup">
+                  Arrange Local Pickup
+                </option>
+              </select>
             </div>
+
             <MetaTags
               metaTags={metaTags}
               setMetaTags={setMetaTags}
@@ -289,9 +284,11 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
                     className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
                   >
                     <option value="">Choose Below</option>
-                    <option>Trade/Barter</option>
-                    <option>For Sale or Trade Barter</option>
-                    <option>For Sale</option>
+                    <option value="trade/barter">Trade/Barter</option>
+                    <option value="for_sale_or_trade_barter">
+                      For Sale or Trade Barter
+                    </option>
+                    <option value="for_sale">For Sale</option>
                   </select>
                 )}
               />

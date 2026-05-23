@@ -13,6 +13,9 @@ const headers = [
   { label: "Expenses", key: "expenses" },
   { label: "Shipping", key: "shipping" },
   { label: "Sales Tax", key: "sales_tax" },
+  { label: "Discount", key: "discount" },
+  { label: "Payment Method", key: "payment_method" },
+  { label: "Total", key: "total" },
   { label: "Date", key: "date" },
 ];
 
@@ -26,7 +29,6 @@ const page = () => {
     date_to: filter === "custom_date_range" ? dateRange.to : undefined,
     year: filter === "specific_year" ? year : undefined,
   });
-  console.log(accountingData);
 
   return (
     <>

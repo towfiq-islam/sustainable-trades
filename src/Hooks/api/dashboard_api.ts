@@ -841,3 +841,20 @@ export const useCancelOrder = () => {
     },
   });
 };
+
+// Guest order
+export const useGuestOrder = (id: number) => {
+  return useClientApi({
+    method: "post",
+    key: ["guest-order", id],
+    endpoint: `/api/guest-local-pickup/${id}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};

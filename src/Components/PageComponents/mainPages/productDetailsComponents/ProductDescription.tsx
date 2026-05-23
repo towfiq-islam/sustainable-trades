@@ -9,7 +9,7 @@ import {
 } from "@/Components/Svg/SvgContainer";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
-import React, { useState } from "react";
+import { useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
 import Modal from "@/Components/Common/Modal";
 import { FaHeart, FaStar } from "react-icons/fa";
@@ -18,6 +18,7 @@ import { useAddFavorite, useAddToCart } from "@/Hooks/api/cms_api";
 import TradeOfferModal from "@/Components/Modals/TradeOfferModal";
 import MessageToSellerModal from "@/Components/Modals/MessageToSellerModal";
 import Link from "next/link";
+import GuestModal from "@/Components/Modals/GuestModal";
 
 type descriptionItem = {
   id: number;
@@ -51,10 +52,6 @@ interface descriptionProps {
   data: descriptionItem;
 }
 
-const handleBuyNow = () => {
-  toast.error("Development is ongoing");
-};
-
 const ProductDescription = ({ data }: descriptionProps) => {
   // Hook
   const { user } = useAuth();
@@ -63,11 +60,13 @@ const ProductDescription = ({ data }: descriptionProps) => {
   const [id, setId] = useState<number | null>(null);
   const [productId, setProductId] = useState<number | null>(null);
   const [tradeOpen, setTradeOpen] = useState<boolean>(false);
+  const [guestOpen, setGuestOpen] = useState<boolean>(false);
   const [msgOpen, setMsgOpen] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(1);
 
   // Mutations
   const { mutate: addFavoriteMutation, isPending } = useAddFavorite();
+
   const { mutate: addToCartMutation, isPending: addCardPending } = useAddToCart(
     data?.id,
   );
@@ -125,7 +124,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
         {/* Add To Cart */}
         <button
           disabled={addCardPending}
-          onClick={user ? handleAddToCart : handleBuyNow}
+          onClick={handleAddToCart}
           className={`border border-primary-green rounded-lg px-4 py-2 hover:bg-primary-green hover:text-accent-white duration-500 transition-all shrink-0 ${
             addCardPending ? "cursor-not-allowed" : "cursor-pointer"
           }`}
@@ -143,6 +142,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
           )}
         </button>
       </div>
+
       {/* Product Description */}
       <p className="text-primary-green text-lg md:text-xl font-semibold mb-3">
         Product Description
@@ -236,13 +236,18 @@ const ProductDescription = ({ data }: descriptionProps) => {
           </button>
         </div>
       </div>
+
       {/* Buy btn */}
-      <button className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow hover:text-primary-green hover:bg-transparent font-semibold border-primary-green">
+      <button
+        onClick={() => setGuestOpen(true)}
+        className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow hover:text-primary-green hover:bg-transparent font-semibold border-primary-green disabled:opacity-70 disabled:cursor-not-allowed"
+      >
         Buy it now
       </button>
+
       {/* Trade btn */}
       {user?.role !== "customer" &&
-        data?.selling_option !== "For Sale" &&
+        data?.selling_option !== "for_sale" &&
         user?.shop_info?.user_id !== data?.shop?.user_id && (
           <button
             onClick={() => {
@@ -258,6 +263,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
             Trade
           </button>
         )}
+
       {/* Message btn */}
       {user?.shop_info?.user_id !== data?.shop?.user_id && (
         <button
@@ -284,8 +290,13 @@ const ProductDescription = ({ data }: descriptionProps) => {
           setTradeOpen={setTradeOpen}
         />
       </Modal>
+
       <Modal open={msgOpen} onClose={() => setMsgOpen(false)}>
         <MessageToSellerModal id={id} shopInfo={data} setMsgOpen={setMsgOpen} />
+      </Modal>
+
+      <Modal open={guestOpen} onClose={() => setGuestOpen(false)}>
+        <GuestModal id={data?.id} onClose={() => setGuestOpen(false)} />
       </Modal>
     </>
   );

@@ -26,6 +26,7 @@ type orderItem = {
   sales_tax: number;
   shipping: number;
   expenses: number;
+  payment_method: string;
 };
 
 const AccountTable = ({
@@ -99,6 +100,7 @@ const AccountTable = ({
               <th className="py-2 px-4 text-left">Expenses</th>
               <th className="py-2 px-4 text-left">Shipping</th>
               <th className="py-2 px-4 text-left">Sales Tax</th>
+              <th className="py-2 px-4 text-left">Payment Method</th>
               <th className="py-2 px-4 text-center">Date</th>
             </tr>
           </thead>
@@ -152,6 +154,7 @@ const AccountTable = ({
                   <td className="py-3 px-4">{row.expenses.toFixed(2)}</td>
                   <td className="py-3 px-4">{row?.shipping.toFixed(2)}</td>
                   <td className="py-3 px-4">{row.sales_tax.toFixed(2)}</td>
+                  <td className="py-3 px-4">{row.payment_method}</td>
                   <td className="py-3 px-4 text-center">{row?.date}</td>
                 </tr>
               ))

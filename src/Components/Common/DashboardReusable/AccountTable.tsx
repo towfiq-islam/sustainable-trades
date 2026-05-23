@@ -140,6 +140,9 @@ const AccountTable = ({
                   <td className="py-3 px-4">
                     <div className="h-4 w-16 bg-gray-200 rounded" />
                   </td>
+                  <td className="py-3 px-4">
+                    <div className="h-4 w-16 bg-gray-200 rounded" />
+                  </td>
                   <td className="py-3 px-4 text-center">
                     <div className="h-4 w-24 bg-gray-200 rounded mx-auto" />
                   </td>

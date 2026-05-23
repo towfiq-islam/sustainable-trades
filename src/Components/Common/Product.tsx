@@ -56,7 +56,7 @@ const Product = ({
   const { user } = useAuth();
   const { mutate: addFavoriteMutation, isPending } = useAddFavorite();
   const { mutate: addToCartMutation, isPending: addCardPending } = useAddToCart(
-    product?.id
+    product?.id,
   );
 
   // Func for add to favorite
@@ -153,17 +153,17 @@ const Product = ({
       <div className="flex gap-2 items-center justify-between mb-3">
         {/* Selling Option */}
         <div>
-          {product?.selling_option === "Trade/Barter" && (
+          {product?.selling_option === "trade/barter" && (
             <p className="size-6 shrink-0 rounded-full bg-[#D4E2CB] grid place-items-center">
               <SignSvg />
             </p>
           )}
-          {product?.selling_option === "For Sale" && (
+          {product?.selling_option === "for_sale" && (
             <p className="size-6 shrink-0 rounded-full bg-accent-red grid place-items-center">
               <DollarSvg />
             </p>
           )}
-          {product?.selling_option === "For Sale or Trade Barter" && (
+          {product?.selling_option === "for_sale_or_trade_barter" && (
             <div className="flex gap-2 items-center">
               <p className="size-6 shrink-0 rounded-full bg-accent-red grid place-items-center">
                 <DollarSvg />
@@ -196,13 +196,13 @@ const Product = ({
             onClick={user ? handleAddToCart : handleBuyNow}
             disabled={
               addCardPending ||
-              product?.selling_option === "Trader/Barter" ||
+              product?.selling_option === "trade/barter" ||
               (!product?.unlimited_stock && product?.out_of_stock) ||
               (!product?.unlimited_stock && product?.product_quantity === 0)
             }
             className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm ${
               addCardPending ||
-              product?.selling_option === "Trader/Barter" ||
+              product?.selling_option === "trade/barter" ||
               (!product?.unlimited_stock && product?.out_of_stock) ||
               (!product?.unlimited_stock && product?.product_quantity === 0)
                 ? "cursor-not-allowed opacity-75 border-gray-400"

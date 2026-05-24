@@ -5,7 +5,6 @@ import { FiMoreVertical } from "react-icons/fi";
 import Image, { StaticImageData } from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { getallListings } from "@/Hooks/api/dashboard_api";
-import { statusColorsinventory } from "@/Components/Data/data";
 import { ProductRowSkeleton } from "@/Components/Loader/Loader";
 
 type ImageItem = {
@@ -143,9 +142,7 @@ export default function Page() {
                     </td>
                     <td>
                       <span
-                        className={`px-4 py-2 rounded-full text-sm ${
-                          statusColorsinventory[p?.status]
-                        }`}
+                        className={`px-4 py-2 rounded-full text-sm capitalize`}
                       >
                         {p.status}
                       </span>

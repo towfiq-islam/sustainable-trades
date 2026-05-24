@@ -76,6 +76,11 @@ const BasicNavbar = ({ dynamicPage }: any) => {
         },
       ],
     },
+    {
+      id: 6,
+      label: "Blog",
+      path: "/blog",
+    },
   ];
 
   const { user } = useAuth();
@@ -219,8 +224,8 @@ const BasicNavbar = ({ dynamicPage }: any) => {
 
                           <span>{page_title}</span>
                         </Link>
-                      )
-                    )
+                      ),
+                    ),
                 )}
               </div>
             </div>
@@ -234,9 +239,9 @@ const BasicNavbar = ({ dynamicPage }: any) => {
                 user?.role === "customer"
                   ? "dashboard/customer/messages"
                   : user?.role === "vendor" &&
-                    user?.membership?.membership_type === "pro"
-                  ? "dashboard/pro/messages"
-                  : "dashboard/basic/messages"
+                      user?.membership?.membership_type === "pro"
+                    ? "dashboard/pro/messages"
+                    : "dashboard/basic/messages"
               }`}
               className="cursor-pointer text-accent-white"
             >
@@ -274,9 +279,9 @@ const BasicNavbar = ({ dynamicPage }: any) => {
                 user?.role === "customer"
                   ? "dashboard/customer/favorites"
                   : user?.role === "vendor" &&
-                    user?.membership?.membership_type === "pro"
-                  ? "dashboard/pro/favorites"
-                  : "dashboard/basic/favorites"
+                      user?.membership?.membership_type === "pro"
+                    ? "dashboard/pro/favorites"
+                    : "dashboard/basic/favorites"
               }`}
               className="cursor-pointer hidden lg:block"
             >
@@ -329,9 +334,9 @@ const BasicNavbar = ({ dynamicPage }: any) => {
                     user?.role === "customer"
                       ? "/dashboard/customer/orders"
                       : user?.role === "vendor" &&
-                        user?.membership?.membership_type === "pro"
-                      ? "/dashboard/pro/home"
-                      : "/dashboard/basic/home"
+                          user?.membership?.membership_type === "pro"
+                        ? "/dashboard/pro/home"
+                        : "/dashboard/basic/home"
                   }`}
                   className="flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold"
                 >

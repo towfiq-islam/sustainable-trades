@@ -28,6 +28,7 @@ type orderItem = {
   total_amount: string;
   status: string;
   order_number: string;
+  note: string;
   shop: {
     shop_name: string;
     user: {
@@ -51,6 +52,8 @@ const page = () => {
   const tabs = ["orders", "pending", "confirmed", "delivered", "cancelled"];
   const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
   const { data: myOrders, isLoading } = getMyOrders(status);
+  const [showNote, setShowNote] = useState<boolean>(false);
+  const [note, setNote] = useState<string>("");
 
   // Func for download Invoice pdf
   const handleDownloadInvoice = (order_id: number) => {
@@ -67,7 +70,7 @@ const page = () => {
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
         },
-      }
+      },
     );
   };
 
@@ -136,12 +139,12 @@ const page = () => {
                           order?.status === "delivered"
                             ? "bg-primary-green"
                             : order?.status === "pending"
-                            ? "bg-accent-red"
-                            : order?.status === "pending"
-                            ? "bg-blue-500"
-                            : order?.status === "cancelled"
-                            ? "bg-red-500"
-                            : "bg-gray-500"
+                              ? "bg-accent-red"
+                              : order?.status === "pending"
+                                ? "bg-blue-500"
+                                : order?.status === "cancelled"
+                                  ? "bg-red-500"
+                                  : "bg-gray-500"
                         }`}
                       >
                         {order?.status}
@@ -233,7 +236,7 @@ const page = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-4 ">
+                  <div className="flex flex-col gap-3">
                     <button
                       onClick={() => {
                         isOpen(true);
@@ -257,6 +260,18 @@ const page = () => {
                     >
                       Get Help
                     </Link>
+
+                    {order?.note && (
+                      <button
+                        onClick={() => {
+                          setNote(order?.note);
+                          setShowNote(true);
+                        }}
+                        className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
+                      >
+                        View note
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -269,6 +284,13 @@ const page = () => {
 
       <Modal open={open} onClose={() => isOpen(false)}>
         <TrackPackageModal order_id={orderId} />
+      </Modal>
+
+      <Modal open={showNote} onClose={() => setShowNote(false)}>
+        <h3 className="text-xl font-semibold text-primary-green mb-2">
+          Order Note
+        </h3>
+        <p className="leading-[164%] text-gray-700">"{note}"</p>
       </Modal>
     </section>
   );

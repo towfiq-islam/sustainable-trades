@@ -222,7 +222,7 @@ export default function Page() {
                             </button>
                           </Link>
 
-                          <button
+                          {/* <button
                             onClick={() => {
                               setProducts(products.filter(x => x.id !== p.id));
                               setOpenMenu(null);
@@ -230,7 +230,7 @@ export default function Page() {
                             className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 cursor-pointer"
                           >
                             Delete
-                          </button>
+                          </button> */}
                         </div>
                       )}
                     </td>
@@ -298,7 +298,7 @@ export default function Page() {
                       Edit
                     </button>
                   </Link>
-                  <button
+                  {/* <button
                     onClick={() => {
                       setProducts(products.filter(x => x.id !== p.id));
                       setOpenMenu(null);
@@ -306,7 +306,7 @@ export default function Page() {
                     className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
                   >
                     Delete
-                  </button>
+                  </button> */}
                 </div>
               )}
             </div>

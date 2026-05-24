@@ -51,7 +51,7 @@ const page = () => {
     getFeaturedListings(listing_id);
   const { data: shopReviews, isLoading: reviewLoading } = getShopReviews(
     listing_id,
-    reviewPage
+    reviewPage,
   );
   const { data: allListings, isLoading: listingsLoading } = getAllListings(
     listing_id,
@@ -59,9 +59,8 @@ const page = () => {
     sub_category_id,
     short_by,
     search,
-    page
+    page,
   );
-  console.log(allListings);
 
   return (
     <>

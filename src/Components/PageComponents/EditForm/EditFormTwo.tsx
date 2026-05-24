@@ -17,7 +17,7 @@ const EditFormTwo = ({ data }: any) => {
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    fileField: "shop_image" | "shop_banner"
+    fileField: "shop_image" | "shop_banner",
   ) => {
     const file: File | null = e.target.files?.[0] || null;
     if (file) {
@@ -72,7 +72,7 @@ const EditFormTwo = ({ data }: any) => {
             {...register("shop_city")}
             className="form-input"
             placeholder="City, State"
-            defaultValue={data?.shop_info?.shop_city}
+            defaultValue={data?.shop_info?.address?.city}
           />
           <p className="text-red-600">
             {errors.shop_city ? String(errors.shop_city.message) : null}

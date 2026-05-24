@@ -197,7 +197,7 @@ const ShippingAddress = ({
           >
             <option value="">Select pickup option</option>
             <option value="pickup">Pickup</option>
-            <option value="delivery">Delivery</option>
+            <option value="shipping">Shipping</option>
           </select>
           {errors.shipping_option && (
             <p className="form-error">{errors.shipping_option.message}</p>

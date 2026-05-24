@@ -182,7 +182,7 @@ const page = () => {
                           className={`min-w-[100px] capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
                             order?.payment_status === "pending"
                               ? "text-red-500"
-                              : "text-green-600"
+                              : "text-primary-green"
                           }`}
                         >
                           {order?.payment_status}

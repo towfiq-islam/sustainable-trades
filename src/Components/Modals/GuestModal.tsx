@@ -30,7 +30,9 @@ const GuestModal = ({ id, onClose }: any) => {
           onClose();
         },
       });
-    } else {
+    }
+    else {
+      
     }
   };
 

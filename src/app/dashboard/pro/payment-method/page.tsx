@@ -109,7 +109,7 @@ const page = () => {
             <button
               disabled={isDisconnecting}
               onClick={handleDisconnect}
-              className="mt-5 md:mt-10 p-2 md:p-3 border border-red-500 rounded-md text-[12px] md:text-[14px] font-semibold text-red-500 enabled:hover:text-white enabled:hover:bg-red-500 duration-500 ease-in-out uppercase disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer min-w-[130px]"
+              className="mt-5 md:mt-10 p-2 md:p-3 border border-primary-red rounded-md text-[12px] md:text-[14px] font-semibold text-primary-red enabled:hover:text-white enabled:hover:bg-primary-red duration-500 ease-in-out uppercase disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer min-w-[130px]"
             >
               {isDisconnecting ? (
                 <p className="flex gap-2 items-center justify-center">

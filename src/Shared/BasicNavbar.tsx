@@ -237,11 +237,11 @@ const BasicNavbar = ({ dynamicPage }: any) => {
             <Link
               href={`${
                 user?.role === "customer"
-                  ? "dashboard/customer/messages"
+                  ? "/dashboard/customer/messages"
                   : user?.role === "vendor" &&
                       user?.membership?.membership_type === "pro"
-                    ? "dashboard/pro/messages"
-                    : "dashboard/basic/messages"
+                    ? "/dashboard/pro/messages"
+                    : "/dashboard/basic/messages"
               }`}
               className="cursor-pointer text-accent-white"
             >
@@ -254,8 +254,8 @@ const BasicNavbar = ({ dynamicPage }: any) => {
                 href={`${
                   user?.role === "vendor" &&
                   user?.membership?.membership_type === "pro"
-                    ? "dashboard/pro/notification"
-                    : "dashboard/basic/notification"
+                    ? "/dashboard/pro/notification"
+                    : "/dashboard/basic/notification"
                 }`}
                 className="cursor-pointer text-accent-white"
               >
@@ -277,11 +277,11 @@ const BasicNavbar = ({ dynamicPage }: any) => {
             <Link
               href={`${
                 user?.role === "customer"
-                  ? "dashboard/customer/favorites"
+                  ? "/dashboard/customer/favorites"
                   : user?.role === "vendor" &&
                       user?.membership?.membership_type === "pro"
-                    ? "dashboard/pro/favorites"
-                    : "dashboard/basic/favorites"
+                    ? "/dashboard/pro/favorites"
+                    : "/dashboard/basic/favorites"
               }`}
               className="cursor-pointer hidden lg:block"
             >

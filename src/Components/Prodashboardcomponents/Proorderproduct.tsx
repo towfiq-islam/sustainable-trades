@@ -44,7 +44,7 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
         },
-      }
+      },
     );
   };
 
@@ -90,10 +90,10 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
           {data?.order_items?.map(order => (
             <div
               key={order?.order_id}
-              className="flex flex-col md:flex-row justify-between md:items-center border-b border-gray-300 px-6 py-4"
+              className="flex flex-col md:flex-row gap-5 justify-between md:items-center border-b border-gray-300 px-6 py-4"
             >
               <div className="flex flex-col md:flex-row gap-x-6 md:items-center">
-                <figure className="w-36 h-28 rounded border border-gray-100 relative">
+                <figure className="w-36 h-28 rounded border border-gray-100 relative shrink-0">
                   <Image
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${order?.product?.images?.[0]?.image}`}
                     alt="Thumbnail"
@@ -103,12 +103,12 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
                   />
                 </figure>
 
-                <h3 className="text-[20px] font-semibold text-[#13141D] truncate">
+                <h3 className="text-[20px] font-semibold text-[#13141D]">
                   {order?.product?.product_name}
                 </h3>
               </div>
 
-              <div>
+              <div className="shrink-0">
                 <h3 className="text-[20px] font-semibold text-[#13141D] pb-1">
                   ${order?.product?.product_price}
                 </h3>

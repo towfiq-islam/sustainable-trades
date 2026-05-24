@@ -1,7 +1,7 @@
 "use client";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { getOrders, useUpdateOrderStatus } from "@/Hooks/api/dashboard_api";
+import { getOrders, useCancelOrder } from "@/Hooks/api/dashboard_api";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
@@ -13,6 +13,7 @@ type orderItem = {
   id: number;
   order_number: string;
   payment_method: string;
+  payment_status: string;
   created_at: string;
   total_quantity: number;
   total_amount: string;
@@ -45,7 +46,8 @@ const page = () => {
     "purchased from another member",
   ];
   const { data: allOrders, isLoading } = getOrders(status, page);
-  const { mutate: updateStatusMutation, isPending } = useUpdateOrderStatus();
+  const { mutate: cancelOrder, isPending: isCancelling } = useCancelOrder();
+  console.log(allOrders);
 
   useEffect(() => {
     const handleWindowClick = () => {
@@ -109,7 +111,7 @@ const page = () => {
               setStatus(
                 tab === "orders" || tab === "purchased from another shop"
                   ? ""
-                  : tab
+                  : tab,
               );
             }}
             className={`cursor-pointer px-3 capitalize text-[16px] md:text-[20px] font-semibold ${
@@ -137,7 +139,9 @@ const page = () => {
                   <th className="py-3 px-4 text-left">Customer</th>
                   <th className="py-3 px-4 text-left">Items</th>
                   <th className="py-3 px-4 text-left">Amount</th>
-                  <th className="py-3 px-4 text-left">Status</th>
+                  <th className="py-3 px-4 text-left">Payment Method</th>
+                  <th className="py-3 px-4 text-left">Payment Status</th>
+                  <th className="py-3 px-4 text-left">Order Status</th>
                   <th className="py-3 px-4 text-left">FullFillment</th>
                   <th className="py-3 px-4 text-left">Notes</th>
                   <th className="py-3 px-4 text-center">Action</th>
@@ -172,18 +176,31 @@ const page = () => {
 
                       <td className="py-4 px-4">{order?.total_quantity}</td>
                       <td className="py-4 px-4">${order?.total_amount}</td>
+                      <td className="py-4 px-4">Paypal</td>
+                      <td className="py-4 px-4">
+                        <span
+                          className={`min-w-[100px] capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
+                            order?.payment_status === "pending"
+                              ? "text-red-500"
+                              : "text-primary-green"
+                          }`}
+                        >
+                          {order?.payment_status}
+                        </span>
+                      </td>
+
                       <td className="py-4 px-4">
                         <span
                           className={`min-w-[100px] text-white capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
                             order?.status === "delivered"
                               ? "bg-primary-green"
                               : order?.status === "pending"
-                              ? "bg-accent-red"
-                              : order?.status === "pending"
-                              ? "bg-blue-500"
-                              : order?.status === "cancelled"
-                              ? "bg-primary-red"
-                              : "bg-gray-500"
+                                ? "bg-accent-red"
+                                : order?.status === "pending"
+                                  ? "bg-blue-500"
+                                  : order?.status === "cancelled"
+                                    ? "bg-primary-red"
+                                    : "bg-gray-500"
                           }`}
                         >
                           {order?.status}
@@ -241,27 +258,22 @@ const page = () => {
                             </Link>
 
                             <button
-                              disabled={isPending}
+                              disabled={isCancelling}
                               onClick={() =>
-                                updateStatusMutation(
+                                cancelOrder(
                                   {
-                                    endpoint: `/api/order-status-update/${order?.id}`,
-                                    status: "cancelled",
+                                    endpoint: `/api/cancel-order/${order?.id}`,
                                   },
                                   {
                                     onSuccess: () => {
                                       setOpenPopup(false);
                                     },
-                                  }
+                                  },
                                 )
                               }
-                              className={`w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block ${
-                                isPending
-                                  ? "cursor-not-allowed opacity-85"
-                                  : "cursor-pointer"
-                              }`}
+                              className="w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block disabled:cursor-not-allowed disabled:opacity-85 cursor-pointer"
                             >
-                              {isPending ? "Cancelling..." : " Cancel Order"}
+                              {isCancelling ? "Cancelling..." : " Cancel Order"}
                             </button>
                           </div>
                         )}

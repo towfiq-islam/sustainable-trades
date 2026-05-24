@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import DashboardSidebar from "@/Shared/DashboardSidebar";
 
 import {
@@ -244,9 +244,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               user?.membership?.membership_type === "pro"
                 ? proNavLinks
                 : user?.role === "vendor" &&
-                  user?.membership?.membership_type === "basic"
-                ? basicNavLinks
-                : customerNavLinks
+                    user?.membership?.membership_type === "basic"
+                  ? basicNavLinks
+                  : customerNavLinks
             }
           />
 

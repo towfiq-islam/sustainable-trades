@@ -1,6 +1,6 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
-import { FaAngleDown } from "react-icons/fa";
+import { FaAngleDown, FaCheck } from "react-icons/fa";
 import { PuffLoader } from "react-spinners";
 import { GoBackSvg, Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
@@ -9,6 +9,7 @@ import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
 import Proorderproduct from "@/Components/Prodashboardcomponents/Proorderproduct";
 import {
   getSingleOrder,
+  useCancelOrder,
   useUpdateOrderStatus,
 } from "@/Hooks/api/dashboard_api";
 import Modal from "@/Components/Common/Modal";
@@ -26,23 +27,23 @@ interface FormValues {
 
 const Page = () => {
   const { user } = useAuth();
-  console.log(user);
   const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);
   const [open, isOpen] = useState<boolean>(false);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openStatusPopover, setOpenStatusPopover] = useState(false);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
-  const { mutate: updateStatusMutation, isPending: isCancelling } =
-    useUpdateOrderStatus();
+  const { mutate: updateStatusMutation } = useUpdateOrderStatus();
   const { mutate: sendMessageMutation, isPending: isSending } =
     useSendMessage();
   const { data: singleOrder, isLoading } = getSingleOrder(order_id);
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const orderHistory = singleOrder?.data?.order_status_history ?? [];
-  console.log(singleOrder?.data);
+  const { mutate: cancelOrder, isPending: isCancellingOrder } =
+    useCancelOrder();
 
   const steps = [
     { label: "Order Confirmed", key: "confirmed" },
@@ -172,6 +173,8 @@ const Page = () => {
     );
   }
 
+  const currentStatus = enabledSteps?.[enabledSteps.length - 1];
+
   return (
     <>
       {/* Back Btn */}
@@ -203,27 +206,72 @@ const Page = () => {
         {/* Left Side */}
         <div className="w-full lg:w-[65%] 2xl:w-[75%]">
           {/* Order Status Dropdown */}
-          <h4 className="text-[#000] font-bold text-[16px]">Order Status</h4>
-          <div className="relative my-3">
-            <select
-              onChange={e => {
-                if (e.target.value) {
-                  updateStatusMutation({
-                    endpoint: `/api/order-status-update/${order_id}`,
-                    status: e.target.value,
-                  });
-                }
-              }}
-              className="border border-[#A7A39C] rounded-[8px] cursor-pointer appearance-none outline-0 px-2 py-[10px] w-[190px] text-[#274F45] text-[14px] font-normal"
-            >
-              <option value="">Choose status</option>
-              {steps?.map(step => (
-                <option key={step.label} value={step?.key}>
-                  {step?.label}
-                </option>
-              ))}
-            </select>
-            <FaAngleDown className="absolute top-3 left-40 size-5" />
+          <div className="my-4">
+            <h4 className="text-[#000] font-bold text-[16px] mb-3">
+              Order Status
+            </h4>
+
+            <div className="relative inline-block">
+              {/* Trigger */}
+              <button
+                onClick={() => setOpenStatusPopover(prev => !prev)}
+                className="min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-2 hover:border-[#274F45] transition-all duration-300 cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="size-3 rounded-full bg-[#274F45]" />
+
+                  <div className="text-left">
+                    <p className="text-[12px] text-gray-500">Current Status</p>
+
+                    <h5 className="text-[15px] font-semibold text-[#274F45] capitalize">
+                      {currentStatus}
+                    </h5>
+                  </div>
+                </div>
+
+                <FaAngleDown
+                  className={`transition-transform duration-300 ${
+                    openStatusPopover ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Popover */}
+              <div
+                className={`absolute left-0 top-[110%] z-50 w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl transition-all duration-300 ${
+                  openStatusPopover
+                    ? "visible translate-y-0 opacity-100"
+                    : "invisible -translate-y-2 opacity-0"
+                }`}
+              >
+                <div className="p-2">
+                  {steps?.slice(0, 4)?.map(step => (
+                    <button
+                      key={step.key}
+                      onClick={() => {
+                        updateStatusMutation({
+                          endpoint: `/api/order-status-update/${order_id}`,
+                          status: step?.key,
+                        });
+
+                        setOpenStatusPopover(false);
+                      }}
+                      className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left hover:bg-[#274F45]/5 transition-all cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="size-2 rounded-full bg-[#274F45]" />
+
+                        <span className="text-[14px] font-medium text-[#222] group-hover:text-[#274F45]">
+                          {step.label}
+                        </span>
+                      </div>
+
+                      <FaCheck className="opacity-0 scale-50 text-[#274F45] transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Progress Bar */}
@@ -381,10 +429,10 @@ const Page = () => {
                       "pro"
                       ? "pro"
                       : singleOrder?.data?.user?.role === "vendor" &&
-                        singleOrder?.data?.user?.membership?.membership_type ===
-                          "basic"
-                      ? "basic"
-                      : "customer"
+                          singleOrder?.data?.user?.membership
+                            ?.membership_type === "basic"
+                        ? "basic"
+                        : "customer"
                   }/messages/inbox/${singleOrder?.data?.user_id}`}
                   className="auth-primary-btn !text-center"
                 >
@@ -396,15 +444,15 @@ const Page = () => {
 
           <div className="mt-12">
             <button
+              disabled={isCancellingOrder}
               onClick={() =>
-                updateStatusMutation({
-                  endpoint: `/api/order-status-update/${order_id}`,
-                  status: "cancelled",
+                cancelOrder({
+                  endpoint: `/api/cancel-order/${order_id}`,
                 })
               }
-              className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] text-[16px] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full"
+              className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
             >
-              {isCancelling ? "Cancelling...." : "Cancel Order"}
+              {isCancellingOrder ? "Cancelling...." : "Cancel Order"}
             </button>
           </div>
         </div>

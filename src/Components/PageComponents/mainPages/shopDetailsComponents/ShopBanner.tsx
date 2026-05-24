@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
@@ -18,12 +18,14 @@ type BannerItem = {
   first_name: string;
   last_name: string;
   avatar: string;
+  trade_offers_count: number;
   shop_info: {
     id: number;
     user_id: number;
     shop_banner: string;
     shop_image: string;
     shop_name: string;
+    order_count: number;
     about: {
       statement: string;
     };
@@ -46,7 +48,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
   const { user } = useAuth();
   const bannerUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/${data?.shop_info?.shop_banner}`;
   const { mutate: followShopMutation, isPending } = useFollowShop(
-    data?.shop_info?.id
+    data?.shop_info?.id,
   );
 
   // Func for follow shop
@@ -210,12 +212,16 @@ const ShopBanner = ({ id, data }: BannerProps) => {
 
             <div className="flex gap-2 items-center mb-2">
               <p className="size-5 rounded-full bg-[#D4E2CB]"></p>
-              <p className="text-lg text-[#A7A39C] font-semibold">340 Trades</p>
+              <p className="text-lg text-[#A7A39C] font-semibold">
+                {data?.trade_offers_count || 0} Trades
+              </p>
             </div>
 
             <div className="flex gap-2 items-center">
               <p className="size-5 rounded-full bg-[#E48872]"></p>
-              <p className="text-lg text-[#A7A39C] font-semibold">2340 Sales</p>
+              <p className="text-lg text-[#A7A39C] font-semibold">
+                {data?.shop_info?.order_count || 0} Sales
+              </p>
             </div>
           </div>
 
@@ -259,7 +265,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
                   <p className="size-5 rounded-full bg-[#D4E2CB]"></p>
                 </span>
                 <p className="text-lg text-gray-300 font-semibold">
-                  340 Trades
+                  {data?.trade_offers_count || 0} Trades
                 </p>
               </div>
 
@@ -267,7 +273,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
               <div className="flex items-center gap-2">
                 <p className="size-5 rounded-full bg-[#E48872]"></p>
                 <p className="text-lg text-gray-300 font-semibold">
-                  2,430 Sales
+                  {data?.shop_info?.order_count || 0} Sales
                 </p>
               </div>
             </div>

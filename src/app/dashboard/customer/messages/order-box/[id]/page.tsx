@@ -11,18 +11,51 @@ import { useQueryClient } from "@tanstack/react-query";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
 import { useEffect, useRef, useState } from "react";
 import { getSingleConversation, useSendMessage } from "@/Hooks/api/chat_api";
+import Link from "next/link";
+
+type CartProductImage = {
+  id: number;
+  product_id: number;
+  image: string;
+};
+
+type CartProduct = {
+  id: number;
+  product_name: string;
+  product_price: number;
+  images: CartProductImage[];
+};
+
+type CartItem = {
+  id: number;
+  cart_id: number;
+  product_id: number;
+  quantity: number;
+  product: CartProduct;
+};
+
+type Cart = {
+  id: number;
+  user_id: number;
+  shop_id: number;
+  cart_items: CartItem[];
+};
 
 type messageItem = {
   id: number;
   sender_id: number;
+  receiver_id: number;
+  conversation_id: number;
   message: string;
   created_at: string;
-  status: string;
+  status?: string;
   sender: {
     first_name: string;
-    last_name: string;
-    avatar: string;
+    last_name: string | null;
+    avatar: string | null;
   };
+
+  cart: Cart | null;
 };
 
 const page = () => {
@@ -204,6 +237,7 @@ const page = () => {
                 user?.id === msg?.sender_id ? "justify-end" : "justify-start"
               }`}
             >
+              {/* Sender Image */}
               {user?.id !== msg?.sender_id && (
                 <figure className="size-11 rounded-full relative shrink-0 grid place-items-center bg-accent-red text-sm">
                   {msg?.sender?.avatar ? (
@@ -222,24 +256,83 @@ const page = () => {
                 </figure>
               )}
 
-              <p
-                className={`relative text-[15px] font-lato leading-[160%] py-3 px-3.5 rounded-[6px] max-w-[550px] shadow ${
-                  msg?.status === "sending"
-                    ? "bg-gray-50 opacity-80"
-                    : msg?.status === "failed"
-                      ? "bg-red-100 border border-red-400 text-red-700"
-                      : "bg-accent-white"
-                }
-                `}
-              >
-                {msg?.message}
-                <br />
+              {/* Message Content */}
+              <div className="max-w-[550px]">
+                {/* NORMAL MESSAGE */}
+                {!msg?.cart && (
+                  <div
+                    className={`relative text-[15px] font-lato leading-[160%] py-3 px-3.5 rounded-[6px] shadow ${
+                      msg?.status === "sending"
+                        ? "bg-gray-50 opacity-80"
+                        : msg?.status === "failed"
+                          ? "bg-red-100 border border-red-400 text-red-700"
+                          : "bg-accent-white"
+                    }`}
+                  >
+                    <p>{msg?.message}</p>
 
-                {/* Time */}
-                <span className="text-xs text-gray-500 text-end block mt-1">
-                  {moment(msg?.created_at).format("LT")}
-                </span>
-              </p>
+                    <span className="text-xs text-gray-500 text-end block mt-1">
+                      {moment(msg?.created_at).format("LT")}
+                    </span>
+                  </div>
+                )}
+
+                {/* CART MESSAGE */}
+                {msg?.cart && (
+                  <div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+                    {/* Message */}
+                    <div className="p-4 border-b border-gray-200">
+                      <p className="text-sm text-gray-700">{msg?.message}</p>
+                    </div>
+
+                    {/* Cart Products */}
+                    <div className="p-4 space-y-4">
+                      {msg?.cart?.cart_items?.map(item => (
+                        <Link
+                          key={item?.id}
+                          href={`/product-details/${item?.product?.id}`}
+                          className="flex items-center gap-3 group"
+                        >
+                          {/* Product Image */}
+                          <figure className="size-16 rounded-lg overflow-hidden relative shrink-0 bg-gray-100">
+                            {item?.product?.images?.[0]?.image && (
+                              <Image
+                                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images?.[0]?.image}`}
+                                alt={item?.product?.product_name}
+                                fill
+                                unoptimized
+                                className="object-cover"
+                              />
+                            )}
+                          </figure>
+
+                          {/* Product Info */}
+                          <p className="flex-1">
+                            <h4 className="font-semibold text-sm text-secondary-black group-hover:underline">
+                              {item?.product?.product_name}
+                            </h4>
+
+                            <p className="text-sm text-gray-500">
+                              Qty: {item?.quantity}
+                            </p>
+
+                            <p className="text-sm font-bold text-primary-green">
+                              ${item?.product?.product_price}
+                            </p>
+                          </p>
+                        </Link>
+                      ))}
+                    </div>
+
+                    {/* Time */}
+                    <div className="px-4 pb-3 text-right">
+                      <span className="text-xs text-gray-500">
+                        {moment(msg?.created_at).format("LT")}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           ))
         )}

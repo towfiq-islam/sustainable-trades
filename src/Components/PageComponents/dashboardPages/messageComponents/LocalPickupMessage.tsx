@@ -4,7 +4,7 @@ import Image from "next/image";
 import moment from "moment";
 import echo from "@/lib/echo";
 import useAuth from "@/Hooks/useAuth";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { getLocalPickupConversation } from "@/Hooks/api/chat_api";
@@ -69,9 +69,9 @@ const LocalPickupMessage = () => {
                 user?.membership?.membership_type === "pro"
                   ? "pro"
                   : user?.role === "vendor" &&
-                    user?.membership?.membership_type === "basic"
-                  ? "basic"
-                  : "customer"
+                      user?.membership?.membership_type === "basic"
+                    ? "basic"
+                    : "customer"
               }/messages/order-box/${
                 conversation?.participants[0]?.participant_id
               }`}
@@ -91,7 +91,7 @@ const LocalPickupMessage = () => {
                   ) : (
                     <span className="text-xl font-bold text-white">
                       {conversation?.participants[0]?.participant?.first_name?.at(
-                        0
+                        0,
                       )}
                     </span>
                   )}
@@ -124,7 +124,7 @@ const LocalPickupMessage = () => {
                 </p>
               </div>
             </Link>
-          )
+          ),
         )
       ) : (
         <div className="pt-20 flex justify-center items-center flex-col gap-1">

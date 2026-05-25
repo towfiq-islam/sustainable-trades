@@ -9,7 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { PuffLoader } from "react-spinners";
 import { useQueryClient } from "@tanstack/react-query";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getSingleConversation, useSendMessage } from "@/Hooks/api/chat_api";
 
 type messageItem = {
@@ -37,6 +37,7 @@ const page = () => {
   const [chats, setChats] = useState<messageItem[]>([]);
   const [message, setMessage] = useState<string>("");
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  console.log(chats);
 
   // Mutation & Query
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
@@ -109,15 +110,15 @@ const page = () => {
           prev?.map(msg =>
             msg?.id === tempId
               ? { ...msg, ...res.message, status: "sent" }
-              : msg
-          )
+              : msg,
+          ),
         );
       },
       onError: () => {
         setChats(prev =>
           prev?.map(msg =>
-            msg?.id === tempId ? { ...msg, status: "failed" } : msg
-          )
+            msg?.id === tempId ? { ...msg, status: "failed" } : msg,
+          ),
         );
       },
     });
@@ -157,7 +158,7 @@ const page = () => {
             ) : (
               <span className="text-xl font-bold text-white">
                 {singleConversation?.data?.conversation?.participants[0]?.participant?.first_name?.at(
-                  0
+                  0,
                 )}
               </span>
             )}
@@ -226,8 +227,8 @@ const page = () => {
                   msg?.status === "sending"
                     ? "bg-gray-50 opacity-80"
                     : msg?.status === "failed"
-                    ? "bg-red-100 border border-red-400 text-red-700"
-                    : "bg-accent-white"
+                      ? "bg-red-100 border border-red-400 text-red-700"
+                      : "bg-accent-white"
                 }
                 `}
               >

@@ -1,8 +1,7 @@
 "use client";
-
 import React, { useRef, useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { FaAngleRight, FaPlay, FaPlus } from "react-icons/fa";
 import { MdArrowOutward, MdDelete } from "react-icons/md";
 import Preview from "../../../../../../Assets/fallbackimage.png";
@@ -17,12 +16,10 @@ import {
   getProductCategoriesClient,
   getProductSubCategoriesClient,
 } from "@/Hooks/api/cms_api";
-import useAuth from "@/Hooks/useAuth";
 import { PuffLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
 
-// Define types for the API response and error
 interface UpdateProductResponse {
   success: boolean;
   message: string;
@@ -83,11 +80,8 @@ interface KeptImage {
 const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { user } = useAuth();
-
   const { id } = use(params);
   const { data: listing, isLoading } = useGetSingleListing(id);
-
   const updateProduct = useupdateProduct(id);
   const deleteProduct = useDeleteProduct(id);
 
@@ -113,7 +107,6 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const [sellingOption, setSellingOption] = useState("");
   const { data: categoriesData } = getProductCategoriesClient();
   const { data: subcategoriesData } = getProductSubCategoriesClient();
-
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -183,10 +176,9 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
     setVideoFile(null);
     setHasExistingVideo(!!productData.video);
 
-    // ✅ Set Category & Subcategory by ID
+    // Set Category & Subcategory by ID
     setCategory(productData.category_id?.toString() || "");
     setSubcategory(productData.sub_category_id?.toString() || "");
-
     setFulfillment(productData.fulfillment || "");
     setSellingOption(productData.selling_option || "");
     setImageFiles([]);
@@ -234,7 +226,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
       );
       if (fileIndex > -1) {
         setImageFiles(prev => prev.filter((_, idx) => idx !== fileIndex));
-        URL.revokeObjectURL(imageUrl); // Clean up memory
+        URL.revokeObjectURL(imageUrl);
       }
 
       // Remove from images array
@@ -445,7 +437,6 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
       ? "Active"
       : listing?.data?.status || "Pending";
 
-  // Combined images for preview (existing kept + new previews)
   const previewImages = [
     ...keptImagePaths,
     ...images.filter(url => !keptImagePaths.includes(url)),
@@ -790,21 +781,18 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
           )}
 
+          {/* Fulfillment */}
           <div>
             <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
               Fulfillment
             </h3>
             <select
-              className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+              disabled
+              className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 opacity-60"
               value={fulfillment}
               onChange={e => setFulfillment(e.target.value)}
             >
-              <option value="">Select Fulfillment</option>
-              <option value="Arrange Local Pickup">Arrange Local Pickup</option>
-              <option value="Shipping">Shipping</option>
-              <option value="Arrange Local Pickup or Shipping">
-                Arrange Local Pickup and Shipping
-              </option>
+              <option value="arrange_local_pickup">Arrange Local Pickup</option>
             </select>
           </div>
 
@@ -851,11 +839,11 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               onChange={e => setSellingOption(e.target.value)}
             >
               <option value="">Choose Below</option>
-              <option value="Trade/Barter">Trade/Barter</option>
-              <option value="For Sale or Trade Barter">
+              <option value="trade/barter">Trade/Barter</option>
+              <option value="for_sale_or_trade_barter">
                 For Sale or Trade Barter
               </option>
-              <option value="For Sale">For Sale</option>
+              <option value="for_sale">For Sale</option>
             </select>
           </div>
 

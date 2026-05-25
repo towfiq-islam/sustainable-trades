@@ -254,7 +254,7 @@ const Pricing = ({
               <button
                 disabled={isPending}
                 onClick={() => cancelMembership()}
-                className={`px-6 py-2 bg-red-500 rounded-lg shadow hover:bg-red-600 text-white font-semibold text-[16px] ${
+                className={`px-6 py-2 bg-primary-red rounded-lg shadow hover:bg-primary-red text-white font-semibold text-[16px] ${
                   isPending ? "cursor-not-allowed" : "cursor-pointer"
                 }`}
               >

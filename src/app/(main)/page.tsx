@@ -26,7 +26,7 @@ const Page = async () => {
   return (
     <>
       <HomeBanner data={bannerData?.data} />
-      <HowItWorks data={howItWorksData?.data} />
+      {/* <HowItWorks data={howItWorksData?.data} />
       <MagicMarkers />
       <FeaturedShops />
       <ExploreProduct data={productCategories?.data} />
@@ -38,7 +38,7 @@ const Page = async () => {
         button2="Monthly Billing"
       />
       <Subscribe />
-      <GetUserLocation />
+      <GetUserLocation /> */}
     </>
   );
 };

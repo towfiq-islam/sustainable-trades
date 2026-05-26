@@ -28,8 +28,6 @@ jobs:
            git fetch origin
            git reset --hard origin/main
 
-           echo "NEXT_PUBLIC_SITE_URL=https://melissabooth123.thewarriors.team" > .env
-
             npm install
             NODE_ENV=production npm run build
 

@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useSendMessage } from "@/Hooks/api/chat_api";
-import { useLocalPickup } from "@/Hooks/api/dashboard_api";
 
 type formData = {
   name: string;
@@ -40,8 +39,6 @@ const ShippingOptionsModal = ({
   );
 
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
-  const { mutate: localPickupMutation, isPending: isPickupPending } =
-    useLocalPickup(cart_id);
 
   const {
     register,
@@ -54,17 +51,13 @@ const ShippingOptionsModal = ({
       receiver_id: userId,
       type: "order",
       message: data?.message,
+      cart_id,
     };
 
-    localPickupMutation(data, {
-      onSuccess: () => {
-        sendMessageMutation(payload, {
-          onSuccess: (res: any) => {
-            toast.success(res.message);
-            onClose();
-            window.location.reload();
-          },
-        });
+    sendMessageMutation(payload, {
+      onSuccess: (res: any) => {
+        toast.success(res.message);
+        onClose();
       },
     });
   };
@@ -237,14 +230,14 @@ const ShippingOptionsModal = ({
 
               {/* Submit btn */}
               <button
-                disabled={isPending || isPickupPending}
+                disabled={isPending}
                 className={`primary_btn ${
-                  isPending || isPickupPending
+                  isPending
                     ? "!cursor-not-allowed opacity-85 hover:!bg-primary-green hover:!text-white"
                     : "cursor-pointer"
                 } `}
               >
-                {isPending || isPickupPending ? (
+                {isPending ? (
                   <span className="flex gap-2 items-center justify-center">
                     <CgSpinnerTwo className="animate-spin text-xl" />
                     <span>Please wait....</span>

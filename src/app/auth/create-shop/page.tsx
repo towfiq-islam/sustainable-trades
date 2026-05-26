@@ -72,7 +72,6 @@ const page = () => {
     mode: "onBlur",
   });
 
-  
   // Steps array
   const steps: StepItem[] = [
     { smLabel: "Profile", lgLabel: "Profile Info", component: StepOne },

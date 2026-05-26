@@ -28,11 +28,10 @@ jobs:
            git fetch origin
            git reset --hard origin/main
 
-            npm install
-            NODE_ENV=production npm run build
-
-            PM2_PATH=/home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2
-
-            $PM2_PATH delete sustainable-trades || true
-            $PM2_PATH start npm --name "sustainable-trades" -- run start
-            $PM2_PATH save
+           npm install
+           NODE_ENV=production npm run build
+            
+           PM2_PATH=/home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2
+            
+           $PM2_PATH restart sustainable-trades || \
+           $PM2_PATH save

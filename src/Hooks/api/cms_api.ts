@@ -95,7 +95,7 @@ export async function getAllShops() {
 export async function getMissionData() {
   return useServerApi({
     endpoint: "/api/our-mission",
-    revalidate: 1000,
+    revalidate: 60,
   });
 }
 

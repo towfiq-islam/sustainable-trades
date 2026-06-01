@@ -3,7 +3,6 @@ import { Paypal } from "@/Components/Svg/SvgContainer";
 import {
   useDisconnectOnboarding,
   useOnboarding,
-  useReconnectOnboarding,
 } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import { CgSpinnerTwo } from "react-icons/cg";
@@ -21,8 +20,8 @@ const page = () => {
     useDisconnectOnboarding();
 
   // Reconnect
-  const { mutate: onboardingReconnectMutation, isPending: isReconnecting } =
-    useReconnectOnboarding();
+  // const { mutate: onboardingReconnectMutation, isPending: isReconnecting } =
+  //   useReconnectOnboarding();
 
   // CONNECT
   const handleConnect = () => {
@@ -51,21 +50,21 @@ const page = () => {
   };
 
   // RECONNECT
-  const handleReconnect = () => {
-    onboardingReconnectMutation(
-      {
-        success_url: `${window.location.origin}/dashboard/pro/payment-method`,
-        cancel_url: `${window.location.origin}/dashboard/pro/payment-method`,
-      },
-      {
-        onSuccess: (data: any) => {
-          if (data?.success) {
-            window.location.href = data?.data?.url;
-          }
-        },
-      },
-    );
-  };
+  // const handleReconnect = () => {
+  //   onboardingReconnectMutation(
+  //     {
+  //       success_url: `${window.location.origin}/dashboard/pro/payment-method`,
+  //       cancel_url: `${window.location.origin}/dashboard/pro/payment-method`,
+  //     },
+  //     {
+  //       onSuccess: (data: any) => {
+  //         if (data?.success) {
+  //           window.location.href = data?.data?.url;
+  //         }
+  //       },
+  //     },
+  //   );
+  // };
 
   return (
     <>
@@ -80,7 +79,19 @@ const page = () => {
       </h5>
 
       <div className="mt-9 md:mt-10 border border-[#BFBEBE] rounded-[10px] p-6 w-full max-w-[480px]">
-        <Paypal />
+        <div className="flex gap-3 items-start justify-between">
+          <Paypal />
+          {isOnboarded ? (
+            <p className="px-3 py-1 rounded-full text-sm bg-primary-green text-white">
+              Connected
+            </p>
+          ) : (
+            <p className="px-3 py-1 rounded-full text-sm bg-accent-red text-gray-50">
+              Not Connected
+            </p>
+          )}
+        </div>
+
         <p className="font-normal text-[14px] md:text-[16px] text-[#3D4145]  pt-2">
           Customers can check out from your store with a PayPal or Venmo Account
         </p>
@@ -123,7 +134,7 @@ const page = () => {
           )}
 
           {/* RECONNECT BUTTON */}
-          {isOnboarded && (
+          {/* {isOnboarded && (
             <button
               disabled={isReconnecting}
               onClick={handleReconnect}
@@ -138,7 +149,7 @@ const page = () => {
                 "Reconnect"
               )}
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </>

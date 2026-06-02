@@ -32,6 +32,7 @@ type categoryItem = {
 const page = ({ params }: any) => {
   const id = Number(params?.id);
   const { latitude, longitude } = useAuth();
+  const [page, setPage] = useState<string>("");
   const [categoryId, setCategoryId] = useState<number>(id);
   const { data: spotlightData } = getMembershipSpotlightClient();
   const { data: allCategory, isLoading: categoryLoading } =
@@ -39,7 +40,8 @@ const page = ({ params }: any) => {
   const { data: categoryDetails, isLoading } = getCategoryDetails(
     categoryId,
     latitude,
-    longitude
+    longitude,
+    page,
   );
 
   return (
@@ -162,6 +164,23 @@ const page = ({ params }: any) => {
             {categoryDetails?.data?.products?.map((product: any) => (
               <Product key={product?.id} product={product} />
             ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {!isLoading && (
+          <div className="py-8 flex justify-center items-center gap-2 flex-wrap">
+            {categoryDetails?.data?.products?.links?.map(
+              (item: any, idx: number) => (
+                <button
+                  key={idx}
+                  disabled={!item.url}
+                  dangerouslySetInnerHTML={{ __html: item.label }}
+                  onClick={() => item.url && setPage(item.url.split("=")[1])}
+                  className={`px-3 py-1 rounded border transition-all duration-200 ${item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"} ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                />
+              ),
+            )}
           </div>
         )}
       </Container>

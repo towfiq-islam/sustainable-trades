@@ -4,7 +4,7 @@ import "swiper/css/thumbs";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 
@@ -14,7 +14,12 @@ type galleryItem = {
 };
 
 interface galleryProps {
-  data: galleryItem[];
+  data: {
+    out_of_stock: boolean;
+    unlimited_stock: boolean;
+    product_quantity: number;
+    images: galleryItem[];
+  };
 }
 
 const ProductGallery = ({ data }: galleryProps) => {
@@ -47,7 +52,7 @@ const ProductGallery = ({ data }: galleryProps) => {
           order-2 md:order-1
         "
       >
-        {data?.map((img, index) => (
+        {data?.images?.map((img, index) => (
           <SwiperSlide key={index}>
             <figure className="w-full h-[90px] md:h-[100px] cursor-pointer rounded-lg border border-gray-100 relative">
               <Image
@@ -75,7 +80,7 @@ const ProductGallery = ({ data }: galleryProps) => {
           order-1 md:order-2
         "
       >
-        {data?.map((img, index) => (
+        {data?.images?.map((img, index) => (
           <SwiperSlide key={index}>
             <Image
               src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
@@ -84,6 +89,21 @@ const ProductGallery = ({ data }: galleryProps) => {
               unoptimized
               className="object-cover rounded-xl"
             />
+
+            {/* Stock Info */}
+            {data?.unlimited_stock ? (
+              <button className="absolute top-3 right-3 shadow-lg font-medium px-3 py-1 rounded-full bg-primary-green text-white z-10 text-sm">
+                In Stock
+              </button>
+            ) : !data?.out_of_stock && Number(data?.product_quantity) > 0 ? (
+              <button className="absolute top-3 right-3 shadow-lg font-medium px-3 py-1 rounded-full bg-primary-green text-white z-10 text-sm">
+                In Stock
+              </button>
+            ) : (
+              <button className="absolute top-3 right-3 shadow-lg font-medium px-3 py-1 rounded-full bg-accent-red text-white z-10 text-sm">
+                Stock Out
+              </button>
+            )}
           </SwiperSlide>
         ))}
       </Swiper>

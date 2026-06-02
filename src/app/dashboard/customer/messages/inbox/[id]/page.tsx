@@ -9,7 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { PuffLoader } from "react-spinners";
 import { useQueryClient } from "@tanstack/react-query";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getSingleConversation, useSendMessage } from "@/Hooks/api/chat_api";
 
 type messageItem = {

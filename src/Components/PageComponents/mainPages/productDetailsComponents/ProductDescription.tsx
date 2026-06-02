@@ -31,6 +31,9 @@ type descriptionItem = {
   shop_info_id: number;
   fulfillment: string;
   selling_option: string;
+  unlimited_stock: boolean;
+  out_of_stock: boolean;
+  product_quantity: number;
   shop: {
     id: number;
     user_id: number;
@@ -123,9 +126,13 @@ const ProductDescription = ({ data }: descriptionProps) => {
 
         {/* Add To Cart */}
         <button
-          disabled={addCardPending}
+          disabled={
+            addCardPending ||
+            (!data?.unlimited_stock && data?.out_of_stock) ||
+            (!data?.unlimited_stock && data?.product_quantity === 0)
+          }
           onClick={handleAddToCart}
-          className={`border border-primary-green rounded-lg px-4 py-2 hover:bg-primary-green hover:text-accent-white duration-500 transition-all shrink-0 ${
+          className={`border border-primary-green rounded-lg px-4 py-2 enabled:hover:bg-primary-green enabled:hover:text-accent-white duration-500 transition-all shrink-0 disabled:cursor-not-allowed disabled:opacity-75 disabled:border-gray-400 ${
             addCardPending ? "cursor-not-allowed" : "cursor-pointer"
           }`}
         >

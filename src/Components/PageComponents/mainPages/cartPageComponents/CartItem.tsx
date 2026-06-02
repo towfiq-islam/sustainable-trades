@@ -36,6 +36,7 @@ interface CartItem {
   cart_items: {
     id: number;
     quantity: number;
+    price: string;
     product: {
       images: { image: string }[];
       product_name: string;
@@ -158,9 +159,7 @@ const CartItem = ({ item, setCartList }: CartProps) => {
                 </h3>
 
                 {/* Product Price */}
-                <p className="text-2xl font-bold">
-                  ${cart?.product?.product_price}
-                </p>
+                <p className="text-2xl font-bold">${cart?.price}</p>
               </div>
 
               {/* Product Quantity */}

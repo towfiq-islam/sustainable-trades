@@ -11,12 +11,20 @@ const PaymentOptions = () => {
 
   return (
     <section className="mb-20">
-      <div className="flex items-center justify-between">
-        <h3 className="section_sub_title">
-          {cartData?.data?.total_cart_items
-            ? `${cartData?.data?.total_cart_items} Items In Your Cart`
-            : "Cart is empty"}
-        </h3>
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="section_sub_title !mb-0">
+              {cartData?.data?.total_cart_items
+                ? `${cartData?.data?.total_cart_items} Items In Your Cart`
+                : "Cart is empty"}
+            </h3>
+
+            <p>Subtotal: ${cartData?.data?.total_price?.toFixed(2)}</p>
+          </div>
+
+          <p>Shipping and sales tax will be added at checkout if applicable.</p>
+        </div>
 
         {cartData?.data?.length > 0 && (
           <button

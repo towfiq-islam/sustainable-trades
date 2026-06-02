@@ -33,6 +33,7 @@ type categoryItem = {
 
 const page = () => {
   // State
+  const [page, setPage] = useState<string>("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
 
   // Hooks
@@ -45,7 +46,8 @@ const page = () => {
   const { data: categoryDetails, isLoading } = getCategoryDetails(
     categoryId,
     latitude,
-    longitude
+    longitude,
+    page,
   );
 
   useEffect(() => {
@@ -160,7 +162,7 @@ const page = () => {
               <ProductSkeleton key={idx} />
             ))}
           </div>
-        ) : categoryDetails?.data?.products?.length === 0 ||
+        ) : categoryDetails?.data?.products?.data?.length === 0 ||
           !categoryDetails ? (
           <div className="flex flex-col justify-center items-center gap-3 lg:gap-4 text-center py-5 md:py-20">
             <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
@@ -170,9 +172,26 @@ const page = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-            {categoryDetails?.data?.products?.map((product: any) => (
+            {categoryDetails?.data?.products?.data?.map((product: any) => (
               <Product key={product?.id} product={product} isMiles={true} />
             ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {!isLoading && (
+          <div className="py-8 flex justify-center items-center gap-2 flex-wrap">
+            {categoryDetails?.data?.products?.links?.map(
+              (item: any, idx: number) => (
+                <button
+                  key={idx}
+                  disabled={!item.url}
+                  dangerouslySetInnerHTML={{ __html: item.label }}
+                  onClick={() => item.url && setPage(item.url.split("=")[1])}
+                  className={`px-3 py-1 rounded border transition-all duration-200 ${item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"} ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                />
+              ),
+            )}
           </div>
         )}
       </Container>

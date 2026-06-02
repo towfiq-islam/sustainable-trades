@@ -143,7 +143,7 @@ const page = () => {
                               : order?.status === "pending"
                                 ? "bg-blue-500"
                                 : order?.status === "cancelled"
-                                  ? "bg-red-500"
+                                  ? "bg-primary-red"
                                   : "bg-gray-500"
                         }`}
                       >
@@ -278,7 +278,7 @@ const page = () => {
             </div>
           ))
         ) : (
-          <p className="text-red-500 font-semibold text-lg">No Orders Found</p>
+          <p className="text-primary-red font-semibold text-lg">No Orders Found</p>
         )}
       </div>
 

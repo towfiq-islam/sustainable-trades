@@ -115,7 +115,7 @@ const VendorOrders = () => {
                             : order?.status === "pending"
                             ? "bg-blue-500"
                             : order?.status === "cancelled"
-                            ? "bg-red-500"
+                            ? "bg-primary-red"
                             : "bg-gray-500"
                         }`}
                       >

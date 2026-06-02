@@ -173,7 +173,7 @@ const Membershipreusable: React.FC<MembershipReusableProps> = ({
           <button className="px-6 py-2 bg-yellow-500 cursor-pointer rounded-lg shadow hover:bg-yellow-600 text-[#2D2D2D] font-semibold text-[16px]">
             Pause Membership
           </button>
-          <button className="px-6 py-2 bg-red-500 cursor-pointer rounded-lg shadow hover:bg-red-600 text-[#2D2D2D] font-semibold text-[16px]">
+          <button className="px-6 py-2 bg-primary-red cursor-pointer rounded-lg shadow hover:bg-primary-red/80 text-[#2D2D2D] font-semibold text-[16px]">
             Cancel
           </button>
         </div>

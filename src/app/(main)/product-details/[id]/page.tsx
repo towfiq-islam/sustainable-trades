@@ -34,7 +34,6 @@ const page = ({ params }: Props) => {
     id,
     page
   );
-  console.log(productDetailsData?.data);
 
   if (isLoading) {
     return <ProductDetailsSkeleton />;

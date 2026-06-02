@@ -31,8 +31,10 @@ const Page = () => {
   const params = useParams();
   const order_id = Number(params.id);
   const [open, isOpen] = useState<boolean>(false);
+  const [note, setNote] = useState<string>("");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [openStatusPopover, setOpenStatusPopover] = useState(false);
+  const [showNote, setShowNote] = useState<boolean>(false);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
@@ -159,7 +161,7 @@ const Page = () => {
     //   ),
     // },
     {
-      title: "Order Note",
+      title: "Add Note",
       content: <></>,
       isModal: true,
     },
@@ -442,6 +444,21 @@ const Page = () => {
             </form>
           </div>
 
+          <button
+            disabled={!singleOrder?.data?.note}
+            onClick={() => {
+              setNote(singleOrder?.data?.note);
+              setShowNote(true);
+            }}
+            className={`font-semibold border border-[#E1E2E2] rounded-lg overflow-hidden w-full p-3 ${
+              singleOrder?.data?.note
+                ? "cursor-pointer hover:bg-accent-red hover:text-white duration-300 transition-all"
+                : "opacity-70 bg-gray-200 cursor-not-allowed"
+            }`}
+          >
+            View Note
+          </button>
+
           <div className="mt-12">
             <button
               disabled={isCancellingOrder}
@@ -481,6 +498,13 @@ const Page = () => {
 
       <Modal open={open} onClose={() => isOpen(false)}>
         <TrackPackageModal order_id={order_id} />
+      </Modal>
+
+      <Modal open={showNote} onClose={() => setShowNote(false)}>
+        <h3 className="text-xl font-semibold text-primary-green mb-2">
+          Order Note
+        </h3>
+        <p className="leading-[164%] text-gray-700">"{note}"</p>
       </Modal>
     </>
   );

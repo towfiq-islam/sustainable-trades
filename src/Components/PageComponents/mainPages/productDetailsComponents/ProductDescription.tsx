@@ -182,15 +182,12 @@ const ProductDescription = ({ data }: descriptionProps) => {
           This product is available for:
         </h3>
 
-        <p className="mb-2">
-          <span className="font-semibold">Shipping</span> •{" "}
-          <span>
-            {data?.fulfillment === "arrange_local_pickup"
-              ? "Arrange Local Pickup"
-              : data?.fulfillment === "shipping"
-                ? "Shipping"
-                : "Arrange Local Pickup and Shipping"}
-          </span>
+        <p className="mb-2 font-semibold">
+          {data?.fulfillment === "arrange_local_pickup"
+            ? "Arrange Local Pickup"
+            : data?.fulfillment === "shipping"
+              ? "Shipping"
+              : "Arrange Local Pickup and Shipping"}
         </p>
 
         {/* Selling Option */}

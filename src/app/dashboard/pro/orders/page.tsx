@@ -47,7 +47,6 @@ const page = () => {
   ];
   const { data: allOrders, isLoading } = getOrders(status, page);
   const { mutate: cancelOrder, isPending: isCancelling } = useCancelOrder();
-  console.log(allOrders);
 
   useEffect(() => {
     const handleWindowClick = () => {
@@ -131,7 +130,7 @@ const page = () => {
         <div className="w-full pt-10">
           {/* Desktop Table */}
           <div className="hidden lg:block overflow-x-auto">
-            <table className="w-full border-collapse">
+            <table className="w-full border-collapse text-nowrap">
               <thead>
                 <tr className="border-b-2 border-gray-300 text-[#13141D] text-[15px] xl:text-[16px] font-semibold">
                   <th className="py-3 px-4 text-left">Order #</th>

@@ -9,6 +9,7 @@ import Container from "@/Components/Common/Container";
 import { ShopListSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
 import ProductMap from "./ProductMap";
+import { DollarSvg, SignSvg } from "@/Components/Svg/SvgContainer";
 
 const ProductLocation = () => {
   // Hook
@@ -21,7 +22,7 @@ const ProductLocation = () => {
   const { data: allProducts, isLoading: productLoading } = getAllProducts(
     search,
     latitude,
-    longitude
+    longitude,
   );
 
   return (
@@ -50,7 +51,7 @@ const ProductLocation = () => {
                     onMouseLeave={() => setHoveredProduct(null)}
                   >
                     {/* Product Image */}
-                    <figure className="size-16 md:size-22 shrink-0 rounded-lg relative">
+                    <figure className="size-16 md:size-24 shrink-0 rounded-lg relative">
                       <Image
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product?.images[0]?.image}`}
                         alt="product_image"
@@ -94,9 +95,31 @@ const ProductLocation = () => {
                         </p>
 
                         {/* Selling Option */}
-                        <p className="text-secondary-gray text-xs md:text-sm">
-                          {product?.selling_option}
-                        </p>
+                        <div className="text-secondary-gray text-xs md:text-sm mt-2">
+                          <div>
+                            {product?.selling_option === "trade/barter" && (
+                              <p className="size-5.5 shrink-0 rounded-full bg-[#D4E2CB] grid place-items-center">
+                                <SignSvg />
+                              </p>
+                            )}
+                            {product?.selling_option === "for_sale" && (
+                              <p className="size-5.5 shrink-0 rounded-full bg-accent-red grid place-items-center">
+                                <DollarSvg />
+                              </p>
+                            )}
+                            {product?.selling_option ===
+                              "for_sale_or_trade_barter" && (
+                              <div className="flex gap-2 items-center">
+                                <p className="size-5.5 shrink-0 rounded-full bg-accent-red grid place-items-center">
+                                  <DollarSvg />
+                                </p>
+                                <p className="size-5.5 shrink-0 rounded-full bg-[#D4E2CB] grid place-items-center">
+                                  <SignSvg />
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </Link>

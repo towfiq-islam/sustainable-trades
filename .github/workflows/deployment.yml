@@ -32,6 +32,8 @@ jobs:
 
            npm install
            NODE_ENV=production npm run build
+
+           PM2_PATH=/home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2
                         
            $PM2_PATH reload sustainable-trades
            $PM2_PATH save

@@ -5,21 +5,23 @@ import { FiMoreVertical } from "react-icons/fi";
 import Image, { StaticImageData } from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { getallListings } from "@/Hooks/api/dashboard_api";
-import {
-  statusColorsinventory,
-  visibilityColors,
-} from "@/Components/Data/data";
 import { ProductRowSkeleton } from "@/Components/Loader/Loader";
 
-type Product = {
+type ImageItem = {
+  image: string;
+};
+
+type productItem = {
   id: number;
-  name: string;
-  status: "Approved" | "Pending" | "Denied";
+  product_name: string;
+  product_price: number;
+  images: ImageItem[];
+  status: string;
+  product_quantity: number;
+  unlimited_stock: boolean;
+  out_of_stock: boolean;
   sku: string;
-  stock: number;
-  price: number;
-  cost: number;
-  visibility: "Active" | "Inactive";
+  cost: string;
   image: string | StaticImageData;
 };
 
@@ -28,29 +30,7 @@ export default function Page() {
   const { data: allListings, isLoading } = getallListings();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
   const [openMenu, setOpenMenu] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (allListings?.data) {
-      const mappedProducts: Product[] = allListings.data.map((item: any) => ({
-        id: item.id,
-        name: item.product_name,
-        status: (item.status.charAt(0).toUpperCase() + item.status.slice(1)) as
-          | "Approved"
-          | "Pending"
-          | "Denied",
-        sku: `SKU-${item.id}`,
-        stock: item.product_quantity,
-        price: item.product_price,
-        cost: parseFloat(item.cost),
-        visibility: "Active",
-        image:
-          item.images && item.images.length > 0 ? item.images[0].image : "",
-      }));
-      setProducts(mappedProducts);
-    }
-  }, [allListings]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -64,13 +44,9 @@ export default function Page() {
 
   const toggleSelect = (id: number) => {
     setSelected(prev =>
-      prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id],
     );
   };
-
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
 
   return (
     <>
@@ -125,9 +101,6 @@ export default function Page() {
                 Approval Status
               </th>
               <th className="text-[#13141D] font-semibold text-[16px] pb-5">
-                SKU
-              </th>
-              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
                 Stock
               </th>
               <th className="text-[#13141D] font-semibold text-[16px] pb-5">
@@ -137,9 +110,8 @@ export default function Page() {
                 Cost
               </th>
               <th className="text-[#13141D] font-semibold text-[16px] pb-5">
-                Visibility
+                Action
               </th>
-              <th />
             </tr>
           </thead>
 
@@ -148,55 +120,48 @@ export default function Page() {
               ? Array.from({ length: 3 }).map((_, idx) => (
                   <ProductRowSkeleton key={idx} />
                 ))
-              : filteredProducts?.map(p => (
+              : allListings?.data?.map((p: productItem) => (
                   <tr
-                    key={p.id}
+                    key={p?.id}
                     className="border-b border-[#A7A39C] hover:bg-gray-50"
                   >
                     <td className="py-3 text-[#13141D] font-semibold text-[14px]">
                       <div className="flex items-center gap-5">
                         <figure className="h-[80px] w-[100px] rounded-lg relative">
                           <Image
-                            src={`${process.env.NEXT_PUBLIC_SITE_URL}/${p.image}`}
-                            alt={p.name}
+                            src={`${process.env.NEXT_PUBLIC_SITE_URL}/${p?.images[0]?.image}`}
+                            alt={p?.product_name}
                             fill
                             unoptimized
                             className="h-full w-full rounded-lg"
                           />
                         </figure>
 
-                        <span>{p?.name}</span>
+                        <span>{p?.product_name}</span>
                       </div>
                     </td>
                     <td>
                       <span
-                        className={`px-4 py-2 rounded-full text-sm ${
-                          statusColorsinventory[p.status]
-                        }`}
+                        className={`px-4 py-2 rounded-full text-sm capitalize`}
                       >
                         {p.status}
                       </span>
                     </td>
+
                     <td className="text-[#13141D] font-semibold text-[14px]">
-                      {p.sku}
+                      {p?.out_of_stock
+                        ? "Stock Out"
+                        : p?.unlimited_stock
+                          ? "Unlimited stock"
+                          : p?.product_quantity}
                     </td>
+
                     <td className="text-[#13141D] font-semibold text-[14px]">
-                      {p.stock}
+                      ${p.product_price.toFixed(2)}
                     </td>
+
                     <td className="text-[#13141D] font-semibold text-[14px]">
-                      ${p.price.toFixed(2)}
-                    </td>
-                    <td className="text-[#13141D] font-semibold text-[14px]">
-                      ${p.cost.toFixed(2)}
-                    </td>
-                    <td>
-                      <span
-                        className={`px-3 py-2 rounded-full text-sm ${
-                          visibilityColors[p.visibility]
-                        }`}
-                      >
-                        {p.visibility}
-                      </span>
+                      ${Number(p?.cost)?.toFixed(2)}
                     </td>
 
                     <td className="relative">
@@ -242,7 +207,7 @@ export default function Page() {
 
       {/* Mobile Card Layout */}
       <div className="block lg:hidden space-y-4 mt-6">
-        {filteredProducts.map(p => (
+        {allListings?.data.map((p: productItem) => (
           <div
             key={p.id}
             className="flex items-start justify-between border border-gray-200 rounded-lg p-4 shadow-sm"
@@ -256,27 +221,32 @@ export default function Page() {
               />
               <Image
                 src={`${process.env.NEXT_PUBLIC_SITE_URL}/${p.image}`}
-                alt={p.name}
+                alt={p?.product_name}
                 height={50}
                 width={50}
                 className="rounded-md object-cover"
               />
               <div>
                 <h3 className="font-semibold text-[#13141D] text-sm">
-                  {p.name}
+                  {p?.product_name}
                 </h3>
-                <p className="text-xs text-gray-500">SKU: {p.sku}</p>
-                <p className="text-xs text-gray-500">Stock: {p.stock}</p>
+                <p className="text-xs text-gray-500">SKU: {p?.sku}</p>
                 <p className="text-xs text-gray-500">
-                  Price: ${p.price.toFixed(2)}
+                  Stock:{" "}
+                  {p?.out_of_stock
+                    ? "Stock Out"
+                    : p?.unlimited_stock
+                      ? "Unlimited stock"
+                      : p?.product_quantity}
+                </p>
+                <p className="text-xs text-gray-500">
+                  Price: ${p.product_price.toFixed(2)}
                 </p>
 
-                <p className="text-xs text-gray-500">Approval: {p.status}</p>
-
-                <p className="text-xs text-gray-500">Cost: {p.cost}</p>
+                <p className="text-xs text-gray-500">Approval: {p?.status}</p>
 
                 <p className="text-xs text-gray-500">
-                  Visibility: {p.visibility}
+                  Cost: ${Number(p?.cost)?.toFixed(2)}
                 </p>
               </div>
             </div>

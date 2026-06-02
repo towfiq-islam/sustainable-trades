@@ -20,6 +20,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
+           set -e
+           
            export NVM_DIR="$HOME/.nvm"
            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
            nvm use 24 || nvm install 24
@@ -30,8 +32,6 @@ jobs:
 
            npm install
            NODE_ENV=production npm run build
-            
-           PM2_PATH=/home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2
-            
-           $PM2_PATH restart sustainable-trades || \
+                        
+           $PM2_PATH reload sustainable-trades
            $PM2_PATH save

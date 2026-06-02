@@ -10,6 +10,7 @@ type OrderImage = {
 type orderItem = {
   order_id: number;
   quantity: number;
+  total_price: string;
   product: {
     product_name: string;
     product_price: number;
@@ -110,7 +111,7 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
 
               <div className="shrink-0">
                 <h3 className="text-[20px] font-semibold text-[#13141D] pb-1">
-                  ${order?.product?.product_price}
+                  ${order?.total_price}
                 </h3>
                 <h4 className="text-[18px] font-semibold text-[#13141D]">
                   Qty: {order?.quantity}

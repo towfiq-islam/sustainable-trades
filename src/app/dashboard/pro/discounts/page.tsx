@@ -19,7 +19,7 @@ const DiscountsPage = () => {
   const [singleDiscountId, setSingleDiscountId] = useState(null);
   const tabs = [{ label: "active" }, { label: "inactive" }];
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
 
   // Mutation & Query
@@ -30,7 +30,7 @@ const DiscountsPage = () => {
 
   const toggleSelect = (id: string) => {
     setSelected(prev =>
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id],
     );
   };
 
@@ -47,7 +47,7 @@ const DiscountsPage = () => {
           setSelected([]);
           refetch();
         },
-      }
+      },
     );
   };
 
@@ -64,7 +64,7 @@ const DiscountsPage = () => {
           toggleOpen(id);
           refetch();
         },
-      }
+      },
     );
   };
 
@@ -136,7 +136,7 @@ const DiscountsPage = () => {
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => <DiscountSkeleton key={i} />)
         ) : discountData?.data?.length === 0 ? (
-          <p className="py-6 text-center text-red-500 font-semibold">
+          <p className="py-6 text-center text-primary-red font-semibold">
             No discounts found
           </p>
         ) : (
@@ -180,7 +180,7 @@ const DiscountsPage = () => {
                       STARTS:
                     </span>
                     <span className="text-gray-600">{`${moment(
-                      d?.start_date
+                      d?.start_date,
                     ).format("ll")} at ${d?.start_time}`}</span>
 
                     <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-[#13141D]">
@@ -230,7 +230,7 @@ const DiscountsPage = () => {
                     className={`px-2 py-1 rounded text-sm font-semibold cursor-pointer capitalize ${
                       d?.status.toLowerCase() === "active"
                         ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
+                        : "bg-primary-red text-accent-white"
                     }`}
                   >
                     {d?.status}

@@ -64,7 +64,7 @@ const page = ({ params }: Props) => {
           {/* Left */}
           <div className="space-y-10 md:space-y-16">
             {/* Thumbnail Gallery */}
-            <ProductGallery data={productDetailsData?.data?.images} />
+            <ProductGallery data={productDetailsData?.data} />
 
             {/* Reviews */}
             <ProductReviews

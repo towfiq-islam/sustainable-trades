@@ -527,7 +527,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                         !isDeleting && handleRemoveImage(src, isNewImage)
                       }
                       disabled={isDeleting}
-                      className={`absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs ${
+                      className={`absolute top-0 right-0 bg-primary-red text-white rounded-full w-5 h-5 flex items-center justify-center text-xs ${
                         isDeleting ? "cursor-not-allowed opacity-50" : ""
                       }`}
                     >

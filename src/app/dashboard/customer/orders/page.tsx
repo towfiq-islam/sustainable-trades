@@ -15,6 +15,8 @@ type ProductImg = {
 
 type SingleItem = {
   product_id: number;
+  total_price: string;
+  quantity: number;
   product: {
     product_name: string;
     product_price: string;
@@ -143,7 +145,7 @@ const page = () => {
                               : order?.status === "pending"
                                 ? "bg-blue-500"
                                 : order?.status === "cancelled"
-                                  ? "bg-red-500"
+                                  ? "bg-primary-red"
                                   : "bg-gray-500"
                         }`}
                       >
@@ -219,7 +221,11 @@ const page = () => {
                               {item?.product?.product_name}
                             </h5>
                             <h5 className="text-[#222]">
-                              Price: ${item?.product?.product_price}
+                              Price: ${item?.total_price}
+                            </h5>
+
+                            <h5 className="text-[#222]">
+                              Qty: {item?.quantity}
                             </h5>
 
                             {order?.status === "delivered" && (
@@ -278,7 +284,9 @@ const page = () => {
             </div>
           ))
         ) : (
-          <p className="text-red-500 font-semibold text-lg">No Orders Found</p>
+          <p className="text-primary-red font-semibold text-lg">
+            No Orders Found
+          </p>
         )}
       </div>
 

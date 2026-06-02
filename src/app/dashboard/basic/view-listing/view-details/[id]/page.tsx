@@ -121,7 +121,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const updateLocalStateWithProductData = (
-    productData: UpdateProductResponse["data"]
+    productData: UpdateProductResponse["data"],
   ) => {
     setProductName(productData.product_name || "");
     setPrice(`$${productData.product_price || 0}`);
@@ -133,13 +133,13 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
     setOutOfStock(productData.out_of_stock || false);
     setFeatured(productData.is_featured || false);
     setMetaTags(
-      productData.meta_tags?.map((tag: { tag: string }) => tag.tag) || []
+      productData.meta_tags?.map((tag: { tag: string }) => tag.tag) || [],
     );
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
     const imageUrls =
       productData.images?.map((img: { image: string }) =>
-        img.image.startsWith("http") ? img.image : `${baseUrl}/${img.image}`
+        img.image.startsWith("http") ? img.image : `${baseUrl}/${img.image}`,
       ) || [];
     setExistingImages(imageUrls);
     setKeptImagePaths(imageUrls);
@@ -195,7 +195,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const handleRemoveImage = (imageUrl: string, isNew: boolean) => {
     if (isNew) {
       const fileIndex = imageFiles.findIndex(
-        file => URL.createObjectURL(file) === imageUrl
+        file => URL.createObjectURL(file) === imageUrl,
       );
       if (fileIndex > -1) {
         setImageFiles(prev => prev.filter((_, idx) => idx !== fileIndex));
@@ -375,7 +375,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                     onClick={() =>
                       handleRemoveImage(src, !keptImagePaths.includes(src))
                     }
-                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                    className="absolute top-0 right-0 bg-primary-red text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
                   >
                     x
                   </button>
@@ -615,7 +615,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                   ?.filter(
                     (sub: any) =>
                       String(sub.category_id) === String(category) || // match by parent category
-                      String(sub.id) === String(subcategory) // keep saved subcategory visible
+                      String(sub.id) === String(subcategory), // keep saved subcategory visible
                   )
                   .map((sub: any) => (
                     <option key={sub.id} value={String(sub.id)}>

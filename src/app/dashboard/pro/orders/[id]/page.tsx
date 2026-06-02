@@ -27,6 +27,7 @@ interface FormValues {
 
 const Page = () => {
   const { user } = useAuth();
+  console.log(user);
   const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);
@@ -81,10 +82,10 @@ const Page = () => {
       }\n` +
       `Order Number: ${singleOrder?.data?.order_number}\n` +
       `Order Details: <a href="${
-        user?.role === "customer"
-          ? `https://sustainable-trades.vercel.app/dashboard/customer/orders/${order_id}`
-          : `https://sustainable-trades.vercel.app/dashboard/pro/orders/${order_id}`
-      }"  target="_blank" style="text-decoration: underline">Click here</a>\n` +
+        user?.role === "vendor"
+          ? `${window.location.origin}/dashboard/pro/orders/${order_id}`
+          : `${window.location.origin}/dashboard/customer/orders/${order_id}`
+      }"  target="_blank" style="text-decoration: underline color: blue">Click here</a>\n` +
       `Message: ${data?.message}`;
 
     const payload = {

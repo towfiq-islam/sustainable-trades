@@ -562,14 +562,15 @@ export const getCategoryDetails = (
   id: number | null,
   lat: number,
   lng: number,
+  page: string,
 ) => {
   return useClientApi({
     method: "get",
     isPrivate: true,
-    key: ["get-category-details", id, lat, lng],
+    key: ["get-category-details", id, lat, lng, page],
     enabled: !!id,
     endpoint: `/api/category/${id}`,
-    params: { lat, lng },
+    params: { lat, lng, page },
     queryOptions: {
       retry: false,
     },
@@ -603,13 +604,17 @@ export const getFeaturedProducts = () => {
 };
 
 // Nearby Products
-export const getNearbyProducts = (lat: number, lng: number) => {
+export const getNearbyProducts = (
+  lat: number,
+  lng: number,
+  nearbyPage: string,
+) => {
   return useClientApi({
     method: "get",
     isPrivate: true,
-    key: ["nearby-products", lat, lng],
+    key: ["nearby-products", lat, lng, nearbyPage],
     endpoint: "/api/nearby-product",
-    params: { lat, lng },
+    params: { lat, lng, page: nearbyPage },
     queryOptions: {
       retry: false,
     },
@@ -645,13 +650,18 @@ export const getProductReviews = (id: number, page: string) => {
 };
 
 // All Products
-export const getAllProducts = (search: string, lat: number, lng: number) => {
+export const getAllProducts = (
+  search: string,
+  lat: number,
+  lng: number,
+  page: string,
+) => {
   return useClientApi({
     method: "get",
-    key: ["all-products", search, lat, lng],
+    key: ["all-products", search, lat, lng, page],
     enabled: !!search,
     endpoint: "/api/all-products",
-    params: { search, lat, lng },
+    params: { search, lat, lng, page },
     queryOptions: {
       retry: false,
     },

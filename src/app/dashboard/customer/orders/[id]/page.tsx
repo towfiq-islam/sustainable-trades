@@ -36,7 +36,7 @@ const OrderDetailsPage = () => {
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
         },
-      }
+      },
     );
   };
 
@@ -205,17 +205,16 @@ const OrderDetailsPage = () => {
                       className="rounded size-full object-cover"
                     />
                   </figure>
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1">
                     <h5 className="text-[16px] sm:text-[20px] font-bold text-[#000]">
                       {item?.product?.product_name}
                     </h5>
-                    <h5 className="text-[#222]">
-                      Price: ${item?.product?.product_price}
-                    </h5>
+                    <h5 className="text-[#222] text-sm">Price: ${item?.total_price}</h5>
+                    <h5 className="text-[#222] text-sm">Qty: {item?.quantity}</h5>
 
                     <Link
                       href={`/product-details/${item?.product_id}`}
-                      className="px-2 mt-1 py-1.5 rounded-[8px] w-fit bg-[#D4E2CB] flex gap-2 cursor-pointer group"
+                      className="text-sm px-2 mt-1 py-1.5 rounded-[8px] w-fit bg-[#D4E2CB] flex gap-2 cursor-pointer group"
                     >
                       <Again className="transition-transform duration-500 group-hover:rotate-[260deg]" />
                       Buy it again

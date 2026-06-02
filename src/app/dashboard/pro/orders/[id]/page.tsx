@@ -85,7 +85,7 @@ const Page = () => {
         user?.role === "vendor"
           ? `${window.location.origin}/dashboard/pro/orders/${order_id}`
           : `${window.location.origin}/dashboard/customer/orders/${order_id}`
-      }"  target="_blank" style="text-decoration: underline">Click here</a>\n` +
+      }"  target="_blank" style="text-decoration: underline color: blue">Click here</a>\n` +
       `Message: ${data?.message}`;
 
     const payload = {

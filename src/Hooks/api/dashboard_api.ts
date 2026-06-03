@@ -850,7 +850,7 @@ export const useConnectShippo = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        // window.location.href = data?.data?.url;
+        window.location.href = data?.data?.url;
       }
     },
     onError: (err: any) => {

@@ -1,10 +1,12 @@
 "use client";
+import { useState } from "react";
 import AccountTable from "@/Components/Common/DashboardReusable/AccountTable";
 import { Download } from "@/Components/Svg/SvgContainer";
-import { FaAngleRight } from "react-icons/fa";
 import { CSVLink } from "react-csv";
-import { getAccountingData } from "@/Hooks/api/dashboard_api";
-import { useState } from "react";
+import {
+  getAccountingData,
+  getTradeAndBarterData,
+} from "@/Hooks/api/dashboard_api";
 
 const headers = [
   { label: "Order#", key: "order_number" },
@@ -30,12 +32,21 @@ const page = () => {
     year: filter === "specific_year" ? year : undefined,
   });
 
+  const { data: tradeAndBarterData, isLoading: isTradeAndBarterLoading } =
+    getTradeAndBarterData({
+      filter,
+      date_from: filter === "custom_date_range" ? dateRange.from : undefined,
+      date_to: filter === "custom_date_range" ? dateRange.to : undefined,
+      year: filter === "specific_year" ? year : undefined,
+    });
+
   return (
     <>
       <div className="flex flex-wrap w-full justify-between">
         <h3 className="text-[30px] lg:text-4xl font-semibold text-[#000] flex items-center gap-x-2">
-          Accounting <FaAngleRight className="mt-2" /> Sales
+          Accounting
         </h3>
+
         <div className="flex flex-wrap gap-3 md:gap-6 items-center w-full md:w-fit ">
           <CSVLink
             data={accountingData?.data?.orders || []}
@@ -62,9 +73,19 @@ const page = () => {
         />
       </div>
 
-      {/* <div className="mt-10">
-        <AccountTable title="Barters and Trades" />
-      </div> */}
+      <div className="mt-12">
+        <AccountTable
+          title="Barters and Trades"
+          data={tradeAndBarterData?.data?.trades}
+          isLoading={isTradeAndBarterLoading}
+          filter={filter}
+          setFilter={setFilter}
+          setDateRange={setDateRange}
+          year={year}
+          setYear={setYear}
+          isTradeAndBarter={true}
+        />
+      </div>
     </>
   );
 };

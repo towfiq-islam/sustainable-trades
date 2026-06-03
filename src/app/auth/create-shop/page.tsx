@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useCreateShop } from "@/Hooks/api/auth_api";
 import Container from "@/Components/Common/Container";
@@ -20,6 +20,7 @@ type StepItem = {
 
 const page = () => {
   const searchParams = useSearchParams();
+  const formRef = useRef<HTMLDivElement | null>(null);
   const newStep = Number(searchParams.get("step"));
   const [step, setStep] = useState<number>(1);
   const { mutateAsync: createShopMutation, isPending } = useCreateShop();
@@ -119,8 +120,12 @@ const page = () => {
     }
   }, [newStep]);
 
+  useEffect(() => {
+    formRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [step]);
+
   return (
-    <section className="py-12">
+    <section ref={formRef} className="py-12">
       <Container>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>

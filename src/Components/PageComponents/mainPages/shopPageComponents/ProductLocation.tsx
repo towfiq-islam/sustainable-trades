@@ -13,7 +13,7 @@ import { DollarSvg, SignSvg } from "@/Components/Svg/SvgContainer";
 
 const ProductLocation = () => {
   // Hook
-  const [page, setPage] = useState<string>("");
+  // const [page, setPage] = useState<string>("");
   const { search, latitude, longitude } = useAuth();
 
   // States
@@ -38,7 +38,7 @@ const ProductLocation = () => {
                 Array.from({ length: 7 }).map((_, idx) => (
                   <ShopListSkeleton key={idx} />
                 ))
-              ) : allProducts?.data?.data?.length === 0 || !allProducts ? (
+              ) : allProducts?.data?.length === 0 || !allProducts ? (
                 <div className="text-gray-700 font-semibold text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-[#d4e2cb2f]">
                   <LuFileQuestion className="text-5xl text-gray-600" />
                   No Product Found
@@ -153,9 +153,9 @@ const ProductLocation = () => {
 
           {/* Right - Google Map */}
           <div className="md:h-[550px]">
-            {allProducts?.data && allProducts?.data?.length > 0 ? (
+            {allProducts?.data?.data && allProducts?.data?.data?.length > 0 ? (
               <ProductMap
-                products={allProducts?.data}
+                products={allProducts?.data?.data}
                 hoveredProduct={hoveredProduct}
                 productLoading={productLoading}
               />

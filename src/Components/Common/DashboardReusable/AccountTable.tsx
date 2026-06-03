@@ -10,6 +10,7 @@ type Props = {
   title: string;
   data: orderItem[];
   isLoading: boolean;
+  isTradeAndBarter?: boolean;
   filter: string;
   setFilter: (val: string) => void;
   setDateRange: React.Dispatch<React.SetStateAction<DateRange>>;
@@ -40,6 +41,7 @@ const AccountTable = ({
   setDateRange,
   year,
   setYear,
+  isTradeAndBarter,
 }: Props) => {
   return (
     <div>
@@ -111,7 +113,7 @@ const AccountTable = ({
 
           <tbody>
             {isLoading ? (
-              Array.from({ length: 5 }).map((_, idx) => (
+              Array.from({ length: 4 }).map((_, idx) => (
                 <tr
                   key={idx}
                   className="border-b border-gray-300 animate-pulse"
@@ -156,7 +158,7 @@ const AccountTable = ({
                 >
                   <td className="text-[#3470E5]">
                     <Link
-                      href={`/dashboard/pro/orders/${row?.id}`}
+                      href={`${isTradeAndBarter ? "" : `/dashboard/pro/orders/${row?.id}`}`}
                       className="py-3 px-4 hover:underline cursor-pointer"
                     >
                       #{row?.order_number}

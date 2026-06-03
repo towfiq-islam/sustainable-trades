@@ -7,6 +7,7 @@ import AosProvider from "@/Provider/AosProvider/AosProvider";
 import AuthProvider from "@/Provider/AuthProvider/AuthProvider";
 import QueryProvider from "@/Provider/QueryProvider/QueryProvider";
 
+
 // Fonts
 const lato = Lato({
   variable: "--font-lato",

@@ -1,4 +1,5 @@
 name: Deploy to VPS
+
 on:
   push:
     branches:
@@ -7,11 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
-      - name: Deploy to VPS using password
+    steps:
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -21,39 +20,35 @@ jobs:
             set -e
 
             export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
             nvm use 24 || nvm install 24
 
-            PM2_PATH=/home/sustainabletrades/.nvm/versions/node/v24/bin/pm2
-            PROD_DIR=${{ secrets.VPS_PATH }}
-            STAGING_DIR="${PROD_DIR}_staging"
-            BACKUP_DIR="${PROD_DIR}_backup"
+            APP_DIR="${{ secrets.VPS_PATH }}"
+            TMP_DIR="/tmp/nextjs-build-check"
 
-            # ── 1. Prepare staging clone ──────────────────────────────────────
-            rm -rf "$STAGING_DIR"
-            git clone "$PROD_DIR" "$STAGING_DIR" --local   # fast local clone
-            cd "$STAGING_DIR"
+            rm -rf "$TMP_DIR"
+
+            git clone --depth=1 \
+              --branch main \
+              https://github.com/${{ github.repository }}.git \
+              "$TMP_DIR"
+
+            cd "$TMP_DIR"
+
+            npm ci
+            npm run build
+
+            cd "$APP_DIR"
+
             git fetch origin
             git reset --hard origin/main
 
-            # ── 2. Build in staging (production never touched yet) ────────────
             npm ci
-            NODE_ENV=production npm run build
 
-            # ── 3. Atomic swap ────────────────────────────────────────────────
-            rm -rf "$BACKUP_DIR"
-            cp -a "$PROD_DIR" "$BACKUP_DIR"          # keep a rollback copy
+            pm2 reload sustainable-trades --update-env
+            pm2 save
 
-            rsync -a --delete \
-              --exclude='.git' \
-              "$STAGING_DIR/" "$PROD_DIR/"
+            rm -rf "$TMP_DIR"
 
-            # ── 4. Reload PM2 only after successful swap ──────────────────────
-            cd "$PROD_DIR"
-            $PM2_PATH reload sustainable-trades
-            $PM2_PATH save
-
-            # ── 5. Cleanup ────────────────────────────────────────────────────
-            rm -rf "$STAGING_DIR"
-
-            echo "✅ Deploy complete"
+            echo "Deployment completed successfully."

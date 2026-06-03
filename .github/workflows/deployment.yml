@@ -10,45 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to VPS
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to VPS using password
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            set -e
+           set -e
+           
+           export NVM_DIR="$HOME/.nvm"
+           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+           nvm use 24 || nvm install 24
 
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+           cd ${{ secrets.VPS_PATH }}
+           git fetch origin
+           git reset --hard origin/main
 
-            nvm use 24 || nvm install 24
+           npm install
+           NODE_ENV=production npm run build
 
-            APP_DIR="${{ secrets.VPS_PATH }}"
-            TMP_DIR="/tmp/nextjs-build-check"
-
-            rm -rf "$TMP_DIR"
-
-            git clone --depth=1 \
-              --branch main \
-              https://github.com/${{ github.repository }}.git \
-              "$TMP_DIR"
-
-            cd "$TMP_DIR"
-
-            npm ci
-            npm run build
-
-            cd "$APP_DIR"
-
-            git fetch origin
-            git reset --hard origin/main
-
-            npm ci
-
-            pm2 reload sustainable-trades --update-env
-            pm2 save
-
-            rm -rf "$TMP_DIR"
-
-            echo "Deployment completed successfully."
+           PM2_PATH=/home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2
+                        
+           $PM2_PATH reload sustainable-trades
+           $PM2_PATH save

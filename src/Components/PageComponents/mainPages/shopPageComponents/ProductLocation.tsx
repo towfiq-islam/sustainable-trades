@@ -13,7 +13,7 @@ import { DollarSvg, SignSvg } from "@/Components/Svg/SvgContainer";
 
 const ProductLocation = () => {
   // Hook
-  // const [page, setPage] = useState<string>("");
+  const [page, setPage] = useState<string>("");
   const { search, latitude, longitude } = useAuth();
 
   // States

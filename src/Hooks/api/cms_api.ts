@@ -578,12 +578,12 @@ export const getCategoryDetails = (
 };
 
 // All Shops (Client)
-export const getAllShopsClient = (address: string) => {
+export const getAllShopsClient = (address: string, page: string) => {
   return useClientApi({
     method: "get",
-    key: ["get-all-shop", address],
+    key: ["get-all-shop", address, page],
     endpoint: `/api/shops`,
-    params: { address },
+    params: { address, page },
     queryOptions: {
       retry: false,
     },

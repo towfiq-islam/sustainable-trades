@@ -153,9 +153,9 @@ const ProductLocation = () => {
 
           {/* Right - Google Map */}
           <div className="md:h-[550px]">
-            {allProducts?.data && allProducts?.data?.length > 0 ? (
+            {allProducts?.data?.data && allProducts?.data?.data?.length > 0 ? (
               <ProductMap
-                products={allProducts?.data}
+                products={allProducts?.data?.data}
                 hoveredProduct={hoveredProduct}
                 productLoading={productLoading}
               />

@@ -83,6 +83,7 @@ const page = () => {
           setDateRange={setDateRange}
           year={year}
           setYear={setYear}
+          isTradeAndBarter={true}
         />
       </div>
     </>

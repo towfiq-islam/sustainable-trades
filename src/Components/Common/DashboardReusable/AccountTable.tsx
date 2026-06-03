@@ -174,7 +174,7 @@ const AccountTable = ({
                 </tr>
               ))
             ) : (
-              <p className="text-red-500 pt-5">"No data found"</p>
+              <p className="text-primary-red pt-5">"No data found"</p>
             )}
           </tbody>
         </table>

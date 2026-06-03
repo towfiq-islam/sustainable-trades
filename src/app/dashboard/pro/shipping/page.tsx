@@ -10,7 +10,10 @@ import {
   useWeightRate,
   useWeightRateget,
   useWeightRateDelete,
+  useConnectShippo,
+  useDisconnectShippo,
 } from "@/Hooks/api/dashboard_api";
+import useAuth from "@/Hooks/useAuth";
 
 interface FlatRateForm {
   option_name: string;
@@ -25,6 +28,7 @@ interface WeightForm {
 }
 
 const Page = () => {
+  const { user } = useAuth();
   const [openFlatModal, setOpenFlatModal] = useState(false);
   const [openWightModal, setOpenWightModal] = useState(false);
   const [openConnectModal, setOpenConnectFlatModal] = useState(false);
@@ -36,6 +40,9 @@ const Page = () => {
   const { mutate: FlatRateMutation, isPending } = useFlatRate();
   const { mutate: useWeightMutation, isPending: isWightLoading } =
     useWeightRate();
+  const { mutate: connectShippo, isPending: isConnecting } = useConnectShippo();
+  const { mutate: disconnectShippo, isPending: isDisconnecting } =
+    useDisconnectShippo();
 
   /* ---------- FORMS ---------- */
   const {
@@ -80,7 +87,7 @@ const Page = () => {
   const handleDeleteRange = (id: number) => {
     deleteWeightRange(
       { endpoint: `/api/weight_range/${id}` },
-      { onSuccess: refetch }
+      { onSuccess: refetch },
     );
   };
 
@@ -147,18 +154,34 @@ const Page = () => {
                   </p>
                 </button>
 
-                <button
+                <div
                   onClick={() => setOpenConnectFlatModal(true)}
-                  className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer"
+                  className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer flex gap-3 items-center justify-between"
                 >
-                  <h3 className="text-[#274F45] font-bold text-[16px]">
-                    Connect ShipStation
-                  </h3>
-                  <p className="text-[16px] text-[#3D3D3D] font-medium pt-1">
-                    Define a charge for every order and a flat fee for each
-                    item.
-                  </p>
-                </button>
+                  <div>
+                    <h3 className="text-[#274F45] font-bold text-[16px]">
+                      {user?.shop_info?.shippo_connected
+                        ? "ShipStation Connected"
+                        : "Connect to ShipStation"}
+                    </h3>
+                    <p className="text-[16px] text-[#3D3D3D] font-medium pt-1">
+                      Define a charge for every order and a flat fee for each
+                      item.
+                    </p>
+                  </div>
+
+                  <button>
+                    {user?.shop_info?.shippo_connected ? (
+                      <p className="px-3 py-1 rounded-full text-sm bg-primary-green text-white">
+                        Connected
+                      </p>
+                    ) : (
+                      <p className="px-3 py-1 rounded-full text-sm bg-accent-red text-gray-50">
+                        Not Connected
+                      </p>
+                    )}
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -364,7 +387,9 @@ const Page = () => {
         onClose={() => setOpenConnectFlatModal(false)}
       >
         <h3 className="text-[#3D3D3D] text-[18px] md:text-[24px] font-bold text-center">
-          CONNECT TO SHIPSTATION
+          {user?.shop_info?.shippo_connected
+            ? "DISCONNECT FROM SHIPSTATION"
+            : "CONNECT TO SHIPSTATION"}
         </h3>
 
         <div className="px-6 py-6 space-y-5">
@@ -392,9 +417,31 @@ const Page = () => {
         </div>
 
         <div className="flex justify-end px-6 py-4 border-t">
-          <button className="bg-[#0B3C32] text-white px-6 py-2 rounded-md font-medium">
-            Connect to ShipStation
-          </button>
+          {user?.shop_info?.shippo_connected ? (
+            <button
+              disabled={isDisconnecting}
+              onClick={() =>
+                disconnectShippo(undefined, {
+                  onSuccess: (res: any) => {
+                    if (res?.success) {
+                      setOpenConnectFlatModal(false);
+                    }
+                  },
+                })
+              }
+              className="bg-primary-red text-white px-6 py-2 rounded-md font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
+            >
+              Disconnect from ShipStation
+            </button>
+          ) : (
+            <button
+              disabled={isConnecting}
+              onClick={() => connectShippo()}
+              className="bg-[#0B3C32] text-white px-6 py-2 rounded-md font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
+            >
+              Connect to ShipStation
+            </button>
+          )}
         </div>
       </Modal>
     </>

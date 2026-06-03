@@ -792,25 +792,6 @@ export const useDeleteAllNotifications = () => {
   });
 };
 
-// Local Pickup
-// export const useLocalPickup = (id: number | null) => {
-//   const queryClient = useQueryClient();
-//   return useClientApi({
-//     method: "post",
-//     key: ["local-pickup", id],
-//     isPrivate: true,
-//     endpoint: `/api/arrange-local-pickup/${id}`,
-//     onSuccess: (data: any) => {
-//       if (data?.success) {
-//         queryClient.invalidateQueries("get-product-cart" as any);
-//       }
-//     },
-//     onError: (err: any) => {
-//       toast.error(err?.response?.data?.message);
-//     },
-//   });
-// };
-
 // Get Accounting
 export const getAccountingData = (params: any) => {
   return useClientApi({
@@ -851,6 +832,46 @@ export const useGuestOrder = (id: number) => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Connect Shippo
+export const useConnectShippo = () => {
+  return useClientApi({
+    method: "post",
+    key: ["connect-shippo"],
+    isPrivate: true,
+    endpoint: "/api/shippo/connect",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        // window.location.href = data?.data?.url;
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Disconnect Shippo
+export const useDisconnectShippo = () => {
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["disconnect-shippo"],
+    isPrivate: true,
+    endpoint: "/api/shippo/disconnect",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        queryClient.invalidateQueries("user" as any);
       }
     },
     onError: (err: any) => {

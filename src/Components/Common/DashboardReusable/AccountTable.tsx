@@ -111,7 +111,7 @@ const AccountTable = ({
 
           <tbody>
             {isLoading ? (
-              Array.from({ length: 5 }).map((_, idx) => (
+              Array.from({ length: 4 }).map((_, idx) => (
                 <tr
                   key={idx}
                   className="border-b border-gray-300 animate-pulse"

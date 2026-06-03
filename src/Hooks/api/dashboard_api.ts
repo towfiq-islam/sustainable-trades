@@ -803,6 +803,17 @@ export const getAccountingData = (params: any) => {
   });
 };
 
+// Get trade and barters
+export const getTradeAndBarterData = (params: any) => {
+  return useClientApi({
+    method: "get",
+    key: ["get-trade-and-barter", params],
+    isPrivate: true,
+    endpoint: "/api/barters-and-trades/summary",
+    params,
+  });
+};
+
 // Cancel Order
 export const useCancelOrder = () => {
   const queryClient = useQueryClient();

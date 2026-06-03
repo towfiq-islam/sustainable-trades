@@ -58,7 +58,7 @@ const LocalMagicMarker = ({ address }: Props) => {
                   Array.from({ length: 7 }).map((_, idx) => (
                     <ShopListSkeleton key={idx} />
                   ))
-                ) : shopData?.data?.data?.length === 0 || !shopData ? (
+                ) : shopData?.data?.length === 0 || !shopData ? (
                   <div className="text-gray-700 font-semibold text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-[#d4e2cb2f]">
                     <LuFileQuestion className="text-5xl text-gray-600" />
                     No Shop Found

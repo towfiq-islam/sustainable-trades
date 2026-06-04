@@ -118,10 +118,10 @@ const page = () => {
                             order?.payment_status === "pending"
                               ? "border-accent-red text-accent-red"
                               : order?.payment_status === "failed"
-                              ? "border-primary-red text-primary-red"
-                              : order?.payment_status === "completed"
-                              ? "border-primary-green text-primary-green"
-                              : ""
+                                ? "border-primary-red text-primary-red"
+                                : order?.payment_status === "completed"
+                                  ? "border-primary-green text-primary-green"
+                                  : ""
                           }`}
                         >
                           {order?.payment_status}
@@ -130,7 +130,7 @@ const page = () => {
                     </tr>
                   ))
                 ) : (
-                  <p className="text-red-500 text-lg pt-5 font-semibold">
+                  <p className="text-primary-red text-lg pt-5 font-semibold">
                     No payment history found!
                   </p>
                 )}

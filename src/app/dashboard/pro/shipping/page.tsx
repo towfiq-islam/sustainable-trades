@@ -12,6 +12,9 @@ import {
   useWeightRateDelete,
   useConnectShippo,
   useDisconnectShippo,
+  useSyncShippo,
+  useChangeLabelType,
+  usePickCarrier,
 } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
@@ -34,6 +37,8 @@ const Page = () => {
   const [openWightModal, setOpenWightModal] = useState(false);
   const [openConnectModal, setOpenConnectFlatModal] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [labelType, setLabelType] = useState("Cheapest");
+  console.log(user?.shop_info?.shippo_rate_preferences);
 
   /* ---------- API ---------- */
   const { data: weightRanges, refetch } = useWeightRateget();
@@ -41,9 +46,15 @@ const Page = () => {
   const { mutate: FlatRateMutation, isPending } = useFlatRate();
   const { mutate: useWeightMutation, isPending: isWightLoading } =
     useWeightRate();
+  const { mutate: syncShippo, isPending: isSyncing } = useSyncShippo();
   const { mutate: connectShippo, isPending: isConnecting } = useConnectShippo();
   const { mutate: disconnectShippo, isPending: isDisconnecting } =
     useDisconnectShippo();
+
+  const { mutate: pickupCarrier, isPending: isPickingCarrier } =
+    usePickCarrier();
+  const { mutate: changeLabelType, isPending: isChangingLabelType } =
+    useChangeLabelType();
 
   /* ---------- FORMS ---------- */
   const {
@@ -90,6 +101,22 @@ const Page = () => {
       { endpoint: `/api/weight_range/${id}` },
       { onSuccess: refetch },
     );
+  };
+
+  const handleCarrierToggle = (carrierAccount: any) => {
+    if (!carrierAccount?.shippo_object_id) return;
+
+    pickupCarrier({
+      endpoint: `/api/shippo/carrier/${carrierAccount.id}`,
+      active: !carrierAccount.active,
+    });
+  };
+
+  const handleLabelTypeChange = (rate: any) => {
+    changeLabelType({
+      endpoint: `/api/shippo/rate-preference/${rate.id}`,
+      active: !rate.active,
+    });
   };
 
   return (
@@ -436,25 +463,130 @@ const Page = () => {
             </Link>
             .
           </p>
+
+          {!user?.shop_info?.shippo_connected && (
+            <p className="text-primary-green">
+              <span className="font-semibold"> Note:</span> Connecting to Shippo
+              will allow you to pick from multiple carriers and label types.
+            </p>
+          )}
+
+          <div className="space-y-5 border-t pt-5">
+            {/* Carrier */}
+            <div>
+              <label className="block text-sm font-semibold text-[#13141D] mb-3">
+                Pick your carrier
+              </label>
+
+              <div className="space-y-3">
+                {user?.shop_info?.shippo_carrier_accounts?.map(
+                  (carrierAccount: any) => {
+                    const isAvailable = !!carrierAccount.shippo_object_id;
+
+                    return (
+                      <div
+                        key={carrierAccount.id}
+                        className={`flex items-center justify-between border rounded-lg p-3 ${
+                          !isAvailable ? "opacity-50" : ""
+                        }`}
+                      >
+                        <div>
+                          <p className="font-medium">
+                            {carrierAccount.carrier_name}
+                          </p>
+
+                          {!isAvailable && (
+                            <p className="text-xs text-red-500">
+                              Not connected in Shippo
+                            </p>
+                          )}
+                        </div>
+
+                        <button
+                          type="button"
+                          disabled={!isAvailable || isPickingCarrier}
+                          onClick={() => handleCarrierToggle(carrierAccount)}
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                            carrierAccount.active
+                              ? "bg-primary-green"
+                              : "bg-gray-300"
+                          } ${
+                            !isAvailable
+                              ? "cursor-not-allowed"
+                              : "cursor-pointer"
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                              carrierAccount.active
+                                ? "translate-x-6"
+                                : "translate-x-1"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    );
+                  },
+                )}
+              </div>
+            </div>
+
+            {/* Label Type */}
+            <div>
+              <label className="block text-sm font-semibold text-[#13141D] mb-3">
+                Choose label type
+              </label>
+
+              <div className="space-y-2">
+                {user?.shop_info?.shippo_rate_preferences?.map((rate: any) => (
+                  <label
+                    key={rate.id}
+                    className="flex items-center gap-3 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      disabled={isChangingLabelType}
+                      name="labelType"
+                      checked={rate.active}
+                      onChange={() => handleLabelTypeChange(rate)}
+                      className="h-4 w-4 accent-primary-green cursor-pointer"
+                    />
+
+                    <span className="capitalize">{rate.rate_type}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex justify-end px-6 py-4">
           {user?.shop_info?.shippo_connected ? (
-            <button
-              disabled={isDisconnecting}
-              onClick={() =>
-                disconnectShippo(undefined, {
-                  onSuccess: (res: any) => {
-                    if (res?.success) {
-                      setOpenConnectFlatModal(false);
-                    }
-                  },
-                })
-              }
-              className="bg-primary-red text-white px-6 py-2 rounded-md font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
-            >
-              Disconnect from Shippo
-            </button>
+            <div className="flex gap-3 items-center">
+              <button
+                disabled={isDisconnecting}
+                onClick={() =>
+                  disconnectShippo(undefined, {
+                    onSuccess: (res: any) => {
+                      if (res?.success) {
+                        setOpenConnectFlatModal(false);
+                      }
+                    },
+                  })
+                }
+                className="bg-primary-red text-white px-6 py-2 rounded-md font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
+              >
+                Disconnect from Shippo
+              </button>
+
+              <button
+                disabled={isSyncing}
+                onClick={() => syncShippo()}
+                className="bg-[#0B3C32] text-white px-6 py-2 rounded-md font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
+              >
+                Sync now
+              </button>
+            </div>
           ) : (
             <button
               disabled={isConnecting}

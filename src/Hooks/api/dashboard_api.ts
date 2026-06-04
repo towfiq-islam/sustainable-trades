@@ -890,3 +890,31 @@ export const useDisconnectShippo = () => {
     },
   });
 };
+
+// Add Sales Tax
+export const useAddSalesTax = () => {
+  return useClientApi({
+    method: "post",
+    key: ["add-sales-tax"],
+    isPrivate: true,
+    endpoint: "/api/sales-tax",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get Sales Tax
+export const getSalesTaxData = () => {
+  return useClientApi({
+    method: "get",
+    key: ["get-sales-tax"],
+    isPrivate: true,
+    endpoint: "/api/sales-tax",
+  });
+};

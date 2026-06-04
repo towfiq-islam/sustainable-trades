@@ -7,6 +7,13 @@ import {
   useTaxes,
 } from "@/Hooks/api/dashboard_api";
 
+type stateItem = {
+  id: number;
+  name: string;
+  code: string;
+  enabled: boolean;
+};
+
 type TaxForm = {
   country: string;
   state: string;
@@ -19,11 +26,31 @@ export default function TaxRatePage() {
   const { mutate, isPending } = useTaxes();
   const { mutate: addSalesTaxMutate, isPending: isAddingSalesTax } =
     useAddSalesTax();
-  const { data: taxData, isLoading } = getSalesTaxData();
+  const { data: taxData } = getSalesTaxData();
   const [chargeOnServices, setChargeOnServices] = useState(true);
   const [chargeOnShipping, setChargeOnShipping] = useState(false);
   const [states, setStates] = useState(taxData?.data?.states || []);
-  console.log(taxData?.data?.states);
+
+  const handleStateToggle = (id: number) => {
+    setStates((prev: any[]) =>
+      prev.map(state =>
+        state.id === id ? { ...state, enabled: !state.enabled } : state,
+      ),
+    );
+  };
+
+  const handleSaveAutomaticTax = () => {
+    const payload = {
+      tax_provider: "ziptax",
+      ziptax_api_key: apiKey,
+      states: states.map((state: stateItem) => ({
+        id: state.id,
+        enabled: state.enabled,
+      })),
+    };
+
+    addSalesTaxMutate(payload);
+  };
 
   const {
     register,
@@ -50,27 +77,6 @@ export default function TaxRatePage() {
         }
       },
     });
-  };
-
-  const handleStateToggle = (id: number) => {
-    setStates(prev =>
-      prev.map(state =>
-        state.id === id ? { ...state, enabled: !state.enabled } : state,
-      ),
-    );
-  };
-
-  const handleSaveAutomaticTax = () => {
-    const payload = {
-      tax_provider: "ziptax",
-      ziptax_api_key: apiKey,
-      states: states.map(state => ({
-        id: state.id,
-        enabled: state.enabled,
-      })),
-    };
-
-    addSalesTaxMutate(payload);
   };
 
   useEffect(() => {
@@ -268,30 +274,29 @@ export default function TaxRatePage() {
           <div>
             <h3 className="font-semibold mb-3">Enable States</h3>
 
-            <div className="grid md:grid-cols-4 gap-3">
-              {states.map(state => (
+            <div className="max-h-[400px] overflow-y-auto grid grid-cols-2 pe-4 gap-y-5 gap-x-16">
+              {states.map((state: stateItem) => (
                 <div
                   key={state.id}
-                  onClick={() => handleStateToggle(state.id)}
-                  className={`
-        border rounded-xl p-4 cursor-pointer transition
-        ${
-          state.enabled ? "border-primary-green bg-green-50" : "border-gray-200"
-        }
-      `}
+                  className="flex items-center justify-between"
                 >
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="font-medium">{state.name}</p>
-                      <p className="text-xs text-gray-500">{state.code}</p>
-                    </div>
+                  <span>
+                    {state.name} ({state.code})
+                  </span>
 
-                    {state.enabled && (
-                      <div className="w-5 h-5 rounded-full bg-primary-green text-white flex items-center justify-center text-xs">
-                        ✓
-                      </div>
-                    )}
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleStateToggle(state.id)}
+                    className={`relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full transition-colors ${
+                      state.enabled ? "bg-primary-green" : "bg-gray-300"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        state.enabled ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
                 </div>
               ))}
             </div>
@@ -299,9 +304,9 @@ export default function TaxRatePage() {
 
           <button
             type="button"
-            disabled={isAddingSalesTax}
+            disabled={isAddingSalesTax || !apiKey}
             onClick={handleSaveAutomaticTax}
-            className="w-full bg-primary-green text-white py-3 rounded-lg"
+            className="w-full bg-primary-green cursor-pointer font-semibold text-white py-3 rounded-lg disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isAddingSalesTax ? "Saving..." : "Save Automatic Tax"}
           </button>

@@ -15,6 +15,7 @@ const headers = [
   { label: "Expenses", key: "expenses" },
   { label: "Shipping", key: "shipping" },
   { label: "Sales Tax", key: "sales_tax" },
+  { label: "Tax State", key: "tax_state" },
   { label: "Discount", key: "discount" },
   { label: "Payment Method", key: "payment_method" },
   { label: "Total", key: "total" },

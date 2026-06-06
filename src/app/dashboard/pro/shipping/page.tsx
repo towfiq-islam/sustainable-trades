@@ -15,6 +15,8 @@ import {
   useSyncShippo,
   useChangeLabelType,
   usePickCarrier,
+  useSetShipping,
+  useGetFlatRate,
 } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
@@ -40,11 +42,12 @@ const Page = () => {
 
   /* ---------- API ---------- */
   const { data: weightRanges, refetch } = useWeightRateget();
+  const { data: flatRateRanges } = useGetFlatRate();
   const { mutate: deleteWeightRange } = useWeightRateDelete();
   const { mutate: FlatRateMutation, isPending } = useFlatRate();
   const { mutate: syncShippo, isPending: isSyncing } = useSyncShippo();
+  const { mutate: setShippo, isPending: isSetting } = useSetShipping();
   const { mutate: connectShippo, isPending: isConnecting } = useConnectShippo();
-
   const { mutate: useWeightMutation, isPending: isWightLoading } =
     useWeightRate();
   const { mutate: disconnectShippo, isPending: isDisconnecting } =
@@ -53,6 +56,8 @@ const Page = () => {
     usePickCarrier();
   const { mutate: changeLabelType, isPending: isChangingLabelType } =
     useChangeLabelType();
+
+  console.log(user);
 
   /* ---------- FORMS ---------- */
   const {
@@ -117,6 +122,24 @@ const Page = () => {
     });
   };
 
+  const handleShippingMethodChange = (method: string) => {
+    if (method === "shippo" && !user?.shop_info?.shippo_connected) {
+      toast.error("Please connect Shippo first");
+      return;
+    }
+
+    setShippo(
+      { shipping_setting: method },
+      {
+        onSuccess: (res: any) => {
+          if (res?.success) {
+            toast.success(res?.message);
+          }
+        },
+      },
+    );
+  };
+
   return (
     <>
       <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000] border-b border-[#BFBEBE] pb-2">
@@ -144,71 +167,167 @@ const Page = () => {
           </p>
 
           <div className="relative w-full">
-            <button
+            {/* <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="bg-primary-green text-white px-4 py-2 rounded-lg w-fit font-semibold flex gap-x-5 items-center text-[14px] md:text-[16px] cursor-pointer"
+              className="bg-primary-green text-white px-4 py-2.5 rounded-lg w-fit font-semibold flex gap-3 items-center text-[14px] md:text-[16px] cursor-pointer"
             >
               <FaAngleDown />
               Add Shipping Option
-            </button>
+            </button> */}
+            {/* {(isDropdownOpen || user?.shop_info?.shipping_setting) && ""} */}
 
-            {(isDropdownOpen || user?.shop_info?.shippo_connected) && (
-              <div className="absolute z-10 mt-5 w-full flex flex-col gap-y-4">
-                <button
-                  onClick={() => setOpenFlatModal(true)}
-                  className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer"
-                >
-                  <h3 className="text-primary-green font-bold text-[14px] md:text-[16px]">
-                    Flat Rate
-                  </h3>
-                  <p className="text-[13px] md:text-[16px] text-[#3D3D3D] font-medium pt-1">
-                    Define a charge for every order and a flat fee for each
-                    item.
-                  </p>
-                </button>
+            <div className="absolute z-10 mt-5 w-full flex flex-col gap-y-4 pb-10">
+              <div
+                onClick={() => handleShippingMethodChange("flat_rate")}
+                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all ${
+                  user?.shop_info?.shipping_setting === "flat_rate"
+                    ? "border-primary-green bg-[#F2EFE8]"
+                    : "border-gray-300 bg-white hover:border-primary-green"
+                }
+`}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      checked={
+                        user?.shop_info?.shipping_setting === "flat_rate"
+                      }
+                      readOnly
+                      className="h-4 w-4 accent-primary-green cursor-pointer"
+                    />
 
-                <button
-                  onClick={() => setOpenWightModal(true)}
-                  className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer"
-                >
-                  <h3 className="text-primary-green font-bold text-[14px] md:text-[16px]">
-                    Depending on Weight
-                  </h3>
-                  <p className="text-[13px] md:text-[16px] text-[#3D3D3D] font-medium pt-1">
-                    Let the cost depend on the total weight of the purchase
-                  </p>
-                </button>
-
-                <div
-                  onClick={() => setOpenConnectFlatModal(true)}
-                  className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer flex gap-3 items-center justify-between"
-                >
-                  <div>
-                    <h3 className="text-primary-green font-bold text-[16px]">
-                      {user?.shop_info?.shippo_connected
-                        ? "Shippo Connected"
-                        : "Connect to Shippo"}
-                    </h3>
-                    <p className="text-[16px] text-[#3D3D3D] font-medium pt-1">
-                      Automatically sync your orders with a shipping solution to
-                      streamline your fulfillment workflow.
-                    </p>
+                    <h3 className="font-bold text-primary-green">Flat Rate</h3>
                   </div>
 
-                  <button className="shrink-0">
-                    {user?.shop_info?.shippo_connected ? (
-                      <p className="px-3 py-1 rounded-full text-sm bg-primary-green text-white">
-                        Connected
-                      </p>
-                    ) : (
-                      <p className="px-3 py-1 rounded-full text-sm bg-accent-red text-gray-50">
-                        Not Connected
-                      </p>
-                    )}
-                  </button>
+                  {user?.shop_info?.shipping_setting === "flat_rate" && (
+                    <span className="bg-primary-green text-white px-3 py-1 rounded-full text-sm">
+                      Active
+                    </span>
+                  )}
                 </div>
+
+                <p className="text-[#3D3D3D] mt-2">
+                  Define a charge for every order and a flat fee for each item.
+                </p>
+
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    setOpenFlatModal(true);
+                  }}
+                  className="mt-3 text-accent-red duration-200 hover:bg-accent-red hover:text-gray-100 transition-all font-semibold cursor-pointer border px-3 py-1 rounded-full text-sm"
+                >
+                  Configure
+                </button>
               </div>
-            )}
+
+              <div
+                onClick={() => handleShippingMethodChange("weight_based")}
+                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all
+    ${
+      user?.shop_info?.shipping_setting === "weight_based"
+        ? "border-primary-green bg-[#F2EFE8]"
+        : "border-gray-300 bg-white hover:border-primary-green"
+    }
+  `}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      checked={
+                        user?.shop_info?.shipping_setting === "weight_based"
+                      }
+                      readOnly
+                      className="h-4 w-4 accent-primary-green cursor-pointer"
+                    />
+
+                    <h3 className="font-bold text-primary-green">
+                      Depending on Weight
+                    </h3>
+                  </div>
+
+                  {user?.shop_info?.shipping_setting === "weight_based" && (
+                    <span className="bg-primary-green text-white px-3 py-1 rounded-full text-sm">
+                      Active
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-[#3D3D3D] mt-2">
+                  Let the cost depend on the total weight of the purchase.
+                </p>
+
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    setOpenWightModal(true);
+                  }}
+                  className="mt-3 text-accent-red duration-200 hover:bg-accent-red hover:text-gray-100 transition-all font-semibold cursor-pointer border px-3 py-1 rounded-full text-sm"
+                >
+                  Configure
+                </button>
+              </div>
+
+              <div
+                onClick={() => handleShippingMethodChange("shippo")}
+                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all
+    ${
+      user?.shop_info?.shipping_setting === "shippo"
+        ? "border-primary-green bg-[#F2EFE8]"
+        : "border-gray-300 bg-white hover:border-primary-green"
+    }
+  `}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      checked={user?.shop_info?.shipping_setting === "shippo"}
+                      readOnly
+                      disabled={!user?.shop_info?.shippo_connected}
+                      className="h-4 w-4 accent-primary-green cursor-pointer"
+                    />
+
+                    <h3 className="font-bold text-primary-green">Shippo</h3>
+                  </div>
+
+                  <div className="flex gap-2 items-center">
+                    {user?.shop_info?.shipping_setting === "shippo" && (
+                      <span className="bg-primary-green text-white px-3 py-1 rounded-full text-sm">
+                        Active
+                      </span>
+                    )}
+
+                    {user?.shop_info?.shippo_connected ? (
+                      <span className="bg-primary-green text-white px-3 py-1 rounded-full text-sm">
+                        Connected
+                      </span>
+                    ) : (
+                      <span className="bg-primary-red text-white px-3 py-1 rounded-full text-sm">
+                        Not Connected
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <p className="text-[#3D3D3D] mt-2">
+                  Automatically sync your orders with Shippo and generate
+                  shipping labels.
+                </p>
+
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    setOpenConnectFlatModal(true);
+                  }}
+                  className="mt-3 text-accent-red duration-200 hover:bg-accent-red hover:text-gray-100 transition-all font-semibold cursor-pointer border px-3 py-1 rounded-full text-sm"
+                >
+                  Configure
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -231,6 +350,11 @@ const Page = () => {
             <p className="form-label font-bold">Option Name *</p>
             <input
               className="form-input"
+              defaultValue={
+                user?.shop_info?.shipping_setting === "flat_rate"
+                  ? flatRateRanges?.data?.option_name
+                  : ""
+              }
               placeholder="“FedEx Next Day”, “USPS Express Mail”"
               {...registerFlat("option_name", { required: true })}
             />
@@ -248,6 +372,11 @@ const Page = () => {
               <input
                 type="number"
                 className="form-input"
+                defaultValue={
+                  user?.shop_info?.shipping_setting === "flat_rate"
+                    ? flatRateRanges?.data?.per_order_fee
+                    : ""
+                }
                 placeholder="$ XXX"
                 {...registerFlat("per_order_fee", { required: true })}
               />
@@ -264,6 +393,11 @@ const Page = () => {
               <input
                 type="number"
                 className="form-input"
+                defaultValue={
+                  user?.shop_info?.shipping_setting === "flat_rate"
+                    ? flatRateRanges?.data?.per_item_fee
+                    : ""
+                }
                 placeholder="$ XXX"
                 {...registerFlat("per_item_fee", { required: true })}
               />
@@ -279,10 +413,10 @@ const Page = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || isSetting}
               className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-[190px] cursor-pointer disabled:opacity-85 disabled:cursor-not-allowed"
             >
-              {isPending ? "Saving..." : "Save"}
+              {isPending || isSetting ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
@@ -351,10 +485,10 @@ const Page = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              disabled={isWightLoading}
-              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-[190px] cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
+              disabled={isWightLoading || isSetting}
+              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-47.5 cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
             >
-              {isWightLoading ? "Saving..." : "Save"}
+              {isWightLoading || isSetting ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
@@ -469,7 +603,7 @@ const Page = () => {
           )}
 
           {user?.shop_info?.shippo_connected && (
-            <div className="space-y-5 border-t pt-5">
+            <div className="space-y-5 border-t pt-5 border-gray-700">
               {/* Carrier */}
               <div>
                 <label className="block text-sm font-semibold text-secondary-black mb-3">
@@ -590,7 +724,7 @@ const Page = () => {
             </div>
           ) : (
             <button
-              disabled={isConnecting}
+              disabled={isConnecting || isSetting}
               onClick={() => connectShippo()}
               className="bg-[#0B3C32] text-white px-6 py-2 rounded-md font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
             >

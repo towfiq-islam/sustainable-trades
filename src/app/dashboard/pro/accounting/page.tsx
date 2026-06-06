@@ -1,10 +1,12 @@
 "use client";
+import { useState } from "react";
 import AccountTable from "@/Components/Common/DashboardReusable/AccountTable";
 import { Download } from "@/Components/Svg/SvgContainer";
-import { FaAngleRight } from "react-icons/fa";
 import { CSVLink } from "react-csv";
-import { getAccountingData } from "@/Hooks/api/dashboard_api";
-import { useState } from "react";
+import {
+  getAccountingData,
+  getTradeAndBarterData,
+} from "@/Hooks/api/dashboard_api";
 
 const headers = [
   { label: "Order#", key: "order_number" },
@@ -13,6 +15,7 @@ const headers = [
   { label: "Expenses", key: "expenses" },
   { label: "Shipping", key: "shipping" },
   { label: "Sales Tax", key: "sales_tax" },
+  { label: "Tax State", key: "tax_state" },
   { label: "Discount", key: "discount" },
   { label: "Payment Method", key: "payment_method" },
   { label: "Total", key: "total" },
@@ -30,18 +33,27 @@ const page = () => {
     year: filter === "specific_year" ? year : undefined,
   });
 
+  const { data: tradeAndBarterData, isLoading: isTradeAndBarterLoading } =
+    getTradeAndBarterData({
+      filter,
+      date_from: filter === "custom_date_range" ? dateRange.from : undefined,
+      date_to: filter === "custom_date_range" ? dateRange.to : undefined,
+      year: filter === "specific_year" ? year : undefined,
+    });
+
   return (
     <>
       <div className="flex flex-wrap w-full justify-between">
-        <h3 className="text-[30px] lg:text-4xl font-semibold text-[#000] flex items-center gap-x-2">
-          Accounting <FaAngleRight className="mt-2" /> Sales
+        <h3 className="text-[30px] lg:text-4xl font-semibold text-black flex items-center gap-x-2">
+          Accounting
         </h3>
+
         <div className="flex flex-wrap gap-3 md:gap-6 items-center w-full md:w-fit ">
           <CSVLink
             data={accountingData?.data?.orders || []}
             headers={headers}
             filename={"sales-report.csv"}
-            className="w-full md:w-fit px-6 rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer duration-300 ease-in-out flex gap-x-2 items-center h-[50px] justify-center hover:translate-y-1"
+            className="w-full md:w-fit px-6 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer duration-300 ease-in-out flex gap-x-2 items-center h-[50px] justify-center hover:translate-y-1"
           >
             <Download />
             Download File
@@ -62,9 +74,19 @@ const page = () => {
         />
       </div>
 
-      {/* <div className="mt-10">
-        <AccountTable title="Barters and Trades" />
-      </div> */}
+      <div className="mt-12">
+        <AccountTable
+          title="Barters and Trades"
+          data={tradeAndBarterData?.data?.trades}
+          isLoading={isTradeAndBarterLoading}
+          filter={filter}
+          setFilter={setFilter}
+          setDateRange={setDateRange}
+          year={year}
+          setYear={setYear}
+          isTradeAndBarter={true}
+        />
+      </div>
     </>
   );
 };

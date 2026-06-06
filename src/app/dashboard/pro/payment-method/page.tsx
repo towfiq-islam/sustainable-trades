@@ -102,7 +102,7 @@ const page = () => {
             <button
               disabled={isConnecting}
               onClick={handleConnect}
-              className="mt-5 md:mt-10 p-2 md:p-3 border border-[#274F45] rounded-md text-[12px] md:text-[14px] font-semibold text-[#274F45] enabled:hover:text-white enabled:hover:bg-[#274F45] duration-500 ease-in-out uppercase disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer min-w-[130px]"
+              className="mt-5 md:mt-10 p-2 md:p-3 border border-primary-green rounded-md text-[12px] md:text-[14px] font-semibold text-primary-green enabled:hover:text-white enabled:hover:bg-primary-green duration-500 ease-in-out uppercase disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer min-w-[130px]"
             >
               {isConnecting ? (
                 <p className="flex gap-2 items-center justify-center">
@@ -138,7 +138,7 @@ const page = () => {
             <button
               disabled={isReconnecting}
               onClick={handleReconnect}
-              className="mt-5 md:mt-10 p-2 md:p-3 bg-[#274F45] border border-[#274F45] rounded-md text-[12px] md:text-[14px] font-semibold text-white enabled:hover:opacity-90 duration-500 ease-in-out uppercase disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer min-w-[130px]"
+              className="mt-5 md:mt-10 p-2 md:p-3 bg-primary-green border border-primary-green rounded-md text-[12px] md:text-[14px] font-semibold text-white enabled:hover:opacity-90 duration-500 ease-in-out uppercase disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer min-w-[130px]"
             >
               {isReconnecting ? (
                 <p className="flex gap-2 items-center justify-center">

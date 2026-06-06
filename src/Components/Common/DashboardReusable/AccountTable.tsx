@@ -10,6 +10,7 @@ type Props = {
   title: string;
   data: orderItem[];
   isLoading: boolean;
+  isTradeAndBarter?: boolean;
   filter: string;
   setFilter: (val: string) => void;
   setDateRange: React.Dispatch<React.SetStateAction<DateRange>>;
@@ -21,6 +22,7 @@ type orderItem = {
   id: number;
   order_number: string;
   date: string;
+  tax_state: string;
   profit: number;
   revenue: number;
   sales_tax: number;
@@ -40,6 +42,7 @@ const AccountTable = ({
   setDateRange,
   year,
   setYear,
+  isTradeAndBarter,
 }: Props) => {
   return (
     <div>
@@ -95,13 +98,14 @@ const AccountTable = ({
       <div className="overflow-x-auto mt-5">
         <table className="w-full min-w-[800px] border-collapse">
           <thead>
-            <tr className="bg-[#274F45] text-[#fff] text-[14px] sm:text-[16px] font-semibold">
+            <tr className="bg-primary-green text-[#fff] text-[14px] sm:text-[16px] font-semibold">
               <th className="py-2 px-4 text-left"># Order</th>
               <th className="py-2 px-4 text-left">Revenue</th>
               <th className="py-2 px-4 text-left">Profit</th>
               <th className="py-2 px-4 text-left">Expenses</th>
               <th className="py-2 px-4 text-left">Shipping</th>
               <th className="py-2 px-4 text-left">Sales Tax</th>
+              <th className="py-2 px-4 text-left">Tax State</th>
               <th className="py-2 px-4 text-left">Discount</th>
               <th className="py-2 px-4 text-left">Payment Method</th>
               <th className="py-2 px-4 text-left">Total</th>
@@ -111,7 +115,7 @@ const AccountTable = ({
 
           <tbody>
             {isLoading ? (
-              Array.from({ length: 5 }).map((_, idx) => (
+              Array.from({ length: 4 }).map((_, idx) => (
                 <tr
                   key={idx}
                   className="border-b border-gray-300 animate-pulse"
@@ -152,11 +156,11 @@ const AccountTable = ({
               data?.map((row, idx) => (
                 <tr
                   key={idx}
-                  className="border-b border-gray-300 text-[#13141D] text-[14px] font-medium"
+                  className="border-b border-gray-300 text-secondary-black text-[14px] font-medium"
                 >
                   <td className="text-[#3470E5]">
                     <Link
-                      href={`/dashboard/pro/orders/${row?.id}`}
+                      href={`${isTradeAndBarter ? "" : `/dashboard/pro/orders/${row?.id}`}`}
                       className="py-3 px-4 hover:underline cursor-pointer"
                     >
                       #{row?.order_number}
@@ -167,6 +171,7 @@ const AccountTable = ({
                   <td className="py-3 px-4">{row.expenses.toFixed(2)}</td>
                   <td className="py-3 px-4">{row?.shipping.toFixed(2)}</td>
                   <td className="py-3 px-4">{row.sales_tax.toFixed(2)}</td>
+                  <td className="py-3 px-4">{row.tax_state}</td>
                   <td className="py-3 px-4">{row.discount}</td>
                   <td className="py-3 px-4">{row.payment_method}</td>
                   <td className="py-3 px-4">{row.total}</td>
@@ -174,7 +179,7 @@ const AccountTable = ({
                 </tr>
               ))
             ) : (
-              <p className="text-red-500 pt-5">"No data found"</p>
+              <p className="text-primary-red pt-5">"No data found"</p>
             )}
           </tbody>
         </table>

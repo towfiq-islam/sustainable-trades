@@ -11,35 +11,43 @@ const PaymentOptions = () => {
 
   return (
     <section className="mb-20">
-      <div className="flex items-center justify-between">
-        <h3 className="section_sub_title">
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <h3 className="section_sub_title !mb-0">
           {cartData?.data?.total_cart_items
             ? `${cartData?.data?.total_cart_items} Items In Your Cart`
             : "Cart is empty"}
         </h3>
 
-        {cartData?.data?.length > 0 && (
-          <button
-            disabled={isPending}
-            onClick={() => clearCartMutation()}
-            className={`px-3 py-1.5 text-sm rounded-full font-semibold bg-primary-red text-white flex gap-1 items-center ${
-              isPending ? "cursor-not-allowed" : "cursor-pointer"
-            }`}
-          >
-            {isPending ? (
-              <span className="flex gap-2 items-center justify-center">
-                <CgSpinnerTwo className="animate-spin" />
-                <span>Clearing...</span>
-              </span>
-            ) : (
-              <span className="flex gap-1 items-center">
-                <TiDelete className="text-lg" />
-                Clear Cart
-              </span>
-            )}
-          </button>
-        )}
+        <p className="text-lg text-secondary-black font-semibold">
+          Subtotal: ${cartData?.data?.total_price?.toFixed(2)}
+        </p>
       </div>
+
+      <p className="text-secondary-gray mb-5">
+        Shipping and sales tax will be added at checkout if applicable.
+      </p>
+
+      {cartData?.data?.length > 0 && (
+        <button
+          disabled={isPending}
+          onClick={() => clearCartMutation()}
+          className={`px-3 py-1.5 text-sm rounded-full font-semibold bg-primary-red text-white flex gap-1 items-center ${
+            isPending ? "cursor-not-allowed" : "cursor-pointer"
+          }`}
+        >
+          {isPending ? (
+            <span className="flex gap-2 items-center justify-center">
+              <CgSpinnerTwo className="animate-spin" />
+              <span>Clearing...</span>
+            </span>
+          ) : (
+            <span className="flex gap-1 items-center">
+              <TiDelete className="text-lg" />
+              Clear Cart
+            </span>
+          )}
+        </button>
+      )}
 
       <div className="space-y-7">
         {isLoading

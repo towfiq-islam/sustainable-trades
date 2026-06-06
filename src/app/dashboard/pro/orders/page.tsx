@@ -69,7 +69,7 @@ const page = () => {
 
         {/* <div className="flex flex-wrap gap-2.5 md:gap-x-4 items-center">
           <button
-            className="px-6 w-full md:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer
+            className="px-6 w-full md:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer
                       duration-300 ease-in-out flex gap-x-2 items-center h-[50px] hover:translate-y-1"
           >
             <Download />
@@ -89,7 +89,7 @@ const page = () => {
             </div>
           </div>
           <div className="relative w-full md:w-fit">
-            <select className="border border-[#A7A39C] rounded-[8px] cursor-pointer appearance-none outline-0 px-3 pr-10 py-[10px] w-full md:w-[190px] text-[#274F45] text-[14px] font-normal">
+            <select className="border border-accent-gray rounded-[8px] cursor-pointer appearance-none outline-0 px-3 pr-10 py-[10px] w-full md:w-[190px] text-primary-green text-[14px] font-normal">
               <option value="Last 30 Days">Last 30 Days</option>
               <option value="Last 6 Month">Last 6 Month</option>
               <option value="Last Year">Last Year</option>
@@ -115,8 +115,8 @@ const page = () => {
             }}
             className={`cursor-pointer px-3 capitalize text-[16px] md:text-[20px] font-semibold ${
               isActive === tab
-                ? "border-b-2 border-[#13141D] text-[#13141D]"
-                : "text-[#77978F]"
+                ? "border-b-2 border-secondary-black text-secondary-black"
+                : "text-light-green"
             }`}
           >
             {tab}
@@ -132,7 +132,7 @@ const page = () => {
           <div className="hidden lg:block overflow-x-auto">
             <table className="w-full border-collapse text-nowrap">
               <thead>
-                <tr className="border-b-2 border-gray-300 text-[#13141D] text-[15px] xl:text-[16px] font-semibold">
+                <tr className="border-b-2 border-gray-300 text-secondary-black text-[15px] xl:text-[16px] font-semibold">
                   <th className="py-3 px-4 text-left">Order #</th>
                   <th className="py-3 px-4 text-left">Order Date</th>
                   <th className="py-3 px-4 text-left">Customer</th>
@@ -156,7 +156,7 @@ const page = () => {
                   allOrders?.data?.data?.map((order: orderItem, i: number) => (
                     <tr
                       key={i}
-                      className="border-b border-gray-300 text-[#13141D] text-[14px] font-semibold last:border-b-0 hover:bg-gray-100 duration-200 transition-all"
+                      className="border-b border-gray-300 text-secondary-black text-[14px] font-semibold last:border-b-0 hover:bg-gray-100 duration-200 transition-all"
                     >
                       <td className="py-4 px-4">{order?.order_number}</td>
                       <td className="py-4 px-4">

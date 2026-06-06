@@ -70,7 +70,7 @@ const ShippingOptionsModal = ({
 
       {/* Dynamic Error Message */}
       {errorMessage && (
-        <div className="mb-4 px-2 py-3 bg-red-500/10 border border-red-500 rounded-lg text-red-500 text-sm">
+        <div className="mb-4 px-2 py-3 bg-primary-red/10 border border-primary-red rounded-lg text-primary-red text-sm">
           {errorMessage}
         </div>
       )}

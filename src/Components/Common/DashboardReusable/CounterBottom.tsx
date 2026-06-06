@@ -75,14 +75,14 @@ const CounterBottom = () => {
             className="w-10 h-10 rounded-full"
           />
           <div>
-            <h4 className="font-semibold text-[#274F45]">Chat With</h4>
+            <h4 className="font-semibold text-primary-green">Chat With</h4>
             <p className="text-sm text-gray-600">Linda Anderson</p>
           </div>
         </div>
 
         {/* Messages */}
         <div className="flex-1 p-4 space-y-4 overflow-y-auto min-h-[400px] max-h-[500px]">
-          {messages.map((msg) => (
+          {messages.map(msg => (
             <div
               key={msg.id}
               className={`flex ${msg.isOwn ? "justify-end" : "justify-start"}`}
@@ -113,9 +113,9 @@ const CounterBottom = () => {
               type="text"
               placeholder="Message"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={e => setMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="w-full border border-[#BFBEBE] rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#274F45] focus:border-transparent"
+              className="w-full border border-[#BFBEBE] rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
             />
             <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
               <FaMicrophone size={14} />
@@ -123,7 +123,7 @@ const CounterBottom = () => {
           </div>
           <button
             onClick={handleSendMessage}
-            className="bg-[#274F45] text-white p-2 rounded-md hover:bg-[#1e3a32] transition-colors"
+            className="bg-primary-green text-white p-2 rounded-md hover:bg-[#1e3a32] transition-colors"
           >
             <FaPaperPlane size={16} />
           </button>
@@ -131,13 +131,13 @@ const CounterBottom = () => {
       </div>
       <div className="w-full lg:w-1/2 ">
         <div className="flex gap-x-2.5 md:gap-x-5 items-center">
-          <h3 className="text-[16px] text-[#274F45] font-semibold">
+          <h3 className="text-[16px] text-primary-green font-semibold">
             Trade Details
           </h3>
-          <h4 className="text-[16px] text-[#A7A39C] font-semibold">
+          <h4 className="text-[16px] text-accent-gray font-semibold">
             11/28/2023
           </h4>
-          <h5 className="text-[16px] text-[#A7A39C] font-semibold">
+          <h5 className="text-[16px] text-accent-gray font-semibold">
             Inquiry <span># 378</span>
           </h5>
         </div>
@@ -151,12 +151,12 @@ const CounterBottom = () => {
               className="h-[100px] w-[100px] rounded-lg"
             />
             <div className="flex flex-col gap-y-1">
-              <h3 className="text-[18px] lg:text-[20px] font-semibold text-[#13141D]">
+              <h3 className="text-[18px] lg:text-[20px] font-semibold text-secondary-black">
                 8oz Watermelon Sustainable Bar Soap
               </h3>
-              <h4 className="text-[18px] lg:text-[20px] font-normal text-[#4B4A47] flex gap-x-5 items-center">
+              <h4 className="text-[18px] lg:text-[20px] font-normal text-secondary-gray flex gap-x-5 items-center">
                 The Soap Shop
-                <span className="text-[12px] lg:text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
+                <span className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray font-lato">
                   View Shop
                 </span>
               </h4>
@@ -169,21 +169,21 @@ const CounterBottom = () => {
               </div>
               <div className="flex gap-x-2 items-center">
                 <LocationSvg1 />
-                <h5 className="text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
+                <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
                   13 mi. away -
                 </h5>
-                <h5 className="text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
+                <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
                   Denver, CO
                 </h5>
               </div>
               <ul className="flex flex-col gap-y-2">
-                <li className="flex gap-x-2 te4xt-[16px] font-normal text-[#4B4A47] items-center">
+                <li className="flex gap-x-2 te4xt-[16px] font-normal text-secondary-gray items-center">
                   Qty: <span className="font-bold">3 Bars </span>
                 </li>
-                <li className="flex gap-x-2 te4xt-[16px] font-normal text-[#4B4A47] items-center">
+                <li className="flex gap-x-2 te4xt-[16px] font-normal text-secondary-gray items-center">
                   Item Price: <span className="font-bold">$10</span>
                 </li>
-                <li className="flex gap-x-2 te4xt-[16px] font-normal text-[#4B4A47] items-center">
+                <li className="flex gap-x-2 te4xt-[16px] font-normal text-secondary-gray items-center">
                   Total amount: <span className="font-bold">$30 </span>
                 </li>
               </ul>
@@ -199,21 +199,21 @@ const CounterBottom = () => {
             <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
           </div>
           <div className="">
-            <h4 className="text-[18px] lg:text-[20px] font-semibold text-[#274F45]">
+            <h4 className="text-[18px] lg:text-[20px] font-semibold text-primary-green">
               Organic Bath Soaps
             </h4>
             <h3 className="text-[22px] lg:text-[32px] font-semibold text-[#000] py-3">
               Coconut Bar Soap
             </h3>
             <ul>
-              <li className="text-[18px] lg:text-[20px] font-semibold text-[#274F45]">
+              <li className="text-[18px] lg:text-[20px] font-semibold text-primary-green">
                 Product Description
               </li>
-              <li className="text-[14px] lg:text-[16px] font-semibold text-[#13141D] list-disc ml-5">
+              <li className="text-[14px] lg:text-[16px] font-semibold text-secondary-black list-disc ml-5">
                 Made with 100% organic coconut oil, ensuring a natural and
                 chemical-free cleansing experience.
               </li>
-              <li className="text-[14px] lg:text-[16px] font-semibold text-[#13141D] list-disc ml-5">
+              <li className="text-[14px] lg:text-[16px] font-semibold text-secondary-black list-disc ml-5">
                 Free from synthetic additives, parabens, and harsh chemicals for
                 a gentle and nourishing bath.
               </li>
@@ -245,7 +245,7 @@ const CounterBottom = () => {
                 className="flex justify-between py-4 cursor-pointer items-center"
                 onClick={() => setIsOpen(!isOpen)}
               >
-                <h5 className="text-[20px] font-normal text-[#274F45]">
+                <h5 className="text-[20px] font-normal text-primary-green">
                   Shop FAQ
                 </h5>
                 <FaAngleDown

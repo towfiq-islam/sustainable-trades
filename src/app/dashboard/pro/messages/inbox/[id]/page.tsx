@@ -109,15 +109,15 @@ const page = () => {
           prev?.map(msg =>
             msg?.id === tempId
               ? { ...msg, ...res.message, status: "sent" }
-              : msg
-          )
+              : msg,
+          ),
         );
       },
       onError: () => {
         setChats(prev =>
           prev?.map(msg =>
-            msg?.id === tempId ? { ...msg, status: "failed" } : msg
-          )
+            msg?.id === tempId ? { ...msg, status: "failed" } : msg,
+          ),
         );
       },
     });
@@ -156,7 +156,7 @@ const page = () => {
             ) : (
               <span className="text-xl font-bold text-white">
                 {singleConversation?.data?.conversation?.participants[0]?.participant?.first_name?.at(
-                  0
+                  0,
                 )}
               </span>
             )}
@@ -195,53 +195,70 @@ const page = () => {
             <PuffLoader color="#274f45" />
           </div>
         ) : (
-          chats?.map((msg: messageItem) => (
-            <div
-              key={msg?.id}
-              className={`flex gap-3 ${
-                user?.id === msg?.sender_id ? "justify-end" : "justify-start"
-              }`}
-            >
-              {user?.id !== msg?.sender_id && (
-                <figure className="size-11 rounded-full relative shrink-0 grid place-items-center bg-accent-red text-sm">
-                  {msg?.sender?.avatar ? (
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_SITE_URL}/${msg?.sender?.avatar}`}
-                      alt="author"
-                      fill
-                      className="size-full rounded-full"
-                    />
-                  ) : (
-                    <span className="text-xl font-bold text-white">
-                      {msg?.sender?.first_name?.at(0)}
-                    </span>
-                  )}
-                </figure>
-              )}
+          chats?.map((msg: messageItem) => {
+            const dashboardType =
+              user?.role === "customer"
+                ? "customer"
+                : user?.membership?.membership_type === "pro"
+                  ? "pro"
+                  : "basic";
 
+            const formattedMessage = msg?.message
+              ?.replace(
+                /\/dashboard\/pro\/orders\/(\d+)/g,
+                `/dashboard/${dashboardType}/orders/$1`,
+              )
+              ?.replace(/\n/g, "<br />");
+
+            return (
               <div
-                className={`relative text-[15px] font-lato leading-[160%] py-3 px-3.5 rounded-[6px] max-w-[550px] shadow ${
-                  msg?.status === "sending"
-                    ? "bg-gray-50 opacity-80"
-                    : msg?.status === "failed"
-                    ? "bg-red-100 border border-red-400 text-red-700"
-                    : "bg-accent-white"
-                }
-                `}
+                key={msg?.id}
+                className={`flex gap-3 ${
+                  user?.id === msg?.sender_id ? "justify-end" : "justify-start"
+                }`}
               >
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: (msg?.message).replace(/\n/g, "<br />"),
-                  }}
-                />
+                {user?.id !== msg?.sender_id && (
+                  <figure className="size-11 rounded-full relative shrink-0 grid place-items-center bg-accent-red text-sm">
+                    {msg?.sender?.avatar ? (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${msg?.sender?.avatar}`}
+                        alt="author"
+                        fill
+                        unoptimized
+                        className="size-full rounded-full"
+                      />
+                    ) : (
+                      <span className="text-xl font-bold text-white">
+                        {msg?.sender?.first_name?.at(0)}
+                      </span>
+                    )}
+                  </figure>
+                )}
 
-                {/* Time */}
-                <span className="text-xs text-gray-500 text-end block mt-1">
-                  {moment(msg?.created_at).format("LT")}
-                </span>
+                <div
+                  className={`relative text-[15px] font-lato leading-[160%] py-3 px-3.5 rounded-[6px] max-w-[550px] shadow ${
+                    msg?.status === "sending"
+                      ? "bg-gray-50 opacity-80"
+                      : msg?.status === "failed"
+                        ? "bg-red-100 border border-red-400 text-red-700"
+                        : "bg-accent-white"
+                  }
+                                        `}
+                >
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: formattedMessage,
+                    }}
+                  />
+
+                  {/* Time */}
+                  <span className="text-xs text-gray-500 text-end block mt-1">
+                    {moment(msg?.created_at).format("LT")}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 

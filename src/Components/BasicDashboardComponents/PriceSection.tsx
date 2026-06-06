@@ -19,7 +19,7 @@ const PriceSection = ({
 
   return (
     <div>
-      <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+      <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
         Price
       </h3>
       <Controller
@@ -36,7 +36,7 @@ const PriceSection = ({
           <input
             type="number"
             {...field}
-            className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-0"
+            className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-0"
           />
         )}
       />
@@ -49,7 +49,7 @@ const PriceSection = ({
       <div className="mt-4">
         <h3
           className={`text-[20px] md:text-[24px] font-semibold ${
-            isBasicMember ? "text-gray-400" : "text-[#13141D]"
+            isBasicMember ? "text-gray-400" : "text-secondary-black"
           }`}
         >
           Cost
@@ -68,10 +68,10 @@ const PriceSection = ({
               type="number"
               {...field}
               disabled={isBasicMember}
-              className={`w-full border text-[16px] md:text-[20px] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-0 ${
+              className={`w-full border text-[16px] md:text-[20px] border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-0 ${
                 isBasicMember
                   ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "text-[#13141D]"
+                  : "text-secondary-black"
               }`}
             />
           )}
@@ -84,7 +84,7 @@ const PriceSection = ({
       <div className="mt-4">
         <h3
           className={`text-[20px] md:text-[24px] font-semibold ${
-            isBasicMember ? "text-gray-400" : "text-[#13141D]"
+            isBasicMember ? "text-gray-400" : "text-secondary-black"
           }`}
         >
           Weight
@@ -103,10 +103,10 @@ const PriceSection = ({
               type="number"
               {...field}
               disabled={isBasicMember}
-              className={`w-full border text-[16px] md:text-[20px] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-0 ${
+              className={`w-full border text-[16px] md:text-[20px] border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-0 ${
                 isBasicMember
                   ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "text-[#13141D]"
+                  : "text-secondary-black"
               }`}
             />
           )}

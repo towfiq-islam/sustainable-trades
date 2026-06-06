@@ -35,7 +35,9 @@ const EditFormTwo = ({ data }: any) => {
 
   return (
     <div className="mt-5">
-      <h2 className="text-[#274F45] text-[20px] font-semibold">Your Shop</h2>
+      <h2 className="text-primary-green text-[20px] font-semibold">
+        Your Shop
+      </h2>
 
       <div className="lg:mt-12 mt-5 grid lg:grid-cols-2 grid-cols-1 gap-x-[96px] items-center lg:gap-y-10 gap-y-5 font-lato">
         {/* Shop Name */}
@@ -52,14 +54,14 @@ const EditFormTwo = ({ data }: any) => {
             {errors.shop_name ? String(errors.shop_name?.message) : null}
           </p>
 
-          <ul className="mt-[2px] text-[16px] text-[#4B4A47] ml-5">
+          <ul className="mt-[2px] text-[16px] text-secondary-gray ml-5">
             <li className="list-disc">Between 4-30 characters</li>
             <li className="list-disc">
               No special characters, spaces, or accented letters
             </li>
           </ul>
         </div>
-        <h5 className="text-[16px] text-[#4B4A47]">
+        <h5 className="text-[16px] text-secondary-gray">
           Can be your personal name/nickname or company name. When a trade is
           offered, this is the name that will show to others.
         </h5>
@@ -78,7 +80,7 @@ const EditFormTwo = ({ data }: any) => {
             {errors.shop_city ? String(errors.shop_city.message) : null}
           </p>
         </div>
-        <h5 className="text-[16px] text-[#4B4A47]">
+        <h5 className="text-[16px] text-secondary-gray">
           This is so you show up in your local area on our Geo-locator map.{" "}
           <span className="underline">More info about this</span>
         </h5>
@@ -87,7 +89,7 @@ const EditFormTwo = ({ data }: any) => {
       <div className=" mt-8 mb-[56px] lg:flex gap-x-8">
         {/* Shop Photo */}
         <div>
-          <p className="text-[18px] text-[#13141D] font-lato">
+          <p className="text-[18px] text-secondary-black font-lato">
             Add A Profile Photo *
           </p>
 
@@ -149,7 +151,7 @@ const EditFormTwo = ({ data }: any) => {
 
         {/* Cover Photo */}
         <div className="w-full">
-          <p className="text-[18px] text-[#13141D] font-lato">
+          <p className="text-[18px] text-secondary-black font-lato">
             Add A Cover Photo *
           </p>
           <div

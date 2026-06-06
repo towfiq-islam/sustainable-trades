@@ -13,6 +13,7 @@ import { DollarSvg, SignSvg } from "@/Components/Svg/SvgContainer";
 
 const ProductLocation = () => {
   // Hook
+  const [page, setPage] = useState<string>("");
   const { search, latitude, longitude } = useAuth();
 
   // States
@@ -23,6 +24,7 @@ const ProductLocation = () => {
     search,
     latitude,
     longitude,
+    page,
   );
 
   return (
@@ -42,7 +44,7 @@ const ProductLocation = () => {
                   No Product Found
                 </div>
               ) : (
-                allProducts?.data?.map((product: any) => (
+                allProducts?.data?.data?.map((product: any) => (
                   <Link
                     key={product?.id}
                     href={`/product-details/${product?.id}`}
@@ -125,6 +127,22 @@ const ProductLocation = () => {
                   </Link>
                 ))
               )}
+
+              {!productLoading && (
+                <div className="py-8 flex justify-center items-center gap-2 flex-wrap">
+                  {allProducts?.data?.links?.map((item: any, idx: number) => (
+                    <button
+                      key={idx}
+                      disabled={!item.url}
+                      dangerouslySetInnerHTML={{ __html: item.label }}
+                      onClick={() =>
+                        item.url && setPage(item.url.split("=")[1])
+                      }
+                      className={`px-3 py-1 rounded border transition-all duration-200 ${item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"} ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           ) : (
             <div className="text-gray-700 font-semibold text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-[#d4e2cb2f]">
@@ -135,9 +153,9 @@ const ProductLocation = () => {
 
           {/* Right - Google Map */}
           <div className="md:h-[550px]">
-            {allProducts?.data && allProducts?.data?.length > 0 ? (
+            {allProducts?.data?.data && allProducts?.data?.data?.length > 0 ? (
               <ProductMap
-                products={allProducts?.data}
+                products={allProducts?.data?.data}
                 hoveredProduct={hoveredProduct}
                 productLoading={productLoading}
               />

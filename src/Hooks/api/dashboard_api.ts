@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosSecure } from "../useAxiosSecure";
+import useAuth from "../useAuth";
 
 // Add Product
 export const useAddProduct = () => {
@@ -792,25 +793,6 @@ export const useDeleteAllNotifications = () => {
   });
 };
 
-// Local Pickup
-// export const useLocalPickup = (id: number | null) => {
-//   const queryClient = useQueryClient();
-//   return useClientApi({
-//     method: "post",
-//     key: ["local-pickup", id],
-//     isPrivate: true,
-//     endpoint: `/api/arrange-local-pickup/${id}`,
-//     onSuccess: (data: any) => {
-//       if (data?.success) {
-//         queryClient.invalidateQueries("get-product-cart" as any);
-//       }
-//     },
-//     onError: (err: any) => {
-//       toast.error(err?.response?.data?.message);
-//     },
-//   });
-// };
-
 // Get Accounting
 export const getAccountingData = (params: any) => {
   return useClientApi({
@@ -818,6 +800,17 @@ export const getAccountingData = (params: any) => {
     key: ["get-accounting", params],
     isPrivate: true,
     endpoint: "/api/accounting/summary",
+    params,
+  });
+};
+
+// Get trade and barters
+export const getTradeAndBarterData = (params: any) => {
+  return useClientApi({
+    method: "get",
+    key: ["get-trade-and-barter", params],
+    isPrivate: true,
+    endpoint: "/api/barters-and-trades/summary",
     params,
   });
 };
@@ -851,6 +844,136 @@ export const useGuestOrder = (id: number) => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Connect Shippo
+export const useConnectShippo = () => {
+  return useClientApi({
+    method: "post",
+    key: ["connect-shippo"],
+    isPrivate: true,
+    endpoint: "/api/shippo/connect",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        window.location.href = data?.data?.url;
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Disconnect Shippo
+export const useDisconnectShippo = () => {
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["disconnect-shippo"],
+    isPrivate: true,
+    endpoint: "/api/shippo/disconnect",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        queryClient.invalidateQueries("user" as any);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Add Sales Tax
+export const useAddSalesTax = () => {
+  return useClientApi({
+    method: "post",
+    key: ["add-sales-tax"],
+    isPrivate: true,
+    endpoint: "/api/sales-tax",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get Sales Tax
+export const getSalesTaxData = () => {
+  return useClientApi({
+    method: "get",
+    key: ["get-sales-tax"],
+    isPrivate: true,
+    endpoint: "/api/sales-tax",
+  });
+};
+
+// Sync Shippo
+export const useSyncShippo = () => {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["sync-shippo"],
+    isPrivate: true,
+    endpoint: `/api/shippo/sync-carriers-accounts/${user?.id}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        queryClient.invalidateQueries("user" as any);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Pick Carrier
+export const usePickCarrier = () => {
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["pick-carrier"],
+    isPrivate: true,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        queryClient.invalidateQueries("user" as any);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Change Label Type
+export const useChangeLabelType = () => {
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["change-label-type"],
+    isPrivate: true,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        queryClient.invalidateQueries("user" as any);
       }
     },
     onError: (err: any) => {

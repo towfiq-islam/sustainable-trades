@@ -15,6 +15,8 @@ import {
   useSyncShippo,
   useChangeLabelType,
   usePickCarrier,
+  useSetShipping,
+  useGetFlatRate,
 } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
@@ -40,11 +42,12 @@ const Page = () => {
 
   /* ---------- API ---------- */
   const { data: weightRanges, refetch } = useWeightRateget();
+  const { data: flatRateRanges } = useGetFlatRate();
   const { mutate: deleteWeightRange } = useWeightRateDelete();
   const { mutate: FlatRateMutation, isPending } = useFlatRate();
   const { mutate: syncShippo, isPending: isSyncing } = useSyncShippo();
+  const { mutate: setShippo, isPending: isSetting } = useSetShipping();
   const { mutate: connectShippo, isPending: isConnecting } = useConnectShippo();
-
   const { mutate: useWeightMutation, isPending: isWightLoading } =
     useWeightRate();
   const { mutate: disconnectShippo, isPending: isDisconnecting } =
@@ -53,6 +56,8 @@ const Page = () => {
     usePickCarrier();
   const { mutate: changeLabelType, isPending: isChangingLabelType } =
     useChangeLabelType();
+
+  console.log(user);
 
   /* ---------- FORMS ---------- */
   const {
@@ -71,24 +76,40 @@ const Page = () => {
 
   /* ---------- SUBMIT HANDLERS ---------- */
   const onFlatSubmit = (data: FlatRateForm) => {
-    FlatRateMutation(data, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          toast.success(data?.message);
-          resetFlat();
-          setOpenFlatModal(false);
+    const payload = { shipping_setting: "flat_rate" };
+
+    setShippo(payload, {
+      onSuccess: (res: any) => {
+        if (res?.success) {
+          FlatRateMutation(data, {
+            onSuccess: (data: any) => {
+              if (data?.success) {
+                toast.success(data?.message);
+                resetFlat();
+                setOpenFlatModal(false);
+              }
+            },
+          });
         }
       },
     });
   };
 
   const onWeightSubmit = (data: WeightForm) => {
-    useWeightMutation(data, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          toast.success(data?.message);
-          resetWeight();
-          refetch();
+    const payload = { shipping_setting: "weight_based" };
+
+    setShippo(payload, {
+      onSuccess: (res: any) => {
+        if (res?.success) {
+          useWeightMutation(data, {
+            onSuccess: (data: any) => {
+              if (data?.success) {
+                toast.success(data?.message);
+                resetWeight();
+                refetch();
+              }
+            },
+          });
         }
       },
     });
@@ -114,6 +135,20 @@ const Page = () => {
     changeLabelType({
       endpoint: `/api/shippo/rate-preference/${rate.id}`,
       active: !rate.active,
+    });
+  };
+
+  const handleConnectShippo = () => {
+    const payload = { shipping_setting: "shippo" };
+
+    connectShippo(undefined, {
+      onSuccess: (res: any) => {
+        if (res?.success) {
+          setShippo(payload);
+          toast.success(res);
+          // window.location.href = res?.data?.url;
+        }
+      },
     });
   };
 
@@ -146,66 +181,88 @@ const Page = () => {
           <div className="relative w-full">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="bg-primary-green text-white px-4 py-2 rounded-lg w-fit font-semibold flex gap-x-5 items-center text-[14px] md:text-[16px] cursor-pointer"
+              className="bg-primary-green text-white px-4 py-2.5 rounded-lg w-fit font-semibold flex gap-3 items-center text-[14px] md:text-[16px] cursor-pointer"
             >
               <FaAngleDown />
               Add Shipping Option
             </button>
 
-            {(isDropdownOpen || user?.shop_info?.shippo_connected) && (
+            {(isDropdownOpen || user?.shop_info?.shipping_setting) && (
               <div className="absolute z-10 mt-5 w-full flex flex-col gap-y-4">
-                <button
+                <div
                   onClick={() => setOpenFlatModal(true)}
                   className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer"
                 >
-                  <h3 className="text-primary-green font-bold text-[14px] md:text-[16px]">
-                    Flat Rate
-                  </h3>
+                  <div className="flex gap-3 items-center justify-between">
+                    <h3 className="text-primary-green font-bold text-[14px] md:text-[16px]">
+                      Flat Rate
+                    </h3>
+                    {user?.shop_info?.shipping_setting === "flat_rate" && (
+                      <p className="shrink-0 text-white bg-primary-green px-3 py-1 text-sm rounded-full">
+                        Active
+                      </p>
+                    )}
+                  </div>
+
                   <p className="text-[13px] md:text-[16px] text-[#3D3D3D] font-medium pt-1">
                     Define a charge for every order and a flat fee for each
                     item.
                   </p>
-                </button>
+                </div>
 
-                <button
+                <div
                   onClick={() => setOpenWightModal(true)}
                   className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer"
                 >
-                  <h3 className="text-primary-green font-bold text-[14px] md:text-[16px]">
-                    Depending on Weight
-                  </h3>
+                  <div className="flex justify-between gap-3 items-center">
+                    <h3 className="text-primary-green font-bold text-[14px] md:text-[16px]">
+                      Depending on Weight
+                    </h3>
+                    {user?.shop_info?.shipping_setting === "weight_based" && (
+                      <p className="shrink-0 text-white bg-primary-green px-3 py-1 text-sm rounded-full">
+                        Active
+                      </p>
+                    )}
+                  </div>
+
                   <p className="text-[13px] md:text-[16px] text-[#3D3D3D] font-medium pt-1">
                     Let the cost depend on the total weight of the purchase
                   </p>
-                </button>
+                </div>
 
                 <div
                   onClick={() => setOpenConnectFlatModal(true)}
-                  className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer flex gap-3 items-center justify-between"
+                  className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer"
                 >
-                  <div>
+                  <div className="flex gap-3 items-center justify-between">
                     <h3 className="text-primary-green font-bold text-[16px]">
                       {user?.shop_info?.shippo_connected
                         ? "Shippo Connected"
                         : "Connect to Shippo"}
                     </h3>
-                    <p className="text-[16px] text-[#3D3D3D] font-medium pt-1">
-                      Automatically sync your orders with a shipping solution to
-                      streamline your fulfillment workflow.
-                    </p>
+                    <div className="flex gap-2 items-center">
+                      {user?.shop_info?.shipping_setting === "shippo" && (
+                        <p className="shrink-0 text-white bg-primary-green px-3 py-1 text-sm rounded-full">
+                          Active
+                        </p>
+                      )}
+
+                      {user?.shop_info?.shippo_connected ? (
+                        <p className="px-3 py-1 rounded-full text-sm bg-primary-green text-white">
+                          Connected
+                        </p>
+                      ) : (
+                        <p className="px-3 py-1 rounded-full text-sm bg-accent-red text-gray-50">
+                          Not Connected
+                        </p>
+                      )}
+                    </div>
                   </div>
 
-                  <button className="shrink-0">
-                    {user?.shop_info?.shippo_connected ? (
-                      <p className="px-3 py-1 rounded-full text-sm bg-primary-green text-white">
-                        Connected
-                      </p>
-                    ) : (
-                      <p className="px-3 py-1 rounded-full text-sm bg-accent-red text-gray-50">
-                        Not Connected
-                      </p>
-                    )}
-                  </button>
+                  <p className="text-[16px] text-[#3D3D3D] font-medium pt-1.5">
+                    Automatically sync your orders with a shipping solution to
+                    streamline your fulfillment workflow.
+                  </p>
                 </div>
               </div>
             )}
@@ -231,6 +288,11 @@ const Page = () => {
             <p className="form-label font-bold">Option Name *</p>
             <input
               className="form-input"
+              defaultValue={
+                user?.shop_info?.shipping_setting === "flat_rate"
+                  ? flatRateRanges?.data?.option_name
+                  : ""
+              }
               placeholder="“FedEx Next Day”, “USPS Express Mail”"
               {...registerFlat("option_name", { required: true })}
             />
@@ -248,6 +310,11 @@ const Page = () => {
               <input
                 type="number"
                 className="form-input"
+                defaultValue={
+                  user?.shop_info?.shipping_setting === "flat_rate"
+                    ? flatRateRanges?.data?.per_order_fee
+                    : ""
+                }
                 placeholder="$ XXX"
                 {...registerFlat("per_order_fee", { required: true })}
               />
@@ -264,6 +331,11 @@ const Page = () => {
               <input
                 type="number"
                 className="form-input"
+                defaultValue={
+                  user?.shop_info?.shipping_setting === "flat_rate"
+                    ? flatRateRanges?.data?.per_item_fee
+                    : ""
+                }
                 placeholder="$ XXX"
                 {...registerFlat("per_item_fee", { required: true })}
               />
@@ -279,10 +351,10 @@ const Page = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || isSetting}
               className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-[190px] cursor-pointer disabled:opacity-85 disabled:cursor-not-allowed"
             >
-              {isPending ? "Saving..." : "Save"}
+              {isPending || isSetting ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
@@ -351,10 +423,10 @@ const Page = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              disabled={isWightLoading}
-              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-[190px] cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
+              disabled={isWightLoading || isSetting}
+              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-47.5 cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
             >
-              {isWightLoading ? "Saving..." : "Save"}
+              {isWightLoading || isSetting ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
@@ -469,7 +541,7 @@ const Page = () => {
           )}
 
           {user?.shop_info?.shippo_connected && (
-            <div className="space-y-5 border-t pt-5">
+            <div className="space-y-5 border-t pt-5 border-gray-700">
               {/* Carrier */}
               <div>
                 <label className="block text-sm font-semibold text-secondary-black mb-3">
@@ -590,8 +662,8 @@ const Page = () => {
             </div>
           ) : (
             <button
-              disabled={isConnecting}
-              onClick={() => connectShippo()}
+              disabled={isConnecting || isSetting}
+              onClick={handleConnectShippo}
               className="bg-[#0B3C32] text-white px-6 py-2 rounded-md font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
             >
               Connect to Shippo

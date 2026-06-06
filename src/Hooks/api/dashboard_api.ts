@@ -279,11 +279,16 @@ export const getDiscount = (status: string) => {
 
 // Create Flat Rate Hooks
 export const useFlatRate = () => {
+  const queryClient = useQueryClient();
+
   return useClientApi({
     method: "post",
     key: ["flat-rate"],
     isPrivate: true,
     endpoint: "/api/flat-rates",
+    onSuccess: () => {
+      queryClient.invalidateQueries("flat-rate" as any);
+    },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message || "Failed to create flat rate");
     },
@@ -859,12 +864,11 @@ export const useConnectShippo = () => {
     key: ["connect-shippo"],
     isPrivate: true,
     endpoint: "/api/shippo/connect",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-        window.location.href = data?.data?.url;
-      }
-    },
+    // onSuccess: (data: any) => {
+    //   if (data?.success) {
+    //     toast.success(data?.message);
+    //   }
+    // },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },
@@ -979,5 +983,35 @@ export const useChangeLabelType = () => {
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },
+  });
+};
+
+// Set shipping
+export const useSetShipping = () => {
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["set-shipping"],
+    isPrivate: true,
+    endpoint: "/api/shipping-settings",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        queryClient.invalidateQueries("user" as any);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get flat rate
+export const useGetFlatRate = () => {
+  return useClientApi({
+    method: "get",
+    key: ["flat-rate"],
+    isPrivate: true,
+    endpoint: "/api/flat-rate",
   });
 };

@@ -70,7 +70,6 @@ const page = () => {
   const [chats, setChats] = useState<messageItem[]>([]);
   const [message, setMessage] = useState<string>("");
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
-  console.log(chats);
 
   // Mutation & Query
   const { mutate: sendMessageMutation, isPending } = useSendMessage();

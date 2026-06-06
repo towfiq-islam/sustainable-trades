@@ -42,11 +42,7 @@ const page = () => {
 
   // DISCONNECT
   const handleDisconnect = () => {
-    onboardingDisconnectMutation(undefined, {
-      onSuccess: () => {
-        console.log("Disconnected successfully");
-      },
-    });
+    onboardingDisconnectMutation();
   };
 
   // RECONNECT

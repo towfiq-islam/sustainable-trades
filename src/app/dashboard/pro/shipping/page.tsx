@@ -76,40 +76,24 @@ const Page = () => {
 
   /* ---------- SUBMIT HANDLERS ---------- */
   const onFlatSubmit = (data: FlatRateForm) => {
-    const payload = { shipping_setting: "flat_rate" };
-
-    setShippo(payload, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          FlatRateMutation(data, {
-            onSuccess: (data: any) => {
-              if (data?.success) {
-                toast.success(data?.message);
-                resetFlat();
-                setOpenFlatModal(false);
-              }
-            },
-          });
+    FlatRateMutation(data, {
+      onSuccess: (data: any) => {
+        if (data?.success) {
+          toast.success(data?.message);
+          resetFlat();
+          setOpenFlatModal(false);
         }
       },
     });
   };
 
   const onWeightSubmit = (data: WeightForm) => {
-    const payload = { shipping_setting: "weight_based" };
-
-    setShippo(payload, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          useWeightMutation(data, {
-            onSuccess: (data: any) => {
-              if (data?.success) {
-                toast.success(data?.message);
-                resetWeight();
-                refetch();
-              }
-            },
-          });
+    useWeightMutation(data, {
+      onSuccess: (data: any) => {
+        if (data?.success) {
+          toast.success(data?.message);
+          resetWeight();
+          refetch();
         }
       },
     });
@@ -135,20 +119,6 @@ const Page = () => {
     changeLabelType({
       endpoint: `/api/shippo/rate-preference/${rate.id}`,
       active: !rate.active,
-    });
-  };
-
-  const handleConnectShippo = () => {
-    const payload = { shipping_setting: "shippo" };
-
-    connectShippo(undefined, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          setShippo(payload);
-          toast.success(res);
-          // window.location.href = res?.data?.url;
-        }
-      },
     });
   };
 
@@ -755,7 +725,7 @@ const Page = () => {
           ) : (
             <button
               disabled={isConnecting || isSetting}
-              onClick={handleConnectShippo}
+              onClick={() => connectShippo()}
               className="bg-[#0B3C32] text-white px-6 py-2 rounded-md font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
             >
               Connect to Shippo

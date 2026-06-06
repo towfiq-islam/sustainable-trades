@@ -1,6 +1,5 @@
 "use client";
 import "swiper/css";
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import "swiper/css/pagination";
@@ -106,7 +105,7 @@ const Product = ({
         </button>
       ) : (
         <button className="absolute top-3 left-3 shadow-lg font-medium px-3 py-1 rounded-full bg-accent-red text-white z-10 text-sm">
-          Stock Out
+          Out of Stock
         </button>
       )}
 

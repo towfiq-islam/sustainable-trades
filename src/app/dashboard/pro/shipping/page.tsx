@@ -37,20 +37,18 @@ const Page = () => {
   const [openWightModal, setOpenWightModal] = useState(false);
   const [openConnectModal, setOpenConnectFlatModal] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [labelType, setLabelType] = useState("Cheapest");
-  console.log(user?.shop_info?.shippo_rate_preferences);
 
   /* ---------- API ---------- */
   const { data: weightRanges, refetch } = useWeightRateget();
   const { mutate: deleteWeightRange } = useWeightRateDelete();
   const { mutate: FlatRateMutation, isPending } = useFlatRate();
-  const { mutate: useWeightMutation, isPending: isWightLoading } =
-    useWeightRate();
   const { mutate: syncShippo, isPending: isSyncing } = useSyncShippo();
   const { mutate: connectShippo, isPending: isConnecting } = useConnectShippo();
+  
+  const { mutate: useWeightMutation, isPending: isWightLoading } =
+    useWeightRate();
   const { mutate: disconnectShippo, isPending: isDisconnecting } =
     useDisconnectShippo();
-
   const { mutate: pickupCarrier, isPending: isPickingCarrier } =
     usePickCarrier();
   const { mutate: changeLabelType, isPending: isChangingLabelType } =
@@ -141,7 +139,7 @@ const Page = () => {
           <p className="text-[#13141D] text-[12px] md:text-[16px] font-normal max-w-[570px]">
             You can choose how you want to apply shipping costs to your order.
             Shipping cost can be calculated with a flat rate, by weight, or
-            connect your store to shippo and enjoy full shipping integration
+            connect your store to Shippo and enjoy full shipping integration
             including automated shipping labels!
           </p>
 
@@ -177,8 +175,7 @@ const Page = () => {
                     Depending on Weight
                   </h3>
                   <p className="text-[13px] md:text-[16px] text-[#3D3D3D] font-medium pt-1">
-                    Define a charge for every order and a flat fee for each
-                    item.
+                    Let the cost depend on the total weight of the purchase
                   </p>
                 </button>
 
@@ -193,12 +190,12 @@ const Page = () => {
                         : "Connect to Shippo"}
                     </h3>
                     <p className="text-[16px] text-[#3D3D3D] font-medium pt-1">
-                      Define a charge for every order and a flat fee for each
-                      item.
+                      Automatically sync your orders with a shipping solution to
+                      streamline your fulfillment workflow.
                     </p>
                   </div>
 
-                  <button>
+                  <button className="shrink-0">
                     {user?.shop_info?.shippo_connected ? (
                       <p className="px-3 py-1 rounded-full text-sm bg-primary-green text-white">
                         Connected

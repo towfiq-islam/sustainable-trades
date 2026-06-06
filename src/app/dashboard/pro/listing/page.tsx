@@ -150,7 +150,7 @@ export default function Page() {
 
                     <td className="text-[#13141D] font-semibold text-[14px]">
                       {p?.out_of_stock
-                        ? "Stock Out"
+                        ? "Out of Stock"
                         : p?.unlimited_stock
                           ? "Unlimited stock"
                           : p?.product_quantity}
@@ -234,7 +234,7 @@ export default function Page() {
                 <p className="text-xs text-gray-500">
                   Stock:{" "}
                   {p?.out_of_stock
-                    ? "Stock Out"
+                    ? "Out of Stock"
                     : p?.unlimited_stock
                       ? "Unlimited stock"
                       : p?.product_quantity}

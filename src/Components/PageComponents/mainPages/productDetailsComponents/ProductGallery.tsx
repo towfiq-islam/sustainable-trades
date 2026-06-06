@@ -101,7 +101,7 @@ const ProductGallery = ({ data }: galleryProps) => {
               </button>
             ) : (
               <button className="absolute top-3 right-3 shadow-lg font-medium px-3 py-1 rounded-full bg-accent-red text-white z-10 text-sm">
-                Stock Out
+                Out of Stock
               </button>
             )}
           </SwiperSlide>

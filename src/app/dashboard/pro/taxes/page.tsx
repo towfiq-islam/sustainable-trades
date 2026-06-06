@@ -89,7 +89,7 @@ export default function TaxRatePage() {
     <section>
       <h2 className="section_title text-center !mb-4 md:!mb-7">Sales Tax</h2>
 
-      <p className="text-center text-base sm:text-lg max-w-3xl mx-auto text-[#4B4A47] mb-7">
+      <p className="text-center text-base sm:text-lg max-w-3xl mx-auto text-secondary-gray mb-7">
         Set up your sales tax rates for different regions. You can choose to
         charge taxes on services, digital products, and shipping to ensure
         compliance with local tax regulations.
@@ -142,7 +142,7 @@ export default function TaxRatePage() {
           >
             {/* Country */}
             <div className="space-y-2">
-              <label className="text-[16px] md:text-[20px] font-semibold text-[#13141D] block mb-2">
+              <label className="text-[16px] md:text-[20px] font-semibold text-secondary-black block mb-2">
                 Country *
               </label>
               <input
@@ -159,7 +159,7 @@ export default function TaxRatePage() {
 
             {/* State */}
             <div className="space-y-2">
-              <label className="text-[16px] md:text-[20px] font-semibold text-[#13141D] block mb-2">
+              <label className="text-[16px] md:text-[20px] font-semibold text-secondary-black block mb-2">
                 State *
               </label>
               <input
@@ -176,21 +176,21 @@ export default function TaxRatePage() {
 
             {/* Tax */}
             <div className="space-y-2">
-              <label className="text-[16px] md:text-[20px] font-semibold text-[#13141D] block mb-2">
+              <label className="text-[16px] md:text-[20px] font-semibold text-secondary-black block mb-2">
                 Local Sales Tax Rate
               </label>
 
-              <div className="flex items-center border-b-2 pb-1 border-[#A7A39C]">
+              <div className="flex items-center border-b-2 pb-1 border-accent-gray">
                 <input
                   {...register("rate", {
                     required: "Tax rate is required",
                     min: { value: 0, message: "Rate must be positive" },
                   })}
                   placeholder="0"
-                  className="flex-1 text-[16px] font-semibold text-[#13141D]
+                  className="flex-1 text-[16px] font-semibold text-secondary-black
                 bg-transparent border-none outline-none"
                 />
-                <span className="text-[16px] font-semibold text-[#13141D]">
+                <span className="text-[16px] font-semibold text-secondary-black">
                   %
                 </span>
               </div>
@@ -201,7 +201,7 @@ export default function TaxRatePage() {
 
             <div className="space-y-6">
               {/* Digital Products */}
-              <div className="flex items-center justify-between border-b md:pb-5 border-[#A7A39C]">
+              <div className="flex items-center justify-between border-b md:pb-5 border-accent-gray">
                 <div className="flex-1 pr-4">
                   <label className="text-[16px] md:text-[20px] font-semibold text-[#000]">
                     Charge taxes on services and <br /> digital products

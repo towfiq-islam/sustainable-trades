@@ -76,7 +76,7 @@ const Page = () => {
 
       {/* Tabs */}
       <div className="mt-14">
-        <ul className="flex justify-between relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:p-[3px] after:border after:border-[#A7A39C] after:rounded-lg">
+        <ul className="flex justify-between relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:p-[3px] after:border after:border-accent-gray after:rounded-lg">
           {tradetabs.map(tab => (
             <li
               key={tab.label}
@@ -85,7 +85,7 @@ const Page = () => {
                 ${
                   activeTab === tab.label
                     ? "font-semibold text-[#000] relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[8px] after:bg-primary-green after:rounded-lg"
-                    : "text-[#13141D]"
+                    : "text-secondary-black"
                 }`}
             >
               {tab.label}
@@ -119,7 +119,7 @@ const Page = () => {
       )}
 
       {/* <div className="w-2/5 mt-10 border border-gray-300 rounded-lg p-6 ml-5">
-        <h3 className="text-[#13141D] text-[16px] font-semibold">
+        <h3 className="text-secondary-black text-[16px] font-semibold">
           Tips for Trading
         </h3>
 
@@ -130,7 +130,7 @@ const Page = () => {
                 className="flex justify-between items-center cursor-pointer py-2"
                 onClick={() => toggle(index)}
               >
-                <h4 className="text-[#13141D] text-[14px] font-normal">
+                <h4 className="text-secondary-black text-[14px] font-normal">
                   {tip.question}
                 </h4>
                 <FaAngleDown
@@ -145,7 +145,7 @@ const Page = () => {
                   maxHeight: openIndex === index ? "200px" : "0px",
                 }}
               >
-                <p className="mt-2 text-[#4B4A47] text-[14px]">{tip.answer}</p>
+                <p className="mt-2 text-secondary-gray text-[14px]">{tip.answer}</p>
               </div>
             </div>
           ))}

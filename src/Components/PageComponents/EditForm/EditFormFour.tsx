@@ -69,7 +69,7 @@ const EditFormFour = ({ data }: any) => {
 
   return (
     <>
-      <h4 className="mt-12 mb-7 text-[#274F45] text-[20px] font-semibold">
+      <h4 className="mt-12 mb-7 text-primary-green text-[20px] font-semibold">
         Geo-Locator
       </h4>
 

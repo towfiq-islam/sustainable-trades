@@ -45,7 +45,7 @@ const Membershipreusable: React.FC<MembershipReusableProps> = ({
         <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000]">
           Membership Details
         </h2>
-        <div className="flex gap-x-2 items-center border border-[#A7A39C] rounded-[8px]">
+        <div className="flex gap-x-2 items-center border border-accent-gray rounded-[8px]">
           {tabs.map(tab => (
             <button
               key={tab}
@@ -161,7 +161,7 @@ const Membershipreusable: React.FC<MembershipReusableProps> = ({
       </div>
 
       {/* Membership Status + Pause */}
-      <div className="mt-10 border border-[#274F45] rounded-lg p-6 max-w-[850px] mx-auto">
+      <div className="mt-10 border border-primary-green rounded-lg p-6 max-w-[850px] mx-auto">
         <p className="text-[#2D2D2D] font-semibold text-[20px] mb-4">pro</p>
         <p className="text-[#2D2D2D] text-sm mb-6">
           Cancel or upgrade to Pro by choosing premium above. Refunds will not

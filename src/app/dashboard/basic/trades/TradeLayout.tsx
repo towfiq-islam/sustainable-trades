@@ -45,8 +45,8 @@ const TradeLayout = ({ children, initialTab }: TradeLayoutProps) => {
 
       {/* Tabs */}
       <div className="mt-14">
-        <ul className="flex justify-between relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:p-[3px] after:border after:border-[#A7A39C] after:rounded-lg">
-          {tradetabs.map((tab) => (
+        <ul className="flex justify-between relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:p-[3px] after:border after:border-accent-gray after:rounded-lg">
+          {tradetabs.map(tab => (
             <li
               key={tab.label}
               onClick={() => setActiveTab(tab.label as typeof initialTab)}
@@ -102,7 +102,9 @@ const TradeLayout = ({ children, initialTab }: TradeLayoutProps) => {
                   maxHeight: openIndex === index ? "200px" : "0px",
                 }}
               >
-                <p className="mt-2 text-[#4B4A47] text-[14px]">{tip.answer}</p>
+                <p className="mt-2 text-secondary-gray text-[14px]">
+                  {tip.answer}
+                </p>
               </div>
             </div>
           ))}

@@ -161,7 +161,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mt-4 md:mt-8">
           <div className="flex flex-col gap-3 md:gap-6">
             <div>
-              <h3 className="text-[17px] md:text-[20px] font-semibold text-[#13141D]">
+              <h3 className="text-[17px] md:text-[20px] font-semibold text-secondary-black">
                 Product Name / Service
               </h3>
               <Controller
@@ -172,7 +172,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
                   <input
                     type="text"
                     {...field}
-                    className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-none"
+                    className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-none"
                   />
                 )}
               />
@@ -202,7 +202,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
               setValue={setValue}
             />
             <div>
-              <p className="font-semibold text-[20px] md:text-[24px] text-[#13141D]">
+              <p className="font-semibold text-[20px] md:text-[24px] text-secondary-black">
                 Listing Status:{" "}
                 <span className="px-3 py-2 text-white text-sm rounded-full bg-[#757575]">
                   Pending
@@ -217,7 +217,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
               isBasicMember={isBasicMember}
             />
             <div>
-              <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+              <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
                 Description
               </h3>
               <Controller
@@ -228,7 +228,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
                   <textarea
                     {...field}
                     rows={5}
-                    className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-0"
+                    className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-0"
                   />
                 )}
               />
@@ -248,7 +248,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
 
             {/* Fulfillment */}
             <div>
-              <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+              <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
                 Fulfillment
               </h3>
 
@@ -257,7 +257,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
               <select
                 disabled
                 value="arrange_local_pickup"
-                className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 opacity-60"
+                className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 opacity-60"
               >
                 <option value="arrange_local_pickup">
                   Arrange Local Pickup
@@ -271,7 +271,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
               setValue={setValue}
             />
             <div>
-              <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+              <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
                 Selling Option
               </h3>
               <Controller
@@ -281,7 +281,7 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
                 render={({ field }) => (
                   <select
                     {...field}
-                    className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+                    className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                   >
                     <option value="">Choose Below</option>
                     <option value="trade/barter">Trade/Barter</option>

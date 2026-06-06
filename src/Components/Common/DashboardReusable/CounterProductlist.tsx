@@ -47,15 +47,15 @@ const CounterProductlist = () => {
     },
   ];
   const handleSeeMore = () => {
-    setVisibleTrades((prev) => Math.min(prev + 5, trades.length));
+    setVisibleTrades(prev => Math.min(prev + 5, trades.length));
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Pending":
-        return "bg-[#E48872] text-[#fff]";
+        return "bg-accent-red text-[#fff]";
       case "Sent":
-        return "bg-[#274F45] text-[#fff]";
+        return "bg-primary-green text-[#fff]";
       default:
         return "bg-gray-200 text-gray-600";
     }
@@ -65,7 +65,7 @@ const CounterProductlist = () => {
     <div>
       <div className="w-full">
         <div className="flex justify-between items-center mb-4">
-          <p className="text-[16px] text-[#A7A39C]">
+          <p className="text-[16px] text-accent-gray">
             Showing {visibleTrades} of {trades.length}
           </p>
           {visibleTrades < trades.length && (
@@ -94,10 +94,10 @@ const CounterProductlist = () => {
                   <h5 className="text-[#000] font-semibold underline mb-1 text-[14px] sm:text-[16px]">
                     {trade.title}
                   </h5>
-                  <p className="text-[12px] sm:text-[14px] font-normal text-[#13141D]">
+                  <p className="text-[12px] sm:text-[14px] font-normal text-secondary-black">
                     {trade.company}
                   </p>
-                  <p className="text-[12px] sm:text-[14px] font-normal text-[#13141D]">
+                  <p className="text-[12px] sm:text-[14px] font-normal text-secondary-black">
                     Qty: {trade.qty}
                   </p>
                   <p className="text-[12px] sm:text-[14px] font-normal text-[#828282]">
@@ -108,15 +108,15 @@ const CounterProductlist = () => {
               <div className="flex flex-col items-end sm:gap-2 min-w-[80px]">
                 <span
                   className={`px-3 py-1 rounded-full text-[14px] md:text-lg font-medium w-full text-center ${getStatusColor(
-                    trade.status
+                    trade.status,
                   )}`}
                 >
                   {trade.status}
                 </span>
-                <p className="text-[14px] font-normal text-[#4B4A47]">
+                <p className="text-[14px] font-normal text-secondary-gray">
                   Offer Date:
                 </p>
-                <p className="text-[14px] font-normal text-[#4B4A47]">
+                <p className="text-[14px] font-normal text-secondary-gray">
                   {trade.date}
                 </p>
               </div>

@@ -38,7 +38,7 @@ const Page = () => {
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
-              className="p-2 md:p-4 rounded-[10px] border border-[#A7A39C] mt-2 w-full md:w-[190px] cursor-pointer"
+              className="p-2 md:p-4 rounded-[10px] border border-accent-gray mt-2 w-full md:w-[190px] cursor-pointer"
             >
               <option value="">All</option>
               <option value="a-z">A - Z</option>
@@ -48,13 +48,13 @@ const Page = () => {
 
           {/* Status */}
           <div className="w-full md:w-fit">
-            <p className="text-[#13141D] text-[16px] font-semibold">
+            <p className="text-secondary-black text-[16px] font-semibold">
               Listing Status
             </p>
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
-              className="p-2 md:p-4 rounded-[10px] border border-[#A7A39C] mt-2 w-full md:w-[190px] cursor-pointer capitalize"
+              className="p-2 md:p-4 rounded-[10px] border border-accent-gray mt-2 w-full md:w-[190px] cursor-pointer capitalize"
             >
               <option value="">All</option>
               {allStatus?.map(status => (

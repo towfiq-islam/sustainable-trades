@@ -27,7 +27,7 @@ const AboutUsTab = ({ dynamicPage }: DynamicProps) => {
           className={`flex gap-2.5 items-center text-[14px] md:text-[16px] lg:text-lg lg:border-l-2 border-b-2 lg:border-b-0 pl-1 lg:py-2 duration-300 transition-all mb-0 lg:mb-[16px] hover:text-primary-green ${
             pathname === `/about/${page_slug}`
               ? "font-semibold text-primary-green border-primary-green"
-              : "text-[#77978F] border-transparent"
+              : "text-light-green border-transparent"
           }`}
         >
           {/* Logo */}

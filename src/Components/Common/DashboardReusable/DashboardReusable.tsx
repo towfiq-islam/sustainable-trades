@@ -60,10 +60,10 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
       {/* Top Section */}
       <div className="pb-9  flex flex-col  md:flex-row justify-between md:items-center gap-[32px] md:gap-0">
         <div className="text-[20px] md:text-[24px] flex flex-col gap-y-2">
-          <h3 className=" font-semibold text-[#13141D] tracking-[2.4px]">
+          <h3 className=" font-semibold text-secondary-black tracking-[2.4px]">
             Hi {user?.first_name},
           </h3>
-          <h3 className=" font-semibold text-[#13141D] tracking-[2.4px]">
+          <h3 className=" font-semibold text-secondary-black tracking-[2.4px]">
             Here’s your store: {user?.shop_info?.shop_name}
           </h3>
         </div>
@@ -72,20 +72,20 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
           href={`/shop-details?view=${"owner"}&id=${
             user?.shop_info?.user_id
           }&listing_id=${user?.shop_info?.id}`}
-          className="px-[20px] lg:px-[58px] py-2 md:py-4 rounded-[8px] bg-[#E48872] text-[14px] md:text-[18px] font-semibold text-[#13141D] cursor-pointer hover:bg-transparent duration-500 ease-in-out border border-[#E48872] text-center"
+          className="px-[20px] lg:px-[58px] py-2 md:py-4 rounded-[8px] bg-accent-red text-[14px] md:text-[18px] font-semibold text-secondary-black cursor-pointer hover:bg-transparent duration-500 ease-in-out border border-accent-red text-center"
         >
           Edit Shop
         </Link>
       </div>
 
       {/* Upper section */}
-      <div className="border border-[#A7A39C] py-3 rounded-[8px]">
+      <div className="border border-accent-gray py-3 rounded-[8px]">
         <div className="flex flex-wrap justify-between items-center">
           <div className="px-[40px] md:px-[65px]">
             <p className="text-[16px] text-[#67645F] font-semibold text-center">
               Orders
             </p>
-            <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
+            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
               {homeDataLoading ? (
                 <p className="w-10 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
               ) : (
@@ -97,7 +97,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             <p className="text-[16px] text-[#67645F] font-semibold text-center">
               Trades
             </p>
-            <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
+            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
               {homeDataLoading ? (
                 <p className="w-14 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
               ) : (
@@ -109,7 +109,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             <p className="text-[16px] text-[#67645F] font-semibold text-center">
               Revenue
             </p>
-            <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
+            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
               {homeDataLoading ? (
                 <p className="w-20 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
               ) : (
@@ -123,7 +123,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             <p className="text-[16px] text-[#67645F] font-semibold text-center">
               Visits
             </p>
-            <h4 className="text-[25px] md:text-[40px] text-[#274F45] font-semibold text-center">
+            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
               {homeDataLoading ? (
                 <p className="w-10 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
               ) : (
@@ -137,7 +137,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
       <div className="flex flex-col gap-[20px] lg:flex-row justify-between py-10">
         {/* Latest Products */}
         <div className="pt-[30px] md:pt-[77px] pb-8">
-          <div className="border border-[#A7A39C] rounded-[10px] w-full md:w-[380px]">
+          <div className="border border-accent-gray rounded-[10px] w-full md:w-[380px]">
             <div className="p-3">
               <div className="flex justify-between">
                 <h5 className="text-[16px] text-[#000] font-semibold text-center">
@@ -178,7 +178,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                           {item?.product_name}
                         </h4>
 
-                        <h4 className="text-[14px] text-[#274F45] font-semibold">
+                        <h4 className="text-[14px] text-primary-green font-semibold">
                           {item?.unlimited_stock
                             ? "Unlimited Stock"
                             : `${item?.product_quantity} items left`}
@@ -206,18 +206,18 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
 
         {/* Popup */}
         {isPackage && (
-          <div className="border border-[#A7A39C] rounded-[8px] p-4 lg:w-1/3 text-center flex flex-col justify-center items-center">
+          <div className="border border-accent-gray rounded-[8px] p-4 lg:w-1/3 text-center flex flex-col justify-center items-center">
             <h3 className="text-[16px] md:text-[20px] font-semibold text-[#13141D">
               Want more admin access?
             </h3>
-            <p className="text-[13px] md:text-[16px] font-normal text-[#13141D] max-w-[280px] pt-[10px] pb-2.5 lg:pb-5">
+            <p className="text-[13px] md:text-[16px] font-normal text-secondary-black max-w-[280px] pt-[10px] pb-2.5 lg:pb-5">
               Upgrade at anytime to pro! All you have to do is pay the
               difference for the remainder of the year.
             </p>
 
             <Link
               href="/dashboard/basic/membership"
-              className="min-w-[250px] md:min-w-[300px] py-2 md:py-4 rounded-[8px] bg-transparent text-[14px] md:text-[18px] font-semibold text-[#13141D] cursor-pointer hover:bg-[#E48872]  duration-500 ease-in-out border border-[#E48872]"
+              className="min-w-[250px] md:min-w-[300px] py-2 md:py-4 rounded-[8px] bg-transparent text-[14px] md:text-[18px] font-semibold text-secondary-black cursor-pointer hover:bg-accent-red  duration-500 ease-in-out border border-accent-red"
             >
               Upgrade To Pro
             </Link>
@@ -226,7 +226,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
       </div>
 
       {/* Recent Activity */}
-      <div className="border border-[#A7A39C] rounded-[8px]">
+      <div className="border border-accent-gray rounded-[8px]">
         <div className="flex justify-between p-4">
           <h5 className="text-[16px] text-[#000] font-semibold text-center">
             Recent Activity
@@ -249,7 +249,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
           notificationsData?.data?.data?.map((item: NotificationItem) => (
             <div
               key={item?.id}
-              className="border-b last:border-b-0 border-[#A7A39C] py-4"
+              className="border-b last:border-b-0 border-accent-gray py-4"
             >
               <div className="flex flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
                 <div className="flex gap-x-2 items-center">

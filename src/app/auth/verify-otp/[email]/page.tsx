@@ -62,7 +62,7 @@ const page = ({ params }: any) => {
                   numInputs={4}
                   renderInput={(props: any) => <input {...props} />}
                   containerStyle={"flex items-center justify-center"}
-                  inputStyle={`mx-auto !w-[50px] md:!w-[90px] !h-[50px] md:!h-[70px] border border-[#274F45] md:rounded-[12px] !bg-plan-card rounded-[8px] text-lg md:text-xl font-medium text-[#274F45] bg-[linear-gradient(90deg,_rgba(33,72,159,0.15)_0%,_rgb(39, 79, 69)_100%)]`}
+                  inputStyle={`mx-auto !w-[50px] md:!w-[90px] !h-[50px] md:!h-[70px] border border-primary-green md:rounded-[12px] !bg-plan-card rounded-[8px] text-lg md:text-xl font-medium text-primary-green bg-[linear-gradient(90deg,_rgba(33,72,159,0.15)_0%,_rgb(39, 79, 69)_100%)]`}
                 />
               )}
             />

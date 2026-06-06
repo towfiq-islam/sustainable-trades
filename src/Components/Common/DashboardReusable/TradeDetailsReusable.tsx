@@ -21,15 +21,15 @@ const TradeDetailsReusable = () => {
     { bg?: string; border?: string; text: string }
   > = {
     Approve: {
-      bg: "bg-[#274F45]",
+      bg: "bg-primary-green",
       text: "text-white",
       border: "#274F45",
     },
-    Deny: { border: "border-[#8B200C]", text: "text-[#8B200C]" },
+    Deny: { border: "border-primary-red", text: "text-primary-red" },
     Counter: {
-      bg: "bg-[#E48872]",
+      bg: "bg-accent-red",
       text: "text-black",
-      border: "border-[#E48872]",
+      border: "border-accent-red",
     },
     Message: { border: "border-gray-200", text: "text-black" },
     "Write A review": {
@@ -49,9 +49,9 @@ const TradeDetailsReusable = () => {
     getShopDetails(senderUserId);
 
   const tradeSenderProduct = tradeSingleData?.data?.items?.find(
-    (item: any) => item?.product?.shop?.user_id === +senderUserId
+    (item: any) => item?.product?.shop?.user_id === +senderUserId,
   );
- 
+
   console.log(tradeSenderProduct);
 
   if (tradeLoading || shopLoading) {
@@ -65,16 +65,16 @@ const TradeDetailsReusable = () => {
   return (
     <div>
       <div className="flex gap-x-5 items-center mt-6">
-        <h3 className="text-[16px] text-[#274F45] font-semibold">
+        <h3 className="text-[16px] text-primary-green font-semibold">
           Trade Details
         </h3>
-        <h4 className="text-[16px] text-[#A7A39C] font-semibold">
+        <h4 className="text-[16px] text-accent-gray font-semibold">
           {" "}
           {moment(tradeSingleData?.data?.created_at).format(
-            "MMMM Do YYYY, h:mm:ss a"
+            "MMMM Do YYYY, h:mm:ss a",
           )}
         </h4>
-        <h5 className="text-[16px] text-[#A7A39C] font-semibold">
+        <h5 className="text-[16px] text-accent-gray font-semibold">
           Inquiry <span># {tradeSingleData?.data?.inquiry}</span>
         </h5>
       </div>
@@ -88,12 +88,12 @@ const TradeDetailsReusable = () => {
             className="h-[100px] w-[100px] rounded-lg"
           />
           <div className="flex flex-col gap-y-1">
-            <h3 className="text-[20px] font-semibold text-[#13141D]">
+            <h3 className="text-[20px] font-semibold text-secondary-black">
               {tradeSenderProduct?.product?.product_name}
             </h3>
-            <h4 className="text-[20px] font-normal text-[#4B4A47] flex gap-x-5 items-center">
+            <h4 className="text-[20px] font-normal text-secondary-gray flex gap-x-5 items-center">
               {tradeSenderProduct?.product?.shop?.shop_name}
-              <span className="text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
+              <span className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
                 View Shop
               </span>
             </h4>
@@ -106,28 +106,28 @@ const TradeDetailsReusable = () => {
             </div>
             <div className="flex gap-x-2 items-center">
               <LocationSvg1 />
-              <h5 className="text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
                 13 mi. away -
               </h5>
-              <h5 className="text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
                 Denver, CO
               </h5>
             </div>
             <ul className="flex flex-col gap-y-2">
-              <li className="flex gap-x-2 te4xt-[16px] font-normal text-[#4B4A47] items-center">
+              <li className="flex gap-x-2 te4xt-[16px] font-normal text-secondary-gray items-center">
                 Qty: <span className="font-bold">3 Bars </span>
               </li>
-              <li className="flex gap-x-2 te4xt-[16px] font-normal text-[#4B4A47] items-center">
+              <li className="flex gap-x-2 te4xt-[16px] font-normal text-secondary-gray items-center">
                 Item Price: <span className="font-bold">$10</span>
               </li>
-              <li className="flex gap-x-2 te4xt-[16px] font-normal text-[#4B4A47] items-center">
+              <li className="flex gap-x-2 te4xt-[16px] font-normal text-secondary-gray items-center">
                 Total amount: <span className="font-bold">$30 </span>
               </li>
             </ul>
           </div>
         </div>
         <div className="flex flex-col gap-1">
-          <h4 className="text-[20px] font-semibold text-[#274F45]">
+          <h4 className="text-[20px] font-semibold text-primary-green">
             {tradeSenderShopData?.data?.first_name}{" "}
             {tradeSenderShopData?.data?.last_name}
           </h4>
@@ -154,7 +154,7 @@ const TradeDetailsReusable = () => {
             </h5>
           </div>
           <div className="flex flex-col">
-            <h4 className="text-[16px] text-[#274F45] font-semibold">
+            <h4 className="text-[16px] text-primary-green font-semibold">
               Shop description
             </h4>
             <p className="text-[14px] max-w-[400px]">
@@ -173,7 +173,7 @@ const TradeDetailsReusable = () => {
                       className="flex justify-between py-4 cursor-pointer items-center"
                       onClick={() => setOpenIndex(isOpen ? null : index)}
                     >
-                      <h5 className="text-[15px] font-normal text-[#274F45]">
+                      <h5 className="text-[15px] font-normal text-primary-green">
                         {faq?.question}
                       </h5>
 
@@ -193,7 +193,7 @@ const TradeDetailsReusable = () => {
                     </div>
                   </div>
                 );
-              }
+              },
             )}
           </div>
         </div>
@@ -217,12 +217,12 @@ const TradeDetailsReusable = () => {
             className="h-[100px] w-[100px] rounded-lg"
           />
           <div className="flex flex-col gap-y-1">
-            <h3 className="text-[20px] font-semibold text-[#13141D]">
+            <h3 className="text-[20px] font-semibold text-secondary-black">
               8oz Watermelon Sustainable Bar Soap
             </h3>
-            <h4 className="text-[20px] font-normal text-[#4B4A47] flex gap-x-5 items-center">
+            <h4 className="text-[20px] font-normal text-secondary-gray flex gap-x-5 items-center">
               The Soap Shop
-              <span className="text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
+              <span className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
                 View Shop
               </span>
             </h4>
@@ -235,21 +235,21 @@ const TradeDetailsReusable = () => {
             </div>
             <div className="flex gap-x-2 items-center">
               <LocationSvg1 />
-              <h5 className="text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
                 13 mi. away -
               </h5>
-              <h5 className="text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
                 Denver, CO
               </h5>
             </div>
             <ul className="flex flex-col gap-y-2">
-              <li className="flex gap-x-2 te4xt-[16px] font-normal text-[#4B4A47] items-center">
+              <li className="flex gap-x-2 te4xt-[16px] font-normal text-secondary-gray items-center">
                 Qty: <span className="font-bold">3 Bars </span>
               </li>
-              <li className="flex gap-x-2 te4xt-[16px] font-normal text-[#4B4A47] items-center">
+              <li className="flex gap-x-2 te4xt-[16px] font-normal text-secondary-gray items-center">
                 Item Price: <span className="font-bold">$10</span>
               </li>
-              <li className="flex gap-x-2 te4xt-[16px] font-normal text-[#4B4A47] items-center">
+              <li className="flex gap-x-2 te4xt-[16px] font-normal text-secondary-gray items-center">
                 Total amount: <span className="font-bold">$30 </span>
               </li>
             </ul>
@@ -279,10 +279,8 @@ const TradeDetailsReusable = () => {
               className={`relative cursor-pointer py-[10px] border px-4 rounded-md font-lato font-semibold overflow-hidden
         hover:scale-110 duration-500 ease-in-out
         ${style.bg || ""} ${
-                style.border
-                  ? `border-2 ${style.border}`
-                  : "border-2 border-gray-300"
-              } ${style.text}
+          style.border ? `border-2 ${style.border}` : "border-2 border-gray-300"
+        } ${style.text}
        `}
             >
               <span className="relative z-10">{btn}</span>

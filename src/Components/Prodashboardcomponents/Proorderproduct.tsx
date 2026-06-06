@@ -104,16 +104,16 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
                   />
                 </figure>
 
-                <h3 className="text-[20px] font-semibold text-[#13141D]">
+                <h3 className="text-[20px] font-semibold text-secondary-black">
                   {order?.product?.product_name}
                 </h3>
               </div>
 
               <div className="shrink-0">
-                <h3 className="text-[20px] font-semibold text-[#13141D] pb-1">
+                <h3 className="text-[20px] font-semibold text-secondary-black pb-1">
                   ${order?.total_price}
                 </h3>
-                <h4 className="text-[18px] font-semibold text-[#13141D]">
+                <h4 className="text-[18px] font-semibold text-secondary-black">
                   Qty: {order?.quantity}
                 </h4>
               </div>

@@ -45,7 +45,7 @@ const ReuseableFavorite = () => {
             className={`text-[16px] md:text-[18px] font-bold shrink-0 cursor-pointer transition-all duration-200 uppercase ${
               isActive === tab
                 ? "text-[#000] border-b-2 border-black"
-                : "text-[#77978F]"
+                : "text-light-green"
             }`}
           >
             {tab}

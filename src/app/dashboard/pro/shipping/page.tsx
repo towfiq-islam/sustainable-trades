@@ -44,7 +44,7 @@ const Page = () => {
   const { mutate: FlatRateMutation, isPending } = useFlatRate();
   const { mutate: syncShippo, isPending: isSyncing } = useSyncShippo();
   const { mutate: connectShippo, isPending: isConnecting } = useConnectShippo();
-  
+
   const { mutate: useWeightMutation, isPending: isWightLoading } =
     useWeightRate();
   const { mutate: disconnectShippo, isPending: isDisconnecting } =
@@ -124,19 +124,19 @@ const Page = () => {
       </h2>
 
       <div className="pt-3 md:pt-6">
-        <h4 className="text-[#13141D] text-[20px] md:text-[24px] font-bold">
+        <h4 className="text-secondary-black text-[20px] md:text-[24px] font-bold">
           Shipping Settings
         </h4>
-        <p className="text-[#13141D] text-[13px] md:text-[16px] font-normal">
+        <p className="text-secondary-black text-[13px] md:text-[16px] font-normal">
           You can manage available shipping options for customers and set up
           your preferred shipping calculator.
         </p>
 
         <div className="pt-3 md:pt-6 flex flex-col gap-y-2 md:gap-y-4">
-          <h5 className="text-[#13141D] text-[13px] md:text-[16px] font-semibold">
+          <h5 className="text-secondary-black text-[13px] md:text-[16px] font-semibold">
             Shipping Options
           </h5>
-          <p className="text-[#13141D] text-[12px] md:text-[16px] font-normal max-w-[570px]">
+          <p className="text-secondary-black text-[12px] md:text-[16px] font-normal max-w-[570px]">
             You can choose how you want to apply shipping costs to your order.
             Shipping cost can be calculated with a flat rate, by weight, or
             connect your store to Shippo and enjoy full shipping integration
@@ -146,7 +146,7 @@ const Page = () => {
           <div className="relative w-full">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="bg-[#274F45] text-white px-4 py-2 rounded-lg w-fit font-semibold flex gap-x-5 items-center text-[14px] md:text-[16px] cursor-pointer"
+              className="bg-primary-green text-white px-4 py-2 rounded-lg w-fit font-semibold flex gap-x-5 items-center text-[14px] md:text-[16px] cursor-pointer"
             >
               <FaAngleDown />
               Add Shipping Option
@@ -158,7 +158,7 @@ const Page = () => {
                   onClick={() => setOpenFlatModal(true)}
                   className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer"
                 >
-                  <h3 className="text-[#274F45] font-bold text-[14px] md:text-[16px]">
+                  <h3 className="text-primary-green font-bold text-[14px] md:text-[16px]">
                     Flat Rate
                   </h3>
                   <p className="text-[13px] md:text-[16px] text-[#3D3D3D] font-medium pt-1">
@@ -171,7 +171,7 @@ const Page = () => {
                   onClick={() => setOpenWightModal(true)}
                   className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer"
                 >
-                  <h3 className="text-[#274F45] font-bold text-[14px] md:text-[16px]">
+                  <h3 className="text-primary-green font-bold text-[14px] md:text-[16px]">
                     Depending on Weight
                   </h3>
                   <p className="text-[13px] md:text-[16px] text-[#3D3D3D] font-medium pt-1">
@@ -184,7 +184,7 @@ const Page = () => {
                   className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer flex gap-3 items-center justify-between"
                 >
                   <div>
-                    <h3 className="text-[#274F45] font-bold text-[16px]">
+                    <h3 className="text-primary-green font-bold text-[16px]">
                       {user?.shop_info?.shippo_connected
                         ? "Shippo Connected"
                         : "Connect to Shippo"}
@@ -280,7 +280,7 @@ const Page = () => {
             <button
               type="submit"
               disabled={isPending}
-              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-[#274F45] rounded w-[190px] cursor-pointer disabled:opacity-85 disabled:cursor-not-allowed"
+              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-[190px] cursor-pointer disabled:opacity-85 disabled:cursor-not-allowed"
             >
               {isPending ? "Saving..." : "Save"}
             </button>
@@ -352,14 +352,14 @@ const Page = () => {
             <button
               type="submit"
               disabled={isWightLoading}
-              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-[#274F45] rounded w-[190px] cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
+              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-[190px] cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
             >
               {isWightLoading ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
 
-        <h4 className="text-[20px] font-semibold text-[#274F45] mt-5">
+        <h4 className="text-[20px] font-semibold text-primary-green mt-5">
           Weight Ranges
         </h4>
         <p className="font-normal text-[16px] text-[#3D3D3D]">
@@ -418,12 +418,12 @@ const Page = () => {
         </h3>
 
         <div className="px-6 py-6 space-y-5">
-          <p className="font-semibold text-[#13141D]">
+          <p className="font-semibold text-secondary-black">
             Flexible, powerful shipping starting at $0/month (billed directly by
             Shippo)
           </p>
 
-          <ul className="list-disc list-inside space-y-1 text-[#13141D] text-[15px]">
+          <ul className="list-disc list-inside space-y-1 text-secondary-black text-[15px]">
             <li>
               Sync your Sustainable Trades orders with Shippo in just a few
               clicks.
@@ -437,7 +437,7 @@ const Page = () => {
             </li>
           </ul>
 
-          <p className="text-sm text-[#13141D] leading-relaxed">
+          <p className="text-sm text-secondary-black leading-relaxed">
             Shippo is a leading web-based shipping platform designed for small
             and growing online sellers. By creating a Shippo account,
             Sustainable Trades members can import their orders, print shipping
@@ -446,7 +446,7 @@ const Page = () => {
           </p>
 
           <p>
-            <span className="font-semibold text-[#13141D]">
+            <span className="font-semibold text-secondary-black">
               Sustainable Trades customers are billed directly by Shippo.
             </span>
             <br />
@@ -472,7 +472,7 @@ const Page = () => {
             <div className="space-y-5 border-t pt-5">
               {/* Carrier */}
               <div>
-                <label className="block text-sm font-semibold text-[#13141D] mb-3">
+                <label className="block text-sm font-semibold text-secondary-black mb-3">
                   Pick your carrier
                 </label>
 
@@ -531,7 +531,7 @@ const Page = () => {
 
               {/* Label Type */}
               <div>
-                <label className="block text-sm font-semibold text-[#13141D] mb-3">
+                <label className="block text-sm font-semibold text-secondary-black mb-3">
                   Choose label type
                 </label>
 

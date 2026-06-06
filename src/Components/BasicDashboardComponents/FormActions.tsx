@@ -16,7 +16,7 @@ const FormActions = ({ isPending }: FormActionsProps) => (
     <button
       type="submit"
       disabled={isPending}
-      className={`bg-[#E48872] duration-500 ease-in-out text-white py-2.5 md:py-5 px-6 md:px-12 flex items-center justify-center gap-2 cursor-pointer rounded-lg font-semibold hover:bg-[#a34739] mt-6 ${
+      className={`bg-accent-red duration-500 ease-in-out text-white py-2.5 md:py-5 px-6 md:px-12 flex items-center justify-center gap-2 cursor-pointer rounded-lg font-semibold hover:bg-[#a34739] mt-6 ${
         isPending ? "opacity-50 cursor-not-allowed" : ""
       }`}
     >

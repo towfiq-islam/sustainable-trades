@@ -63,8 +63,8 @@ const page = () => {
               }}
               className={`cursor-pointer px-3 capitalize text-[16px] md:text-[20px] font-semibold ${
                 isActive === tab
-                  ? "border-b-2 border-[#13141D] text-[#13141D]"
-                  : "text-[#77978F]"
+                  ? "border-b-2 border-secondary-black text-secondary-black"
+                  : "text-light-green"
               }`}
             >
               {tab}
@@ -77,7 +77,7 @@ const page = () => {
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b-2 border-gray-300 text-[#13141D] text-[16px] font-semibold">
+                <tr className="border-b-2 border-gray-300 text-secondary-black text-[16px] font-semibold">
                   <th className="py-3 px-4 text-left"># Order ID</th>
                   <th className="py-3 px-4 text-left">Purchase Date</th>
                   <th className="py-3 px-4 text-left">Billing to</th>
@@ -95,7 +95,7 @@ const page = () => {
                   allPayments?.data?.map((order: orderItem, i: number) => (
                     <tr
                       key={i}
-                      className="border-b border-gray-300 text-[#13141D] text-[15px] font-semibold"
+                      className="border-b border-gray-300 text-secondary-black text-[15px] font-semibold"
                     >
                       <td className="py-4 px-4">
                         {order?.order?.order_number}
@@ -143,7 +143,7 @@ const page = () => {
             {paginatedData.map((order, i) => (
               <div
                 key={i}
-                className="border rounded-lg p-4 shadow-sm text-sm text-[#13141D] font-medium relative"
+                className="border rounded-lg p-4 shadow-sm text-sm text-secondary-black font-medium relative"
               >
                 <div className="flex justify-between">
                   <span className="font-semibold">Invoice:</span>
@@ -178,7 +178,7 @@ const page = () => {
 
                 <div className="mt-3 flex flex-col md:flex-row gap-2">
                   <button
-                    className="flex-1 bg-[#274F45] text-white py-2 cursor-pointer rounded-lg"
+                    className="flex-1 bg-primary-green text-white py-2 cursor-pointer rounded-lg"
                     onClick={() =>
                       router.push(`/dashboard/pro/orders/${order.invoice}`)
                     }

@@ -477,7 +477,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               type="text"
               value={productName}
               onChange={e => setProductName(e.target.value)}
-              className="w-full border text-[18px] md:text-[20px] text-secondary-black border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-none"
+              className="w-full border text-[18px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-none"
             />
           </div>
 
@@ -563,7 +563,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               value={quantity}
               disabled
               onChange={e => setQuantity(e.target.value)}
-              className="w-full md:w-[350px] border cursor-not-allowed bg-gray-300 border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 text-[20px] text-[#13141D] font-normal outline-0"
+              className="w-full md:w-[350px] border cursor-not-allowed bg-gray-300 border-accent-gray rounded-lg p-2 md:p-4 mt-2 text-[20px] text-secondary-black font-normal outline-0"
             />
             <div className="flex flex-col gap-4 mt-2">
               <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-secondary-black font-semibold">
@@ -693,7 +693,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               type="text"
               value={price}
               onChange={e => setPrice(e.target.value)}
-              className="w-full border text-[16px] md:text-[20px] text-secondary-black border-[#A7A39C] rounded-lg p-2 md:p-4  outline-0"
+              className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4  outline-0"
             />
           </div>
           <div>
@@ -705,7 +705,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               disabled
               value={cost}
               onChange={e => setCost(e.target.value)}
-              className="w-full border text-[16px] cursor-not-allowed bg-gray-300 md:text-[20px] text-secondary-black border-[#A7A39C] rounded-lg p-2 md:p-4  outline-0"
+              className="w-full border text-[16px] cursor-not-allowed bg-gray-300 md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4  outline-0"
             />
           </div>
           <div>
@@ -717,7 +717,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               disabled
               value={weight}
               onChange={e => setWeight(e.target.value)}
-              className="w-full border text-[16px] cursor-not-allowed bg-gray-300  md:text-[20px] text-secondary-black border-[#A7A39C] rounded-lg p-2 md:p-4 outline-0"
+              className="w-full border text-[16px] cursor-not-allowed bg-gray-300  md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 outline-0"
             />
           </div>
 
@@ -730,7 +730,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               rows={5}
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full border text-[20px] text-secondary-black border-[#A7A39C] rounded-lg p-2 md:p-4  outline-0"
+              className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4  outline-0"
             />
           </div>
 
@@ -739,7 +739,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             Category
           </h3>
           <select
-            className="w-full border text-[16px] md:text-[20px] text-secondary-black border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+            className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
             value={category}
             onChange={e => {
               setCategory(e.target.value);
@@ -761,7 +761,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                 Subcategory
               </h3>
               <select
-                className="w-full border text-[20px] text-secondary-black border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+                className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                 value={subcategory}
                 onChange={e => setSubcategory(e.target.value)}
               >
@@ -788,7 +788,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             </h3>
             <select
               disabled
-              className="w-full border text-[16px] md:text-[20px] text-secondary-black border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 opacity-60"
+              className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 opacity-60"
               value={fulfillment}
               onChange={e => setFulfillment(e.target.value)}
             >
@@ -817,7 +817,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                 value={newTag}
                 onChange={e => setNewTag(e.target.value)}
                 onKeyPress={e => e.key === "Enter" && handleAddTag()}
-                className="flex-1  border text-[20px] text-secondary-black border-[#A7A39C] rounded-lg p-2 md:p-4 pl-10 "
+                className="flex-1  border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 pl-10 "
                 placeholder="Add a meta tag"
               />
               <button
@@ -834,7 +834,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               Selling Option
             </h3>
             <select
-              className="w-full border text-[16px] md:text-[20px] text-secondary-black border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+              className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
               value={sellingOption}
               onChange={e => setSellingOption(e.target.value)}
             >
@@ -872,7 +872,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
-            <h3 className="text-lg font-semibold text-[#13141D] mb-4">
+            <h3 className="text-lg font-semibold text-secondary-black mb-4">
               Delete Listing
             </h3>
             <p className="text-[#67645F] mb-6">
@@ -882,7 +882,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             <div className="flex justify-end gap-3">
               <button
                 onClick={cancelDelete}
-                className="px-4 py-2 border border-[#A7A39C] rounded-lg text-secondary-black hover:bg-gray-100"
+                className="px-4 py-2 border border-accent-gray rounded-lg text-secondary-black hover:bg-gray-100"
               >
                 Cancel
               </button>

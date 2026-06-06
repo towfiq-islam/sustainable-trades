@@ -36,7 +36,7 @@ const EditOrderModal: React.FC<OrderNoteProps> = ({
             {/* Full Name */}
             <div>
               <p className="form-label font-bold">
-                Full Name <span className="text-[#8B200C]">*</span>
+                Full Name <span className="text-primary-red">*</span>
               </p>
               <input
                 type="text"
@@ -46,7 +46,7 @@ const EditOrderModal: React.FC<OrderNoteProps> = ({
             </div>
             <div>
               <p className="form-label font-bold">
-                Country Name <span className="text-[#8B200C]">*</span>
+                Country Name <span className="text-primary-red">*</span>
               </p>
               <select className="form-input">
                 <option value="Country">Country</option>
@@ -57,7 +57,7 @@ const EditOrderModal: React.FC<OrderNoteProps> = ({
             </div>
             <div>
               <p className="form-label font-bold">
-                Street Address <span className="text-[#8B200C]">*</span>
+                Street Address <span className="text-primary-red">*</span>
               </p>
               <input
                 type="text"
@@ -78,7 +78,7 @@ const EditOrderModal: React.FC<OrderNoteProps> = ({
             <div className="flex md:gap-5 flex-col md:flex-row md:justify-between ">
               <div className="w-full">
                 <p className="form-label font-bold">
-                  City <span className="text-[#8B200C]">*</span>
+                  City <span className="text-primary-red">*</span>
                 </p>
                 <input
                   type="text"
@@ -88,14 +88,14 @@ const EditOrderModal: React.FC<OrderNoteProps> = ({
               </div>
               <div className="w-full">
                 <p className="form-label font-bold">
-                  Zip Code <span className="text-[#8B200C]">*</span>
+                  Zip Code <span className="text-primary-red">*</span>
                 </p>
                 <input type="text" className="form-input" placeholder="1205" />
               </div>
             </div>
             <div>
               <p className="form-label font-bold">
-                State <span className="text-[#8B200C]">*</span>
+                State <span className="text-primary-red">*</span>
               </p>
               <select className="form-input">
                 <option value="State">State</option>

@@ -74,14 +74,14 @@ const actionButtonStyles: Record<
   { bg?: string; border?: string; text: string }
 > = {
   Approve: {
-    bg: "bg-[#274F45]",
+    bg: "bg-primary-green",
     text: "text-white",
   },
-  Deny: { border: "border-[#8B200C]", text: "text-[#8B200C]" },
+  Deny: { border: "border-primary-red", text: "text-primary-red" },
   Counter: {
-    bg: "bg-[#E48872]",
+    bg: "bg-accent-red",
     text: "text-black",
-    border: "border-[#E48872]",
+    border: "border-accent-red",
   },
   Message: { border: "border-gray-200", text: "text-black" },
   "Write A review": {
@@ -116,7 +116,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
             queryKey: ["get-count"],
           });
         },
-        onError: (error) => {
+        onError: error => {
           toast.error("This is not your offer");
         },
       });
@@ -163,25 +163,25 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
             >
               <div className="flex flex-col gap-3.5 sm:gap-0 sm:flex-row justify-between pb-4 border-b border-[#BFBEBE]">
                 <div className="flex flex-wrap sm:flex-nowrap  gap-x-5 items-center">
-                  <h3 className="font-semibold text-[16px] text-[#274F45]">
+                  <h3 className="font-semibold text-[16px] text-primary-green">
                     Trade Request
                   </h3>
-                  <h4 className="font-semibold text-[16px] text-[#A7A39C]">
+                  <h4 className="font-semibold text-[16px] text-accent-gray">
                     {moment(trade.created_at).format("MMMM Do YYYY, h:mm:ss a")}
                   </h4>
-                  <h5 className="font-semibold text-[16px] text-[#A7A39C]">
+                  <h5 className="font-semibold text-[16px] text-accent-gray">
                     Inquiry # {trade.inquiry}
                   </h5>
                 </div>
                 <button
                   className={`px-2 py-1 rounded-[8px] min-w-[100px] inline-block  cursor-pointer capitalize font-semibold ${
                     trade.status === "pending"
-                      ? "bg-[#E48872] text-white"
+                      ? "bg-accent-red text-white"
                       : trade.status === "sent"
-                      ? "bg-blue-500"
-                      : trade.status === "accepted"
-                      ? "bg-[#B0DEDB] text-black"
-                      : "bg-[#8B200C] text-white"
+                        ? "bg-blue-500"
+                        : trade.status === "accepted"
+                          ? "bg-[#B0DEDB] text-black"
+                          : "bg-primary-red text-white"
                   }`}
                 >
                   {trade.status}
@@ -190,11 +190,11 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
 
               {(() => {
                 const requestedItems = trade?.items?.filter(
-                  (item: any) => item?.type?.trim() === "requested"
+                  (item: any) => item?.type?.trim() === "requested",
                 );
 
                 const offeredItems = trade?.items?.filter(
-                  (item: any) => item?.type?.trim() === "offered"
+                  (item: any) => item?.type?.trim() === "offered",
                 );
 
                 return (
@@ -215,12 +215,12 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                             <div className="flex flex-col">
                               <Link
                                 href={`/product-details/${item?.product_id}`}
-                                className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-[#13141D] hover:underline"
+                                className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-secondary-black hover:underline"
                               >
                                 {item?.product?.product_name}
                               </Link>
 
-                              <h4 className="text-[16px] sm:text-[17px] font-normal text-[#4B4A47]">
+                              <h4 className="text-[16px] sm:text-[17px] font-normal text-secondary-gray">
                                 Visit Shop:{" "}
                                 <Link
                                   href={`/shop-details?view=customer&id=${item?.product?.shop?.user_id}&listing_id=${item?.product?.shop_info_id}`}
@@ -230,23 +230,23 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                                 </Link>
                               </h4>
 
-                              <h5 className="text-[#13141D] text-[13px] sm:text-[14px]">
+                              <h5 className="text-secondary-black text-[13px] sm:text-[14px]">
                                 Qty: {item?.quantity}
                               </h5>
 
-                              <h6 className="text-[#13141D] text-[13px] sm:text-[14px]">
+                              <h6 className="text-secondary-black text-[13px] sm:text-[14px]">
                                 Unit Price: $ {item?.product?.product_price}
                               </h6>
                             </div>
                           </div>
 
-                          <h2 className="text-[16px] sm:text-[20px] font-normal text-[#4B4A47]">
+                          <h2 className="text-[16px] sm:text-[20px] font-normal text-secondary-gray">
                             Total amount:{" "}
-                            <span className="font-semibold text-[#13141D]">
+                            <span className="font-semibold text-secondary-black">
                               $
                               {totalAmount(
                                 +item?.quantity,
-                                +item?.product?.product_price
+                                +item?.product?.product_price,
                               )}
                             </span>
                           </h2>
@@ -281,12 +281,12 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                             <div className="flex flex-col">
                               <Link
                                 href={`/product-details/${item?.product_id}`}
-                                className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-[#13141D] hover:underline"
+                                className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-secondary-black hover:underline"
                               >
                                 {item?.product?.product_name}
                               </Link>
 
-                              <h4 className="text-[16px] sm:text-[17px] font-normal text-[#4B4A47]">
+                              <h4 className="text-[16px] sm:text-[17px] font-normal text-secondary-gray">
                                 Visit Shop:{" "}
                                 <Link
                                   href={`/shop-details?view=customer&id=${item?.product?.shop?.user_id}&listing_id=${item?.product?.shop_info_id}`}
@@ -296,23 +296,23 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                                 </Link>
                               </h4>
 
-                              <h5 className="text-[#13141D] text-[13px] sm:text-[14px]">
+                              <h5 className="text-secondary-black text-[13px] sm:text-[14px]">
                                 Qty: {item?.quantity}
                               </h5>
 
-                              <h6 className="text-[#13141D] text-[13px] sm:text-[14px]">
+                              <h6 className="text-secondary-black text-[13px] sm:text-[14px]">
                                 Unit Price: $ {item?.product?.product_price}
                               </h6>
                             </div>
                           </div>
 
-                          <h2 className="text-[16px] sm:text-[20px] font-normal text-[#4B4A47]">
+                          <h2 className="text-[16px] sm:text-[20px] font-normal text-secondary-gray">
                             Total amount:{" "}
-                            <span className="font-semibold text-[#13141D]">
+                            <span className="font-semibold text-secondary-black">
                               $
                               {totalAmount(
                                 +item?.quantity,
-                                +item?.product?.product_price
+                                +item?.product?.product_price,
                               )}
                             </span>
                           </h2>
@@ -344,7 +344,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                           onClick={() => {
                             if (btn === "Counter") {
                               router.push(
-                                `/dashboard/${user?.membership?.membership_type}/trades/counter/${trade?.id}`
+                                `/dashboard/${user?.membership?.membership_type}/trades/counter/${trade?.id}`,
                               );
                             } else {
                               setUserId(trade?.receiver_id);

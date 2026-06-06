@@ -156,7 +156,7 @@ const DiscountsPage = () => {
                   className="self-start mt-2 scale-110"
                 />
                 <div>
-                  <h3 className="text-[18px] md:text-[20px] font-bold text-[#13141D]">
+                  <h3 className="text-[18px] md:text-[20px] font-bold text-secondary-black">
                     Discount Name: {d?.name}
                   </h3>
 
@@ -176,14 +176,14 @@ const DiscountsPage = () => {
                   </p>
 
                   <div className="mt-3 md:mt-7 text-[14px] md:text-[16px] flex gap-1 items-center">
-                    <span className="font-bold text-[12px] md:text-[16px] text-[#13141D]">
+                    <span className="font-bold text-[12px] md:text-[16px] text-secondary-black">
                       STARTS:
                     </span>
                     <span className="text-gray-600">{`${moment(
                       d?.start_date,
                     ).format("ll")} at ${d?.start_time}`}</span>
 
-                    <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-[#13141D]">
+                    <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-secondary-black">
                       ENDS:
                     </span>
                     <span className="text-gray-600">
@@ -199,7 +199,7 @@ const DiscountsPage = () => {
 
               {/* Right side */}
               <div className="flex items-end w-full md:w-fit md:justify-end flex-col space-y-2 relative">
-                <div className="text-[15px] md:text-[20px] font-bold text-[#13141D]">
+                <div className="text-[15px] md:text-[20px] font-bold text-secondary-black">
                   {d?.code}
                 </div>
 
@@ -214,7 +214,7 @@ const DiscountsPage = () => {
                   </Link>
                 </div>
 
-                <div className="text-[16px] text-[#13141D] font-bold">
+                <div className="text-[16px] text-secondary-black font-bold">
                   {d?.discount_limits === 0
                     ? "Unlimited Uses"
                     : `0 of ${d?.discount_limits} Uses`}

@@ -90,7 +90,7 @@ const page = () => {
             }}
             className={`text-[15px] lg:text-[20px] font-bold text-black px-3 md:px-6 py-2 w-fit flex-1 text-nowrap cursor-pointer capitalize ${
               isActive === tab
-                ? "border-b-[3px] border-[#77978F]"
+                ? "border-b-[3px] border-light-green"
                 : "border-b border-[#BFBEBE]"
             } ${index === tabs.length - 1 ? "flex-1" : "sm:shrink-0"}`}
           >

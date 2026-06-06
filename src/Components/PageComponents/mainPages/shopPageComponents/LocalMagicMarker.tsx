@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { LuFileQuestion } from "react-icons/lu";
@@ -18,11 +18,14 @@ type Props = {
 const LocalMagicMarker = ({ address }: Props) => {
   // States
   const [searchShop, setSearchShop] = useState<string>(address);
+  const [page, setPage] = useState<string>("");
   const [hoveredShop, setHoveredShop] = useState<any>(null);
 
   // Query
-  const { data: shopData, isLoading: shopLoading } =
-    getAllShopsClient(searchShop);
+  const { data: shopData, isLoading: shopLoading } = getAllShopsClient(
+    searchShop,
+    page,
+  );
 
   return (
     <section className="mt-10 mb-16">
@@ -61,7 +64,7 @@ const LocalMagicMarker = ({ address }: Props) => {
                     No Shop Found
                   </div>
                 ) : (
-                  shopData?.data?.map((item: any) => (
+                  shopData?.data?.data?.map((item: any) => (
                     <Link
                       href={`/shop-details?view=${"customer"}&id=${
                         item?.shop_info?.user_id
@@ -116,6 +119,23 @@ const LocalMagicMarker = ({ address }: Props) => {
                     </Link>
                   ))
                 )}
+
+                {/* Pagination */}
+                {!shopLoading && (
+                  <div className="py-8 flex justify-center items-center gap-2 flex-wrap">
+                    {shopData?.data?.links?.map((item: any, idx: number) => (
+                      <button
+                        key={idx}
+                        disabled={!item.url}
+                        dangerouslySetInnerHTML={{ __html: item.label }}
+                        onClick={() =>
+                          item.url && setPage(item.url.split("=")[1])
+                        }
+                        className={`px-3 py-1 rounded border transition-all duration-200 ${item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"} ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex flex-col justify-center h-full p-2 lg:p-8 bg-[#d4e2cb2f] rounded-xl">
@@ -133,9 +153,9 @@ const LocalMagicMarker = ({ address }: Props) => {
 
             {/* Right - Google Map */}
             <div className="md:h-[550px]">
-              {shopData?.data && shopData?.data?.length > 0 ? (
+              {shopData?.data?.data && shopData?.data?.data?.length > 0 ? (
                 <ShopsMap
-                  shops={shopData?.data}
+                  shops={shopData?.data?.data}
                   hoveredShop={hoveredShop}
                   shopLoading={shopLoading}
                 />

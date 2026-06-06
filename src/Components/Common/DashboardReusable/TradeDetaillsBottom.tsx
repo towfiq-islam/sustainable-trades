@@ -109,9 +109,9 @@ const TradeDetailsBottom = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Pending":
-        return "bg-[#E48872] text-[#fff]";
+        return "bg-accent-red text-[#fff]";
       case "Sent":
-        return "bg-[#274F45] text-[#fff]";
+        return "bg-primary-green text-[#fff]";
       default:
         return "bg-gray-200 text-gray-600";
     }
@@ -129,7 +129,7 @@ const TradeDetailsBottom = () => {
             className="w-10 h-10 rounded-full"
           />
           <div>
-            <h4 className="font-semibold text-[#274F45]">Chat With</h4>
+            <h4 className="font-semibold text-primary-green">Chat With</h4>
             <p className="text-sm text-gray-600">Linda Anderson</p>
           </div>
         </div>
@@ -169,7 +169,7 @@ const TradeDetailsBottom = () => {
               value={message}
               onChange={e => setMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="w-full border border-[#BFBEBE] rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#274F45] focus:border-transparent"
+              className="w-full border border-[#BFBEBE] rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
             />
             <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
               <FaMicrophone size={14} />
@@ -177,7 +177,7 @@ const TradeDetailsBottom = () => {
           </div>
           <button
             onClick={handleSendMessage}
-            className="bg-[#274F45] text-white p-2 rounded-md hover:bg-[#1e3a32] transition-colors"
+            className="bg-primary-green text-white p-2 rounded-md hover:bg-[#1e3a32] transition-colors"
           >
             <FaPaperPlane size={16} />
           </button>
@@ -187,7 +187,7 @@ const TradeDetailsBottom = () => {
       {/* Trade List Section */}
       <div className="w-1/2">
         <div className="flex justify-between items-center mb-4">
-          <p className="text-[16px] text-[#A7A39C]">
+          <p className="text-[16px] text-accent-gray">
             Showing {visibleTrades} of {trades.length}
           </p>
           {visibleTrades < trades.length && (
@@ -217,10 +217,10 @@ const TradeDetailsBottom = () => {
                   <h5 className="text-[#000] font-semibold underline mb-1 text-[16px]">
                     {trade.title}
                   </h5>
-                  <p className="text-[14px] font-normal text-[#13141D]">
+                  <p className="text-[14px] font-normal text-secondary-black">
                     {trade.company}
                   </p>
-                  <p className="text-[14px] font-normal text-[#13141D]">
+                  <p className="text-[14px] font-normal text-secondary-black">
                     Qty: {trade.qty}
                   </p>
                   <p className="text-[14px] font-normal text-[#828282]">
@@ -231,15 +231,15 @@ const TradeDetailsBottom = () => {
               <div className="flex flex-col items-end gap-2 min-w-[80px]">
                 <span
                   className={`px-3 py-1 rounded-full text-lg font-medium w-full text-center ${getStatusColor(
-                    trade.status
+                    trade.status,
                   )}`}
                 >
                   {trade.status}
                 </span>
-                <p className="text-[14px] font-normal text-[#4B4A47]">
+                <p className="text-[14px] font-normal text-secondary-gray">
                   Offer Date:
                 </p>
-                <p className="text-[14px] font-normal text-[#4B4A47]">
+                <p className="text-[14px] font-normal text-secondary-gray">
                   {trade.date}
                 </p>
               </div>

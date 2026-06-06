@@ -7,7 +7,6 @@ import Container from "@/Components/Common/Container";
 
 const page = () => {
   const { user } = useAuth();
-  console.log(user);
 
   return (
     <div className="lg:pt-20 pt-10 lg:pb-[200px] pb-[50px]">
@@ -16,7 +15,7 @@ const page = () => {
 
         <Image src={setupBg} alt="setup" unoptimized className="mx-auto my-9" />
 
-        <p className="text-[20px] text-[#67645F] font-bold text-center max-w-[700px] w-full mx-auto">
+        <p className="text-[20px] text-secondary-gray font-bold text-center max-w-[700px] w-full mx-auto">
           Now that we have your preferences all sorted out, it's time to unveil
           your amazing selection of products!
         </p>

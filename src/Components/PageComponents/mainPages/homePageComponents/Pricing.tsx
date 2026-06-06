@@ -63,7 +63,7 @@ const Pricing = ({
           Plans & Benefits
         </h2>
 
-        <p className="text-center text-base sm:text-lg md:text-xl text-[#4B4A47] mb-7">
+        <p className="text-center text-base sm:text-lg md:text-xl text-secondary-gray mb-7">
           {description}
         </p>
 
@@ -120,7 +120,7 @@ const Pricing = ({
                     membership_type,
                     image,
                   }: pricingData,
-                  idx: number
+                  idx: number,
                 ) => (
                   <div
                     key={id}
@@ -192,7 +192,7 @@ const Pricing = ({
                                 </p>
                               </div>
                             </div>
-                          )
+                          ),
                         )}
                       </div>
                     </div>
@@ -234,13 +234,13 @@ const Pricing = ({
                         : `Choose ${name}`}
                     </button>
                   </div>
-                )
+                ),
               )}
         </div>
 
         {/* Cancel btn */}
         {isCancel && user?.membership?.status === "active" && (
-          <div className="mt-10 border border-[#274F45] rounded-lg p-6 max-w-[850px] mx-auto">
+          <div className="mt-10 border border-primary-green rounded-lg p-6 max-w-[850px] mx-auto">
             <p className="text-[#2D2D2D] font-semibold text-2xl capitalize mb-4">
               {user?.membership?.membership_type}
             </p>

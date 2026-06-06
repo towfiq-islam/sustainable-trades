@@ -18,7 +18,7 @@ const QuantitySection = ({
 
   return (
     <div>
-      <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+      <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
         Quantity
       </h3>
       {/* <Controller
@@ -34,7 +34,7 @@ const QuantitySection = ({
           <input
             type="number"
             {...field}
-            className={`w-full lg:w-[350px] border border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 text-[#13141D] font-normal outline-0 ${
+            className={`w-full lg:w-[350px] border border-accent-gray rounded-lg p-2 md:p-4 mt-2 text-secondary-black font-normal outline-0 ${
               isBasicMember ? "" : ""
             }`}
           />
@@ -66,7 +66,7 @@ const QuantitySection = ({
               type="number"
               {...field}
               disabled={unlimitedStock}
-              className={`w-full lg:w-[350px] border border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 text-[#13141D] font-normal outline-0 ${
+              className={`w-full lg:w-[350px] border border-accent-gray rounded-lg p-2 md:p-4 mt-2 text-secondary-black font-normal outline-0 ${
                 unlimitedStock ? "bg-gray-100 cursor-not-allowed" : ""
               }`}
             />
@@ -82,7 +82,7 @@ const QuantitySection = ({
         {/* Unlimited Stock */}
         <label
           className={`flex items-center gap-2 text-[20px] md:text-[24px] font-semibold ${
-            isBasicMember ? "text-gray-400" : "text-[#13141D]"
+            isBasicMember ? "text-gray-400" : "text-secondary-black"
           }`}
         >
           Unlimited Stock
@@ -98,7 +98,7 @@ const QuantitySection = ({
                 onChange={e => field.onChange(e.target.checked)}
                 onBlur={field.onBlur}
                 disabled={isBasicMember}
-                className={`mt-1 accent-[#274F45] ${
+                className={`mt-1 accent-primary-green ${
                   isBasicMember ? "cursor-not-allowed" : ""
                 }`}
               />
@@ -107,7 +107,7 @@ const QuantitySection = ({
         </label>
 
         {/* Feature */}
-        <label className="flex items-center gap-2 text-[20px] md:text-[24px] text-[#13141D] font-semibold">
+        <label className="flex items-center gap-2 text-[20px] md:text-[24px] text-secondary-black font-semibold">
           Feature
           <Controller
             name="is_featured"
@@ -120,7 +120,7 @@ const QuantitySection = ({
                 checked={!!field.value}
                 onChange={e => field.onChange(e.target.checked)}
                 onBlur={field.onBlur}
-                className="mt-1 accent-[#274F45]"
+                className="mt-1 accent-primary-green"
               />
             )}
           />
@@ -129,7 +129,7 @@ const QuantitySection = ({
         {/* Out of Stock */}
         <label
           className={`flex items-center gap-2 text-[20px] md:text-[24px] font-semibold ${
-            isBasicMember ? "text-gray-400" : "text-[#13141D]"
+            isBasicMember ? "text-gray-400" : "text-secondary-black"
           }`}
         >
           Out of Stock
@@ -145,7 +145,7 @@ const QuantitySection = ({
                 onChange={e => field.onChange(e.target.checked)}
                 onBlur={field.onBlur}
                 disabled={isBasicMember}
-                className={`mt-1 accent-[#274F45] ${
+                className={`mt-1 accent-primary-green ${
                   isBasicMember ? "cursor-not-allowed" : ""
                 }`}
               />
@@ -153,7 +153,7 @@ const QuantitySection = ({
           />
         </label>
 
-        <p className="text-[16px] text-[#13141D] font-normal w-full md:max-w-[400px]">
+        <p className="text-[16px] text-secondary-black font-normal w-full md:max-w-[400px]">
           Status automatically changes to "Out of Inventory" when zero inventory
           is reached
         </p>

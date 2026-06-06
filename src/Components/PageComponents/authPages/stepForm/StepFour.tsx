@@ -67,7 +67,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
     }
 
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-      address
+      address,
     )}&key=${API_KEY}`;
 
     try {
@@ -165,7 +165,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
 
         {/* Options Panel */}
         <div className="absolute top-8 right-10 z-10 py-6 max-w-[528px] overflow-y-auto">
-          <div className="bg-[#FFFDF8] px-6 py-10 rounded-lg flex flex-col gap-y-6">
+          <div className="bg-accent-white px-6 py-10 rounded-lg flex flex-col gap-y-6">
             {[1, 2, 3].map(opt => (
               <div key={opt} className="flex gap-x-4 items-start">
                 <input
@@ -177,13 +177,13 @@ const StepFour = ({ setStep, step, isPending }: any) => {
                 />
 
                 <div>
-                  <h3 className="text-[#13141D] font-semibold text-[22px]">
+                  <h3 className="text-secondary-black font-semibold text-[22px]">
                     {opt === 1 && "Display my business’ exact address."}
                     {opt === 2 &&
                       "Display my location within a 0.5-mile radius of my address."}
                     {opt === 3 && "Do not display my address."}
                   </h3>
-                  <p className="text-[#13141D] mt-1">
+                  <p className="text-secondary-black mt-1">
                     {opt === 1 && "Anyone can view your exact address."}
                     {opt === 2 && "Your exact location remains private."}
                     {opt === 3 &&

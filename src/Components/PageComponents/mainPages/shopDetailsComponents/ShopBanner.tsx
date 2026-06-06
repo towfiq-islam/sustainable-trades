@@ -112,7 +112,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
                   />
                 </figure>
 
-                <figure className="size-6 md:size-10 bg-[#E48872] rounded-full grid place-items-center cursor-pointer">
+                <figure className="size-6 md:size-10 bg-accent-red rounded-full grid place-items-center cursor-pointer">
                   <Image
                     src={badge}
                     alt="badge"
@@ -212,14 +212,14 @@ const ShopBanner = ({ id, data }: BannerProps) => {
 
             <div className="flex gap-2 items-center mb-2">
               <p className="size-5 rounded-full bg-[#D4E2CB]"></p>
-              <p className="text-lg text-[#A7A39C] font-semibold">
+              <p className="text-lg text-accent-gray font-semibold">
                 {data?.trade_offers_count || 0} Trades
               </p>
             </div>
 
             <div className="flex gap-2 items-center">
-              <p className="size-5 rounded-full bg-[#E48872]"></p>
-              <p className="text-lg text-[#A7A39C] font-semibold">
+              <p className="size-5 rounded-full bg-accent-red"></p>
+              <p className="text-lg text-accent-gray font-semibold">
                 {data?.shop_info?.order_count || 0} Sales
               </p>
             </div>
@@ -271,7 +271,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
 
               {/* Sales */}
               <div className="flex items-center gap-2">
-                <p className="size-5 rounded-full bg-[#E48872]"></p>
+                <p className="size-5 rounded-full bg-accent-red"></p>
                 <p className="text-lg text-gray-300 font-semibold">
                   {data?.shop_info?.order_count || 0} Sales
                 </p>

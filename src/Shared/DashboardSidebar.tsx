@@ -33,7 +33,7 @@ const DashboardSidebar = ({
 
   const toggleMenu = (id: number) => {
     setOpenMenus(prev =>
-      prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id],
     );
   };
 
@@ -79,7 +79,7 @@ const DashboardSidebar = ({
                 className={`w-full text-left ml-1 px-2 py-2 flex gap-3 items-center font-semibold border-l-2 hover:bg-gray-100 duration-300 transition-all hover:scale-[1.03] ${
                   isActiveParent || isActiveSub || isMessageActive
                     ? "text-primary-green border-primary-green"
-                    : "text-[#77978F] border-transparent"
+                    : "text-light-green border-transparent"
                 }`}
               >
                 {item?.icon}
@@ -99,7 +99,7 @@ const DashboardSidebar = ({
                         className={`px-2 py-1 flex gap-2 items-center text-sm font-medium border-l-2 hover:bg-gray-100 duration-300 transition-all hover:scale-[1.03] ${
                           isActiveMenu
                             ? "text-primary-green border-primary-green"
-                            : "text-[#77978F] border-transparent"
+                            : "text-light-green border-transparent"
                         }`}
                       >
                         {menu?.icon && <span>{menu.icon}</span>}

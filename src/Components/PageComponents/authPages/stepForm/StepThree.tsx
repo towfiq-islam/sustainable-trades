@@ -81,7 +81,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
     <>
       <h2 className="auth_title lg:mt-16 mt-8">About Your Shop</h2>
 
-      <div className="border border-[#A7A39C] rounded-[20px] lg:my-[56px] my-8 lg:p-20 px-5">
+      <div className="border border-accent-gray rounded-[20px] lg:my-[56px] my-8 lg:p-20 px-5">
         {/* Profile Picture */}
         <div className="lg:mt-8 mt-5">
           <p className="form-label text-center lg:text-start">
@@ -98,7 +98,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
           </div>
 
           <div
-            className="relative bg-[#F0EEE9] lg:mx-0 mx-auto h-[150px] w-[150px] rounded-full lg:mt-4 flex flex-col justify-center items-center cursor-pointer overflow-hidden border border-[#A7A39C]"
+            className="relative bg-[#F0EEE9] lg:mx-0 mx-auto h-[150px] w-[150px] rounded-full lg:mt-4 flex flex-col justify-center items-center cursor-pointer overflow-hidden border border-accent-gray"
             onClick={() =>
               document.getElementById("profilePhotoInput")?.click()
             }
@@ -145,13 +145,13 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
 
         {/* About Your Shop */}
         <div className="my-8 border rounded-lg lg:p-8 p-4">
-          <p className="text-[20px] font-normal text-[#13141D] mb-4">
+          <p className="text-[20px] font-normal text-secondary-black mb-4">
             About Shop
           </p>
 
           {/* Tagline */}
           <div className="mb-4">
-            <label className="block text-[#4B4A47] font-semibold mb-1">
+            <label className="block text-secondary-gray font-semibold mb-1">
               Tagline
             </label>
 
@@ -172,7 +172,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
 
           {/* Two-Sentence Statement */}
           <div className="mb-4">
-            <label className="block text-[#4B4A47] font-semibold mb-1">
+            <label className="block text-secondary-gray font-semibold mb-1">
               Two-Sentence Statement
             </label>
 
@@ -192,7 +192,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
 
           {/* Our Story */}
           <div className="mb-4">
-            <label className="block text-[#4B4A47] font-semibold mb-1">
+            <label className="block text-secondary-gray font-semibold mb-1">
               Our Story
             </label>
 
@@ -213,13 +213,13 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
 
         {/* Shop Policies */}
         <div className="border rounded-lg lg:p-8 p-4">
-          <p className="text-[20px] font-normal text-[#13141D] mb-4">
+          <p className="text-[20px] font-normal text-secondary-black mb-4">
             Shop Policies
           </p>
 
           {/* Payment Methods */}
           <div className="mb-4">
-            <label className="block text-[#4B4A47] font-semibold mb-1">
+            <label className="block text-secondary-gray font-semibold mb-1">
               Accepted Payment Methods
             </label>
 
@@ -241,9 +241,9 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
                       })}
                       className="w-4 h-4 text-primary-green"
                     />
-                    <span className="text-[#4B4A47]">{method}</span>
+                    <span className="text-secondary-gray">{method}</span>
                   </label>
-                )
+                ),
               )}
             </div>
 
@@ -256,7 +256,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
 
           {/* Shipping Information */}
           <div className="mb-4">
-            <label className="block text-[#4B4A47] font-semibold mb-1">
+            <label className="block text-secondary-gray font-semibold mb-1">
               Shipping Information
             </label>
             <textarea
@@ -275,7 +275,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
 
           {/* Return & Exchanges */}
           <div className="mb-4">
-            <label className="block text-[#4B4A47] font-semibold mb-1">
+            <label className="block text-secondary-gray font-semibold mb-1">
               Returns & Exchanges
             </label>
 
@@ -393,14 +393,14 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
           )}
         </div>
 
-        <li className="text-[16px] text-[#4B4A47] font-semibold list-disc mt-2">
+        <li className="text-[16px] text-secondary-gray font-semibold list-disc mt-2">
           You can add up to 10 FAQs ({fields.length}/10)
         </li>
       </div>
 
       {/* Link Your Shop Section */}
       <div>
-        <p className="text-[20px] font-normal text-[#13141D] pb-4 pt-2">
+        <p className="text-[20px] font-normal text-secondary-black pb-4 pt-2">
           Link Your Shop <span className="text-[#67645F]">(Optional)</span>
         </p>
         <div className="flex flex-col gap-4">

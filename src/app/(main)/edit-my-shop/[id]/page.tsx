@@ -101,8 +101,8 @@ const Page = ({ params }: Props) => {
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          address
-        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`
+          address,
+        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
       );
       const data = await response.json();
       if (data.status === "OK" && data.results.length > 0) {
@@ -150,7 +150,7 @@ const Page = ({ params }: Props) => {
       onSuccess: (res: any) => {
         if (res.success) {
           router.push(
-            `/shop-details?view=owner&id=${user?.shop_info?.user_id}&listing_id=${user?.shop_info?.id}`
+            `/shop-details?view=owner&id=${user?.shop_info?.user_id}&listing_id=${user?.shop_info?.id}`,
           );
         }
       },
@@ -177,12 +177,12 @@ const Page = ({ params }: Props) => {
             <form onSubmit={handleSubmit(onSubmit as any)}>
               {/* Profile Info */}
               <div className="lg:mt-[45px] mt-[30px]">
-                <h2 className="mt-5 text-[#274F45] text-[20px] font-semibold">
+                <h2 className="mt-5 text-primary-green text-[20px] font-semibold">
                   Profile Info
                 </h2>
-                <p className="text-[16px] text-[#4B4A47] font-normal font-lato">
-                  <span className="text-[#8B200C]">*</span>Indicates a required
-                  field
+                <p className="text-[16px] text-secondary-gray font-normal font-lato">
+                  <span className="text-primary-red">*</span>Indicates a
+                  required field
                 </p>
 
                 <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-7 lg:gap-y-10 gap-y-5">

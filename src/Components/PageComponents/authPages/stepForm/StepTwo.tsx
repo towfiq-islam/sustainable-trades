@@ -16,7 +16,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    previewField: "shopPhotoPreview" | "coverPhotoPreview"
+    previewField: "shopPhotoPreview" | "coverPhotoPreview",
   ) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -35,7 +35,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
       <h2 className="auth_title">Your Shop</h2>
 
       {/* Shop Info */}
-      <div className="border border-[#A7A39C] rounded-[20px] lg:my-[56px] my-6 xl:p-20 p-10">
+      <div className="border border-accent-gray rounded-[20px] lg:my-[56px] my-6 xl:p-20 p-10">
         <div className="mt-5 grid lg:grid-cols-2 grid-cols-1 xl:gap-x-[96px] gap-x-10 items-center lg:gap-y-10 gap-y-5 font-lato">
           {/* Shop Name */}
           <div>
@@ -60,7 +60,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
               </p>
             )}
 
-            <ul className="mt-[2px] text-[16px] text-[#4B4A47] ml-5">
+            <ul className="mt-[2px] text-[16px] text-secondary-gray ml-5">
               <li className="list-disc">Between 4-30 characters</li>
               <li className="list-disc">
                 No special characters, spaces, or accented letters
@@ -68,7 +68,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
             </ul>
           </div>
 
-          <h5 className="text-[16px] text-[#4B4A47]">
+          <h5 className="text-[16px] text-secondary-gray">
             Can be your personal name/nickname or company name.  When a trade is
             offered, this is the name that will show to others.
           </h5>
@@ -91,18 +91,18 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
             )}
           </div>
 
-          <h5 className="text-[16px] text-[#4B4A47]">
+          <h5 className="text-[16px] text-secondary-gray">
             This is so you show up in your local area on our Geo-locator map.
             More info about this
           </h5>
         </div>
       </div>
 
-      <div className="border border-[#A7A39C] rounded-[20px] mt-8 mb-[56px] xl:p-20 p-5 py-10">
+      <div className="border border-accent-gray rounded-[20px] mt-8 mb-[56px] xl:p-20 p-5 py-10">
         <div className="lg:flex gap-x-8">
           {/* Shop Photo */}
           <div>
-            <p className="text-[18px] text-[#13141D] font-lato lg:text-start text-center">
+            <p className="text-[18px] text-secondary-black font-lato lg:text-start text-center">
               Add A Profile Photo *
             </p>
 
@@ -158,7 +158,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
 
           {/* Cover Photo */}
           <div className="w-full lg:mt-0 mt-10">
-            <p className="text-[18px] text-[#13141D] font-lato lg:text-start text-center">
+            <p className="text-[18px] text-secondary-black font-lato lg:text-start text-center">
               Add A Shop Banner *
             </p>
 

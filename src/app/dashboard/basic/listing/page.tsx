@@ -32,7 +32,9 @@ const Page = () => {
         <div className="flex flex-wrap md:flex-nowrap gap-3 md:gap-6">
           {/* Sort By */}
           <div className="w-full md:w-fit">
-            <p className="text-[#13141D] text-[16px] font-semibold">Sort by</p>
+            <p className="text-secondary-black text-[16px] font-semibold">
+              Sort by
+            </p>
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
@@ -64,7 +66,7 @@ const Page = () => {
 
         <Link
           href="/dashboard/basic/create-listing"
-          className="h-[45px] md:h-[60px] rounded-[8px] bg-[#E48872] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:bg-transparent duration-500 ease-in-out border border-[#E48872] w-full md:w-[190px] flex gap-x-2 justify-center items-center"
+          className="h-[45px] md:h-[60px] rounded-[8px] bg- text-[16px] font-semibold text-secondary-black cursor-pointer hover:bg-transparent duration-500 ease-in-out border border-accent-red w-full md:w-[190px] flex gap-x-2 justify-center items-center"
         >
           <FaPlus />
           Add New Listing
@@ -104,21 +106,21 @@ const Page = () => {
                     href={`/dashboard/basic/view-listing/edit-listing/${product.id}`}
                   >
                     <button
-                      className="absolute top-3 right-3 bg-white rounded-full p-2 shadow cursor-pointer border border-[#274F45] 
+                      className="absolute top-3 right-3 bg-white rounded-full p-2 shadow cursor-pointer border border-primary-green 
                       opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 
                       transition-all duration-300 ease-in-out"
                     >
-                      <FiEdit2 size={18} className="text-[#274F45]" />
+                      <FiEdit2 size={18} className="text-primary-green" />
                     </button>
                   </Link>
                 </div>
 
                 {/* Info */}
                 <div className="p-4">
-                  <h3 className="text-[18px] md:text-[20px] font-medium text-[#13141D] truncate">
+                  <h3 className="text-[18px] md:text-[20px] font-medium text-secondary-black truncate">
                     {product?.product_name}
                   </h3>
-                  <p className="text-base md:text-[20px] font-semibold text-[#13141D] mt-1">
+                  <p className="text-base md:text-[20px] font-semibold text-secondary-black mt-1">
                     ${product?.product_price}
                   </p>
                 </div>

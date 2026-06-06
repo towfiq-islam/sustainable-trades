@@ -44,7 +44,7 @@ const page = () => {
   return (
     <>
       <div className="flex flex-wrap w-full justify-between">
-        <h3 className="text-[30px] lg:text-4xl font-semibold text-[#000] flex items-center gap-x-2">
+        <h3 className="text-[30px] lg:text-4xl font-semibold text-black flex items-center gap-x-2">
           Accounting
         </h3>
 

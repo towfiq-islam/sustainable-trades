@@ -77,14 +77,14 @@ const Page = () => {
       {/* Tabs */}
       <div className="mt-14">
         <ul className="flex justify-between relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:p-[3px] after:border after:border-[#A7A39C] after:rounded-lg">
-          {tradetabs.map((tab) => (
+          {tradetabs.map(tab => (
             <li
               key={tab.label}
               onClick={() => setActiveTab(tab.label)}
               className={`flex gap-1.5 md:gap-x-3 items-center text-[14px] sm:text-[16px] cursor-pointer pb-5  lg:px-15 xl:px-20 justify-center
                 ${
                   activeTab === tab.label
-                    ? "font-semibold text-[#000] relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[8px] after:bg-[#274F45] after:rounded-lg"
+                    ? "font-semibold text-[#000] relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[8px] after:bg-primary-green after:rounded-lg"
                     : "text-[#13141D]"
                 }`}
             >
@@ -94,7 +94,7 @@ const Page = () => {
                   ${
                     activeTab === tab.label
                       ? " bg-[#D4E2CB] text-[#6D2D4E2CB8D9]"
-                      : "text-[#13141D]"
+                      : "text-secondary-black"
                   }`}
               >
                 {tab.count}

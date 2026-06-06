@@ -139,14 +139,14 @@ const page = () => {
                   <div
                     key={index}
                     className={`text-center ${
-                      isActive ? "text-primary-green" : "text-[#A7A39C]"
+                      isActive ? "text-primary-green" : "text-secondary-gray"
                     }`}
                   >
                     <div
                       className={`rounded-full grid place-items-center mx-auto mb-2 ${
                         isActive || isCompleted
                           ? "bg-primary-green lg:size-12 size-6"
-                          : "bg-[#77978F] lg:size-10 size-5"
+                          : "bg-light-green lg:size-10 size-5"
                       }`}
                     >
                       {isActive && <StepSvg />}

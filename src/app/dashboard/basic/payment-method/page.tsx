@@ -15,7 +15,7 @@ const page = () => {
             window.location.href = data?.data?.url;
           }
         },
-      }
+      },
     );
   };
 
@@ -39,7 +39,7 @@ const page = () => {
         <button
           disabled={isPending}
           onClick={handleOnboarding}
-          className={`mt-5 md:mt-10 p-2 md:p-3 border border-[#274F45] rounded-md text-[12px] md:text-[14px] font-semibold text-[#274F45] hover:text-white hover:bg-[#274F45] duration-500 ease-in-out uppercase ${
+          className={`mt-5 md:mt-10 p-2 md:p-3 border border-primary-green rounded-md text-[12px] md:text-[14px] font-semibold text-primary-green hover:text-white hover:bg-primary-green duration-500 ease-in-out uppercase ${
             isPending ? "cursor-not-allowed opacity-80" : "cursor-pointer"
           }`}
         >

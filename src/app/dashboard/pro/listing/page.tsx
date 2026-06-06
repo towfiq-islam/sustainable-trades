@@ -58,10 +58,10 @@ export default function Page() {
             onChange={e => setSearch(e.target.value)}
             placeholder="Search all listings..."
             type="search"
-            className="py-[10px] pl-4 pr-12 outline-0 border-2 border-[#274F45] rounded-[8px] text-[16px] text-[#67645F] font-normal w-full"
+            className="py-[10px] pl-4 pr-12 outline-0 border-2 border-primary-green rounded-[8px] text-[16px] text-[#67645F] font-normal w-full"
           />
           {/* Divider */}
-          <div className="absolute top-1/2 right-14 transform -translate-y-1/2 w-[2px] bg-[#274F45] h-full"></div>
+          <div className="absolute top-1/2 right-14 transform -translate-y-1/2 w-[2px] bg-primary-green h-full"></div>
           {/* Search Icon */}
           <div className="absolute top-1/2 right-4 transform -translate-y-1/2 text-[#67645F] cursor-pointer">
             <FaSearch />
@@ -71,18 +71,18 @@ export default function Page() {
         <div className="flex w-full lg:w-fit flex-wrap gap-2 lg:gap-4 lg:items-center">
           <Link href="/dashboard/pro/addnew-listing">
             <button
-              className="h-[45px] lg:h-[50px] w-full lg:w-fit rounded-[8px] bg-[#E48872] text-[16px] font-semibold text-[#13141D] cursor-pointer
-             hover:bg-transparent duration-500 ease-in-out border border-[#E48872] px-6"
+              className="h-[45px] lg:h-[50px] w-full lg:w-fit rounded-[8px] bg-accent-red text-[16px] font-semibold text-secondary-black cursor-pointer
+             hover:bg-transparent duration-500 ease-in-out border border-accent-red px-6"
             >
               Add Product
             </button>
           </Link>
 
-          {/* <button className="flex w-full lg:w-fit items-center justify-center gap-x-2 border border-[#274F45] text-[#274F45] px-6 h-[45px] lg:h-[50px] rounded-lg text-[16px]">
+          {/* <button className="flex w-full lg:w-fit items-center justify-center gap-x-2 border border-primary-green text-primary-green px-6 h-[45px] lg:h-[50px] rounded-lg text-[16px]">
             Export
             <Export />
           </button>
-          <button className="flex w-full lg:w-fit items-center justify-center gap-x-2 bg-[#274F45] text-white px-6 h-[45px] lg:h-[50px] rounded-lg text-[16px]">
+          <button className="flex w-full lg:w-fit items-center justify-center gap-x-2 bg-primary-green text-white px-6 h-[45px] lg:h-[50px] rounded-lg text-[16px]">
             Import
             <Import />
           </button> */}
@@ -93,23 +93,23 @@ export default function Page() {
       <div className="hidden lg:block mt-10">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="text-left border-b border-[#A7A39C]">
-              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
+            <tr className="text-left border-b border-accent-gray">
+              <th className="text-secondary-black font-semibold text-[16px] pb-5">
                 Product
               </th>
-              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
+              <th className="text-secondary-black font-semibold text-[16px] pb-5">
                 Approval Status
               </th>
-              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
+              <th className="text-secondary-black font-semibold text-[16px] pb-5">
                 Stock
               </th>
-              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
+              <th className="text-secondary-black font-semibold text-[16px] pb-5">
                 Price
               </th>
-              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
+              <th className="text-secondary-black font-semibold text-[16px] pb-5">
                 Cost
               </th>
-              <th className="text-[#13141D] font-semibold text-[16px] pb-5">
+              <th className="text-secondary-black font-semibold text-[16px] pb-5">
                 Action
               </th>
             </tr>
@@ -123,9 +123,9 @@ export default function Page() {
               : allListings?.data?.map((p: productItem) => (
                   <tr
                     key={p?.id}
-                    className="border-b border-[#A7A39C] hover:bg-gray-50"
+                    className="border-b border-accent-gray hover:bg-gray-50"
                   >
-                    <td className="py-3 text-[#13141D] font-semibold text-[14px]">
+                    <td className="py-3 text-secondary-black font-semibold text-[14px]">
                       <div className="flex items-center gap-5">
                         <figure className="h-[80px] w-[100px] rounded-lg relative">
                           <Image
@@ -148,7 +148,7 @@ export default function Page() {
                       </span>
                     </td>
 
-                    <td className="text-[#13141D] font-semibold text-[14px]">
+                    <td className="text-secondary-black font-semibold text-[14px]">
                       {p?.out_of_stock
                         ? "Out of Stock"
                         : p?.unlimited_stock
@@ -156,11 +156,11 @@ export default function Page() {
                           : p?.product_quantity}
                     </td>
 
-                    <td className="text-[#13141D] font-semibold text-[14px]">
+                    <td className="text-secondary-black font-semibold text-[14px]">
                       ${p.product_price.toFixed(2)}
                     </td>
 
-                    <td className="text-[#13141D] font-semibold text-[14px]">
+                    <td className="text-secondary-black font-semibold text-[14px]">
                       ${Number(p?.cost)?.toFixed(2)}
                     </td>
 
@@ -227,7 +227,7 @@ export default function Page() {
                 className="rounded-md object-cover"
               />
               <div>
-                <h3 className="font-semibold text-[#13141D] text-sm">
+                <h3 className="font-semibold text-secondary-black text-sm">
                   {p?.product_name}
                 </h3>
                 <p className="text-xs text-gray-500">SKU: {p?.sku}</p>

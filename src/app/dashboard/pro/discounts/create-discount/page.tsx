@@ -259,7 +259,7 @@ const CreateDiscount = () => {
       <div className="border-b border-gray-300">
         <h4
           onClick={handleBack}
-          className="flex gap-x-1 items-center text-[#13141D] font-normal py-4 cursor-pointer"
+          className="flex gap-x-1 items-center text-secondary-black font-normal py-4 cursor-pointer"
         >
           <FaAngleLeft />
           Back
@@ -267,13 +267,13 @@ const CreateDiscount = () => {
       </div>
 
       {/* Title */}
-      <h2 className="text-[30px] md:text-[40px] font-semibold text-[#13141D]">
+      <h2 className="text-[30px] md:text-[40px] font-semibold text-secondary-black">
         {isEditMode ? "Edit Discount" : "Create Discount"}
       </h2>
 
       {/* Name */}
       <div className="pt-4 md:pt-8 pb-6 md:pb-12">
-        <h4 className="text-[16px] md:text-[20px] font-normal text-[#13141D]">
+        <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
           Name
         </h4>
 
@@ -292,22 +292,22 @@ const CreateDiscount = () => {
         {errors.name && (
           <p className="text-red-500 text-sm mt-1 mb-2">{errors.name}</p>
         )}
-        <p className="text-[13px] md:text-[16px] font-bold text-[#13141D] mt-1">
+        <p className="text-[13px] md:text-[16px] font-bold text-secondary-black mt-1">
           The name that shoppers will see at checkout.
         </p>
       </div>
 
       {/* Discount Type */}
       <div className="pb-4 md:pb-8">
-        <h4 className="text-[16px] md:text-[20px] font-normal text-[#13141D]">
+        <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
           Discount Type
         </h4>
         <div className="flex mt-3 ">
           <button
             onClick={() => setDiscountType("code")}
-            className={`px-4 py-[9px] md:py-[18px] rounded-l-md cursor-pointer text-[16px] md:text-[20px] text-[#274F45] font-semibold ${
+            className={`px-4 py-[9px] md:py-[18px] rounded-l-md cursor-pointer text-[16px] md:text-[20px] text-primary-green font-semibold ${
               discountType === "code"
-                ? "bg-[#D4E2CB] border-2 border-[#274F45] "
+                ? "bg-[#D4E2CB] border-2 border-primary-green "
                 : "bg-white border-2 border-[#67645F]"
             }`}
           >
@@ -315,9 +315,9 @@ const CreateDiscount = () => {
           </button>
           <button
             onClick={() => setDiscountType("auto")}
-            className={`px-6 py-2 rounded-r-md cursor-pointer  text-[16px] md:text-[20px] text-[#274F45] font-semibold ${
+            className={`px-6 py-2 rounded-r-md cursor-pointer  text-[16px] md:text-[20px] text-primary-green font-semibold ${
               discountType === "auto"
-                ? "bg-[#D4E2CB] border-2 border-[#274F45] "
+                ? "bg-[#D4E2CB] border-2 border-primary-green "
                 : "bg-white border-2 border-[#67645F]"
             }`}
           >
@@ -329,7 +329,7 @@ const CreateDiscount = () => {
       {/* Discount Code */}
       {discountType === "code" && (
         <div className="pb-4 md:pb-8">
-          <h4 className="text-[16px] md:text-[20px] font-normal text-[#13141D]">
+          <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
             Discount Code
           </h4>
           <div className="flex gap-2 mt-3 w-full lg:w-[750px] relative">
@@ -356,7 +356,7 @@ const CreateDiscount = () => {
           {errors.code && (
             <p className="text-red-500 text-sm mb-2">{errors.code}</p>
           )}
-          <p className="text-[13px] md:text-[16px] font-bold text-[#13141D]">
+          <p className="text-[13px] md:text-[16px] font-bold text-secondary-black">
             Shoppers enter this code at checkout.
           </p>
         </div>
@@ -364,7 +364,7 @@ const CreateDiscount = () => {
 
       {/* Promotion */}
       <div className="pb-4 md:pb-8">
-        <h4 className="text-[16px] md:text-[20px] font-normal text-[#13141D]">
+        <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
           Promotion
         </h4>
         <div
@@ -390,7 +390,7 @@ const CreateDiscount = () => {
               setAmount(e.target.value);
               if (errors.amount) setErrors({ ...errors, amount: "" });
             }}
-            className="rounded-r-md px-4 py-2 flex-1 text-[#13141D] font-bold text-[13px] md:text-[16px] outline-0"
+            className="rounded-r-md px-4 py-2 flex-1 text-secondary-black font-bold text-[13px] md:text-[16px] outline-0"
           />
         </div>
         {errors.amount && (
@@ -400,11 +400,11 @@ const CreateDiscount = () => {
 
       {/* Applies To */}
       <div className="pb-4 md:pb-8">
-        <h4 className="text-[16px] md:text-[20px] font-normal text-[#13141D]">
+        <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
           Applies To
         </h4>
         <select
-          className="mt-3 border border-[#3D3D3D] rounded-md px-4 py-2.5 md:py-5  w-full lg:w-[750px] bg-[#D4E2CB] text-[13px] md:text-[16px] font-bold text-[#274F45]"
+          className="mt-3 border border-[#3D3D3D] rounded-md px-4 py-2.5 md:py-5  w-full lg:w-[750px] bg-[#D4E2CB] text-[13px] md:text-[16px] font-bold text-primary-green"
           value={appliesTo}
           onChange={e => {
             setAppliesTo(e.target.value);
@@ -418,7 +418,7 @@ const CreateDiscount = () => {
         {/* Show product selection dropdown if Single Product is selected */}
         {appliesTo === "Single Product" && (
           <div className="mt-4  w-full lg:w-[750px]">
-            <h5 className="text-[13px] md:text-[16px] font-semibold text-[#13141D] mb-2">
+            <h5 className="text-[13px] md:text-[16px] font-semibold text-secondary-black mb-2">
               Select Product
             </h5>
             <select
@@ -428,7 +428,7 @@ const CreateDiscount = () => {
                 if (errors.selectedProduct)
                   setErrors({ ...errors, selectedProduct: "" });
               }}
-              className={`w-full border rounded-md px-4 py-5 text-[16px] font-bold text-[#13141D] ${
+              className={`w-full border rounded-md px-4 py-5 text-[16px] font-bold text-secondary-black ${
                 errors.selectedProduct ? "border-red-500" : "border-[#67645F]"
               }`}
             >
@@ -450,11 +450,11 @@ const CreateDiscount = () => {
 
       {/* Discount Limits */}
       <div className="pb-4 md:pb-8">
-        <h4 className="text-[16px] md:text-[20px] font-normal text-[#13141D]">
+        <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
           Discount Limits
         </h4>
         <div className="mt-3 flex flex-col gap-2">
-          <label className="flex items-center gap-2 text-[13px] md:text-[16px] font-semibold text-[#13141D]">
+          <label className="flex items-center gap-2 text-[13px] md:text-[16px] font-semibold text-secondary-black">
             <input
               type="checkbox"
               className="w-3 h-3 md:w-4 md:h-4 "
@@ -463,7 +463,7 @@ const CreateDiscount = () => {
             />
             Limit One Per Shopper
           </label>
-          <label className="flex items-center gap-2 text-[13px] md:text-[16px]  font-semibold text-[#13141D]">
+          <label className="flex items-center gap-2 text-[13px] md:text-[16px]  font-semibold text-secondary-black">
             <input
               type="checkbox"
               className="w-3 h-3 md:w-4 md:h-4 "
@@ -497,13 +497,13 @@ const CreateDiscount = () => {
 
       {/* Active Dates */}
       <div className="pb-4 md:pb-8">
-        <h4 className="text-[16px] md:text-[20px] font-normal text-[#13141D]">
+        <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
           Active Dates
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 mt-3 w-full lg:w-[750px]">
           {/* Start Date */}
           <div>
-            <label className="block text-[14px] md:text-[16px] font-normal text-[#13141D] mb-1 md:mb-2">
+            <label className="block text-[14px] md:text-[16px] font-normal text-secondary-black mb-1 md:mb-2">
               Start Date
             </label>
             <div
@@ -530,7 +530,7 @@ const CreateDiscount = () => {
 
           {/* Start Time */}
           <div>
-            <label className="block text-[14px] md:text-[16px] font-normal text-[#13141D] mb-2">
+            <label className="block text-[14px] md:text-[16px] font-normal text-secondary-black mb-2">
               Start Time (PDT)
             </label>
             <div
@@ -557,7 +557,7 @@ const CreateDiscount = () => {
 
           {/* End Date */}
           <div>
-            <label className="block text-[14px] md:text-[16px] font-normal text-[#13141D] mb-2">
+            <label className="block text-[14px] md:text-[16px] font-normal text-secondary-black mb-2">
               End Date
             </label>
             <div
@@ -587,7 +587,7 @@ const CreateDiscount = () => {
 
           {/* End Time */}
           <div>
-            <label className="block text-[14px] md:text-[16px] font-normal text-[#13141D] mb-2">
+            <label className="block text-[14px] md:text-[16px] font-normal text-secondary-black mb-2">
               End Time (PDT)
             </label>
             <div
@@ -629,14 +629,14 @@ const CreateDiscount = () => {
         <button
           onClick={handleDiscard}
           disabled={isPending}
-          className="text-[#274F45] border-[#274F45] border rounded-[8px] px-16 py-2 md:py-4 text-base  md:text-[20px] font-semibold cursor-pointer hover:bg-[#D4E2CB] duration-500 ease-in-out disabled:opacity-50"
+          className="text-primary-green border-primary-green border rounded-[8px] px-16 py-2 md:py-4 text-base  md:text-[20px] font-semibold cursor-pointer hover:bg-[#D4E2CB] duration-500 ease-in-out disabled:opacity-50"
         >
           Discard
         </button>
         <button
           onClick={handleSave}
           disabled={isPending}
-          className="hover:border-[#D4E2CB] hover:border border hover:bg-transparent rounded-[8px] px-16 py-2 md:py-4 text-base md:text-[20px] font-semibold cursor-pointer bg-[#D4E2CB] w-full md:w-fit text-[#274F45] duration-500 ease-in-out disabled:opacity-50"
+          className="hover:border-[#D4E2CB] hover:border border hover:bg-transparent rounded-[8px] px-16 py-2 md:py-4 text-base md:text-[20px] font-semibold cursor-pointer bg-[#D4E2CB] w-full md:w-fit text-primary-green duration-500 ease-in-out disabled:opacity-50"
         >
           {isPending
             ? "Saving..."

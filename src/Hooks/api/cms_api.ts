@@ -486,7 +486,6 @@ export const useUpdateShopBanner = () => {
       "Content-Type": "multipart/form-data",
     },
     onSuccess: (data: any) => {
-      console.log(data);
       if (data?.success) {
         queryClient.invalidateQueries("get-shop-details" as any);
         toast.success(data?.message);

@@ -392,7 +392,6 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
     // Trigger the mutation
     updateProduct.mutate(formData, {
       onSuccess: (data: UpdateProductResponse) => {
-        console.log("Update successful:", data);
         updateLocalStateWithProductData(data.data);
       },
       onError: (error: UpdateProductError) => {

@@ -144,7 +144,6 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
     }
   };
 
-  console.log("tradeRequest", tradeRequests);
 
   return (
     <>

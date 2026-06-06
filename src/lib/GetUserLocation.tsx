@@ -21,7 +21,7 @@ export default function GetUserLocation() {
         { enableHighAccuracy: true }
       );
     } else {
-      console.log("Geolocation not supported by this browser.");
+      
     }
   }, []);
 

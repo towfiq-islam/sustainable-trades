@@ -44,7 +44,7 @@ const page = () => {
   return (
     <>
       <div className="flex flex-wrap w-full justify-between">
-        <h3 className="text-[30px] lg:text-4xl font-semibold text-[#000] flex items-center gap-x-2">
+        <h3 className="text-[30px] lg:text-4xl font-semibold text-black flex items-center gap-x-2">
           Accounting
         </h3>
 
@@ -53,7 +53,7 @@ const page = () => {
             data={accountingData?.data?.orders || []}
             headers={headers}
             filename={"sales-report.csv"}
-            className="w-full md:w-fit px-6 rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer duration-300 ease-in-out flex gap-x-2 items-center h-[50px] justify-center hover:translate-y-1"
+            className="w-full md:w-fit px-6 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer duration-300 ease-in-out flex gap-x-2 items-center h-[50px] justify-center hover:translate-y-1"
           >
             <Download />
             Download File

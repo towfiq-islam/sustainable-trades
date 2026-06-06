@@ -166,7 +166,7 @@ const CreateListing = () => {
           <div className="flex flex-col gap-3 md:gap-6">
             {/* Product Name */}
             <div>
-              <h3 className="text-[17px] md:text-[20px] font-semibold text-[#13141D]">
+              <h3 className="text-[17px] md:text-[20px] font-semibold text-secondary-black">
                 Product Name / Service
               </h3>
               <Controller
@@ -177,7 +177,7 @@ const CreateListing = () => {
                   <input
                     type="text"
                     {...field}
-                    className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-none"
+                    className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-none"
                   />
                 )}
               />
@@ -215,7 +215,7 @@ const CreateListing = () => {
 
             {/* Listing Status */}
             <div>
-              <p className="font-semibold text-[20px] md:text-[24px] text-[#13141D]">
+              <p className="font-semibold text-[20px] md:text-[24px] text-secondary-black">
                 Listing Status:{" "}
                 <span className="px-3 py-2 text-white text-sm rounded-full bg-[#757575]">
                   Pending
@@ -234,7 +234,7 @@ const CreateListing = () => {
 
             {/* Description */}
             <div>
-              <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+              <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
                 Description
               </h3>
               <Controller
@@ -245,7 +245,7 @@ const CreateListing = () => {
                   <textarea
                     {...field}
                     rows={5}
-                    className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-0"
+                    className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-0"
                   />
                 )}
               />
@@ -267,7 +267,7 @@ const CreateListing = () => {
 
             {/* Fulfillment */}
             <div>
-              <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+              <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
                 Fulfillment
               </h3>
               <Controller
@@ -277,7 +277,7 @@ const CreateListing = () => {
                 render={({ field }) => (
                   <select
                     {...field}
-                    className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+                    className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                   >
                     <option value="">Select Fulfillment</option>
                     <option value="arrange_local_pickup">
@@ -306,7 +306,7 @@ const CreateListing = () => {
 
             {/* Selling Option */}
             <div>
-              <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+              <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
                 Selling Option
               </h3>
               <Controller
@@ -316,7 +316,7 @@ const CreateListing = () => {
                 render={({ field }) => (
                   <select
                     {...field}
-                    className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+                    className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                   >
                     <option value="">Choose Below</option>
                     <option value="trade/barter">Trade/Barter</option>

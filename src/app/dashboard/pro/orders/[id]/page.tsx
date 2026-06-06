@@ -27,7 +27,6 @@ interface FormValues {
 
 const Page = () => {
   const { user } = useAuth();
-  console.log(user);
   const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);
@@ -115,7 +114,7 @@ const Page = () => {
     {
       title: "Customer Details",
       content: (
-        <div className="text-[#4B4A47] text-[14px] py-2">
+        <div className="text-secondary-gray text-[14px] py-2">
           <p>
             <strong>Name:</strong> {singleOrder?.data?.user?.first_name}{" "}
             {singleOrder?.data?.user?.last_name}
@@ -129,7 +128,7 @@ const Page = () => {
     {
       title: "Shipping Address",
       content: (
-        <div className="text-[#4B4A47] text-[14px] py-2">
+        <div className="text-secondary-gray text-[14px] py-2">
           <p>
             <strong>Name:</strong>{" "}
             {singleOrder?.data?.shipping_address?.first_name}{" "}
@@ -148,7 +147,7 @@ const Page = () => {
     // {
     //   title: "Billing Address",
     //   content: (
-    //     <div className="text-[#4B4A47] text-[14px] py-2">
+    //     <div className="text-secondary-gray text-[14px] py-2">
     //       <p>
     //         <strong>Name:</strong> John Doe
     //       </p>
@@ -196,7 +195,7 @@ const Page = () => {
         <h3 className="text-[40px] font-semibold text-[#000]">Order Details</h3>
         <div className="flex gap-x-3">
           <button
-            className="py-4 px-6 rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out"
+            className="py-4 px-6 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out"
             onClick={() => isOpen(true)}
           >
             Track Package
@@ -218,15 +217,15 @@ const Page = () => {
               {/* Trigger */}
               <button
                 onClick={() => setOpenStatusPopover(prev => !prev)}
-                className="min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-2 hover:border-[#274F45] transition-all duration-300 cursor-pointer"
+                className="min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-2 hover:border-primary-green transition-all duration-300 cursor-pointer"
               >
                 <div className="flex items-center gap-3">
-                  <div className="size-3 rounded-full bg-[#274F45]" />
+                  <div className="size-3 rounded-full bg-primary-green" />
 
                   <div className="text-left">
                     <p className="text-[12px] text-gray-500">Current Status</p>
 
-                    <h5 className="text-[15px] font-semibold text-[#274F45] capitalize">
+                    <h5 className="text-[15px] font-semibold text-primary-green capitalize">
                       {currentStatus}
                     </h5>
                   </div>
@@ -259,17 +258,17 @@ const Page = () => {
 
                         setOpenStatusPopover(false);
                       }}
-                      className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left hover:bg-[#274F45]/5 transition-all cursor-pointer"
+                      className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left hover:bg-primary-green/5 transition-all cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="size-2 rounded-full bg-[#274F45]" />
+                        <div className="size-2 rounded-full bg-primary-green" />
 
-                        <span className="text-[14px] font-medium text-[#222] group-hover:text-[#274F45]">
+                        <span className="text-[14px] font-medium text-[#222] group-hover:text-primary-green">
                           {step.label}
                         </span>
                       </div>
 
-                      <FaCheck className="opacity-0 scale-50 text-[#274F45] transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
+                      <FaCheck className="opacity-0 scale-50 text-primary-green transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
                     </button>
                   ))}
                 </div>
@@ -291,7 +290,9 @@ const Page = () => {
                   {index !== 0 && (
                     <div
                       className={`absolute top-3 -left-1/2 w-full border-t border-dashed ${
-                        isCompleted ? "border-[#274F45]" : "border-[#A7A39C]"
+                        isCompleted
+                          ? "border-primary-green"
+                          : "border-accent-gray"
                       }`}
                     />
                   )}
@@ -299,12 +300,14 @@ const Page = () => {
                   {/* Circle */}
                   <div
                     className={`z-10 size-6 rounded-full border-2 flex items-center justify-center ${
-                      isCompleted ? "border-[#274F45]" : "border-[#A7A39C]"
+                      isCompleted
+                        ? "border-primary-green"
+                        : "border-accent-gray"
                     }`}
                   >
                     <div
                       className={`size-4 rounded-full ${
-                        isCompleted ? "bg-[#274F45]" : "bg-[#A7A39C]"
+                        isCompleted ? "bg-primary-green" : "bg-accent-gray"
                       }`}
                     />
                   </div>
@@ -312,7 +315,7 @@ const Page = () => {
                   {/* Label */}
                   <h5
                     className={`mt-3 text-center text-[14px] font-medium ${
-                      isCompleted ? "text-[#000]" : "text-[#A7A39C]"
+                      isCompleted ? "text-[#000]" : "text-accent-gray"
                     }`}
                   >
                     {step.label}
@@ -329,16 +332,16 @@ const Page = () => {
 
           {/* Step Buttons */}
           {/* <div className="my-6 flex flex-wrap md:flex-nowrap  stepbutton gap-3">
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out">
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out">
               Track Package
             </button>
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out ">
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out ">
               Return or replace
             </button>
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out ">
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out ">
               Get Help
             </button>
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-[#77978F] text-[16px] font-semibold text-[#13141D] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out">
+            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out">
               Request a Review
             </button>
           </div> */}
@@ -468,7 +471,7 @@ const Page = () => {
                   endpoint: `/api/cancel-order/${order_id}`,
                 })
               }
-              className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] font-semibold text-[#8E2F2F] cursor-pointer hover:border-[#274F45] duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
+              className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] font-semibold text-[#8E2F2F] cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
             >
               {isCancellingOrder ? "Cancelling...." : "Cancel Order"}
             </button>

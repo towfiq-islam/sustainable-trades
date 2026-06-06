@@ -151,7 +151,7 @@ const LowerNavbar = ({ dynamicPage }: any) => {
                           key={id}
                           href={`${path ? path : `/about/${page_slug}`}`}
                           onClick={() => setShowMenu(false)}
-                          className={`flex gap-2.5 items-center text-[#77978F] text-[17px] duration-300 transition-all hover:text-primary-green ${
+                          className={`flex gap-2.5 items-center text-light-green text-[17px] duration-300 transition-all hover:text-primary-green ${
                             (pathname === `/about/${page_slug}` ||
                               pathname === path) &&
                             "font-semibold text-primary-green"

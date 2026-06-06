@@ -22,11 +22,11 @@ const StepOne = ({ step, totalSteps }: any) => {
         Lets set up your shop! Fill in all required fields below to get started.
       </p>
 
-      <div className="border border-[#A7A39C] rounded-[20px] my-[56px] lg:p-20 p-5">
-        <p className="text-[16px] text-[#4B4A47] font-normal font-lato">
-          <span className="text-[#8B200C]">*</span>Indicates a required field
+      <div className="border border-accent-gray rounded-[20px] my-[56px] lg:p-20 p-5">
+        <p className="text-[16px] text-secondary-gray font-normal font-lato">
+          <span className="text-primary-red">*</span>Indicates a required field
         </p>
-        <h6 className="text-[16px] text-[#4B4A47] font-normal font-lato">
+        <h6 className="text-[16px] text-secondary-gray font-normal font-lato">
           Note: Email and password entered here will be your login credentials
         </h6>
 

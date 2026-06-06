@@ -15,7 +15,7 @@ const MetaTags = ({ metaTags, setMetaTags, setValue }: MetaTagsProps) => {
     if (newTag.trim() !== "") {
       const updatedTags = [...metaTags, newTag.trim()];
       setMetaTags(updatedTags);
-      setValue("tags", updatedTags); 
+      setValue("tags", updatedTags);
       setNewTag("");
     }
   };
@@ -28,7 +28,7 @@ const MetaTags = ({ metaTags, setMetaTags, setValue }: MetaTagsProps) => {
 
   return (
     <div>
-      <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+      <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
         Meta Tags
       </h3>
 
@@ -57,13 +57,13 @@ const MetaTags = ({ metaTags, setMetaTags, setValue }: MetaTagsProps) => {
           type="text"
           value={newTag}
           onChange={e => setNewTag(e.target.value)}
-          className="flex-1 border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg py-4 pl-10"
+          className="flex-1 border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg py-4 pl-10"
           placeholder="Enter a tag"
         />
         <button
           type="button"
           onClick={handleAddTag}
-          className="absolute top-1/2 -translate-y-1/2 left-5 cursor-pointer text-xl font-bold text-[#13141D]"
+          className="absolute top-1/2 -translate-y-1/2 left-5 cursor-pointer text-xl font-bold text-secondary-black"
         >
           +
         </button>

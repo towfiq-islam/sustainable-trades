@@ -95,7 +95,7 @@ const EditFormThree = ({ data }: any) => {
           About Your Shop Photo *
         </p>
         <div
-          className="relative bg-[#F0EEE9] lg:mx-0 mx-auto h-[150px] w-[150px] rounded-full lg:mt-4 flex flex-col justify-center items-center cursor-pointer overflow-hidden border border-[#A7A39C]"
+          className="relative bg-[#F0EEE9] lg:mx-0 mx-auto h-[150px] w-[150px] rounded-full lg:mt-4 flex flex-col justify-center items-center cursor-pointer overflow-hidden border border-accent-gray"
           onClick={() => document.getElementById("profilePhotoInput")?.click()}
         >
           {profilePhotoPreview ? (
@@ -148,8 +148,8 @@ const EditFormThree = ({ data }: any) => {
       <div className="my-8 border rounded-lg p-8">
         {/* Tagline */}
         <div className="mb-4">
-          <label className="block text-[#4B4A47] font-semibold mb-1">
-            Tagline <span className="text-[#A7A39C]">(15 words max)</span>
+          <label className="block text-secondary-gray font-semibold mb-1">
+            Tagline <span className="text-accent-gray">(15 words max)</span>
           </label>
           <input
             type="text"
@@ -168,9 +168,9 @@ const EditFormThree = ({ data }: any) => {
 
         {/* Statement */}
         <div className="mb-4">
-          <label className="block text-[#4B4A47] font-semibold mb-1">
+          <label className="block text-secondary-gray font-semibold mb-1">
             Two-Sentence Statement{" "}
-            <span className="text-[#A7A39C]">(50 words max)</span>
+            <span className="text-accent-gray">(50 words max)</span>
           </label>
           <textarea
             defaultValue={data?.shop_info?.about?.statement}
@@ -188,8 +188,8 @@ const EditFormThree = ({ data }: any) => {
 
         {/* Our Story */}
         <div className="mb-4">
-          <label className="block text-[#4B4A47] font-semibold mb-1">
-            Our Story <span className="text-[#A7A39C]">(450 words max)</span>
+          <label className="block text-secondary-gray font-semibold mb-1">
+            Our Story <span className="text-accent-gray">(450 words max)</span>
           </label>
           <textarea
             defaultValue={data?.shop_info?.about?.our_story}
@@ -210,7 +210,7 @@ const EditFormThree = ({ data }: any) => {
       <div className="border rounded-lg p-8 mb-6">
         {/* Payment Methods */}
         <div className="mb-4">
-          <label className="block text-[#4B4A47] font-semibold mb-1">
+          <label className="block text-secondary-gray font-semibold mb-1">
             Accepted Payment Methods
           </label>
 
@@ -233,7 +233,7 @@ const EditFormThree = ({ data }: any) => {
                     })}
                     className="w-4 h-4 text-primary-green"
                   />
-                  <span className="text-[#4B4A47]">{method}</span>
+                  <span className="text-secondary-gray">{method}</span>
                 </label>
               );
             })}
@@ -248,9 +248,9 @@ const EditFormThree = ({ data }: any) => {
 
         {/* Shipping Information */}
         <div className="mb-4">
-          <label className="block text-[#4B4A47] font-semibold mb-1">
+          <label className="block text-secondary-gray font-semibold mb-1">
             Shipping Information{" "}
-            <span className="text-[#A7A39C]">(max 75 words)</span>
+            <span className="text-accent-gray">(max 75 words)</span>
           </label>
           <textarea
             defaultValue={data?.shop_info?.policies?.shipping_information}
@@ -268,9 +268,9 @@ const EditFormThree = ({ data }: any) => {
 
         {/* Returns */}
         <div className="mb-4">
-          <label className="block text-[#4B4A47] font-semibold mb-1">
+          <label className="block text-secondary-gray font-semibold mb-1">
             Returns & Exchanges{" "}
-            <span className="text-[#A7A39C]">(max 75 words)</span>
+            <span className="text-accent-gray">(max 75 words)</span>
           </label>
           <textarea
             defaultValue={data?.shop_info?.policies?.return_policy}
@@ -473,13 +473,13 @@ const EditFormThree = ({ data }: any) => {
         )}
       </div>
 
-      <li className="text-[16px] text-[#4B4A47] font-semibold list-disc mt-2">
+      <li className="text-[16px] text-secondary-gray font-semibold list-disc mt-2">
         You can add up to 10 FAQs ({fields.length}/10)
       </li> */}
 
       {/* Social Media Links */}
       <div>
-        <p className="text-[20px] font-normal text-[#13141D] pb-4 pt-2">
+        <p className="text-[20px] font-normal text-secondary-black pb-4 pt-2">
           Link Your Shop <span className="text-[#67645F]">(Optional)</span>
         </p>
 

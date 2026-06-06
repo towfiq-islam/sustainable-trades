@@ -44,7 +44,7 @@ const Settings = () => {
 
   return (
     <>
-      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000]">
+      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-black">
         Settings
       </h2>
 
@@ -190,7 +190,7 @@ const Settings = () => {
               <button
                 onClick={handleConfirm}
                 className={`px-4 py-2 rounded-lg text-white cursor-pointer ${
-                  modalType === "logout" ? "bg-green-600" : "bg-red-600"
+                  modalType === "logout" ? "bg-primary-green" : "bg-primary-red"
                 }`}
               >
                 Confirm

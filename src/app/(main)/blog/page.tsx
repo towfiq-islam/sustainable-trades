@@ -39,7 +39,7 @@ const page = async () => {
                   {blog?.title}
                 </h3>
 
-                <div className="flex justify-between items-center text-xs sm:text-sm text-[#919EAB] font-medium">
+                <div className="flex justify-between items-center text-xs sm:text-sm text-secondary-gray font-medium">
                   <span>{moment(blog?.created_at).format("LL")}</span>
 
                   <Link

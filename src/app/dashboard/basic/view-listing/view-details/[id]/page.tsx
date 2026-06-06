@@ -80,11 +80,9 @@ interface DetailsProps {
 const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const router = useRouter();
   const { user } = useAuth();
-  console.log(user);
 
   const { id } = use(params);
   const { data: listing, isLoading } = useGetSingleListing(id);
-  console.log(id);
 
   const updateProduct = useupdateProduct(id);
   const deleteProduct = useDeleteProduct(id);
@@ -302,18 +300,18 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
     <>
       <div className="flex justify-between items-center gap-3">
         <div>
-          <h3 className="text-[30px] md:text-[40px] font-semibold text-[#13141D]">
+          <h3 className="text-[30px] md:text-[40px] font-semibold text-secondary-black">
             {productName}
           </h3>
           <div className="flex gap-x-2 items-center pt-2 cursor-pointer">
-            <h4 className="text-[16px] text-[#13141D]">Listings</h4>
+            <h4 className="text-[16px] text-secondary-black">Listings</h4>
             <FaAngleRight className="mt-1" />
-            <h5 className="text-[16px] text-[#13141D]">Edit Listing</h5>
+            <h5 className="text-[16px] text-secondary-black">Edit Listing</h5>
           </div>
         </div>
 
         <Link href="/dashboard/basic/view-listing" className="block shrink-0">
-          <button className="text-[#000] text-[16px] font-semibold flex gap-x-1 items-center border-2 border-[#13141D] rounded-lg py-1.5 md:py-3 px-6 hover:bg-[#E48872] hover:text-white justify-center duration-300 cursor-pointer">
+          <button className="text-[#000] text-[16px] font-semibold flex gap-x-1 items-center border-2 border-secondary-black rounded-lg py-1.5 md:py-3 px-6 hover:bg-accent-red hover:text-white justify-center duration-300 cursor-pointer">
             <MdArrowOutward />
             View Listings
           </button>
@@ -326,14 +324,14 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
         <div className="flex flex-col gap-3 md:gap-6">
           {/* Product Name */}
           <div>
-            <h3 className="text-[17px] md:text-[20px] font-semibold text-[#13141D]">
+            <h3 className="text-[17px] md:text-[20px] font-semibold text-secondary-black">
               Product Name / Service
             </h3>
             <input
               type="text"
               value={productName}
               onChange={e => setProductName(e.target.value)}
-              className="w-full border text-[18px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-none"
+              className="w-full border text-[18px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-none"
             />
           </div>
 
@@ -396,7 +394,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
 
           {/* Quantity */}
           <div>
-            <h3 className="text-[17px] md:text-[20px] font-semibold text-[#13141D]">
+            <h3 className="text-[17px] md:text-[20px] font-semibold text-secondary-black">
               Quantity
             </h3>
             <input
@@ -404,39 +402,39 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               value={quantity}
               disabled
               onChange={e => setQuantity(e.target.value)}
-              className="w-full md:w-[350px] border cursor-not-allowed bg-gray-300 border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 text-[20px] text-[#13141D] font-normal outline-0"
+              className="w-full md:w-[350px] border cursor-not-allowed bg-gray-300 border-accent-gray rounded-lg p-2 md:p-4 mt-2 text-[20px] text-secondary-black font-normal outline-0"
             />
             <div className="flex flex-col gap-4 mt-2">
-              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-[#13141D] font-semibold">
+              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-secondary-black font-semibold">
                 Unlimited Stock
                 <input
                   disabled
                   type="checkbox"
                   checked={unlimitedStock}
                   onChange={() => setUnlimitedStock(!unlimitedStock)}
-                  className="mt-1 accent-[#274F45]"
+                  className="mt-1 accent-primary-green"
                 />
               </label>
-              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-[#13141D] font-semibold">
+              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-secondary-black font-semibold">
                 Feature
                 <input
                   type="checkbox"
                   checked={Featured}
                   onChange={() => setFeatured(!Featured)}
-                  className="mt-1 accent-[#274F45]"
+                  className="mt-1 accent-primary-green"
                 />
               </label>
-              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-[#13141D] font-semibold">
+              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-secondary-black font-semibold">
                 Out of Stock
                 <input
                   type="checkbox"
                   disabled
                   checked={outOfStock}
                   onChange={() => setOutOfStock(!outOfStock)}
-                  className="mt-1 accent-[#274F45]"
+                  className="mt-1 accent-primary-green"
                 />
               </label>
-              <p className="text-[16px] text-[#13141D] font-normal max-w-[400px]">
+              <p className="text-[16px] text-secondary-black font-normal max-w-[400px]">
                 Status automatically changes to “Out of Inventory” when zero
                 inventory is reached
               </p>
@@ -445,7 +443,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
 
           {/* Listing Approval */}
           <div>
-            <h3 className="text-[17px] md:text-[20px] text-[#13141D] font-semibold">
+            <h3 className="text-[17px] md:text-[20px] text-secondary-black font-semibold">
               Listing Approval Process
             </h3>
             <p className="text-[16px]] text-[#67645F] mt-2 max-w-[400px]">
@@ -456,7 +454,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             </p>
             <div>
               <div className="flex gap-4 mt-3">
-                <label className="px-4 md:px-8 py-2.5 md:py-5 bg-[#F0EEE9] rounded-lg cursor-pointer text-[16px] text-[#13141D]">
+                <label className="px-4 md:px-8 py-2.5 md:py-5 bg-[#F0EEE9] rounded-lg cursor-pointer text-[16px] text-secondary-black">
                   Upload video
                   <input
                     type="file"
@@ -518,7 +516,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
 
           {/* Listing Status */}
           <div>
-            <p className="font-semibold text-[20px] md:text-[24px] text-[#13141D]">
+            <p className="font-semibold text-[20px] md:text-[24px] text-secondary-black">
               Listing Status:{" "}
               <span className="px-3 py-2 text-white text-sm rounded-full bg-[#757575]">
                 {statusBadge}
@@ -531,18 +529,18 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
         <div className="flex flex-col gap-4 md:gap-8">
           {/* Price */}
           <div>
-            <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
               Price
             </h3>
             <input
               type="text"
               value={price}
               onChange={e => setPrice(e.target.value)}
-              className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4  outline-0"
+              className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4  outline-0"
             />
           </div>
           <div>
-            <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
               Cost
             </h3>
             <input
@@ -550,11 +548,11 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               disabled
               value={cost}
               onChange={e => setCost(e.target.value)}
-              className="w-full border text-[16px] cursor-not-allowed bg-gray-300 md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4  outline-0"
+              className="w-full border text-[16px] cursor-not-allowed bg-gray-300 md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4  outline-0"
             />
           </div>
           <div>
-            <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
               Weight
             </h3>
             <input
@@ -562,29 +560,29 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               disabled
               value={weight}
               onChange={e => setWeight(e.target.value)}
-              className="w-full border text-[16px] cursor-not-allowed bg-gray-300  md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 outline-0"
+              className="w-full border text-[16px] cursor-not-allowed bg-gray-300  md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 outline-0"
             />
           </div>
 
           {/* Description */}
           <div>
-            <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
               Description
             </h3>
             <textarea
               rows={5}
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4  outline-0"
+              className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4  outline-0"
             />
           </div>
           {/* Category Dropdown */}
           {/* Category Dropdown */}
-          <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+          <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
             Category
           </h3>
           <select
-            className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+            className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
             value={category}
             onChange={e => {
               setCategory(e.target.value);
@@ -602,11 +600,11 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
           {/* Subcategory Dropdown */}
           {subcategoriesData?.data && (
             <div className="mt-4">
-              <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+              <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
                 Subcategory
               </h3>
               <select
-                className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+                className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                 value={subcategory}
                 onChange={e => setSubcategory(e.target.value)}
               >
@@ -627,11 +625,11 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
           )}
 
           <div>
-            <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
               Fulfillment
             </h3>
             <select
-              className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+              className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
               value={fulfillment}
               onChange={e => setFulfillment(e.target.value)}
             >
@@ -645,7 +643,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
 
           <div>
-            <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
               Meta Tags
             </h3>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -664,7 +662,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                 type="text"
                 value={newTag}
                 onChange={e => setNewTag(e.target.value)}
-                className="flex-1  border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 pl-10 "
+                className="flex-1  border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 pl-10 "
               />
               <button
                 onClick={handleAddTag}
@@ -676,11 +674,11 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
 
           <div>
-            <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
               Selling Option
             </h3>
             <select
-              className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+              className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
               value={sellingOption}
               onChange={e => setSellingOption(e.target.value)}
             >
@@ -709,7 +707,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
         <button
           onClick={handleUpdateListing}
           disabled={requestApproval.isFetching}
-          className="bg-[#E48872] w-full sm:w-fit text-white py-2.5 md:py-5 px-12 cursor-pointer rounded-lg font-semibold duration-300 ease-in-out hover:bg-[#a34739] mt-3 md:mt-6 disabled:opacity-50"
+          className="bg-accent-red w-full sm:w-fit text-white py-2.5 md:py-5 px-12 cursor-pointer rounded-lg font-semibold duration-300 ease-in-out hover:bg-[#a34739] mt-3 md:mt-6 disabled:opacity-50"
         >
           {requestApproval.isFetching
             ? "Requesting Approval..."
@@ -721,7 +719,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
-            <h3 className="text-lg font-semibold text-[#13141D] mb-4">
+            <h3 className="text-lg font-semibold text-secondary-black mb-4">
               Delete Listing
             </h3>
             <p className="text-[#67645F] mb-6">
@@ -731,14 +729,14 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             <div className="flex justify-end gap-3">
               <button
                 onClick={cancelDelete}
-                className="px-4 py-2 border border-[#A7A39C] rounded-lg text-[#13141D] hover:bg-gray-100"
+                className="px-4 py-2 border border-accent-gray rounded-lg text-secondary-black hover:bg-gray-100"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmDelete}
                 disabled={deleteProduct.isPending}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg cursor-pointer hover:bg-red-700 disabled:opacity-50"
+                className="px-4 py-2 bg-primary-red text-white rounded-lg cursor-pointer hover:bg-red-700 disabled:opacity-50"
               >
                 {deleteProduct.isPending ? "Deleting..." : "Delete"}
               </button>

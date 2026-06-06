@@ -22,21 +22,21 @@ const CreateListing = () => {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const fileArray = Array.from(e.target.files).map((file) =>
-        URL.createObjectURL(file)
+      const fileArray = Array.from(e.target.files).map(file =>
+        URL.createObjectURL(file),
       );
 
       if (!mainImage) {
         setMainImage(fileArray[0]);
       }
 
-      setImages((prev) => [...prev, ...fileArray]);
+      setImages(prev => [...prev, ...fileArray]);
     }
   };
 
   const videoURL = useMemo(
     () => (video ? URL.createObjectURL(video) : null),
-    [video]
+    [video],
   );
 
   // Handle video upload
@@ -59,7 +59,7 @@ const CreateListing = () => {
     videoRef.current
       .play()
       .then(() => setShowPlayButton(false))
-      .catch((err) => console.error("Playback failed:", err));
+      .catch(err => console.error("Playback failed:", err));
   };
 
   // Pause video
@@ -88,7 +88,7 @@ const CreateListing = () => {
   };
 
   const handleRemoveTag = (tag: string) => {
-    setMetaTags(metaTags.filter((t) => t !== tag));
+    setMetaTags(metaTags.filter(t => t !== tag));
   };
   const [category, setCategory] = useState("");
   const [subcategory, setSubcategory] = useState("");
@@ -128,19 +128,19 @@ const CreateListing = () => {
     <div>
       <div className="flex flex-col gap-2.5 sm:gap-0 sm:flex-row justify-between sm:items-center">
         <div>
-          <h3 className="text-[30px] md:text-[40px] font-semibold text-[#13141D]">
+          <h3 className="text-[30px] md:text-[40px] font-semibold text-secondary-black">
             Organic Cherry Tomatoes
           </h3>
           <div className="flex gap-x-2 items-center pt-2 cursor-pointer">
-            <h4 className="text-[16px] text-[#13141D]">Listings</h4>
+            <h4 className="text-[16px] text-secondary-black">Listings</h4>
             <FaAngleRight className="mt-1" />
-            <h5 className="text-[16px] text-[#13141D]">Add a Listing</h5>
+            <h5 className="text-[16px] text-secondary-black">Add a Listing</h5>
           </div>
         </div>
         <Link
           href="/dashboard/pro/view-listing"
-          className="text-[#000] text-[16px] font-semibold flex gap-x-1 items-center border-2 border-[#13141D] rounded-lg py-1.5 md:py-3 px-6
-           hover:bg-[#E48872] hover:text-white justify-center duration-300 cursor-pointer"
+          className="text-[#000] text-[16px] font-semibold flex gap-x-1 items-center border-2 border-secondary-black rounded-lg py-1.5 md:py-3 px-6
+           hover:bg-accent-red hover:text-white justify-center duration-300 cursor-pointer"
         >
           <MdArrowOutward />
           View Listings
@@ -153,13 +153,13 @@ const CreateListing = () => {
         <div className="flex flex-col gap-3 md:gap-6">
           {/* Product Name */}
           <div>
-            <h3 className="text-[17px] md:text-[20px] font-semibold text-[#13141D]">
+            <h3 className="text-[17px] md:text-[20px] font-semibold text-secondary-black">
               Product Name / Service
             </h3>
             <input
               type="text"
               defaultValue="Organic Cherry Tomatoes"
-              className="w-full border text-[18px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 outline-none"
+              className="w-full border text-[18px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-none"
             />
           </div>
 
@@ -209,44 +209,44 @@ const CreateListing = () => {
 
           {/* Quantity */}
           <div>
-            <h3 className="text-[17px] md:text-[20px] font-semibold text-[#13141D]">
+            <h3 className="text-[17px] md:text-[20px] font-semibold text-secondary-black">
               Quantity
             </h3>
             <input
               type="text"
               value={quantity}
               onChange={e => setQuantity(e.target.value)}
-              className="w-full md:w-[350px] border border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2 text-[20px] text-[#13141D] font-normal outline-0"
+              className="w-full md:w-[350px] border border-accent-gray rounded-lg p-2 md:p-4 mt-2 text-[20px] text-secondary-black font-normal outline-0"
             />
             <div className="flex flex-col gap-4 mt-2">
-              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-[#13141D] font-semibold">
+              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-secondary-black font-semibold">
                 Unlimited Stock
                 <input
                   type="checkbox"
                   checked={unlimitedStock}
                   onChange={() => setUnlimitedStock(!unlimitedStock)}
-                  className="mt-1 accent-[#274F45]"
+                  className="mt-1 accent-primary-green"
                 />
               </label>
-              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-[#13141D] font-semibold">
+              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-secondary-black font-semibold">
                 Feature
                 <input
                   type="checkbox"
                   checked={Featured}
                   onChange={() => setFeatured(!Featured)}
-                  className="mt-1 accent-[#274F45]"
+                  className="mt-1 accent-primary-green"
                 />
               </label>
-              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-[#13141D] font-semibold">
+              <label className="flex items-center gap-2 text-[17px] md:text-[20px] text-secondary-black font-semibold">
                 Out of Stock
                 <input
                   type="checkbox"
                   checked={outOfStock}
                   onChange={() => setOutOfStock(!outOfStock)}
-                  className="mt-1 accent-[#274F45]"
+                  className="mt-1 accent-primary-green"
                 />
               </label>
-              <p className="text-[16px] text-[#13141D] font-normal max-w-[400px]">
+              <p className="text-[16px] text-secondary-black font-normal max-w-[400px]">
                 Status automatically changes to “Out of Inventory” when zero
                 inventory is reached
               </p>
@@ -255,7 +255,7 @@ const CreateListing = () => {
 
           {/* Listing Approval */}
           <div>
-            <h3 className="text-[17px] md:text-[20px] text-[#13141D] font-semibold">
+            <h3 className="text-[17px] md:text-[20px] text-secondary-black font-semibold">
               Listing Approval Process
             </h3>
             <p className="text-[16px]] text-[#67645F] mt-2 max-w-[400px]">
@@ -266,7 +266,7 @@ const CreateListing = () => {
             </p>
             <div>
               <div className="flex gap-4 mt-3">
-                <label className="px-8 py-5 bg-[#F0EEE9] rounded-lg cursor-pointer text-[16px] text-[#13141D]">
+                <label className="px-8 py-5 bg-[#F0EEE9] rounded-lg cursor-pointer text-[16px] text-secondary-black">
                   Upload video
                   <input
                     type="file"
@@ -324,7 +324,7 @@ const CreateListing = () => {
 
           {/* Listing Status */}
           <div>
-            <p className="font-semibold text-[24px] text-[#13141D]">
+            <p className="font-semibold text-[24px] text-secondary-black">
               Listing Status:{" "}
               <span className="px-3 py-2 text-white text-sm rounded-full bg-[#757575] text-white]">
                 Pending
@@ -337,49 +337,55 @@ const CreateListing = () => {
         <div className="flex flex-col gap-4 md:gap-8">
           {/* Price */}
           <div>
-            <h3 className="text-[24px] font-semibold text-[#13141D]">Price</h3>
+            <h3 className="text-[24px] font-semibold text-secondary-black">
+              Price
+            </h3>
             <input
               type="text"
               defaultValue="$2.99/lb"
-              className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4  outline-0"
+              className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4  outline-0"
             />
           </div>
           <div>
-            <h3 className="text-[24px] font-semibold text-[#13141D]">Cost</h3>
+            <h3 className="text-[24px] font-semibold text-secondary-black">
+              Cost
+            </h3>
             <input
               type="text"
               defaultValue="$5.99/lb"
-              className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4  outline-0"
+              className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4  outline-0"
             />
           </div>
           <div>
-            <h3 className="text-[24px] font-semibold text-[#13141D]">Weight</h3>
+            <h3 className="text-[24px] font-semibold text-secondary-black">
+              Weight
+            </h3>
             <input
               type="text"
               defaultValue="20 KG"
-              className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 outline-0"
+              className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 outline-0"
             />
           </div>
 
           {/* Description */}
           <div>
-            <h3 className="text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[24px] font-semibold text-secondary-black">
               Description
             </h3>
             <textarea
               rows={5}
               defaultValue="Grown using organic farming practices, our cherry tomatoes are free from pesticides and artificial additives, ensuring a pure and wholesome experience."
-              className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4  outline-0"
+              className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4  outline-0"
             />
           </div>
 
           <div>
             {/* Category Dropdown */}
-            <h3 className="text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[24px] font-semibold text-secondary-black">
               Category
             </h3>
             <select
-              className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+              className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
               value={category}
               onChange={e => {
                 setCategory(e.target.value);
@@ -397,11 +403,11 @@ const CreateListing = () => {
             {/* Subcategory Dropdown */}
             {category && categories[category].length > 0 && (
               <div className="mt-4">
-                <h3 className="text-[24px] font-semibold text-[#13141D]">
+                <h3 className="text-[24px] font-semibold text-secondary-black">
                   Subcategory
                 </h3>
                 <select
-                  className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+                  className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                   value={subcategory}
                   onChange={e => setSubcategory(e.target.value)}
                 >
@@ -416,10 +422,10 @@ const CreateListing = () => {
             )}
           </div>
           <div>
-            <h3 className="text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[24px] font-semibold text-secondary-black">
               Fulfillment
             </h3>
-            <select className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2">
+            <select className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2">
               <option>Select Fulfillment</option>
               <option>Arrange Local Pickup</option>
               <option>Shipping</option>
@@ -428,7 +434,7 @@ const CreateListing = () => {
           </div>
 
           <div>
-            <h3 className="text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[24px] font-semibold text-secondary-black">
               Meta Tags
             </h3>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -447,7 +453,7 @@ const CreateListing = () => {
                 type="text"
                 value={newTag}
                 onChange={e => setNewTag(e.target.value)}
-                className="flex-1  border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 pl-10 "
+                className="flex-1  border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 pl-10 "
               />
               <button
                 onClick={handleAddTag}
@@ -459,10 +465,10 @@ const CreateListing = () => {
           </div>
 
           <div>
-            <h3 className="text-[24px] font-semibold text-[#13141D]">
+            <h3 className="text-[24px] font-semibold text-secondary-black">
               Selling Option
             </h3>
-            <select className="w-full border text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2">
+            <select className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2">
               <option>Choose Below</option>
               <option>Trade/Barter</option>
               <option>For Sale or Trade Barter</option>
@@ -477,7 +483,7 @@ const CreateListing = () => {
         <button className="text-red-600 w-full sm:w-fit flex items-center justify-center gap-1 mt-4 cursor-pointer">
           <MdDelete /> Delete Listing
         </button>
-        <button className="bg-[#E48872] w-full sm:w-fit text-white py-2.5 md:py-5 px-12 cursor-pointer rounded-lg font-semibold hover:bg-[#a34739] mt-6">
+        <button className="bg-accent-red w-full sm:w-fit text-white py-2.5 md:py-5 px-12 cursor-pointer rounded-lg font-semibold hover:bg-[#a34739] mt-6">
           Save Listing
         </button>
       </div>

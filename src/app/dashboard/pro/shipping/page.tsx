@@ -37,20 +37,18 @@ const Page = () => {
   const [openWightModal, setOpenWightModal] = useState(false);
   const [openConnectModal, setOpenConnectFlatModal] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [labelType, setLabelType] = useState("Cheapest");
-  console.log(user?.shop_info?.shippo_rate_preferences);
 
   /* ---------- API ---------- */
   const { data: weightRanges, refetch } = useWeightRateget();
   const { mutate: deleteWeightRange } = useWeightRateDelete();
   const { mutate: FlatRateMutation, isPending } = useFlatRate();
-  const { mutate: useWeightMutation, isPending: isWightLoading } =
-    useWeightRate();
   const { mutate: syncShippo, isPending: isSyncing } = useSyncShippo();
   const { mutate: connectShippo, isPending: isConnecting } = useConnectShippo();
+
+  const { mutate: useWeightMutation, isPending: isWightLoading } =
+    useWeightRate();
   const { mutate: disconnectShippo, isPending: isDisconnecting } =
     useDisconnectShippo();
-
   const { mutate: pickupCarrier, isPending: isPickingCarrier } =
     usePickCarrier();
   const { mutate: changeLabelType, isPending: isChangingLabelType } =
@@ -126,29 +124,29 @@ const Page = () => {
       </h2>
 
       <div className="pt-3 md:pt-6">
-        <h4 className="text-[#13141D] text-[20px] md:text-[24px] font-bold">
+        <h4 className="text-secondary-black text-[20px] md:text-[24px] font-bold">
           Shipping Settings
         </h4>
-        <p className="text-[#13141D] text-[13px] md:text-[16px] font-normal">
+        <p className="text-secondary-black text-[13px] md:text-[16px] font-normal">
           You can manage available shipping options for customers and set up
           your preferred shipping calculator.
         </p>
 
         <div className="pt-3 md:pt-6 flex flex-col gap-y-2 md:gap-y-4">
-          <h5 className="text-[#13141D] text-[13px] md:text-[16px] font-semibold">
+          <h5 className="text-secondary-black text-[13px] md:text-[16px] font-semibold">
             Shipping Options
           </h5>
-          <p className="text-[#13141D] text-[12px] md:text-[16px] font-normal max-w-[570px]">
+          <p className="text-secondary-black text-[12px] md:text-[16px] font-normal max-w-[570px]">
             You can choose how you want to apply shipping costs to your order.
             Shipping cost can be calculated with a flat rate, by weight, or
-            connect your store to shippo and enjoy full shipping integration
+            connect your store to Shippo and enjoy full shipping integration
             including automated shipping labels!
           </p>
 
           <div className="relative w-full">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="bg-[#274F45] text-white px-4 py-2 rounded-lg w-fit font-semibold flex gap-x-5 items-center text-[14px] md:text-[16px] cursor-pointer"
+              className="bg-primary-green text-white px-4 py-2 rounded-lg w-fit font-semibold flex gap-x-5 items-center text-[14px] md:text-[16px] cursor-pointer"
             >
               <FaAngleDown />
               Add Shipping Option
@@ -160,7 +158,7 @@ const Page = () => {
                   onClick={() => setOpenFlatModal(true)}
                   className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer"
                 >
-                  <h3 className="text-[#274F45] font-bold text-[14px] md:text-[16px]">
+                  <h3 className="text-primary-green font-bold text-[14px] md:text-[16px]">
                     Flat Rate
                   </h3>
                   <p className="text-[13px] md:text-[16px] text-[#3D3D3D] font-medium pt-1">
@@ -173,12 +171,11 @@ const Page = () => {
                   onClick={() => setOpenWightModal(true)}
                   className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer"
                 >
-                  <h3 className="text-[#274F45] font-bold text-[14px] md:text-[16px]">
+                  <h3 className="text-primary-green font-bold text-[14px] md:text-[16px]">
                     Depending on Weight
                   </h3>
                   <p className="text-[13px] md:text-[16px] text-[#3D3D3D] font-medium pt-1">
-                    Define a charge for every order and a flat fee for each
-                    item.
+                    Let the cost depend on the total weight of the purchase
                   </p>
                 </button>
 
@@ -187,18 +184,18 @@ const Page = () => {
                   className="px-2 md:px-4 py-3 bg-[#F2EFE8] border border-[#3C665B] p-4 rounded-lg w-full max-w-[700px] text-left cursor-pointer flex gap-3 items-center justify-between"
                 >
                   <div>
-                    <h3 className="text-[#274F45] font-bold text-[16px]">
+                    <h3 className="text-primary-green font-bold text-[16px]">
                       {user?.shop_info?.shippo_connected
                         ? "Shippo Connected"
                         : "Connect to Shippo"}
                     </h3>
                     <p className="text-[16px] text-[#3D3D3D] font-medium pt-1">
-                      Define a charge for every order and a flat fee for each
-                      item.
+                      Automatically sync your orders with a shipping solution to
+                      streamline your fulfillment workflow.
                     </p>
                   </div>
 
-                  <button>
+                  <button className="shrink-0">
                     {user?.shop_info?.shippo_connected ? (
                       <p className="px-3 py-1 rounded-full text-sm bg-primary-green text-white">
                         Connected
@@ -283,7 +280,7 @@ const Page = () => {
             <button
               type="submit"
               disabled={isPending}
-              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-[#274F45] rounded w-[190px] cursor-pointer disabled:opacity-85 disabled:cursor-not-allowed"
+              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-[190px] cursor-pointer disabled:opacity-85 disabled:cursor-not-allowed"
             >
               {isPending ? "Saving..." : "Save"}
             </button>
@@ -355,14 +352,14 @@ const Page = () => {
             <button
               type="submit"
               disabled={isWightLoading}
-              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-[#274F45] rounded w-[190px] cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
+              className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-[190px] cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
             >
               {isWightLoading ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
 
-        <h4 className="text-[20px] font-semibold text-[#274F45] mt-5">
+        <h4 className="text-[20px] font-semibold text-primary-green mt-5">
           Weight Ranges
         </h4>
         <p className="font-normal text-[16px] text-[#3D3D3D]">
@@ -421,12 +418,12 @@ const Page = () => {
         </h3>
 
         <div className="px-6 py-6 space-y-5">
-          <p className="font-semibold text-[#13141D]">
+          <p className="font-semibold text-secondary-black">
             Flexible, powerful shipping starting at $0/month (billed directly by
             Shippo)
           </p>
 
-          <ul className="list-disc list-inside space-y-1 text-[#13141D] text-[15px]">
+          <ul className="list-disc list-inside space-y-1 text-secondary-black text-[15px]">
             <li>
               Sync your Sustainable Trades orders with Shippo in just a few
               clicks.
@@ -440,7 +437,7 @@ const Page = () => {
             </li>
           </ul>
 
-          <p className="text-sm text-[#13141D] leading-relaxed">
+          <p className="text-sm text-secondary-black leading-relaxed">
             Shippo is a leading web-based shipping platform designed for small
             and growing online sellers. By creating a Shippo account,
             Sustainable Trades members can import their orders, print shipping
@@ -449,7 +446,7 @@ const Page = () => {
           </p>
 
           <p>
-            <span className="font-semibold text-[#13141D]">
+            <span className="font-semibold text-secondary-black">
               Sustainable Trades customers are billed directly by Shippo.
             </span>
             <br />
@@ -471,93 +468,97 @@ const Page = () => {
             </p>
           )}
 
-          <div className="space-y-5 border-t pt-5">
-            {/* Carrier */}
-            <div>
-              <label className="block text-sm font-semibold text-[#13141D] mb-3">
-                Pick your carrier
-              </label>
+          {user?.shop_info?.shippo_connected && (
+            <div className="space-y-5 border-t pt-5">
+              {/* Carrier */}
+              <div>
+                <label className="block text-sm font-semibold text-secondary-black mb-3">
+                  Pick your carrier
+                </label>
 
-              <div className="space-y-3">
-                {user?.shop_info?.shippo_carrier_accounts?.map(
-                  (carrierAccount: any) => {
-                    const isAvailable = !!carrierAccount.shippo_object_id;
+                <div className="space-y-3">
+                  {user?.shop_info?.shippo_carrier_accounts?.map(
+                    (carrierAccount: any) => {
+                      const isAvailable = !!carrierAccount.shippo_object_id;
 
-                    return (
-                      <div
-                        key={carrierAccount.id}
-                        className={`flex items-center justify-between border rounded-lg p-3 ${
-                          !isAvailable ? "opacity-50" : ""
-                        }`}
-                      >
-                        <div>
-                          <p className="font-medium">
-                            {carrierAccount.carrier_name}
-                          </p>
-
-                          {!isAvailable && (
-                            <p className="text-xs text-red-500">
-                              Not connected in Shippo
-                            </p>
-                          )}
-                        </div>
-
-                        <button
-                          type="button"
-                          disabled={!isAvailable || isPickingCarrier}
-                          onClick={() => handleCarrierToggle(carrierAccount)}
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            carrierAccount.active
-                              ? "bg-primary-green"
-                              : "bg-gray-300"
-                          } ${
-                            !isAvailable
-                              ? "cursor-not-allowed"
-                              : "cursor-pointer"
+                      return (
+                        <div
+                          key={carrierAccount.id}
+                          className={`flex items-center justify-between border rounded-lg p-3 ${
+                            !isAvailable ? "opacity-50" : ""
                           }`}
                         >
-                          <span
-                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          <div>
+                            <p className="font-medium">
+                              {carrierAccount.carrier_name}
+                            </p>
+
+                            {!isAvailable && (
+                              <p className="text-xs text-red-500">
+                                Not connected in Shippo
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            disabled={!isAvailable || isPickingCarrier}
+                            onClick={() => handleCarrierToggle(carrierAccount)}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                               carrierAccount.active
-                                ? "translate-x-6"
-                                : "translate-x-1"
+                                ? "bg-primary-green"
+                                : "bg-gray-300"
+                            } ${
+                              !isAvailable
+                                ? "cursor-not-allowed"
+                                : "cursor-pointer"
                             }`}
-                          />
-                        </button>
-                      </div>
-                    );
-                  },
-                )}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                carrierAccount.active
+                                  ? "translate-x-6"
+                                  : "translate-x-1"
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      );
+                    },
+                  )}
+                </div>
+              </div>
+
+              {/* Label Type */}
+              <div>
+                <label className="block text-sm font-semibold text-secondary-black mb-3">
+                  Choose label type
+                </label>
+
+                <div className="space-y-2">
+                  {user?.shop_info?.shippo_rate_preferences?.map(
+                    (rate: any) => (
+                      <label
+                        key={rate.id}
+                        className="flex items-center gap-3 cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          disabled={isChangingLabelType}
+                          name="labelType"
+                          checked={rate.active}
+                          onChange={() => handleLabelTypeChange(rate)}
+                          className="h-4 w-4 accent-primary-green cursor-pointer"
+                        />
+
+                        <span className="capitalize">{rate.rate_type}</span>
+                      </label>
+                    ),
+                  )}
+                </div>
               </div>
             </div>
-
-            {/* Label Type */}
-            <div>
-              <label className="block text-sm font-semibold text-[#13141D] mb-3">
-                Choose label type
-              </label>
-
-              <div className="space-y-2">
-                {user?.shop_info?.shippo_rate_preferences?.map((rate: any) => (
-                  <label
-                    key={rate.id}
-                    className="flex items-center gap-3 cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      disabled={isChangingLabelType}
-                      name="labelType"
-                      checked={rate.active}
-                      onChange={() => handleLabelTypeChange(rate)}
-                      className="h-4 w-4 accent-primary-green cursor-pointer"
-                    />
-
-                    <span className="capitalize">{rate.rate_type}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
+          )}
         </div>
 
         <div className="flex justify-end px-6 py-4">

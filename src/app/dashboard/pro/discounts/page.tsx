@@ -72,7 +72,7 @@ const DiscountsPage = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000]">
+        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-black">
           Discounts
         </h2>
 
@@ -82,17 +82,17 @@ const DiscountsPage = () => {
             <input
               placeholder={"Search..."}
               type="search"
-              className="py-1.5 md:py-3 pl-4 outline-0 border border-[#274F45] rounded-[8px] text-[16px] text-[#67645F] font-normal w-full md:w-[300px]"
+              className="py-1.5 md:py-3 pl-4 outline-0 border border-primary-green rounded-[8px] text-[16px] text-[#67645F] font-normal w-full md:w-[300px]"
             />
             <div className="absolute top-4 right-3">
               <FaSearch />
             </div>
-            <div className="absolute top-0 right-10 w-[2px] bg-[#274F45] h-[45px]"></div>
+            <div className="absolute top-0 right-10 w-[2px] bg-primary-green h-[45px]"></div>
           </div>
 
           {/* Create button */}
           <Link href="/dashboard/pro/discounts/create-discount">
-            <button className="hover:border-[#D4E2CB] hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2 px-5 text-[178px] md:text-[20px] font-semibold cursor-pointer w-full md:w-fit bg-[#D4E2CB] text-[#274F45] duration-500 ease-in-out">
+            <button className="hover:border-[#D4E2CB] hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2 px-5 text-[178px] md:text-[20px] font-semibold cursor-pointer w-full md:w-fit bg-[#D4E2CB] text-primary-green duration-500 ease-in-out">
               Create Discount
             </button>
           </Link>
@@ -105,10 +105,10 @@ const DiscountsPage = () => {
           <button
             key={idx}
             onClick={() => setStatus(tab?.label)}
-            className={`flex items-center justify-center gap-2 border-2 border-[#274F45] rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 cursor-pointer font-semibold capitalize ${
+            className={`flex items-center justify-center gap-2 border-2 border-primary-green rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 cursor-pointer font-semibold capitalize ${
               status === tab?.label
-                ? "bg-[#D4E2CB] text-[#274F45]"
-                : "text-[#274F45] hover:bg-[#D4E2CB]"
+                ? "bg-[#D4E2CB] text-primary-green"
+                : "text-primary-green hover:bg-[#D4E2CB]"
             }`}
           >
             {tab?.label}
@@ -119,7 +119,7 @@ const DiscountsPage = () => {
         <button
           onClick={handleDelete}
           disabled={isPending}
-          className={`flex items-center justify-center gap-2 border-2 border-[#274F45] text-[#274F45] hover:bg-[#D4E2CB] rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 font-semibold capitalize ${
+          className={`flex items-center justify-center gap-2 border-2 border-primary-green text-primary-green hover:bg-[#D4E2CB] rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 font-semibold capitalize ${
             isPending ? "cursor-not-allowed" : "cursor-pointer"
           }`}
         >
@@ -156,7 +156,7 @@ const DiscountsPage = () => {
                   className="self-start mt-2 scale-110"
                 />
                 <div>
-                  <h3 className="text-[18px] md:text-[20px] font-bold text-[#13141D]">
+                  <h3 className="text-[18px] md:text-[20px] font-bold text-secondary-black">
                     Discount Name: {d?.name}
                   </h3>
 
@@ -176,14 +176,14 @@ const DiscountsPage = () => {
                   </p>
 
                   <div className="mt-3 md:mt-7 text-[14px] md:text-[16px] flex gap-1 items-center">
-                    <span className="font-bold text-[12px] md:text-[16px] text-[#13141D]">
+                    <span className="font-bold text-[12px] md:text-[16px] text-secondary-black">
                       STARTS:
                     </span>
                     <span className="text-gray-600">{`${moment(
                       d?.start_date,
                     ).format("ll")} at ${d?.start_time}`}</span>
 
-                    <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-[#13141D]">
+                    <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-secondary-black">
                       ENDS:
                     </span>
                     <span className="text-gray-600">
@@ -199,7 +199,7 @@ const DiscountsPage = () => {
 
               {/* Right side */}
               <div className="flex items-end w-full md:w-fit md:justify-end flex-col space-y-2 relative">
-                <div className="text-[15px] md:text-[20px] font-bold text-[#13141D]">
+                <div className="text-[15px] md:text-[20px] font-bold text-secondary-black">
                   {d?.code}
                 </div>
 
@@ -207,14 +207,14 @@ const DiscountsPage = () => {
                   <Link
                     href={`/dashboard/pro/discounts/create-discount/${d?.id}`}
                   >
-                    <button className="py-2 px-2 md:text-sm rounded bg-[#D4E2CB] text-[#274F45] cursor-pointer flex gap-x-2 font-semibold">
+                    <button className="py-2 px-2 md:text-sm rounded bg-[#D4E2CB] text-primary-green cursor-pointer flex gap-x-2 font-semibold">
                       <Pen />
                       Edit
                     </button>
                   </Link>
                 </div>
 
-                <div className="text-[16px] text-[#13141D] font-bold">
+                <div className="text-[16px] text-secondary-black font-bold">
                   {d?.discount_limits === 0
                     ? "Unlimited Uses"
                     : `0 of ${d?.discount_limits} Uses`}

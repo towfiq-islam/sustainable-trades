@@ -2,7 +2,6 @@ import { FormData } from "@/app/dashboard/basic/create-listing/page";
 import { useMemo, useRef, useState } from "react";
 import { UseFormSetValue } from "react-hook-form";
 
-
 interface VideoUploadProps {
   video: File | null;
   setVideo: React.Dispatch<React.SetStateAction<File | null>>;
@@ -15,7 +14,7 @@ const VideoUpload = ({ video, setVideo, setValue }: VideoUploadProps) => {
 
   const videoURL = useMemo(
     () => (video ? URL.createObjectURL(video) : null),
-    [video]
+    [video],
   );
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +39,7 @@ const VideoUpload = ({ video, setVideo, setValue }: VideoUploadProps) => {
 
   return (
     <div>
-      <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+      <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
         Listing Approval Process
       </h3>
       <p className="text-[16px] text-[#67645F] mt-2 w-full md:max-w-[400px]">
@@ -53,7 +52,7 @@ const VideoUpload = ({ video, setVideo, setValue }: VideoUploadProps) => {
         integrity of our marketplace.
       </p>
       <div className="flex gap-4 mt-3 w-full">
-        <label className="px-4 md:px-8 py-2.5 md:py-5 bg-[#F0EEE9] rounded-lg cursor-pointer text-[14px] md:text-[16px] text-[#13141D]">
+        <label className="px-4 md:px-8 py-2.5 md:py-5 bg-[#F0EEE9] rounded-lg cursor-pointer text-[14px] md:text-[16px] text-secondary-black">
           Upload video
           <input
             type="file"

@@ -26,10 +26,8 @@ const CounterTrades = ({ id }: any) => {
   >({});
   const router = useRouter();
   const { user } = useAuth();
-
   const { data } = useSingleTradeOffer(id);
 
-  console.log(data);
 
   // API mutation
   const { mutate, isPending } = useTradeSendProduct(id);
@@ -53,9 +51,6 @@ const CounterTrades = ({ id }: any) => {
   const { data: requestedShopProduct, isLoading: requestLoading } =
     useTradeShopProduct(otherShopId);
 
-  console.log("offered products", offerShopProduct);
-
-  console.log("requested products", requestedShopProduct);
 
   const queryClient = useQueryClient();
   const cancleTradeMutation = useCancel();
@@ -84,22 +79,22 @@ const CounterTrades = ({ id }: any) => {
 
   // main product quantity
   const handleSelectChange = (itemId: number, newProductId: number) => {
-    setSelectedProducts((prev) => ({ ...prev, [itemId]: newProductId }));
+    setSelectedProducts(prev => ({ ...prev, [itemId]: newProductId }));
   };
 
   const handleIncrement = (itemId: number) => {
-    setQuantities((prev) => ({ ...prev, [itemId]: (prev[itemId] || 1) + 1 }));
+    setQuantities(prev => ({ ...prev, [itemId]: (prev[itemId] || 1) + 1 }));
   };
 
   const handleDecrement = (itemId: number) => {
-    setQuantities((prev) => ({
+    setQuantities(prev => ({
       ...prev,
       [itemId]: Math.max(1, (prev[itemId] || 1) - 1),
     }));
   };
   // addon
   const addAddonProduct = (itemId: number) => {
-    setAddonProducts((prev) => ({
+    setAddonProducts(prev => ({
       ...prev,
       [itemId]: [...(prev[itemId] || []), { productId: 0, quantity: 1 }],
     }));
@@ -108,12 +103,12 @@ const CounterTrades = ({ id }: any) => {
   const updateAddonProduct = (
     itemId: number,
     index: number,
-    productId: number
+    productId: number,
   ) => {
-    setAddonProducts((prev) => ({
+    setAddonProducts(prev => ({
       ...prev,
       [itemId]: prev[itemId].map((a, i) =>
-        i === index ? { ...a, productId } : a
+        i === index ? { ...a, productId } : a,
       ),
     }));
   };
@@ -121,12 +116,12 @@ const CounterTrades = ({ id }: any) => {
   const updateAddonQuantity = (
     itemId: number,
     index: number,
-    quantity: number
+    quantity: number,
   ) => {
-    setAddonProducts((prev) => ({
+    setAddonProducts(prev => ({
       ...prev,
       [itemId]: prev[itemId].map((a, i) =>
-        i === index ? { ...a, quantity: Math.max(1, quantity) } : a
+        i === index ? { ...a, quantity: Math.max(1, quantity) } : a,
       ),
     }));
   };
@@ -168,7 +163,7 @@ const CounterTrades = ({ id }: any) => {
       const addons = addonProducts[item.id] || [];
 
       if (addons.length > 0) {
-        addons.forEach((a) => {
+        addons.forEach(a => {
           if (a.productId && a.quantity > 0) {
             const addonItem = {
               product_id: a.productId,
@@ -194,7 +189,7 @@ const CounterTrades = ({ id }: any) => {
     offeredItems.forEach((item, i) => {
       formData.append(
         `offered_items[${i}][product_id]`,
-        String(item.product_id)
+        String(item.product_id),
       );
       formData.append(`offered_items[${i}][quantity]`, String(item.quantity));
     });
@@ -202,7 +197,7 @@ const CounterTrades = ({ id }: any) => {
     requestedItems.forEach((item, i) => {
       formData.append(
         `requested_items[${i}][product_id]`,
-        String(item.product_id)
+        String(item.product_id),
       );
       formData.append(`requested_items[${i}][quantity]`, String(item.quantity));
     });
@@ -228,7 +223,7 @@ const CounterTrades = ({ id }: any) => {
   };
 
   const removeAddonProduct = (itemId: number, index: number) => {
-    setAddonProducts((prev) => {
+    setAddonProducts(prev => {
       const updated = { ...prev };
       updated[itemId] = prev[itemId].filter((_, i) => i !== index);
       if (updated[itemId].length === 0) delete updated[itemId];
@@ -243,7 +238,7 @@ const CounterTrades = ({ id }: any) => {
   > = {
     "Go Back": { border: "border-gray-200", text: "text-black" },
     Cancel: { border: "border-gray-200", text: "text-black" },
-    "Send Counter": { bg: "bg-[#E48872]", text: "text-white" },
+    "Send Counter": { bg: "bg-accent-red", text: "text-white" },
   };
 
   if (offerLoading || requestLoading) {
@@ -255,7 +250,7 @@ const CounterTrades = ({ id }: any) => {
   }
   return (
     <div className="mb-16">
-      <h3 className="text-[#13141D] font-semibold text-[20px] pb-4">
+      <h3 className="text-secondary-black font-semibold text-[20px] pb-4">
         Counter Offer
       </h3>
 
@@ -267,7 +262,6 @@ const CounterTrades = ({ id }: any) => {
             return 0;
           })
           .map((product: any, i: number, sortedItems: any[]) => {
-            console.log("type", product);
             const itemId = product.id;
             // const nextItem = data?.data?.items?.[i + 1];
             const nextItem = sortedItems[i + 1];
@@ -277,16 +271,16 @@ const CounterTrades = ({ id }: any) => {
             // const showReloadBetween =
             //   product?.type === "offered" && nextItem?.type === "requested";
             const selectedOfferProductPrice = offerShopProduct?.data?.find(
-              (data: any) => data?.id === selectedProducts[itemId]
+              (data: any) => data?.id === selectedProducts[itemId],
             );
 
             const selectedRequestedProductPrice =
               requestedShopProduct?.data?.find(
-                (data: any) => data?.id === selectedProducts[itemId]
+                (data: any) => data?.id === selectedProducts[itemId],
               );
             const unitPrice = Number(
               selectedOfferProductPrice?.product_price ??
-                selectedRequestedProductPrice?.product_price
+                selectedRequestedProductPrice?.product_price,
             );
             const qty = Number(quantities[itemId] || product?.quantity || 1);
 
@@ -309,18 +303,18 @@ const CounterTrades = ({ id }: any) => {
                       <div className="flex flex-col gap-y-1">
                         <Link
                           href={`/product-details/${product?.product_id}`}
-                          className="text-base lg:text-lg max-w-[500px] truncate font-semibold text-[#13141D] hover:underline"
+                          className="text-base lg:text-lg max-w-[500px] truncate font-semibold text-secondary-black hover:underline"
                         >
                           {product.product?.product_name}
                         </Link>
 
-                        <h4 className="text-[14px] lg:text-base text-[#4B4A47] flex flex-col 2xl:flex-row gap-3 2xl:items-center">
+                        <h4 className="text-[14px] lg:text-base text-secondary-gray flex flex-col 2xl:flex-row gap-3 2xl:items-center">
                           {product?.product?.shop?.shop_name}
                           <Link
                             href={`/shop-details?view=${"coustomer"}&id=${
                               product?.product?.shop?.user_id
                             }&listing_id=${product?.product?.shop_info_id}`}
-                            className="text-[12px] lg:text-[14px] underline cursor-pointer text-[#A7A39C] font-lato"
+                            className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray font-lato"
                           >
                             View Shop
                           </Link>
@@ -347,7 +341,7 @@ const CounterTrades = ({ id }: any) => {
                         </div>
                         <div className="flex gap-x-2 items-center">
                           <LocationSvg1 />
-                          <h5 className="text-[12px] lg:text-[14px] underline cursor-pointer text-[#A7A39C] font-lato">
+                          <h5 className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray font-lato">
                             {product?.type === "offered" &&
                             data?.data?.receiver?.shop_info?.address
                               ?.display_my_address
@@ -370,15 +364,15 @@ const CounterTrades = ({ id }: any) => {
                     <div className="flex flex-col gap-y-2 mt-2 md:mt-0">
                       <div className="flex items-end gap-2">
                         <div className="flex flex-col gap-2">
-                          <h4 className="text-[#4B4A47] font-semibold text-[14px]">
+                          <h4 className="text-secondary-gray font-semibold text-[14px]">
                             Product/Service Trade
                           </h4>
                           <select
                             value={selectedProducts[itemId] || ""}
-                            onChange={(e) =>
+                            onChange={e =>
                               handleSelectChange(itemId, Number(e.target.value))
                             }
-                            className="px-4 py-2 rounded-[10px] border border-[#A7A39C] w-full sm:w-[300px] xl:w-[500px]"
+                            className="px-4 py-2 rounded-[10px] border border-accent-gray w-full sm:w-[300px] xl:w-[500px]"
                           >
                             {product?.type === "offered" &&
                               offerShopProduct?.data?.map((p: any) => (
@@ -401,7 +395,7 @@ const CounterTrades = ({ id }: any) => {
                         </div>
 
                         {/* Quantity */}
-                        <div className="px-4 py-1 rounded-[10px] border border-[#A7A39C] flex gap-x-3">
+                        <div className="px-4 py-1 rounded-[10px] border border-accent-gray flex gap-x-3">
                           <button
                             onClick={() => handleDecrement(itemId)}
                             className="font-bold text-[20px]"
@@ -436,14 +430,14 @@ const CounterTrades = ({ id }: any) => {
                         >
                           <select
                             value={addon.productId}
-                            onChange={(e) =>
+                            onChange={e =>
                               updateAddonProduct(
                                 itemId,
                                 idx,
-                                Number(e.target.value)
+                                Number(e.target.value),
                               )
                             }
-                            className="px-4 py-2 rounded-[10px] border border-[#A7A39C] w-full sm:w-[300px] xl:w-[400px]"
+                            className="px-4 py-2 rounded-[10px] border border-accent-gray w-full sm:w-[300px] xl:w-[400px]"
                           >
                             <option value="">Choose Add-on</option>
 
@@ -468,13 +462,13 @@ const CounterTrades = ({ id }: any) => {
                               ))}
                           </select>
 
-                          <div className="px-4 py-1 rounded-[10px] border border-[#A7A39C] justify-center flex gap-x-3 items-center">
+                          <div className="px-4 py-1 rounded-[10px] border border-accent-gray justify-center flex gap-x-3 items-center">
                             <button
                               onClick={() =>
                                 updateAddonQuantity(
                                   itemId,
                                   idx,
-                                  addon.quantity - 1
+                                  addon.quantity - 1,
                                 )
                               }
                               className="font-bold text-[20px]"
@@ -489,7 +483,7 @@ const CounterTrades = ({ id }: any) => {
                                 updateAddonQuantity(
                                   itemId,
                                   idx,
-                                  addon.quantity + 1
+                                  addon.quantity + 1,
                                 )
                               }
                               className="font-bold text-[20px]"
@@ -516,10 +510,10 @@ const CounterTrades = ({ id }: any) => {
                         className="flex gap-x-2 items-center cursor-pointer hover:opacity-70 transition-opacity mt-2"
                         onClick={() => addAddonProduct(itemId)}
                       >
-                        <h6 className="text-[16px] font-semibold text-[#A7A39C]">
+                        <h6 className="text-[16px] font-semibold text-accent-gray">
                           +
                         </h6>
-                        <p className="text-[16px] font-semibold text-[#A7A39C]">
+                        <p className="text-[16px] font-semibold text-accent-gray">
                           Add another product/service
                         </p>
                       </div>
@@ -527,7 +521,7 @@ const CounterTrades = ({ id }: any) => {
                   </div>
                 </div>
                 {/* Total */}
-                <h5 className="flex gap-x-2 text-[16px] font-semibold text-[#4B4A47] items-center justify-end py-2">
+                <h5 className="flex gap-x-2 text-[16px] font-semibold text-secondary-gray items-center justify-end py-2">
                   Total amount:
                   <span className="text-[20px]">
                     ${getItemTotal(product).total}
@@ -552,7 +546,7 @@ const CounterTrades = ({ id }: any) => {
       <textarea
         placeholder="Add your message..."
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={e => setMessage(e.target.value)}
         className="border border-gray-300 rounded-md p-3 mt-6 w-full"
         rows={3}
       />
@@ -586,7 +580,7 @@ const CounterTrades = ({ id }: any) => {
           })}
         </div>
 
-        {/* <li className="text-[#13141D] font-normal text-[16px] list-disc pt-4">
+        {/* <li className="text-secondary-black font-normal text-[16px] list-disc pt-4">
           Sending a message with a counter offer gives you a better chance of
           getting it accepted.
         </li> */}

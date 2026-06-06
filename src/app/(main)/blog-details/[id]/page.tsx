@@ -19,7 +19,7 @@ const page = async ({ params }: any) => {
             {blogDetailsData?.data?.title}
           </h1>
 
-          <p className="text-sm text-[#919EAB] text-center mb-7 lg:mb-10">
+          <p className="text-sm text-secondary-gray text-center mb-7 lg:mb-10">
             {moment(blogDetailsData?.data?.created_at).format("LL")}
           </p>
 

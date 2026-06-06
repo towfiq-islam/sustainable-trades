@@ -34,7 +34,7 @@ const CategorySection = ({
 
   return (
     <div>
-      <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+      <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
         Category
       </h3>
       <Controller
@@ -44,7 +44,7 @@ const CategorySection = ({
         render={({ field }) => (
           <select
             {...field}
-            className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+            className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
           >
             <option value="">Select Category</option>
             {categories.map(cat => (
@@ -63,7 +63,7 @@ const CategorySection = ({
 
       {filteredSubcategories.length > 0 && (
         <div className="mt-4">
-          <h3 className="text-[20px] md:text-[24px] font-semibold text-[#13141D]">
+          <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
             Subcategory
           </h3>
           <Controller
@@ -73,7 +73,7 @@ const CategorySection = ({
             render={({ field }) => (
               <select
                 {...field}
-                className="w-full border text-[16px] md:text-[20px] text-[#13141D] border-[#A7A39C] rounded-lg p-2 md:p-4 mt-2"
+                className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
               >
                 <option value="">Select Subcategory</option>
                 {filteredSubcategories.map(sub => (

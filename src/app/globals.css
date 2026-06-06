@@ -9,6 +9,7 @@
   --color-secondary-gray: #4b4a47;
   --color-secondary-black: #13141d;
   --color-accent-white: #fffdf8;
+  --color-accent-gray: #a7a39c;
 
   /* Font Family */
   --font-lato: var(--font-lato);
@@ -58,7 +59,7 @@ body {
 }
 
 .auth_title {
-  @apply text-[#274F45] text-[40px] font-lato font-bold text-center;
+  @apply text-primary-green text-[40px] font-lato font-bold text-center;
 }
 
 .auth_description {
@@ -74,7 +75,7 @@ body {
 }
 
 .form-input {
-  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2  lg:py-2.5 rounded-[5px] border md:border-2 border-[#67645f];
+  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2  lg:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray;
 }
 
 .form-error {

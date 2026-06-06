@@ -88,9 +88,9 @@ const page = () => {
               setIsActive(tab);
               setStatus(tab === "orders" ? "" : tab);
             }}
-            className={`text-[15px] lg:text-[20px] font-bold text-[#000] px-3 md:px-6 py-2 w-fit flex-1 text-nowrap cursor-pointer capitalize ${
+            className={`text-[15px] lg:text-[20px] font-bold text-black px-3 md:px-6 py-2 w-fit flex-1 text-nowrap cursor-pointer capitalize ${
               isActive === tab
-                ? "border-b-[3px] border-[#77978F]"
+                ? "border-b-[3px] border-light-green"
                 : "border-b border-[#BFBEBE]"
             } ${index === tabs.length - 1 ? "flex-1" : "sm:shrink-0"}`}
           >
@@ -116,7 +116,7 @@ const page = () => {
                         Order Placed
                       </h3>
 
-                      <p className="font-sans font-normal text-[#000] text-[16px]">
+                      <p className="font-sans font-normal text-black text-[16px]">
                         {moment(order?.created_at).format("LL")}
                       </p>
                     </div>
@@ -126,7 +126,7 @@ const page = () => {
                         Total
                       </h3>
 
-                      <p className="font-sans font-normal text-[#000] text-[16px]">
+                      <p className="font-sans font-normal text-black text-[16px]">
                         ${order?.total_amount}
                       </p>
                     </div>
@@ -160,7 +160,7 @@ const page = () => {
                         Order Number
                       </h3>
 
-                      <p className="font-sans font-normal text-[#000] text-[16px]">
+                      <p className="font-sans font-normal text-black text-[16px]">
                         {order?.order_number}
                       </p>
                     </div>
@@ -195,11 +195,11 @@ const page = () => {
               <div className="pt-2 px-4 pb-4">
                 <div className="flex flex-col gap-2.5 sm:gap-0 sm:flex-row sm:justify-between sm:items-center">
                   <div>
-                    <h4 className="text-[16px] sm:text-[20px] font-bold text-[#000]">
+                    <h4 className="text-[16px] sm:text-[20px] font-bold text-black">
                       {order?.shop?.shop_name}
                     </h4>
 
-                    <p className="font-sans font-normal text-[#000] text-[13px] sm:text-[16px] pt-2 pb-3">
+                    <p className="font-sans font-normal text-black text-[13px] sm:text-[16px] pt-2 pb-3">
                       {order?.latest_order_status?.content}
                     </p>
 
@@ -217,7 +217,7 @@ const page = () => {
                             />
                           </figure>
                           <div className="flex flex-col gap-1.5">
-                            <h5 className="text-[16px] sm:text-[20px] font-bold text-[#000]">
+                            <h5 className="text-[16px] sm:text-[20px] font-bold text-black">
                               {item?.product?.product_name}
                             </h5>
                             <h5 className="text-[#222]">
@@ -248,21 +248,21 @@ const page = () => {
                         isOpen(true);
                         setOrderId(order?.id);
                       }}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
+                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-black cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
                     >
                       Track Package
                     </button>
 
                     <Link
                       href={`/dashboard/customer/orders/${order?.id}`}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer text-center w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
+                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-black cursor-pointer text-center w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
                     >
                       View Order
                     </Link>
 
                     <Link
                       href={`/dashboard/${order?.shop?.user?.membership?.membership_type}/messages/inbox/${order?.shop?.user?.membership?.user_id}`}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal text-[#000] cursor-pointer w-full sm:w-[250px] text-center hover:scale-105 duration-500 ease-in-out"
+                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal text-black cursor-pointer w-full sm:w-[250px] text-center hover:scale-105 duration-500 ease-in-out"
                     >
                       Get Help
                     </Link>
@@ -273,7 +273,7 @@ const page = () => {
                           setNote(order?.note);
                           setShowNote(true);
                         }}
-                        className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
+                        className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-black cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
                       >
                         View note
                       </button>

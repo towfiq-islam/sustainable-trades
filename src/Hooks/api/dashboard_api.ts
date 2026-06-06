@@ -864,11 +864,12 @@ export const useConnectShippo = () => {
     key: ["connect-shippo"],
     isPrivate: true,
     endpoint: "/api/shippo/connect",
-    // onSuccess: (data: any) => {
-    //   if (data?.success) {
-    //     toast.success(data?.message);
-    //   }
-    // },
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        window.location.href = data?.data?.url;
+      }
+    },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },

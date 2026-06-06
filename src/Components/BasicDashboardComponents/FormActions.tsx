@@ -5,13 +5,7 @@ interface FormActionsProps {
 
 const FormActions = ({ isPending }: FormActionsProps) => (
   <div className="flex justify-end mt-5 md:mt-10 items-center">
-    {/* <button
-      type="button"
-      className="text-red-600 flex items-center gap-1 mt-4 cursor-pointer border-2 px-5 py-3"
-      onClick={() => console.log("Delete clicked")} 
-    >
-      Delete Listing
-    </button> */}
+
 
     <button
       type="submit"

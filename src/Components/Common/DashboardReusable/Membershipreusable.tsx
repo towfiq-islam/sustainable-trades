@@ -184,7 +184,6 @@ const Membershipreusable: React.FC<MembershipReusableProps> = ({
         isOpen={pauseOpen}
         onClose={() => setPauseOpen(false)}
         onConfirm={(duration: number) => {
-          console.log(`Paused ${membershipType} for ${duration} months`);
           setPauseOpen(false);
         }}
         membershipType={membershipType}

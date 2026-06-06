@@ -381,7 +381,6 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
         if (data?.success) {
           router.push("/dashboard/pro/view-listing");
         }
-        console.log("Update successful:", data);
         // Update local state with the new data
         updateLocalStateWithProductData(data.data);
         // Optionally show success toast: alert("Listing updated successfully!");

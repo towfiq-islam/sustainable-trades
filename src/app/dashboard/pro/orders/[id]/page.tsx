@@ -27,7 +27,6 @@ interface FormValues {
 
 const Page = () => {
   const { user } = useAuth();
-  console.log(user);
   const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);

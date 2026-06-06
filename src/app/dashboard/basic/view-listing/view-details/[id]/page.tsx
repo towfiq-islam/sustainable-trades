@@ -80,11 +80,9 @@ interface DetailsProps {
 const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const router = useRouter();
   const { user } = useAuth();
-  console.log(user);
 
   const { id } = use(params);
   const { data: listing, isLoading } = useGetSingleListing(id);
-  console.log(id);
 
   const updateProduct = useupdateProduct(id);
   const deleteProduct = useDeleteProduct(id);

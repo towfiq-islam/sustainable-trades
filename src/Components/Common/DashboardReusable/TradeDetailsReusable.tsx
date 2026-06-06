@@ -43,7 +43,6 @@ const TradeDetailsReusable = () => {
 
   const senderUserId = tradeSingleData?.data?.sender?.shop_info?.user_id;
 
-  console.log(senderUserId);
 
   const { data: tradeSenderShopData, isLoading: shopLoading } =
     getShopDetails(senderUserId);
@@ -52,7 +51,6 @@ const TradeDetailsReusable = () => {
     (item: any) => item?.product?.shop?.user_id === +senderUserId,
   );
 
-  console.log(tradeSenderProduct);
 
   if (tradeLoading || shopLoading) {
     return <div className="p-10 text-center">Loading Trade Details...</div>;
@@ -273,7 +271,7 @@ const TradeDetailsReusable = () => {
                 } else if (btn === "Deny") {
                   router.push(`/dashboard/pro/trades/deny/${tradeId}`);
                 } else {
-                  console.log(`${btn} clicked for trade ${tradeId}`);
+                 ;
                 }
               }}
               className={`relative cursor-pointer py-[10px] border px-4 rounded-md font-lato font-semibold overflow-hidden

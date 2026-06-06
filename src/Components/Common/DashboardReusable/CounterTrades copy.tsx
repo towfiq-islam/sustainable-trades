@@ -26,10 +26,8 @@ const CounterTrades = ({ id }: any) => {
   >({});
   const router = useRouter();
   const { user } = useAuth();
-
   const { data } = useSingleTradeOffer(id);
 
-  console.log(data);
 
   // API mutation
   const { mutate, isPending } = useTradeSendProduct(id);
@@ -53,9 +51,6 @@ const CounterTrades = ({ id }: any) => {
   const { data: requestedShopProduct, isLoading: requestLoading } =
     useTradeShopProduct(otherShopId);
 
-  console.log("offered products", offerShopProduct);
-
-  console.log("requested products", requestedShopProduct);
 
   const queryClient = useQueryClient();
   const cancleTradeMutation = useCancel();
@@ -267,7 +262,6 @@ const CounterTrades = ({ id }: any) => {
             return 0;
           })
           .map((product: any, i: number, sortedItems: any[]) => {
-            console.log("type", product);
             const itemId = product.id;
             // const nextItem = data?.data?.items?.[i + 1];
             const nextItem = sortedItems[i + 1];

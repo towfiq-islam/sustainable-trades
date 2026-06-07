@@ -43,7 +43,7 @@ const MetaTags = ({ metaTags, setMetaTags, setValue }: MetaTagsProps) => {
             <button
               type="button"
               onClick={() => handleRemoveTag(tag)}
-              className="ml-1 text-red-500 hover:text-red-700"
+              className="ml-1 text-red-500 hover:text-red-700 cursor-pointer text-base"
             >
               ×
             </button>

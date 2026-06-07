@@ -76,40 +76,24 @@ const Page = () => {
 
   /* ---------- SUBMIT HANDLERS ---------- */
   const onFlatSubmit = (data: FlatRateForm) => {
-    const payload = { shipping_setting: "flat_rate" };
-
-    setShippo(payload, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          FlatRateMutation(data, {
-            onSuccess: (data: any) => {
-              if (data?.success) {
-                toast.success(data?.message);
-                resetFlat();
-                setOpenFlatModal(false);
-              }
-            },
-          });
+    FlatRateMutation(data, {
+      onSuccess: (data: any) => {
+        if (data?.success) {
+          toast.success(data?.message);
+          resetFlat();
+          setOpenFlatModal(false);
         }
       },
     });
   };
 
   const onWeightSubmit = (data: WeightForm) => {
-    const payload = { shipping_setting: "weight_based" };
-
-    setShippo(payload, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          useWeightMutation(data, {
-            onSuccess: (data: any) => {
-              if (data?.success) {
-                toast.success(data?.message);
-                resetWeight();
-                refetch();
-              }
-            },
-          });
+    useWeightMutation(data, {
+      onSuccess: (data: any) => {
+        if (data?.success) {
+          toast.success(data?.message);
+          resetWeight();
+          refetch();
         }
       },
     });
@@ -138,23 +122,19 @@ const Page = () => {
     });
   };
 
-  const handleConnectShippo = () => {
-    const payload = { shipping_setting: "shippo" };
-
-    connectShippo(undefined, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          setShippo(payload);
-          toast.success(res);
-          // window.location.href = res?.data?.url;
-        }
-      },
-    });
-  };
-
   const handleShippingMethodChange = (method: string) => {
     if (method === "shippo" && !user?.shop_info?.shippo_connected) {
       toast.error("Please connect Shippo first");
+      return;
+    }
+
+    if (method === "weight_based" && weightRanges?.data?.length <= 0) {
+      toast.error("Weight-based shipping is not configured for this shop");
+      return;
+    }
+
+    if (method === "flat_rate" && flatRateRanges?.data?.length <= 0) {
+      toast.error("Flat-based shipping is not configured for this shop");
       return;
     }
 
@@ -209,12 +189,12 @@ const Page = () => {
             <div className="absolute z-10 mt-5 w-full flex flex-col gap-y-4 pb-10">
               <div
                 onClick={() => handleShippingMethodChange("flat_rate")}
-                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all ${
-                  user?.shop_info?.shipping_setting === "flat_rate"
-                    ? "border-primary-green bg-[#F2EFE8]"
-                    : "border-gray-300 bg-white hover:border-primary-green"
-                }
-`}
+                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all ${isSetting && "animate-pulse"}
+                   ${
+                     user?.shop_info?.shipping_setting === "flat_rate"
+                       ? "border-primary-green bg-[#F2EFE8]"
+                       : "border-gray-300 bg-white hover:border-primary-green"
+                   }`}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
@@ -254,13 +234,12 @@ const Page = () => {
 
               <div
                 onClick={() => handleShippingMethodChange("weight_based")}
-                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all
-    ${
-      user?.shop_info?.shipping_setting === "weight_based"
-        ? "border-primary-green bg-[#F2EFE8]"
-        : "border-gray-300 bg-white hover:border-primary-green"
-    }
-  `}
+                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all ${isSetting && "animate-pulse"}
+                 ${
+                   user?.shop_info?.shipping_setting === "weight_based"
+                     ? "border-primary-green bg-[#F2EFE8]"
+                     : "border-gray-300 bg-white hover:border-primary-green"
+                 }`}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
@@ -302,13 +281,12 @@ const Page = () => {
 
               <div
                 onClick={() => handleShippingMethodChange("shippo")}
-                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all
-    ${
-      user?.shop_info?.shipping_setting === "shippo"
-        ? "border-primary-green bg-[#F2EFE8]"
-        : "border-gray-300 bg-white hover:border-primary-green"
-    }
-  `}
+                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all ${isSetting && "animate-pulse"}
+                   ${
+                     user?.shop_info?.shipping_setting === "shippo"
+                       ? "border-primary-green bg-[#F2EFE8]"
+                       : "border-gray-300 bg-white hover:border-primary-green"
+                   }`}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
@@ -380,11 +358,7 @@ const Page = () => {
             <p className="form-label font-bold">Option Name *</p>
             <input
               className="form-input"
-              defaultValue={
-                user?.shop_info?.shipping_setting === "flat_rate"
-                  ? flatRateRanges?.data?.option_name
-                  : ""
-              }
+              defaultValue={flatRateRanges?.data?.option_name}
               placeholder="“FedEx Next Day”, “USPS Express Mail”"
               {...registerFlat("option_name", { required: true })}
             />
@@ -402,11 +376,7 @@ const Page = () => {
               <input
                 type="number"
                 className="form-input"
-                defaultValue={
-                  user?.shop_info?.shipping_setting === "flat_rate"
-                    ? flatRateRanges?.data?.per_order_fee
-                    : ""
-                }
+                defaultValue={flatRateRanges?.data?.per_order_fee}
                 placeholder="$ XXX"
                 {...registerFlat("per_order_fee", { required: true })}
               />
@@ -423,11 +393,7 @@ const Page = () => {
               <input
                 type="number"
                 className="form-input"
-                defaultValue={
-                  user?.shop_info?.shipping_setting === "flat_rate"
-                    ? flatRateRanges?.data?.per_item_fee
-                    : ""
-                }
+                defaultValue={flatRateRanges?.data?.per_item_fee}
                 placeholder="$ XXX"
                 {...registerFlat("per_item_fee", { required: true })}
               />
@@ -755,7 +721,7 @@ const Page = () => {
           ) : (
             <button
               disabled={isConnecting || isSetting}
-              onClick={handleConnectShippo}
+              onClick={() => connectShippo()}
               className="bg-[#0B3C32] text-white px-6 py-2 rounded-md font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
             >
               Connect to Shippo

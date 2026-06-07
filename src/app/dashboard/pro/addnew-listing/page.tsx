@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "@/Hooks/useAuth";
 import { Controller, useForm } from "react-hook-form";
 import { useAddProduct } from "@/Hooks/api/dashboard_api";
@@ -52,12 +52,8 @@ type SubCategory = {
 const CreateListing = () => {
   const router = useRouter();
   const { user } = useAuth();
-
-  // Determine membership dynamically
   const membershipType = user?.membership?.membership_type || "basic";
   const isBasicMember = membershipType.toLowerCase() === "basic";
-
-  // Separate states for files and previews
   const [video, setVideo] = useState<File | null>(null);
   const [metaTags, setMetaTags] = useState<string[]>([]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -93,6 +89,8 @@ const CreateListing = () => {
       video: null,
     },
   });
+  const categoryId = watch("category_id");
+  const subCategoryId = watch("sub_category_id");
 
   const categories: Category[] = categoriess?.data || [];
   const subcategories: SubCategory[] = subcategoriess?.data || [];
@@ -155,10 +153,50 @@ const CreateListing = () => {
     });
   };
 
+  useEffect(() => {
+    const autoTags: string[] = [];
+
+    // Shop Name
+    if (user?.shop_info?.shop_name) {
+      autoTags.push(user.shop_info.shop_name);
+    }
+    // Category Name
+    const selectedCategory = categories.find(
+      cat => String(cat.id) === String(categoryId),
+    );
+
+    if (selectedCategory) {
+      autoTags.push(selectedCategory.name);
+    }
+
+    // Subcategory Name
+    const selectedSubCategory = subcategories.find(
+      sub => String(sub.id) === String(subCategoryId),
+    );
+
+    if (selectedSubCategory) {
+      autoTags.push(selectedSubCategory.sub_category_name);
+    }
+
+    const uniqueTags = [...new Set(autoTags)];
+
+    setMetaTags(uniqueTags);
+    setValue("tags", uniqueTags);
+  }, [
+    categoryId,
+    subCategoryId,
+    categories,
+    subcategories,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    setValue("sub_category_id", "");
+  }, [categoryId, setValue]);
+
   return (
     <div>
       <Header />
-      {/* Optional: Display membership banner */}
       <MembershipNotice isBasicMember={isBasicMember} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mt-4 md:mt-8">

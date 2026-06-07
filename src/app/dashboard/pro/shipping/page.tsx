@@ -128,6 +128,16 @@ const Page = () => {
       return;
     }
 
+    if (method === "weight_based" && weightRanges?.data?.length <= 0) {
+      toast.error("Weight-based shipping is not configured for this shop");
+      return;
+    }
+
+    if (method === "flat_rate" && flatRateRanges?.data?.length <= 0) {
+      toast.error("Flat-based shipping is not configured for this shop");
+      return;
+    }
+
     setShippo(
       { shipping_setting: method },
       {
@@ -179,12 +189,12 @@ const Page = () => {
             <div className="absolute z-10 mt-5 w-full flex flex-col gap-y-4 pb-10">
               <div
                 onClick={() => handleShippingMethodChange("flat_rate")}
-                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all ${
-                  user?.shop_info?.shipping_setting === "flat_rate"
-                    ? "border-primary-green bg-[#F2EFE8]"
-                    : "border-gray-300 bg-white hover:border-primary-green"
-                }
-`}
+                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all ${isSetting && "animate-pulse"}
+                   ${
+                     user?.shop_info?.shipping_setting === "flat_rate"
+                       ? "border-primary-green bg-[#F2EFE8]"
+                       : "border-gray-300 bg-white hover:border-primary-green"
+                   }`}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
@@ -224,13 +234,12 @@ const Page = () => {
 
               <div
                 onClick={() => handleShippingMethodChange("weight_based")}
-                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all
-    ${
-      user?.shop_info?.shipping_setting === "weight_based"
-        ? "border-primary-green bg-[#F2EFE8]"
-        : "border-gray-300 bg-white hover:border-primary-green"
-    }
-  `}
+                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all ${isSetting && "animate-pulse"}
+                 ${
+                   user?.shop_info?.shipping_setting === "weight_based"
+                     ? "border-primary-green bg-[#F2EFE8]"
+                     : "border-gray-300 bg-white hover:border-primary-green"
+                 }`}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
@@ -272,13 +281,12 @@ const Page = () => {
 
               <div
                 onClick={() => handleShippingMethodChange("shippo")}
-                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all
-    ${
-      user?.shop_info?.shipping_setting === "shippo"
-        ? "border-primary-green bg-[#F2EFE8]"
-        : "border-gray-300 bg-white hover:border-primary-green"
-    }
-  `}
+                className={`px-4 py-4 border rounded-lg w-full max-w-[700px] cursor-pointer transition-all ${isSetting && "animate-pulse"}
+                   ${
+                     user?.shop_info?.shipping_setting === "shippo"
+                       ? "border-primary-green bg-[#F2EFE8]"
+                       : "border-gray-300 bg-white hover:border-primary-green"
+                   }`}
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
@@ -350,11 +358,7 @@ const Page = () => {
             <p className="form-label font-bold">Option Name *</p>
             <input
               className="form-input"
-              defaultValue={
-                user?.shop_info?.shipping_setting === "flat_rate"
-                  ? flatRateRanges?.data?.option_name
-                  : ""
-              }
+              defaultValue={flatRateRanges?.data?.option_name}
               placeholder="“FedEx Next Day”, “USPS Express Mail”"
               {...registerFlat("option_name", { required: true })}
             />
@@ -372,11 +376,7 @@ const Page = () => {
               <input
                 type="number"
                 className="form-input"
-                defaultValue={
-                  user?.shop_info?.shipping_setting === "flat_rate"
-                    ? flatRateRanges?.data?.per_order_fee
-                    : ""
-                }
+                defaultValue={flatRateRanges?.data?.per_order_fee}
                 placeholder="$ XXX"
                 {...registerFlat("per_order_fee", { required: true })}
               />
@@ -393,11 +393,7 @@ const Page = () => {
               <input
                 type="number"
                 className="form-input"
-                defaultValue={
-                  user?.shop_info?.shipping_setting === "flat_rate"
-                    ? flatRateRanges?.data?.per_item_fee
-                    : ""
-                }
+                defaultValue={flatRateRanges?.data?.per_item_fee}
                 placeholder="$ XXX"
                 {...registerFlat("per_item_fee", { required: true })}
               />

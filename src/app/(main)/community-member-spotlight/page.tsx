@@ -32,7 +32,7 @@ const Community = async () => {
               className="rounded-xl flex flex-col lg:flex-row lg:items-center border border-gray-300"
             >
               {/* Left - Spotlight Image */}
-              <figure className="w-full lg:w-[229px] h-[300px] lg:h-[230px] shrink-0 rounded-l-xl relative">
+              <figure className="w-full lg:w-[229px] h-[300px] lg:h-[240px] shrink-0 rounded-l-xl relative">
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.image}`}
                   alt={item?.shop_name}
@@ -43,7 +43,7 @@ const Community = async () => {
               </figure>
 
               {/* Right */}
-              <div className="lg:grow px-4 py-2">
+              <div className="lg:grow px-5">
                 <div className="flex flex-col sm:flex-row md:justify-between md:items-center">
                   {/* Shop Name */}
                   <h3 className="tracking-[0.2px] font-semibold text-secondary-gray text-xl mb-1">
@@ -65,7 +65,7 @@ const Community = async () => {
                 </p>
 
                 {/* Shop Description */}
-                <p className="text-gray-600 text-[13px] md:text-base max-w-[800px] mb-4">
+                <p className="text-gray-600 text-[13px] md:text-base mb-4">
                   {item?.shop_description}
                 </p>
 

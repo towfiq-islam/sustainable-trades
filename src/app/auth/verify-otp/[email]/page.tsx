@@ -32,7 +32,7 @@ const page = ({ params }: any) => {
     <Container>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full min-h-screen flex items-center justify-center"
+        className="w-full min-h-screen flex items-center justify-center text-center"
       >
         <div className="w-full sm:w-[450px] gap-y-5 md:gap-y-7 3xl:gap-y-10">
           <h2 className="text-xl sm:text-2xl  md:text-3xl  lg:text-4xl font-semibold text-secondary-black mb-5 text-center">
@@ -67,7 +67,7 @@ const page = ({ params }: any) => {
               )}
             />
             {errors.otp && (
-              <p className="text-red-600 mt-1 text-sm">{errors.otp.message}</p>
+              <p className="text-red-600 mt-2 text-sm">{errors.otp.message}</p>
             )}
           </div>
 

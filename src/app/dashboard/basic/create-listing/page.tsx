@@ -1,6 +1,6 @@
 "use client";
 import { Controller, useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   getProductCategoriesClient,
@@ -94,6 +94,8 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
     },
   });
 
+  const categoryId = watch("category_id");
+  const subCategoryId = watch("sub_category_id");
   const categories: Category[] = categoriess?.data || [];
   const subcategories: SubCategory[] = subcategoriess?.data || [];
 
@@ -152,6 +154,41 @@ const CreateListing = ({ membershipType = "basic" }: any) => {
       },
     });
   };
+
+  useEffect(() => {
+    const autoTags: string[] = [];
+
+    // Shop Name
+    if (user?.shop_info?.shop_name) {
+      autoTags.push(user.shop_info.shop_name);
+    }
+    // Category Name
+    const selectedCategory = categories.find(
+      cat => String(cat.id) === String(categoryId),
+    );
+
+    if (selectedCategory) {
+      autoTags.push(selectedCategory.name);
+    }
+
+    // Subcategory Name
+    const selectedSubCategory = subcategories.find(
+      sub => String(sub.id) === String(subCategoryId),
+    );
+
+    if (selectedSubCategory) {
+      autoTags.push(selectedSubCategory.sub_category_name);
+    }
+
+    const uniqueTags = [...new Set(autoTags)];
+
+    setMetaTags(uniqueTags);
+    setValue("tags", uniqueTags);
+  }, [categoryId, subCategoryId, categories, subcategories, setValue]);
+
+  useEffect(() => {
+    setValue("sub_category_id", "");
+  }, [categoryId, setValue]);
 
   return (
     <>

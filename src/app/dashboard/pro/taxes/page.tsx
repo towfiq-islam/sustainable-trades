@@ -1,6 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Country, State } from "country-state-city";
+const allowedCountries = Country.getAllCountries().filter(
+  country => country.isoCode === "US" || country.isoCode === "CA",
+);
 import {
   getSalesTaxData,
   useAddSalesTax,
@@ -28,9 +32,12 @@ export default function TaxRatePage() {
   const { mutate, isPending } = useTaxes();
   const { mutate: addSalesTaxMutate, isPending: isAddingSalesTax } =
     useAddSalesTax();
+  const [country, setCountry] = useState<any>(null);
+  const [state, setState] = useState<any>(null);
   const { data: taxData } = getSalesTaxData();
   const [chargeOnServices, setChargeOnServices] = useState(true);
   const [chargeOnShipping, setChargeOnShipping] = useState(false);
+
   const [states, setStates] = useState(taxData?.data?.states || []);
 
   const handleStateToggle = (id: number) => {
@@ -58,13 +65,16 @@ export default function TaxRatePage() {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<TaxForm>();
 
   const onSubmit = (data: TaxForm) => {
+    const countryName = Country.getCountryByCode(country)?.name || "";
+
     const payload = {
-      country: data.country,
-      state: data.state,
+      country: countryName,
+      state: state,
       rate: data.rate,
       is_digital_products: chargeOnServices ? 1 : 0,
       is_shipping: chargeOnShipping ? 1 : 0,
@@ -92,12 +102,13 @@ export default function TaxRatePage() {
       <h2 className="section_title text-center !mb-4 md:!mb-7">Sales Tax</h2>
 
       <p className="text-center text-base sm:text-lg max-w-3xl mx-auto text-secondary-gray mb-7">
-        Set up your sales tax rates for different regions. You can choose to
-        charge taxes on services, digital products, and shipping to ensure
-        compliance with local tax regulations.
+        Choose how you'd like to calculate sales tax for your business. Set up a
+        single local sales tax rate for local pickup orders, or connect ZipTax
+        to automatically calculate sales tax based on your customer's address or
+        pickup location at checkout.
       </p>
 
-      <div className="flex md:gap-5 p-1.5 md:p-3 rounded-xl shadow w-full md:w-[380px] mx-auto bg-primary-green mb-7 md:mb-10">
+      <div className="flex  p-1.5 md:p-3 rounded-xl shadow w-full md:w-[500px] mx-auto bg-primary-green mb-7 md:mb-10">
         <button
           type="button"
           onClick={() => setActiveTab("manual")}
@@ -107,7 +118,7 @@ export default function TaxRatePage() {
               : "text-accent-white bg-transparent"
           }`}
         >
-          Manual Tax
+          Local Sales Tax
         </button>
 
         <button
@@ -119,7 +130,7 @@ export default function TaxRatePage() {
               : "text-accent-white bg-transparent"
           }`}
         >
-          Automatic Tax
+          Automatic Tax (ZipTax)
         </button>
       </div>
 
@@ -148,11 +159,27 @@ export default function TaxRatePage() {
                     {...register("country", {
                       required: "Country is required",
                     })}
-                    className="w-full h-12 px-4 border border-gray-300 rounded-lg bg-white"
+                    className="w-full h-12 px-4 border border-gray-300 rounded-lg"
+                    onChange={e => {
+                      const selectedCountry = e.target.value;
+
+                      setCountry(selectedCountry);
+                      setState("");
+
+                      setValue("country", selectedCountry, {
+                        shouldValidate: true,
+                      });
+
+                      setValue("state", "");
+                    }}
                   >
-                    <option value="">Select country</option>
-                    <option value="USA">United States</option>
-                    <option value="Canada">Canada</option>
+                    <option value="">Select Country</option>
+
+                    {allowedCountries.map(country => (
+                      <option key={country.isoCode} value={country.isoCode}>
+                        {country.name}
+                      </option>
+                    ))}
                   </select>
 
                   {errors.country && (
@@ -165,18 +192,29 @@ export default function TaxRatePage() {
                 {/* State */}
                 <div>
                   <label className="block font-semibold text-secondary-black mb-2">
-                    State *
+                    State / Province *
                   </label>
 
                   <select
                     {...register("state", {
                       required: "State is required",
                     })}
-                    className="w-full h-12 px-4 border border-gray-300 rounded-lg bg-white"
+                    className="w-full h-12 px-4 border border-gray-300 rounded-lg"
+                    value={state}
+                    onChange={e => {
+                      const selectedState = e.target.value;
+
+                      setState(selectedState);
+
+                      setValue("state", selectedState, {
+                        shouldValidate: true,
+                      });
+                    }}
                   >
-                    <option value="">Select state</option>
-                    {states.map((item: stateItem) => (
-                      <option key={item.id} value={item.code}>
+                    <option value="">Select State / Province</option>
+
+                    {State.getStatesOfCountry(country).map(item => (
+                      <option key={item.isoCode} value={item.name}>
                         {item.name}
                       </option>
                     ))}

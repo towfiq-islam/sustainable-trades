@@ -133,3 +133,7 @@ option:hover {
   scrollbar-width: thin;
   scrollbar-color: #274f45;
 }
+
+.stsearch-box input {
+  @apply !border-none !outline-none;
+}

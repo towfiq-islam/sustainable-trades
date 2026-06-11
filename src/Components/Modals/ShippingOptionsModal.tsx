@@ -17,6 +17,7 @@ type ShippingOptionsProps = {
   userId: any;
   fulfillmentType: string;
   membershipType: string;
+  isConnected: boolean;
   onProceed: () => void;
   onSuccess: () => void;
   onClose: () => void;
@@ -29,11 +30,13 @@ const ShippingOptionsModal = ({
   fulfillmentType,
   onProceed,
   onClose,
+  isConnected,
 }: ShippingOptionsProps) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [shippingMethod, setShippingMethod] = useState(
-    fulfillmentType === "shipping" ||
-      fulfillmentType === "arrange_local_pickup_and_shipping"
+    isConnected &&
+      (fulfillmentType === "shipping" ||
+        fulfillmentType === "arrange_local_pickup_and_shipping")
       ? "proceed"
       : "local",
   );
@@ -109,6 +112,10 @@ const ShippingOptionsModal = ({
               } else if (fulfillmentType === "Mixed") {
                 return setErrorMessage(
                   "One or more items in your cart are only available for local pickup. You can message the seller to arrange shipping for the other item if needed, but checkout will continue with local pickup for this order. If you prefer, you can cancel and place separate orders , one for pickup and one for shipping.",
+                );
+              } else if (membershipType === "pro" && !isConnected) {
+                return setErrorMessage(
+                  "Online checkout isn’t available for this item. This listing is from a Pro Member shop, but the shop does not currently have a payment processor connected, so payments cannot be completed through the platform. Please continue with Arrange Local Pickup to coordinate directly with the seller. Some members offer local delivery, feel free to ask.",
                 );
               }
               setShippingMethod(e.target.value);

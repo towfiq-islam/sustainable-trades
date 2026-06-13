@@ -20,6 +20,7 @@ import { CgSpinnerTwo } from "react-icons/cg";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
+import ArrangeLocalPickupModal from "../_Components/ArrangeLocalPickupModal";
 
 interface FormValues {
   message: string;
@@ -36,6 +37,7 @@ const Page = () => {
   const [openStatusPopover, setOpenStatusPopover] = useState(false);
   const [showNote, setShowNote] = useState<boolean>(false);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
+  const [addressOpen, setAddressModalOpen] = useState(false);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
   const { mutate: updateStatusMutation } = useUpdateOrderStatus();
@@ -144,24 +146,13 @@ const Page = () => {
         </div>
       ),
     },
-    // {
-    //   title: "Billing Address",
-    //   content: (
-    //     <div className="text-secondary-gray text-[14px] py-2">
-    //       <p>
-    //         <strong>Name:</strong> John Doe
-    //       </p>
-    //       <p>
-    //         <strong>Phone:</strong> +1234567890
-    //       </p>
-    //       <p>
-    //         <strong>Address:</strong> 456 Street, City, Country
-    //       </p>
-    //     </div>
-    //   ),
-    // },
     {
       title: "Add Note",
+      content: <></>,
+      isModal: true,
+    },
+    {
+      title: "Arrange Local Pickup",
       content: <></>,
       isModal: true,
     },
@@ -176,7 +167,6 @@ const Page = () => {
   }
 
   const currentStatus = enabledSteps?.[enabledSteps.length - 1];
-
   return (
     <>
       {/* Back Btn */}
@@ -208,73 +198,77 @@ const Page = () => {
         {/* Left Side */}
         <div className="w-full lg:w-[65%] 2xl:w-[75%]">
           {/* Order Status Dropdown */}
-          <div className="my-4">
-            <h4 className="text-[#000] font-bold text-[16px] mb-3">
-              Order Status
-            </h4>
+          {singleOrder?.data?.status !== "local_pickup_requested" && (
+            <div className="my-4">
+              <h4 className="text-[#000] font-bold text-[16px] mb-3">
+                Order Status
+              </h4>
 
-            <div className="relative inline-block">
-              {/* Trigger */}
-              <button
-                onClick={() => setOpenStatusPopover(prev => !prev)}
-                className="min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-2 hover:border-primary-green transition-all duration-300 cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="size-3 rounded-full bg-primary-green" />
+              <div className="relative inline-block">
+                {/* Trigger */}
+                <button
+                  onClick={() => setOpenStatusPopover(prev => !prev)}
+                  className="min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-2 hover:border-primary-green transition-all duration-300 cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="size-3 rounded-full bg-primary-green" />
 
-                  <div className="text-left">
-                    <p className="text-[12px] text-gray-500">Current Status</p>
+                    <div className="text-left">
+                      <p className="text-[12px] text-gray-500">
+                        Current Status
+                      </p>
 
-                    <h5 className="text-[15px] font-semibold text-primary-green capitalize">
-                      {currentStatus}
-                    </h5>
+                      <h5 className="text-[15px] font-semibold text-primary-green capitalize">
+                        {currentStatus}
+                      </h5>
+                    </div>
                   </div>
-                </div>
 
-                <FaAngleDown
-                  className={`transition-transform duration-300 ${
-                    openStatusPopover ? "rotate-180" : ""
+                  <FaAngleDown
+                    className={`transition-transform duration-300 ${
+                      openStatusPopover ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* Popover */}
+                <div
+                  className={`absolute left-0 top-[110%] z-50 w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl transition-all duration-300 ${
+                    openStatusPopover
+                      ? "visible translate-y-0 opacity-100"
+                      : "invisible -translate-y-2 opacity-0"
                   }`}
-                />
-              </button>
+                >
+                  <div className="p-2">
+                    {steps?.slice(0, 4)?.map(step => (
+                      <button
+                        key={step.key}
+                        onClick={() => {
+                          updateStatusMutation({
+                            endpoint: `/api/order-status-update/${order_id}`,
+                            status: step?.key,
+                          });
 
-              {/* Popover */}
-              <div
-                className={`absolute left-0 top-[110%] z-50 w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl transition-all duration-300 ${
-                  openStatusPopover
-                    ? "visible translate-y-0 opacity-100"
-                    : "invisible -translate-y-2 opacity-0"
-                }`}
-              >
-                <div className="p-2">
-                  {steps?.slice(0, 4)?.map(step => (
-                    <button
-                      key={step.key}
-                      onClick={() => {
-                        updateStatusMutation({
-                          endpoint: `/api/order-status-update/${order_id}`,
-                          status: step?.key,
-                        });
+                          setOpenStatusPopover(false);
+                        }}
+                        className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left hover:bg-primary-green/5 transition-all cursor-pointer"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="size-2 rounded-full bg-primary-green" />
 
-                        setOpenStatusPopover(false);
-                      }}
-                      className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left hover:bg-primary-green/5 transition-all cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="size-2 rounded-full bg-primary-green" />
+                          <span className="text-[14px] font-medium text-[#222] group-hover:text-primary-green">
+                            {step.label}
+                          </span>
+                        </div>
 
-                        <span className="text-[14px] font-medium text-[#222] group-hover:text-primary-green">
-                          {step.label}
-                        </span>
-                      </div>
-
-                      <FaCheck className="opacity-0 scale-50 text-primary-green transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
-                    </button>
-                  ))}
+                        <FaCheck className="opacity-0 scale-50 text-primary-green transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Progress Bar */}
           <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start mt-6">
@@ -330,22 +324,6 @@ const Page = () => {
             <Proorderproduct data={singleOrder?.data} order_id={order_id} />
           </div>
 
-          {/* Step Buttons */}
-          {/* <div className="my-6 flex flex-wrap md:flex-nowrap  stepbutton gap-3">
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out">
-              Track Package
-            </button>
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out ">
-              Return or replace
-            </button>
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out ">
-              Get Help
-            </button>
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out">
-              Request a Review
-            </button>
-          </div> */}
-
           {/* Order Summary */}
           <div className="hidden lg:block mt-20">
             <OrderSummary data={singleOrder?.data} />
@@ -362,7 +340,13 @@ const Page = () => {
               <div
                 className="flex justify-between items-center p-3 cursor-pointer"
                 onClick={() => {
-                  if (item.isModal) setNoteModalOpen(true);
+                  if (item.isModal && item.title === "Add Note")
+                    setNoteModalOpen(true);
+                  else if (
+                    item.isModal &&
+                    item.title === "Arrange Local Pickup"
+                  )
+                    return setAddressModalOpen(true);
                   else setOpenIndex(openIndex === idx ? null : idx);
                 }}
               >
@@ -483,16 +467,6 @@ const Page = () => {
         <OrderSummary data={singleOrder?.data} />
       </div>
 
-      {/* <EditOrderModal
-        isOpen={editModalOpen}
-        onClose={() => {
-          if (editModalOpen) {
-            setEditModalOpen(false);
-            document.body.style.overflow = "visible";
-          }
-        }}
-      /> */}
-
       <Modal open={noteModalOpen} onClose={() => setNoteModalOpen(false)}>
         <OrderNote
           order_id={order_id}
@@ -509,6 +483,13 @@ const Page = () => {
           Order Note
         </h3>
         <p className="leading-[164%] text-gray-700">"{note}"</p>
+      </Modal>
+
+      <Modal open={addressOpen} onClose={() => setAddressModalOpen(false)}>
+        <ArrangeLocalPickupModal
+          order_id={order_id}
+          onClose={() => setAddressModalOpen(false)}
+        />
       </Modal>
     </>
   );

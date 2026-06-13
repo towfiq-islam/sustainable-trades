@@ -6,6 +6,7 @@ import { Again, GoBackSvg } from "@/Components/Svg/SvgContainer";
 import {
   getMyOrderDetails,
   useDownloadInvoice,
+  useLocalPickupPayment,
 } from "@/Hooks/api/dashboard_api";
 import moment from "moment";
 import { PuffLoader } from "react-spinners";
@@ -20,6 +21,8 @@ const OrderDetailsPage = () => {
   const [open, isOpen] = useState<boolean>(false);
   const { data: getSingleOrder, isLoading } = getMyOrderDetails(orderId);
   const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
+  const { mutate: localPickupPayment, isPending: isConnecting } =
+    useLocalPickupPayment(getSingleOrder?.data?.local_pickup_checkout_token);
 
   // Func for download Invoice pdf
   const handleDownloadInvoice = () => {
@@ -243,6 +246,16 @@ const OrderDetailsPage = () => {
             >
               Get Help
             </Link>
+
+            {getSingleOrder?.data?.status === "awaiting_payment" && (
+              <button
+                disabled={isConnecting}
+                onClick={() => localPickupPayment()}
+                className="p-2 rounded-[8px] border border-[#BFBEBE] text-[14px] md:text-[16px]  font-normal cursor-pointer w-full md:w-[250px] hover:scale-105 duration-500 ease-in-out bg-primary-green text-white disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
+              >
+                Do payment
+              </button>
+            )}
           </div>
         </div>
       </div>

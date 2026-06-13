@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useSendMessage } from "@/Hooks/api/chat_api";
+import { useLocalPickupPro } from "@/Hooks/api/dashboard_api";
 
 type formData = {
   name: string;
@@ -42,6 +43,8 @@ const ShippingOptionsModal = ({
   );
 
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
+  const { mutate: localPickupForPro, isPending: isPicking } =
+    useLocalPickupPro(cart_id);
 
   const {
     register,
@@ -56,6 +59,15 @@ const ShippingOptionsModal = ({
       message: data?.message,
       cart_id,
     };
+
+    if (membershipType === "pro") {
+      return localPickupForPro(data, {
+        onSuccess: (res: any) => {
+          toast.success(res.message);
+          onClose();
+        },
+      });
+    }
 
     sendMessageMutation(payload, {
       onSuccess: (res: any) => {

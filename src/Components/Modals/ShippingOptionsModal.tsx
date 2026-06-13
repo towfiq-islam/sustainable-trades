@@ -249,14 +249,14 @@ const ShippingOptionsModal = ({
 
               {/* Submit btn */}
               <button
-                disabled={isPending}
+                disabled={isPending || isPicking}
                 className={`primary_btn ${
-                  isPending
-                    ? "!cursor-not-allowed opacity-85 hover:!bg-primary-green hover:!text-white"
+                  isPending || isPicking
+                    ? "!cursor-not-allowed opacity-70 enabled:hover:!bg-primary-green enabled:hover:!text-white"
                     : "cursor-pointer"
                 } `}
               >
-                {isPending ? (
+                {isPending || isPicking ? (
                   <span className="flex gap-2 items-center justify-center">
                     <CgSpinnerTwo className="animate-spin text-xl" />
                     <span>Please wait....</span>

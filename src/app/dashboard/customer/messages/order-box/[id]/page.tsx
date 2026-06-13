@@ -40,6 +40,7 @@ type OrderItem = {
   product_id: number;
   quantity: number;
   product: CartProduct;
+  order_id: number;
 };
 
 type Cart = {
@@ -88,6 +89,7 @@ const page = () => {
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
   const { data: singleConversation, isLoading: chatLoading } =
     getSingleConversation(id, "order");
+  console.log(singleConversation);
 
   // Set Initial Chat
   useEffect(() => {
@@ -368,7 +370,7 @@ const page = () => {
                                   user?.membership?.membership_type === "basic"
                                 ? "basic"
                                 : "customer"
-                          }/orders/${item?.product?.id}`}
+                          }/orders/${item?.order_id}`}
                         >
                           {/* Product Image */}
                           <figure className="size-16 rounded-lg overflow-hidden relative shrink-0 bg-gray-100">

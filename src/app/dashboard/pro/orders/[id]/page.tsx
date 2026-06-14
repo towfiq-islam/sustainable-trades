@@ -151,11 +151,15 @@ const Page = () => {
       content: <></>,
       isModal: true,
     },
-    {
-      title: "Arrange Local Pickup",
-      content: <></>,
-      isModal: true,
-    },
+    ...(singleOrder?.data?.shipping_option === "local_pickup"
+      ? [
+          {
+            title: "Arrange Local Pickup",
+            content: <></>,
+            isModal: true,
+          },
+        ]
+      : []),
   ];
 
   if (isLoading) {

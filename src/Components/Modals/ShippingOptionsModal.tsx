@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useSendMessage } from "@/Hooks/api/chat_api";
 import { useLocalPickupPro } from "@/Hooks/api/dashboard_api";
+import { useQueryClient } from "@tanstack/react-query";
 
 type formData = {
   name: string;
@@ -33,6 +34,7 @@ const ShippingOptionsModal = ({
   onClose,
   isConnected,
 }: ShippingOptionsProps) => {
+  const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [shippingMethod, setShippingMethod] = useState(
     isConnected &&
@@ -64,6 +66,7 @@ const ShippingOptionsModal = ({
       return localPickupForPro(data, {
         onSuccess: (res: any) => {
           toast.success(res.message);
+          queryClient.invalidateQueries("get-product-cart" as any);
           onClose();
         },
       });
@@ -72,6 +75,7 @@ const ShippingOptionsModal = ({
     sendMessageMutation(payload, {
       onSuccess: (res: any) => {
         toast.success(res.message);
+        queryClient.invalidateQueries("get-product-cart" as any);
         onClose();
       },
     });
@@ -111,7 +115,7 @@ const ShippingOptionsModal = ({
             checked={shippingMethod === "proceed"}
             onChange={e => {
               if (
-                fulfillmentType === "arrange_local_pickup" ||
+                fulfillmentType === "arrange_local_pickup" &&
                 membershipType === "basic"
               ) {
                 return setErrorMessage(

@@ -19,6 +19,7 @@ const CheckoutPaypalModal = ({
     useLocalPickupPayment(cart_id);
   const queryClient = useQueryClient();
   const token = getItem("token");
+
   const initialOptions = {
     "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
     currency: "USD",
@@ -37,6 +38,7 @@ const CheckoutPaypalModal = ({
       {
         onSuccess: (data: any) => {
           if (data?.success) {
+            queryClient.invalidateQueries("get-product-cart" as any);
           }
         },
       },
@@ -117,6 +119,7 @@ const CheckoutPaypalModal = ({
                 const orderData = await response.json();
                 if (orderData?.success) {
                   toast.success(orderData?.message);
+                  queryClient.invalidateQueries("get-product-cart" as any);
                 }
               } catch (error) {
                 console.error(error);

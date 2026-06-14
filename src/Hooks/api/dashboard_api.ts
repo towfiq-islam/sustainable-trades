@@ -1050,8 +1050,6 @@ export const useArrangeLocalPickupAddress = (id: number) => {
 
 // Local pickup payment
 export const useLocalPickupPayment = (token: any) => {
-  // const queryClient = useQueryClient();
-
   return useClientApi({
     method: "post",
     key: ["local-pickup-payment", token],
@@ -1060,7 +1058,6 @@ export const useLocalPickupPayment = (token: any) => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        // queryClient.invalidateQueries("user" as any);
       }
     },
     onError: (err: any) => {

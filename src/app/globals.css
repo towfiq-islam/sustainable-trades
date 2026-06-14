@@ -51,7 +51,7 @@ body {
 }
 
 .auth-secondary-btn {
-  @apply text-accent-white bg-primary-green px-4 py-1.5 md:py-3 rounded-[6px] shadow border-2 border-primary-green hover:scale-95 duration-500 ease-in-out cursor-pointer;
+  @apply text-accent-white bg-primary-green px-4 py-1.5 md:py-2.5 rounded-[6px] shadow border-2 border-primary-green hover:scale-95 duration-500 ease-in-out cursor-pointer;
 }
 
 .auth-heading {

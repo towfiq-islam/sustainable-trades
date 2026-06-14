@@ -23,8 +23,8 @@ type ShopItem = {
 };
 
 const ReuseableFavorite = () => {
-  const tabs: string[] = ["Follow ShopLists", "WishLists"];
-  const [isActive, setIsActive] = useState("Follow ShopLists");
+  const tabs: string[] = ["Followed Shop", "WishLists"];
+  const [isActive, setIsActive] = useState("Followed Shop");
   const { data: myFavorites, isLoading: isFavoriteLoading } =
     getAllFollowList();
   const { data: followedShop, isLoading: isFollowedLoading } = getAllShoplist();
@@ -87,7 +87,7 @@ const ReuseableFavorite = () => {
       )}
 
       {/* FOLLOW Shop list */}
-      {isActive === "Follow ShopLists" && (
+      {isActive === "Followed Shop" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mb-14 mt-10">
           {isFollowedLoading ? (
             [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)

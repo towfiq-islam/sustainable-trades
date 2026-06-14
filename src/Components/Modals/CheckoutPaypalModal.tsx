@@ -3,6 +3,7 @@ import { useLocalPickupPayment } from "@/Hooks/api/dashboard_api";
 import { getItem } from "@/lib/localStorage";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 
@@ -19,6 +20,7 @@ const CheckoutPaypalModal = ({
     useLocalPickupPayment(cart_id);
   const queryClient = useQueryClient();
   const token = getItem("token");
+  const router = useRouter();
 
   const initialOptions = {
     "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
@@ -178,9 +180,13 @@ const CheckoutPaypalModal = ({
                 );
 
                 const orderData = await response.json();
+                console.log(orderData);
                 if (orderData?.success) {
                   toast.success(orderData?.message);
                   queryClient.invalidateQueries("get-product-cart" as any);
+                  router.push(
+                    `/order-success?order_id=${orderData?.data?.id}&shop_id=${orderData?.data?.shop_id}`,
+                  );
                 }
               } catch (error) {
                 console.error(error);

@@ -171,6 +171,7 @@ const Page = () => {
   }
 
   const currentStatus = enabledSteps?.[enabledSteps.length - 1];
+  
   return (
     <>
       {/* Back Btn */}
@@ -202,77 +203,73 @@ const Page = () => {
         {/* Left Side */}
         <div className="w-full lg:w-[65%] 2xl:w-[75%]">
           {/* Order Status Dropdown */}
-          {singleOrder?.data?.status !== "local_pickup_requested" && (
-            <div className="my-4">
-              <h4 className="text-[#000] font-bold text-[16px] mb-3">
-                Order Status
-              </h4>
+          <div className="my-4">
+            <h4 className="text-[#000] font-bold text-[16px] mb-3">
+              Order Status
+            </h4>
 
-              <div className="relative inline-block">
-                {/* Trigger */}
-                <button
-                  onClick={() => setOpenStatusPopover(prev => !prev)}
-                  className="min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-2 hover:border-primary-green transition-all duration-300 cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="size-3 rounded-full bg-primary-green" />
+            <div className="relative inline-block">
+              {/* Trigger */}
+              <button
+                onClick={() => setOpenStatusPopover(prev => !prev)}
+                className="min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-2 hover:border-primary-green transition-all duration-300 cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="size-3 rounded-full bg-primary-green" />
 
-                    <div className="text-left">
-                      <p className="text-[12px] text-gray-500">
-                        Current Status
-                      </p>
+                  <div className="text-left">
+                    <p className="text-[12px] text-gray-500">Current Status</p>
 
-                      <h5 className="text-[15px] font-semibold text-primary-green capitalize">
-                        {currentStatus}
-                      </h5>
-                    </div>
+                    <h5 className="text-[15px] font-semibold text-primary-green capitalize">
+                      {currentStatus}
+                    </h5>
                   </div>
+                </div>
 
-                  <FaAngleDown
-                    className={`transition-transform duration-300 ${
-                      openStatusPopover ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-
-                {/* Popover */}
-                <div
-                  className={`absolute left-0 top-[110%] z-50 w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl transition-all duration-300 ${
-                    openStatusPopover
-                      ? "visible translate-y-0 opacity-100"
-                      : "invisible -translate-y-2 opacity-0"
+                <FaAngleDown
+                  className={`transition-transform duration-300 ${
+                    openStatusPopover ? "rotate-180" : ""
                   }`}
-                >
-                  <div className="p-2">
-                    {steps?.slice(0, 4)?.map(step => (
-                      <button
-                        key={step.key}
-                        onClick={() => {
-                          updateStatusMutation({
-                            endpoint: `/api/order-status-update/${order_id}`,
-                            status: step?.key,
-                          });
+                />
+              </button>
 
-                          setOpenStatusPopover(false);
-                        }}
-                        className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left hover:bg-primary-green/5 transition-all cursor-pointer"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="size-2 rounded-full bg-primary-green" />
+              {/* Popover */}
+              <div
+                className={`absolute left-0 top-[110%] z-50 w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl transition-all duration-300 ${
+                  openStatusPopover
+                    ? "visible translate-y-0 opacity-100"
+                    : "invisible -translate-y-2 opacity-0"
+                }`}
+              >
+                <div className="p-2">
+                  {steps?.slice(0, 4)?.map(step => (
+                    <button
+                      key={step.key}
+                      onClick={() => {
+                        updateStatusMutation({
+                          endpoint: `/api/order-status-update/${order_id}`,
+                          status: step?.key,
+                        });
 
-                          <span className="text-[14px] font-medium text-[#222] group-hover:text-primary-green">
-                            {step.label}
-                          </span>
-                        </div>
+                        setOpenStatusPopover(false);
+                      }}
+                      className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left hover:bg-primary-green/5 transition-all cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="size-2 rounded-full bg-primary-green" />
 
-                        <FaCheck className="opacity-0 scale-50 text-primary-green transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
-                      </button>
-                    ))}
-                  </div>
+                        <span className="text-[14px] font-medium text-[#222] group-hover:text-primary-green">
+                          {step.label}
+                        </span>
+                      </div>
+
+                      <FaCheck className="opacity-0 scale-50 text-primary-green transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
           {/* Progress Bar */}
           <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start mt-6">
@@ -466,6 +463,7 @@ const Page = () => {
           </div>
         </div>
       </div>
+
       {/* Order Summary */}
       <div className="block lg:hidden mt-20">
         <OrderSummary data={singleOrder?.data} />

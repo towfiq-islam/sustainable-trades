@@ -1,19 +1,29 @@
 "use client";
-import { useCheckout } from "@/Hooks/api/cms_api";
+import { useLocalPickupPayment } from "@/Hooks/api/dashboard_api";
 import { getItem } from "@/lib/localStorage";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 
 const CheckoutPaypalModal = ({
   cart_id,
   formData,
+  onClose,
+  isLocalPayment = false,
 }: {
   cart_id: number | null;
-  formData: any;
+  formData?: any;
+  onClose?: any;
+  isLocalPayment?: boolean;
 }) => {
-  const { mutateAsync: checkoutMutation, isPending } = useCheckout(cart_id);
+  const { mutate: localPickupPayment, isPending: isConnecting } =
+    useLocalPickupPayment(cart_id);
+  const queryClient = useQueryClient();
   const token = getItem("token");
+  const router = useRouter();
+
   const initialOptions = {
     "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
     currency: "USD",
@@ -27,103 +37,167 @@ const CheckoutPaypalModal = ({
 
   // For COD
   const handleCashOnDelivery = () => {
-    checkoutMutation(
-      { ...formData, payment_method: "cash_on_delivery" },
+    localPickupPayment(
+      { payment_method: "cash_on_delivery" },
       {
         onSuccess: (data: any) => {
           if (data?.success) {
-            window.location.reload();
-            // if (user?.role === "customer") {
-            //   window.location.href = `${window.location.origin}/dashboard/customer/orders`;
-            // } else {
-            //   window.location.href = `${window.location.origin}/dashboard/pro/orders`;
-            // }
+            queryClient.invalidateQueries("get-product-cart" as any);
+            onClose();
           }
         },
-      }
+      },
     );
   };
 
   return (
     <div className="pt-5">
-      <button
-        onClick={handleCashOnDelivery}
-        disabled={isPending}
-        className={`block w-full text-center text-lg font-semibold py-3.5 rounded bg-accent-red text-white mb-4 ${
-          isPending ? "!cursor-not-allowed opacity-85" : "cursor-pointer"
-        } `}
-      >
-        {isPending ? (
-          <span className="flex gap-2 items-center justify-center">
-            <CgSpinnerTwo className="animate-spin text-xl" />
-            <span>Please wait....</span>
-          </span>
-        ) : (
-          "Cash On Delivery"
-        )}
-      </button>
+      {isLocalPayment && (
+        <button
+          disabled={isConnecting}
+          onClick={handleCashOnDelivery}
+          className={`block w-full text-center text-lg font-semibold py-3.5 rounded bg-accent-red text-white mb-4 ${
+            isConnecting ? "!cursor-not-allowed opacity-85" : "cursor-pointer"
+          } `}
+        >
+          {isConnecting ? (
+            <span className="flex gap-2 items-center justify-center">
+              <CgSpinnerTwo className="animate-spin text-xl" />
+              <span>Please wait....</span>
+            </span>
+          ) : (
+            "Cash On Delivery"
+          )}
+        </button>
+      )}
 
-      <PayPalScriptProvider options={initialOptions as any}>
-        <PayPalButtons
-          style={{
-            shape: "rect",
-            layout: "vertical",
-            color: "gold",
-            label: "paypal",
-          }}
-          createOrder={async () => {
-            try {
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/checkout/${cart_id}`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
+      {isLocalPayment ? (
+        <PayPalScriptProvider options={initialOptions as any}>
+          <PayPalButtons
+            style={{
+              shape: "rect",
+              layout: "vertical",
+              color: "gold",
+              label: "paypal",
+            }}
+            createOrder={async () => {
+              try {
+                const response = await fetch(
+                  `${process.env.NEXT_PUBLIC_SITE_URL}/api/local-pickup/checkout/${cart_id}`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                      payment_method: "paypal",
+                    }),
                   },
-                  body: JSON.stringify({
-                    ...formData,
-                  }),
+                );
+
+                const orderData = await response.json();
+
+                if (orderData?.paypal_order_id) {
+                  return orderData?.paypal_order_id;
                 }
-              );
-
-              const orderData = await response.json();
-
-              if (orderData?.paypal_order_id) {
-                return orderData?.paypal_order_id;
+              } catch (error) {
+                console.error(error);
               }
-            } catch (error) {
-              console.error(error);
-            }
-          }}
-          onApprove={async data => {
-            try {
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
+            }}
+            onApprove={async data => {
+              try {
+                const response = await fetch(
+                  `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                      paypal_order_id: data?.orderID,
+                    }),
                   },
-                  body: JSON.stringify({
-                    paypal_order_id: data?.orderID,
-                  }),
-                }
-              );
+                );
 
-              const orderData = await response.json();
-              if (orderData?.success) {
-                toast.success(orderData?.message);
-                window.location.reload();
-                // window.location.href = `${window.location.origin}/dashboard/customer/orders`;
+                const orderData = await response.json();
+                if (orderData?.success) {
+                  toast.success(orderData?.message);
+                  queryClient.invalidateQueries("get-product-cart" as any);
+                  onClose();
+                }
+              } catch (error) {
+                console.error(error);
               }
-            } catch (error) {
-              console.error(error);
-            }
-          }}
-        />
-      </PayPalScriptProvider>
+            }}
+          />
+        </PayPalScriptProvider>
+      ) : (
+        <PayPalScriptProvider options={initialOptions as any}>
+          <PayPalButtons
+            style={{
+              shape: "rect",
+              layout: "vertical",
+              color: "gold",
+              label: "paypal",
+            }}
+            createOrder={async () => {
+              try {
+                const response = await fetch(
+                  `${process.env.NEXT_PUBLIC_SITE_URL}/api/checkout/${cart_id}`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                      ...formData,
+                    }),
+                  },
+                );
+
+                const orderData = await response.json();
+
+                if (orderData?.paypal_order_id) {
+                  return orderData?.paypal_order_id;
+                }
+              } catch (error) {
+                console.error(error);
+              }
+            }}
+            onApprove={async data => {
+              try {
+                const response = await fetch(
+                  `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                      paypal_order_id: data?.orderID,
+                    }),
+                  },
+                );
+
+                const orderData = await response.json();
+                if (orderData?.success) {
+                  toast.success(orderData?.message);
+                  queryClient.invalidateQueries("get-product-cart" as any);
+                  router.push(
+                    `/order-success?order_id=${orderData?.data?.id}&shop_id=${orderData?.data?.shop_id}`,
+                  );
+                }
+              } catch (error) {
+                console.error(error);
+              }
+            }}
+          />
+        </PayPalScriptProvider>
+      )}
     </div>
   );
 };

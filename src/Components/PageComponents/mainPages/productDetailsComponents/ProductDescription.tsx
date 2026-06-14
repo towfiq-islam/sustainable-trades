@@ -129,10 +129,11 @@ const ProductDescription = ({ data }: descriptionProps) => {
           disabled={
             addCardPending ||
             (!data?.unlimited_stock && data?.out_of_stock) ||
-            (!data?.unlimited_stock && data?.product_quantity === 0)
+            (!data?.unlimited_stock && data?.product_quantity === 0) ||
+            data?.selling_option === "trade/barter"
           }
           onClick={handleAddToCart}
-          className={`border border-primary-green rounded-lg px-4 py-2 enabled:hover:bg-primary-green enabled:hover:text-accent-white duration-500 transition-all shrink-0 disabled:cursor-not-allowed disabled:opacity-75 disabled:border-gray-400 ${
+          className={`border border-primary-green rounded-lg px-4 py-2 enabled:hover:bg-primary-green enabled:hover:text-accent-white duration-500 transition-all shrink-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:border-gray-300 disabled:bg-gray-100 ${
             addCardPending ? "cursor-not-allowed" : "cursor-pointer"
           }`}
         >
@@ -243,8 +244,9 @@ const ProductDescription = ({ data }: descriptionProps) => {
 
       {/* Buy btn */}
       <button
+        disabled={data?.selling_option === "trade/barter"}
         onClick={() => setGuestOpen(true)}
-        className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow hover:text-primary-green hover:bg-transparent font-semibold border-primary-green disabled:opacity-70 disabled:cursor-not-allowed"
+        className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-semibold border-primary-green disabled:opacity-70 disabled:cursor-not-allowed"
       >
         Buy it now
       </button>

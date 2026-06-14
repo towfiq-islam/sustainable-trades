@@ -27,7 +27,7 @@ const MoreProduct = ({ data }: moreProductProps) => {
 
       {/* Products */}
       {data?.more_products_from_shop?.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-5 gap-y-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-10">
           {data?.more_products_from_shop?.map(product => (
             <Product
               key={product?.id}

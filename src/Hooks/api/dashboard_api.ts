@@ -1016,3 +1016,52 @@ export const useGetFlatRate = () => {
     endpoint: "/api/flat-rate",
   });
 };
+
+// Local pickup for pro
+export const useLocalPickupPro = (id: number | null) => {
+  return useClientApi({
+    method: "post",
+    key: ["pro-local-pickup", id],
+    isPrivate: true,
+    endpoint: `/api/local-pickup/orders/cart/${id}`,
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Arrange Local pickup address
+export const useArrangeLocalPickupAddress = (id: number) => {
+  return useClientApi({
+    method: "post",
+    key: ["arrange-local-pickup-address", id],
+    isPrivate: true,
+    endpoint: `/api/order/${id}/local-pickup/arrange`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Local pickup payment
+export const useLocalPickupPayment = (token: any) => {
+  return useClientApi({
+    method: "post",
+    key: ["local-pickup-payment", token],
+    isPrivate: true,
+    endpoint: `/api/local-pickup/checkout/${token}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};

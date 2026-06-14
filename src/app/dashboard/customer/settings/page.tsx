@@ -1,20 +1,25 @@
 "use client";
-
-import { useLogout } from "@/Hooks/api/auth_api";
+import { useLogout, useUpdateUser } from "@/Hooks/api/auth_api";
 import { useDeleteAccount } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
-import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const Settings = () => {
+  const router = useRouter();
   const { user } = useAuth();
   const [notifications, setNotifications] = useState(false);
   const [language, setLanguage] = useState(false);
   const [cookies, setCookies] = useState(false);
-  const [modalType, setModalType] = useState<"logout" | "delete" | null>(null);
+  const [modalType, setModalType] = useState<
+    "logout" | "delete" | "update" | null
+  >(null);
+  console.log(user);
 
   // API hooks
   const logoutMutation = useLogout();
   const deleteMutation = useDeleteAccount();
+  const { mutate: updateUser, isPending } = useUpdateUser();
 
   // Sync state with user data
   useEffect(() => {
@@ -29,13 +34,13 @@ const Settings = () => {
     if (modalType === "logout") {
       logoutMutation.mutate(undefined, {
         onSuccess: () => {
-          window.location.href = "/auth/login";
+          router.push("/auth/login");
         },
       });
     } else if (modalType === "delete") {
       deleteMutation.mutate(undefined, {
         onSuccess: () => {
-          window.location.href = "/auth/login";
+          router.push("/auth/login");
         },
       });
     }
@@ -52,35 +57,37 @@ const Settings = () => {
         {/* Left Form */}
         <div className="mt-5 lg:mt-0 lg:w-1/2">
           <form className="flex flex-col gap-3">
-            <div className="w-full">
-              <p className="form-label font-bold">Name</p>
-              <input
-                type="text"
-                className="form-input w-full"
-                placeholder="Name"
-                defaultValue={`${user?.first_name || ""} ${
-                  user?.last_name || ""
-                }`}
-              />
+            <div className="flex gap-5 items-center">
+              <div className="flex-1">
+                <p className="form-label font-bold">First Name</p>
+                <input
+                  type="text"
+                  className="form-input w-full"
+                  placeholder="Name"
+                  defaultValue={user?.first_name}
+                />
+              </div>
+              <div className="flex-1">
+                <p className="form-label font-bold">Last Name</p>
+                <input
+                  type="text"
+                  className="form-input w-full"
+                  placeholder="Name"
+                  defaultValue={user?.last_name}
+                />
+              </div>
             </div>
-            <div className="w-full">
-              <p className="form-label font-bold">Username</p>
-              <input
-                type="text"
-                className="form-input w-full"
-                placeholder="Name1234"
-                defaultValue={user?.username || ""}
-              />
-            </div>
+
             <div className="w-full">
               <p className="form-label font-bold">Email</p>
               <input
                 type="text"
                 className="form-input w-full"
                 placeholder="name@email.com"
-                defaultValue={user?.email || ""}
+                defaultValue={user?.email}
               />
             </div>
+
             <div className="w-full">
               <p className="form-label font-bold">Street Name</p>
               <input
@@ -151,15 +158,22 @@ const Settings = () => {
       </div>
 
       {/* Bottom Buttons */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:gap-x-10 mt-10">
+      <div className="flex flex-col gap-2 sm:flex-row sm:gap-x-3 mt-10">
         <button
-          className="auth-secondary-btn sm:w-[150px]"
+          disabled={isPending}
+          className="auth-secondary-btn sm:w-[150px] disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
+          onClick={() => updateUser()}
+        >
+          Update Settings
+        </button>
+        <button
+          className="auth-secondary-btn"
           onClick={() => setModalType("logout")}
         >
           Logout
         </button>
         <button
-          className="auth-secondary-btn"
+          className="auth-secondary-btn !bg-accent-red !border-accent-red"
           onClick={() => setModalType("delete")}
         >
           Delete Account
@@ -204,39 +218,3 @@ const Settings = () => {
 };
 
 export default Settings;
-
-// Toggle Component (for reuse)
-const Toggle = ({
-  label,
-  left,
-  right,
-  enabled,
-  onToggle,
-}: {
-  label: string;
-  left: string;
-  right: string;
-  enabled: boolean;
-  onToggle: () => void;
-}) => (
-  <div className="flex items-center justify-between">
-    <h3 className="text-[16px] font-semibold">{label}</h3>
-    <div className="flex items-center gap-x-5">
-      <span className="text-[16px] font-bold">{left}</span>
-      <button
-        type="button"
-        onClick={onToggle}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition cursor-pointer ${
-          enabled ? "bg-[#D4E2CB]" : "bg-gray-300"
-        }`}
-      >
-        <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-            enabled ? "translate-x-6" : "translate-x-1"
-          }`}
-        />
-      </button>
-      <span className="text-[16px] font-bold">{right}</span>
-    </div>
-  </div>
-);

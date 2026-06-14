@@ -315,7 +315,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             <button
               type="button"
               onClick={handleSaveFaq}
-              className="bg-blue-600 text-white px-4 py-2 rounded"
+              className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
             >
               {editingFaqIndex !== null ? "Update" : "Save"}
             </button>
@@ -385,7 +385,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             </div>
           )}
 
-          {/* ✅ FAQ Required Error */}
+          {/* FAQ Required Error */}
           {fields.length === 0 && (
             <p className="text-red-600 text-sm mt-2">
               Please add at least one FAQ before continuing.

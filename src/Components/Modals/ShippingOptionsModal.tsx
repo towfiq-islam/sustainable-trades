@@ -4,6 +4,9 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useSendMessage } from "@/Hooks/api/chat_api";
+import { useLocalPickupPro } from "@/Hooks/api/dashboard_api";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 type formData = {
   name: string;
@@ -17,6 +20,7 @@ type ShippingOptionsProps = {
   userId: any;
   fulfillmentType: string;
   membershipType: string;
+  isConnected: boolean;
   onProceed: () => void;
   onSuccess: () => void;
   onClose: () => void;
@@ -29,16 +33,22 @@ const ShippingOptionsModal = ({
   fulfillmentType,
   onProceed,
   onClose,
+  isConnected,
 }: ShippingOptionsProps) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [shippingMethod, setShippingMethod] = useState(
-    fulfillmentType === "shipping" ||
-      fulfillmentType === "arrange_local_pickup_and_shipping"
+    isConnected &&
+      (fulfillmentType === "shipping" ||
+        fulfillmentType === "arrange_local_pickup_and_shipping")
       ? "proceed"
       : "local",
   );
 
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
+  const { mutate: localPickupForPro, isPending: isPicking } =
+    useLocalPickupPro(cart_id);
 
   const {
     register,
@@ -54,9 +64,23 @@ const ShippingOptionsModal = ({
       cart_id,
     };
 
+    if (membershipType === "pro") {
+      return localPickupForPro(data, {
+        onSuccess: (res: any) => {
+          toast.success(res.message);
+          queryClient.invalidateQueries("get-product-cart" as any);
+          onClose();
+          router.push(
+            `/order-success?order_id=${res?.data?.id}&shop_id=${res?.data?.shop_id}`,
+          );
+        },
+      });
+    }
+
     sendMessageMutation(payload, {
       onSuccess: (res: any) => {
         toast.success(res.message);
+        queryClient.invalidateQueries("get-product-cart" as any);
         onClose();
       },
     });
@@ -96,7 +120,7 @@ const ShippingOptionsModal = ({
             checked={shippingMethod === "proceed"}
             onChange={e => {
               if (
-                fulfillmentType === "arrange_local_pickup" ||
+                fulfillmentType === "arrange_local_pickup" &&
                 membershipType === "basic"
               ) {
                 return setErrorMessage(
@@ -109,6 +133,10 @@ const ShippingOptionsModal = ({
               } else if (fulfillmentType === "Mixed") {
                 return setErrorMessage(
                   "One or more items in your cart are only available for local pickup. You can message the seller to arrange shipping for the other item if needed, but checkout will continue with local pickup for this order. If you prefer, you can cancel and place separate orders , one for pickup and one for shipping.",
+                );
+              } else if (membershipType === "pro" && !isConnected) {
+                return setErrorMessage(
+                  "Online checkout isn’t available for this item. This listing is from a Pro Member shop, but the shop does not currently have a payment processor connected, so payments cannot be completed through the platform. Please continue with Arrange Local Pickup to coordinate directly with the seller. Some members offer local delivery, feel free to ask.",
                 );
               }
               setShippingMethod(e.target.value);
@@ -230,14 +258,14 @@ const ShippingOptionsModal = ({
 
               {/* Submit btn */}
               <button
-                disabled={isPending}
+                disabled={isPending || isPicking}
                 className={`primary_btn ${
-                  isPending
-                    ? "!cursor-not-allowed opacity-85 hover:!bg-primary-green hover:!text-white"
+                  isPending || isPicking
+                    ? "!cursor-not-allowed opacity-70 enabled:hover:!bg-primary-green enabled:hover:!text-white"
                     : "cursor-pointer"
                 } `}
               >
-                {isPending ? (
+                {isPending || isPicking ? (
                   <span className="flex gap-2 items-center justify-center">
                     <CgSpinnerTwo className="animate-spin text-xl" />
                     <span>Please wait....</span>

@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { useRouter } from "next/navigation";
 import useClientApi from "@/Hooks/useClientApi";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Get User Data
 export const useGetUserData = (token: any) => {
@@ -101,10 +102,10 @@ export const useLogin = () => {
             data?.data?.role === "customer"
               ? "/dashboard/customer/orders"
               : data?.data?.role === "vendor" &&
-                data?.data?.membership?.membership_type === "pro"
-              ? "/dashboard/pro/home"
-              : "/dashboard/basic/home"
-          }`
+                  data?.data?.membership?.membership_type === "pro"
+                ? "/dashboard/pro/home"
+                : "/dashboard/basic/home"
+          }`,
         );
       } else {
         setToken(data?.data?.token);
@@ -190,6 +191,27 @@ export const useVerifyOTP = () => {
       if (data?.success) {
         toast.success(data?.message);
         router.push(`/auth/reset-password/${data?.data?.email}`);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Update user
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["update-user"],
+    endpoint: "/api/users/data/update",
+    isPrivate: true,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+        queryClient.invalidateQueries("user" as any);
       }
     },
     onError: (err: any) => {

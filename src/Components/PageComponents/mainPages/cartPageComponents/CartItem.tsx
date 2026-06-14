@@ -19,6 +19,7 @@ interface CartItem {
   fulfillment_type: string;
   shop: {
     user: {
+      onboarded: boolean;
       membership: {
         membership_type: string;
       };
@@ -239,6 +240,7 @@ const CartItem = ({ item, setCartList }: CartProps) => {
           userId={item?.shop?.user_id}
           membershipType={item?.shop?.user?.membership?.membership_type}
           fulfillmentType={fulfillmentType}
+          isConnected={item?.shop?.user?.onboarded}
           onProceed={() => {
             setShippingOptionsOpen(false);
             setShippingAddressOpen(true);

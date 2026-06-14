@@ -27,12 +27,12 @@ const page = ({ params }: Props) => {
   const { data: productDetailsData, isLoading } = getProductDetails(
     id,
     latitude,
-    longitude
+    longitude,
   );
 
   const { data: productReviews, isLoading: reviewLoading } = getProductReviews(
     id,
-    page
+    page,
   );
 
   if (isLoading) {

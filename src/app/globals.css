@@ -47,11 +47,11 @@ body {
 }
 
 .primary_btn {
-  @apply block w-full py-1.5 md:py-3 bg-primary-green text-accent-white text-[14px] font-semibold md:text-[17px] duration-300 transition-all hover:scale-[0.97] rounded-lg shadow cursor-pointer hover:bg-transparent hover:text-primary-green border-2 border-primary-green text-center;
+  @apply block w-full py-1.5 md:py-3 bg-primary-green text-accent-white text-[14px] font-semibold md:text-[17px] duration-300 transition-all hover:scale-[0.97] rounded-lg shadow cursor-pointer enabled:hover:bg-transparent enabled:hover:text-primary-green border-2 border-primary-green text-center disabled:cursor-not-allowed disabled:opacity-70;
 }
 
 .auth-secondary-btn {
-  @apply text-accent-white bg-primary-green px-4 py-1.5 md:py-3 rounded-[6px] shadow border-2 border-primary-green hover:scale-95 duration-500 ease-in-out cursor-pointer;
+  @apply text-accent-white bg-primary-green px-4 py-1.5 md:py-2.5 rounded-[6px] shadow border-2 border-primary-green hover:scale-95 duration-500 ease-in-out cursor-pointer;
 }
 
 .auth-heading {

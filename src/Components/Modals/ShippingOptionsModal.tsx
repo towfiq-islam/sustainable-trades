@@ -4,6 +4,9 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useSendMessage } from "@/Hooks/api/chat_api";
+import { useLocalPickupPro } from "@/Hooks/api/dashboard_api";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 type formData = {
   name: string;
@@ -32,6 +35,8 @@ const ShippingOptionsModal = ({
   onClose,
   isConnected,
 }: ShippingOptionsProps) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [shippingMethod, setShippingMethod] = useState(
     isConnected &&
@@ -42,6 +47,8 @@ const ShippingOptionsModal = ({
   );
 
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
+  const { mutate: localPickupForPro, isPending: isPicking } =
+    useLocalPickupPro(cart_id);
 
   const {
     register,
@@ -57,9 +64,23 @@ const ShippingOptionsModal = ({
       cart_id,
     };
 
+    if (membershipType === "pro") {
+      return localPickupForPro(data, {
+        onSuccess: (res: any) => {
+          toast.success(res.message);
+          queryClient.invalidateQueries("get-product-cart" as any);
+          onClose();
+          router.push(
+            `/order-success?order_id=${res?.data?.id}&shop_id=${res?.data?.shop_id}`,
+          );
+        },
+      });
+    }
+
     sendMessageMutation(payload, {
       onSuccess: (res: any) => {
         toast.success(res.message);
+        queryClient.invalidateQueries("get-product-cart" as any);
         onClose();
       },
     });
@@ -99,7 +120,7 @@ const ShippingOptionsModal = ({
             checked={shippingMethod === "proceed"}
             onChange={e => {
               if (
-                fulfillmentType === "arrange_local_pickup" ||
+                fulfillmentType === "arrange_local_pickup" &&
                 membershipType === "basic"
               ) {
                 return setErrorMessage(
@@ -237,14 +258,14 @@ const ShippingOptionsModal = ({
 
               {/* Submit btn */}
               <button
-                disabled={isPending}
+                disabled={isPending || isPicking}
                 className={`primary_btn ${
-                  isPending
-                    ? "!cursor-not-allowed opacity-85 hover:!bg-primary-green hover:!text-white"
+                  isPending || isPicking
+                    ? "!cursor-not-allowed opacity-70 enabled:hover:!bg-primary-green enabled:hover:!text-white"
                     : "cursor-pointer"
                 } `}
               >
-                {isPending ? (
+                {isPending || isPicking ? (
                   <span className="flex gap-2 items-center justify-center">
                     <CgSpinnerTwo className="animate-spin text-xl" />
                     <span>Please wait....</span>

@@ -20,6 +20,7 @@ import { CgSpinnerTwo } from "react-icons/cg";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
+import ArrangeLocalPickupModal from "../_Components/ArrangeLocalPickupModal";
 
 interface FormValues {
   message: string;
@@ -36,6 +37,7 @@ const Page = () => {
   const [openStatusPopover, setOpenStatusPopover] = useState(false);
   const [showNote, setShowNote] = useState<boolean>(false);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
+  const [addressOpen, setAddressModalOpen] = useState(false);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
   const { mutate: updateStatusMutation } = useUpdateOrderStatus();
@@ -144,27 +146,20 @@ const Page = () => {
         </div>
       ),
     },
-    // {
-    //   title: "Billing Address",
-    //   content: (
-    //     <div className="text-secondary-gray text-[14px] py-2">
-    //       <p>
-    //         <strong>Name:</strong> John Doe
-    //       </p>
-    //       <p>
-    //         <strong>Phone:</strong> +1234567890
-    //       </p>
-    //       <p>
-    //         <strong>Address:</strong> 456 Street, City, Country
-    //       </p>
-    //     </div>
-    //   ),
-    // },
     {
       title: "Add Note",
       content: <></>,
       isModal: true,
     },
+    ...(singleOrder?.data?.shipping_option === "local_pickup"
+      ? [
+          {
+            title: "Arrange Local Pickup",
+            content: <></>,
+            isModal: true,
+          },
+        ]
+      : []),
   ];
 
   if (isLoading) {
@@ -176,7 +171,7 @@ const Page = () => {
   }
 
   const currentStatus = enabledSteps?.[enabledSteps.length - 1];
-
+  
   return (
     <>
       {/* Back Btn */}
@@ -330,22 +325,6 @@ const Page = () => {
             <Proorderproduct data={singleOrder?.data} order_id={order_id} />
           </div>
 
-          {/* Step Buttons */}
-          {/* <div className="my-6 flex flex-wrap md:flex-nowrap  stepbutton gap-3">
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out">
-              Track Package
-            </button>
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out ">
-              Return or replace
-            </button>
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out ">
-              Get Help
-            </button>
-            <button className="py-4 px-3 md:px-6 w-full sm:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out">
-              Request a Review
-            </button>
-          </div> */}
-
           {/* Order Summary */}
           <div className="hidden lg:block mt-20">
             <OrderSummary data={singleOrder?.data} />
@@ -362,7 +341,13 @@ const Page = () => {
               <div
                 className="flex justify-between items-center p-3 cursor-pointer"
                 onClick={() => {
-                  if (item.isModal) setNoteModalOpen(true);
+                  if (item.isModal && item.title === "Add Note")
+                    setNoteModalOpen(true);
+                  else if (
+                    item.isModal &&
+                    item.title === "Arrange Local Pickup"
+                  )
+                    return setAddressModalOpen(true);
                   else setOpenIndex(openIndex === idx ? null : idx);
                 }}
               >
@@ -478,20 +463,11 @@ const Page = () => {
           </div>
         </div>
       </div>
+
       {/* Order Summary */}
       <div className="block lg:hidden mt-20">
         <OrderSummary data={singleOrder?.data} />
       </div>
-
-      {/* <EditOrderModal
-        isOpen={editModalOpen}
-        onClose={() => {
-          if (editModalOpen) {
-            setEditModalOpen(false);
-            document.body.style.overflow = "visible";
-          }
-        }}
-      /> */}
 
       <Modal open={noteModalOpen} onClose={() => setNoteModalOpen(false)}>
         <OrderNote
@@ -509,6 +485,13 @@ const Page = () => {
           Order Note
         </h3>
         <p className="leading-[164%] text-gray-700">"{note}"</p>
+      </Modal>
+
+      <Modal open={addressOpen} onClose={() => setAddressModalOpen(false)}>
+        <ArrangeLocalPickupModal
+          order_id={order_id}
+          onClose={() => setAddressModalOpen(false)}
+        />
       </Modal>
     </>
   );

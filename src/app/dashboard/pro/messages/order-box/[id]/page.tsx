@@ -1,5 +1,6 @@
 "use client";
 import moment from "moment";
+import Link from "next/link";
 import Image from "next/image";
 import echo from "@/lib/echo";
 import toast from "react-hot-toast";
@@ -9,19 +10,65 @@ import { useParams, useRouter } from "next/navigation";
 import { PuffLoader } from "react-spinners";
 import { useQueryClient } from "@tanstack/react-query";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getSingleConversation, useSendMessage } from "@/Hooks/api/chat_api";
+
+type CartProductImage = {
+  id: number;
+  product_id: number;
+  image: string;
+};
+
+type CartProduct = {
+  id: number;
+  product_name: string;
+  product_price: number;
+  images: CartProductImage[];
+};
+
+type CartItem = {
+  id: number;
+  cart_id: number;
+  product_id: number;
+  quantity: number;
+  product: CartProduct;
+};
+
+type OrderItem = {
+  id: number;
+  cart_id: number;
+  product_id: number;
+  quantity: number;
+  product: CartProduct;
+  order_id: number;
+};
+
+type Cart = {
+  id: number;
+  user_id: number;
+  shop_id: number;
+  cart_items: CartItem[];
+};
+
+type Order = {
+  id: number;
+  order_items: OrderItem[];
+};
 
 type messageItem = {
   id: number;
   sender_id: number;
+  receiver_id: number;
+  conversation_id: number;
   message: string;
   created_at: string;
-  status: string;
+  status?: string;
+  order: Order | null;
+  cart: Cart | null;
   sender: {
     first_name: string;
-    last_name: string;
-    avatar: string;
+    last_name: string | null;
+    avatar: string | null;
   };
 };
 
@@ -109,15 +156,15 @@ const page = () => {
           prev?.map(msg =>
             msg?.id === tempId
               ? { ...msg, ...res.message, status: "sent" }
-              : msg
-          )
+              : msg,
+          ),
         );
       },
       onError: () => {
         setChats(prev =>
           prev?.map(msg =>
-            msg?.id === tempId ? { ...msg, status: "failed" } : msg
-          )
+            msg?.id === tempId ? { ...msg, status: "failed" } : msg,
+          ),
         );
       },
     });
@@ -156,7 +203,7 @@ const page = () => {
             ) : (
               <span className="text-xl font-bold text-white">
                 {singleConversation?.data?.conversation?.participants[0]?.participant?.first_name?.at(
-                  0
+                  0,
                 )}
               </span>
             )}
@@ -202,6 +249,7 @@ const page = () => {
                 user?.id === msg?.sender_id ? "justify-end" : "justify-start"
               }`}
             >
+              {/* Sender Image */}
               {user?.id !== msg?.sender_id && (
                 <figure className="size-11 rounded-full relative shrink-0 grid place-items-center bg-accent-red text-sm">
                   {msg?.sender?.avatar ? (
@@ -219,24 +267,147 @@ const page = () => {
                 </figure>
               )}
 
-              <p
-                className={`relative text-[15px] font-lato leading-[160%] py-3 px-3.5 rounded-[6px] max-w-[550px] shadow ${
-                  msg?.status === "sending"
-                    ? "bg-gray-50 opacity-80"
-                    : msg?.status === "failed"
-                    ? "bg-red-100 border border-red-400 text-red-700"
-                    : "bg-accent-white"
-                }
-                `}
-              >
-                {msg?.message}
-                <br />
+              {/* Message Content */}
+              <div className="max-w-[550px]">
+                {/* NORMAL MESSAGE */}
+                {!msg?.cart && !msg?.order && (
+                  <div
+                    className={`relative text-[15px] font-lato leading-[160%] py-3 px-3.5 rounded-[6px] shadow ${
+                      msg?.status === "sending"
+                        ? "bg-gray-50 opacity-80"
+                        : msg?.status === "failed"
+                          ? "bg-red-100 border border-red-400 text-red-700"
+                          : "bg-accent-white"
+                    }`}
+                  >
+                    <p>{msg?.message}</p>
 
-                {/* Time */}
-                <span className="text-xs text-gray-500 text-end block mt-1">
-                  {moment(msg?.created_at).format("LT")}
-                </span>
-              </p>
+                    <span className="text-xs text-gray-500 text-end block mt-1">
+                      {moment(msg?.created_at).format("LT")}
+                    </span>
+                  </div>
+                )}
+
+                {/* CART MESSAGE */}
+                {msg?.cart && (
+                  <div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+                    {/* Message */}
+                    <div className="p-4 border-b border-gray-200">
+                      <p className="text-sm text-gray-700">{msg?.message}</p>
+                    </div>
+
+                    {/* Cart Products */}
+                    <div className="p-4 space-y-4">
+                      {msg?.cart?.cart_items?.map(item => (
+                        <Link
+                          key={item?.id}
+                          href={`/product-details/${item?.product?.id}`}
+                          className="flex items-center gap-3 group"
+                        >
+                          {/* Product Image */}
+                          <figure className="size-16 rounded-lg overflow-hidden relative shrink-0 bg-gray-100">
+                            {item?.product?.images?.[0]?.image && (
+                              <Image
+                                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images?.[0]?.image}`}
+                                alt={item?.product?.product_name}
+                                fill
+                                unoptimized
+                                className="object-cover"
+                              />
+                            )}
+                          </figure>
+
+                          {/* Product Info */}
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-sm text-secondary-black group-hover:underline">
+                              {item?.product?.product_name}
+                            </h4>
+
+                            <p className="text-sm text-gray-500">
+                              Qty: {item?.quantity}
+                            </p>
+
+                            <p className="text-sm font-bold text-primary-green">
+                              ${item?.product?.product_price}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+
+                    {/* Time */}
+                    <div className="px-4 pb-3 text-right">
+                      <span className="text-xs text-gray-500">
+                        {moment(msg?.created_at).format("LT")}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* ORDER MESSAGE */}
+                {msg?.order && (
+                  <div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+                    {/* Message */}
+                    <div className="p-4 border-b border-gray-200">
+                      <p className="text-sm text-gray-700">{msg?.message}</p>
+                    </div>
+
+                    {/* Order Products */}
+                    <div className="p-4 space-y-4">
+                      {msg?.order?.order_items?.map(item => (
+                        <Link
+                          key={item?.id}
+                          className="flex items-center gap-3 group"
+                          href={`/dashboard/${
+                            user?.role === "vendor" &&
+                            user?.membership?.membership_type === "pro"
+                              ? "pro"
+                              : user?.role === "vendor" &&
+                                  user?.membership?.membership_type === "basic"
+                                ? "basic"
+                                : "customer"
+                          }/orders/${item?.order_id}`}
+                        >
+                          {/* Product Image */}
+                          <figure className="size-16 rounded-lg overflow-hidden relative shrink-0 bg-gray-100">
+                            {item?.product?.images?.[0]?.image && (
+                              <Image
+                                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images?.[0]?.image}`}
+                                alt={item?.product?.product_name}
+                                fill
+                                unoptimized
+                                className="object-cover"
+                              />
+                            )}
+                          </figure>
+
+                          {/* Product Info */}
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-sm text-secondary-black group-hover:underline">
+                              {item?.product?.product_name}
+                            </h4>
+
+                            <p className="text-sm text-gray-500">
+                              Qty: {item?.quantity}
+                            </p>
+
+                            <p className="text-sm font-bold text-primary-green">
+                              ${item?.product?.product_price}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+
+                    {/* Time */}
+                    <div className="px-4 pb-3 text-right">
+                      <span className="text-xs text-gray-500">
+                        {moment(msg?.created_at).format("LT")}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           ))
         )}

@@ -11,6 +11,7 @@ import {
   useTaxes,
 } from "@/Hooks/api/dashboard_api";
 import Link from "next/link";
+import useAuth from "@/Hooks/useAuth";
 
 type stateItem = {
   id: number;
@@ -26,7 +27,11 @@ type TaxForm = {
 };
 
 export default function TaxRatePage() {
-  const [apiKey, setApiKey] = useState("");
+  const { user } = useAuth();
+  console.log(user);
+  const [apiKey, setApiKey] = useState(
+    user?.shop_info?.ziptax_api_key ? user?.shop_info?.ziptax_api_key : "",
+  );
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [activeTab, setActiveTab] = useState<"manual" | "automatic">("manual");
   const { mutate, isPending } = useTaxes();
@@ -37,7 +42,6 @@ export default function TaxRatePage() {
   const { data: taxData } = getSalesTaxData();
   const [chargeOnServices, setChargeOnServices] = useState(true);
   const [chargeOnShipping, setChargeOnShipping] = useState(false);
-
   const [states, setStates] = useState(taxData?.data?.states || []);
 
   const handleStateToggle = (id: number) => {
@@ -138,7 +142,14 @@ export default function TaxRatePage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-[1.2fr_0.9fr] gap-6">
             {/* Left Card */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm relative">
+              {/* Active Status */}
+              {user?.shop_info?.tax_provider === "manual" && (
+                <p className="absolute right-3 top-3 rounded-full px-3.5 py-1 text-sm text-white bg-accent-red">
+                  Active
+                </p>
+              )}
+
               <h2 className="text-2xl font-bold text-secondary-black">
                 Add Local Tax Rate
               </h2>
@@ -382,8 +393,15 @@ export default function TaxRatePage() {
       ) : (
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Top Info Card */}
-          <div className="border border-primary-green/30 rounded-2xl bg-[#FAFFFB] p-6">
-            <div className="flex gap-4">
+          <div className="border border-primary-green/30 rounded-2xl bg-[#FAFFFB] px-5 py-6 relative">
+            {/* Active Status */}
+            {user?.shop_info?.tax_provider === "ziptax" && (
+              <p className="absolute right-3 top-3 rounded-full px-3.5 py-1 text-sm text-white bg-accent-red">
+                Active
+              </p>
+            )}
+
+            <div className="flex gap-3">
               <div className="w-10 h-10 rounded-full bg-primary-green flex items-center justify-center text-white font-bold">
                 i
               </div>
@@ -404,27 +422,48 @@ export default function TaxRatePage() {
                 </p>
 
                 <div className="mt-4 space-y-2 text-gray-700">
-                  <p>
-                    ✅ <b>Free plan:</b> address-level sales tax calculation
-                    (generic rate for the address).
+                  <p className="flex gap-2 items-center">
+                    <input
+                      type="checkbox"
+                      checked
+                      className="accent-primary-green size-4"
+                    />
+                    <span>
+                      <b>Free plan:</b> address-level sales tax calculation
+                      (generic rate for the address).
+                    </span>
                   </p>
 
-                  <p>
-                    ✅ <strong>Pro plan:</strong> product-level accuracy using
-                    taxability codes (TICs) passed from Sustainable Trades,
-                    higher request limits, and scalable for business growth.
+                  <p className="flex gap-2 items-center">
+                    <input
+                      type="checkbox"
+                      checked
+                      className="accent-primary-green size-4"
+                    />
+                    <span>
+                      <strong>Pro plan:</strong> product-level accuracy using
+                      taxability codes (TICs) passed from Sustainable Trades,
+                      higher request limits, and scalable for business growth.
+                    </span>
                   </p>
 
-                  <p>
-                    ✅ <strong>You're in control:</strong> enable only the
-                    states where you are required to collect sales tax.
+                  <p className="flex gap-2 items-center">
+                    <input
+                      type="checkbox"
+                      checked
+                      className="accent-primary-green size-4"
+                    />
+                    <span>
+                      <strong>You're in control:</strong> enable only the states
+                      where you are required to collect sales tax.
+                    </span>
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-8 mt-6">
                   <Link
                     target="_blank"
-                    href="https://platform.zip.tax/sign-up"
+                    href="https://www.zip.tax/pricing"
                     className="text-primary-green font-medium underline"
                   >
                     Create a ZipTax Account
@@ -435,7 +474,7 @@ export default function TaxRatePage() {
                     onClick={() => setShowVideoModal(true)}
                     className="text-primary-green font-medium underline cursor-pointer"
                   >
-                    Watch How-To Video (30 sec)
+                    Watch: How To Connect ZipTax
                   </button>
                 </div>
               </div>

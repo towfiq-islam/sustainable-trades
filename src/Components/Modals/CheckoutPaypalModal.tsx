@@ -10,10 +10,12 @@ import { CgSpinnerTwo } from "react-icons/cg";
 const CheckoutPaypalModal = ({
   cart_id,
   formData,
+  onClose,
   isLocalPayment = false,
 }: {
   cart_id: number | null;
   formData?: any;
+  onClose?: any;
   isLocalPayment?: boolean;
 }) => {
   const { mutate: localPickupPayment, isPending: isConnecting } =
@@ -41,6 +43,7 @@ const CheckoutPaypalModal = ({
         onSuccess: (data: any) => {
           if (data?.success) {
             queryClient.invalidateQueries("get-product-cart" as any);
+            onClose();
           }
         },
       },
@@ -122,6 +125,7 @@ const CheckoutPaypalModal = ({
                 if (orderData?.success) {
                   toast.success(orderData?.message);
                   queryClient.invalidateQueries("get-product-cart" as any);
+                  onClose();
                 }
               } catch (error) {
                 console.error(error);
@@ -180,7 +184,6 @@ const CheckoutPaypalModal = ({
                 );
 
                 const orderData = await response.json();
-                console.log(orderData);
                 if (orderData?.success) {
                   toast.success(orderData?.message);
                   queryClient.invalidateQueries("get-product-cart" as any);

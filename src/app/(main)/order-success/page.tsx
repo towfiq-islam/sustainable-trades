@@ -7,6 +7,7 @@ import Product from "@/Components/Common/Product";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { useSearchParams } from "next/navigation";
 import { getAllListings } from "@/Hooks/api/cms_api";
+import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -16,7 +17,26 @@ export default function Page() {
     getAllFollowList();
   const { data: singleOrder, isLoading } = getMyOrderDetails(order_id);
   const { data: products, isLoading: shopLoading } = getAllListings(shop_id);
-  console.log(singleOrder?.data);
+
+  const mapShops = singleOrder?.data?.shop
+    ? [
+        {
+          id: singleOrder.data.shop.id,
+          first_name: singleOrder.data.shop.user.first_name,
+          last_name: singleOrder.data.shop.user.last_name,
+          role: "vendor",
+          shop_info: {
+            id: singleOrder.data.shop.id,
+            user_id: singleOrder.data.shop.user_id,
+            shop_name: singleOrder.data.shop.shop_name,
+            shop_image: singleOrder.data.shop.shop_image,
+            address: {
+              ...singleOrder.data.shop.address,
+            },
+          },
+        },
+      ]
+    : [];
 
   return (
     <section className="py-12">
@@ -60,12 +80,14 @@ export default function Page() {
 
             {/* Right */}
             <div>
-              <div className="overflow-hidden h-[250px]">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d0!2d-97.7431!3d30.2672!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8644b54a1f5678ef%3A0x1234567890abcdef!2sAustin%2C%20TX!5e0!3m2!1sen!2sus!4v1691261744101!5m2!1sen!2sus"
-                  loading="lazy"
-                  className="h-full w-4/5 mx-auto border-0 rounded-lg"
-                ></iframe>
+              <div className="overflow-hidden rounded-lg h-[250px] w-10/12 mx-auto">
+                {mapShops.length > 0 && (
+                  <ShopsMap
+                    height="250px"
+                    shops={mapShops}
+                    shopLoading={isLoading}
+                  />
+                )}
               </div>
 
               {/* Progress */}

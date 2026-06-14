@@ -265,6 +265,7 @@ const OrderDetailsPage = () => {
       <Modal open={paypalOpen} onClose={() => setPaypalOpen(false)}>
         <CheckoutPaypalModal
           isLocalPayment={true}
+          onClose={() => setPaypalOpen(false)}
           cart_id={getSingleOrder?.data?.local_pickup_checkout_token}
         />
       </Modal>

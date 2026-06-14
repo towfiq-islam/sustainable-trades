@@ -9,13 +9,6 @@ import {
 } from "@react-google-maps/api";
 import { useRouter } from "next/navigation";
 
-const containerStyle = {
-  width: "100%",
-  height: "550px",
-  borderRadius: "12px",
-  position: "relative" as const,
-};
-
 interface Address {
   id: number;
   shop_info_id: number;
@@ -53,6 +46,7 @@ interface ShopsMapProps {
   shops: Shop[];
   hoveredShop?: Shop | null;
   shopLoading?: boolean;
+  height?: string;
 }
 
 // Spiderfy positions for overlapping markers
@@ -91,7 +85,15 @@ const ShopsMap: React.FC<ShopsMapProps> = ({
   shops,
   hoveredShop,
   shopLoading,
+  height,
 }) => {
+  const containerStyle = {
+    width: "100%",
+    height: height ? height : "550px",
+    borderRadius: "12px",
+    position: "relative" as const,
+  };
+
   const [selected, setSelected] = useState<Shop | null>(null);
   const [selectedMarkerPos, setSelectedMarkerPos] = useState<{
     lat: number;
@@ -114,7 +116,7 @@ const ShopsMap: React.FC<ShopsMapProps> = ({
     })
     .filter(
       (item): item is { id: number; lat: number; lng: number; shop: Shop } =>
-        item !== null
+        item !== null,
     );
 
   const defaultCenter = locations[0]
@@ -213,7 +215,7 @@ const ShopsMap: React.FC<ShopsMapProps> = ({
             <div
               onClick={() =>
                 router.push(
-                  `/shop-details?view=customer&id=${selected.shop_info.user_id}&listing_id=${selected.shop_info.id}`
+                  `/shop-details?view=customer&id=${selected.shop_info.user_id}&listing_id=${selected.shop_info.id}`,
                 )
               }
               className="flex items-center gap-2 cursor-pointer group"

@@ -6,6 +6,7 @@ import { CgSpinnerTwo } from "react-icons/cg";
 import { useSendMessage } from "@/Hooks/api/chat_api";
 import { useLocalPickupPro } from "@/Hooks/api/dashboard_api";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 type formData = {
   name: string;
@@ -34,6 +35,7 @@ const ShippingOptionsModal = ({
   onClose,
   isConnected,
 }: ShippingOptionsProps) => {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [shippingMethod, setShippingMethod] = useState(
@@ -68,6 +70,9 @@ const ShippingOptionsModal = ({
           toast.success(res.message);
           queryClient.invalidateQueries("get-product-cart" as any);
           onClose();
+          router.push(
+            `/order-success?order_id=${res?.data?.id}&shop_id=${res?.data?.shop_id}`,
+          );
         },
       });
     }

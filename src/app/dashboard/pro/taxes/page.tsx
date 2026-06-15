@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
 import {
+  getAllTaxes,
   getSalesTaxData,
   useAddSalesTax,
   useTaxes,
@@ -41,6 +42,7 @@ export default function TaxRatePage() {
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
   const { data: taxData } = getSalesTaxData();
+  const { data: allTaxes } = getAllTaxes();
   const [chargeOnServices, setChargeOnServices] = useState(true);
   const [chargeOnShipping, setChargeOnShipping] = useState(false);
   const [states, setStates] = useState(taxData?.data?.states || []);

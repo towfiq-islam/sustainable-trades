@@ -142,9 +142,6 @@ export const getPricingData = (interval: string) => {
     key: ["get-pricing", interval],
     endpoint: "/api/subscriptions",
     params: { interval },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -172,9 +169,6 @@ export const getFeaturedShops = (lat: number, lng: number) => {
     key: ["get-featured-shops", lat, lat],
     endpoint: "/api/shops/featured",
     params: { lat, lng },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -185,9 +179,6 @@ export const getTutorials = (search: string, type: string) => {
     key: ["get-tutorials", search, type],
     endpoint: "/api/tutorials",
     params: { type, search },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -235,9 +226,6 @@ export const getShopDetails = (id: number) => {
     key: ["get-shop-details", id],
     enabled: !!id,
     endpoint: `/api/shop/${id}`,
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -249,9 +237,6 @@ export const getFeaturedListings = (id: number) => {
     key: ["get-featured-listings", id],
     enabled: !!id,
     endpoint: `/api/shop/products/featured/${id}`,
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -279,9 +264,6 @@ export const getAllListings = (
     endpoint: `/api/shop/products/${id}`,
     isPrivate: true,
     params: { category_id, sub_category_id, short_by, search, page },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -336,9 +318,6 @@ export const getProductDetails = (id: number, lat: number, lng: number) => {
     enabled: !!id,
     params: { lat, lng },
     endpoint: `/api/product-details/${id}`,
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -349,9 +328,6 @@ export const getProductCart = () => {
     isPrivate: true,
     key: ["get-product-cart"],
     endpoint: "/api/cart",
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -505,9 +481,6 @@ export const getTradeShopProducts = (id: number | null) => {
     enabled: !!id,
     endpoint: `/api/trade-shop-product/${id}`,
     isPrivate: true,
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -570,9 +543,6 @@ export const getCategoryDetails = (
     enabled: !!id,
     endpoint: `/api/category/${id}`,
     params: { lat, lng, page },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -583,9 +553,6 @@ export const getAllShopsClient = (address: string, page: string) => {
     key: ["get-all-shop", address, page],
     endpoint: `/api/shops`,
     params: { address, page },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -596,9 +563,6 @@ export const getFeaturedProducts = () => {
     isPrivate: true,
     key: ["get-featured-products"],
     endpoint: `/api/is-featured-product`,
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -614,9 +578,6 @@ export const getNearbyProducts = (
     key: ["nearby-products", lat, lng, nearbyPage],
     endpoint: "/api/nearby-product",
     params: { lat, lng, page: nearbyPage },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -628,9 +589,6 @@ export const getShopReviews = (id: number, page: string) => {
     enabled: !!id,
     params: { page },
     endpoint: `/api/shop-review/${id}`,
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -642,9 +600,6 @@ export const getProductReviews = (id: number, page: string) => {
     enabled: !!id,
     params: { page },
     endpoint: `/api/product-review/${id}`,
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -661,9 +616,6 @@ export const getAllProducts = (
     enabled: !!search,
     endpoint: "/api/all-products",
     params: { search, lat, lng, page },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 

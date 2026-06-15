@@ -1,0 +1,217 @@
+"use client";
+import { useState } from "react";
+
+type Item = {
+  id: number;
+  price: string;
+  product: {
+    product_name: string;
+    product_price: number;
+  };
+};
+
+type Props = {
+  onClose: any;
+  onProceed: any;
+  setFormData: any;
+  formData: any;
+  cartItems: any;
+  subTotal: number;
+};
+
+function OrderItem({
+  title,
+  vendor,
+  price,
+}: {
+  title: string;
+  vendor: string;
+  price: string;
+}) {
+  return (
+    <div className="flex justify-between">
+      <div>
+        <h4 className="text-sm font-medium">{title}</h4>
+        <p className="text-[13px] text-gray-500 mt-0.5">{vendor}</p>
+      </div>
+      <span className="text-sm">{price}</span>
+    </div>
+  );
+}
+
+export default function OrderReviewModal({
+  onClose,
+  onProceed,
+  formData,
+  setFormData,
+  cartItems,
+  subTotal,
+}: Props) {
+  const [promo, setPromo] = useState<string>("");
+  console.log(cartItems);
+
+  return (
+    <div className="">
+      <h2 className="text-xl text-light-green font-semibold">
+        Review your order details
+      </h2>
+
+      <p className="mt-2 font-semibold text-secondary-gray">
+        Shipping and Payment Information.
+      </p>
+
+      {/* Newsletter */}
+      <div className="mt-4 space-y-2.5">
+        <label className="flex items-center gap-2 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={formData?.subscribe_website === 1}
+            onChange={e =>
+              setFormData((prev: any) => ({
+                ...prev,
+                subscribe_website: e.target.checked ? 1 : 0,
+              }))
+            }
+            className="size-4 accent-primary-green cursor-pointer"
+          />
+          Subscribe to Sustainable Trades newsletters
+        </label>
+
+        <label className="flex items-center gap-2 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={formData?.subscribe_shop === 1}
+            onChange={e =>
+              setFormData((prev: any) => ({
+                ...prev,
+                subscribe_shop: e.target.checked ? 1 : 0,
+              }))
+            }
+            className="size-4 accent-primary-green cursor-pointer"
+          />
+          Subscribe to Earth Essence newsletters
+        </label>
+      </div>
+
+      {/* Shipping */}
+      <div className="mt-5">
+        <h3 className="font-semibold text-secondary-gray">
+          Shipping Information
+        </h3>
+
+        <div className="mt-1.5 text-sm text-gray-700">
+          <p>
+            {formData?.first_name} {formData?.last_name}
+          </p>
+          <p>{formData?.address}</p>
+          {formData?.apt && <p>{formData.apt}</p>}
+          <p>
+            {formData?.city}
+            {formData?.state ? `, ${formData.state}` : ""}
+            {formData?.postal_code ? ` ${formData.postal_code}` : ""}
+          </p>
+          <p>{formData?.country}</p>
+        </div>
+      </div>
+
+      {/* Promo */}
+      <div className="mt-5">
+        <p className="flex gap-3 items-center justify-between border border-primary-green px-3 py-2.5 text-sm rounded-[6px]">
+          <input
+            type="text"
+            value={promo}
+            onChange={e => setPromo(e.target.value)}
+            className="h-full w-full block outline-none"
+            placeholder="Enter promo code (If have)"
+          />
+
+          {promo && (
+            <button className="text-accent-red hover:underline cursor-pointer">
+              Apply
+            </button>
+          )}
+        </p>
+
+        <p className="mt-2 text-xs text-primary-green font-semibold">
+          Promo applied
+        </p>
+      </div>
+
+      {/* Terms */}
+      <div className="mt-5 border-t text-gray-400 pt-4">
+        <label className="flex items-start gap-3 text-secondary-gray text-sm">
+          <input
+            type="checkbox"
+            checked={formData?.terms_and_condition === 1}
+            onChange={e =>
+              setFormData((prev: any) => ({
+                ...prev,
+                terms_and_condition: e.target.checked ? 1 : 0,
+              }))
+            }
+            className="mt-1 size-4 accent-primary-green cursor-pointer"
+          />
+
+          <span>
+            By continuing, you agree to Sustainable Trades' Acceptable Use
+            Policy, Privacy Policy, and Terms & Conditions.
+          </span>
+        </label>
+      </div>
+
+      {/* Order Summary */}
+      <div className="mt-5">
+        <h3 className="text-xl font-semibold text-secondary-gray">Subtotal</h3>
+
+        <div className="mt-3 space-y-4">
+          {cartItems?.cart_items?.map((item: Item) => (
+            <OrderItem
+              title={item?.product?.product_name}
+              vendor={cartItems?.shop?.shop_name}
+              price={`$${Number(item?.price).toFixed(2)}`}
+            />
+          ))}
+
+          <div className="flex justify-between text-sm">
+            <span>Promo discount (50% off)</span>
+            <span>-$00.00</span>
+          </div>
+        </div>
+
+        <div className="my-4 border-t border-gray-400" />
+
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <span className="text-xl font-semibold text-secondary-gray">
+              Total
+            </span>
+            <span className="text-xl font-semibold text-secondary-black">
+              ${subTotal}
+            </span>
+          </div>
+
+          <div className="flex justify-between text-sm text-gray-600">
+            <span>{cartItems?.cart_items?.length} Cart Items</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="mt-6 space-y-3">
+        <button
+          onClick={() => onProceed()}
+          className="w-full rounded-md bg-primary-green py-3 font-semibold text-white cursor-pointer"
+        >
+          Checkout
+        </button>
+
+        <button
+          onClick={onClose}
+          className="w-full rounded-md bg-[#d9e3d0] py-3 font-semibold text-primary-green cursor-pointer"
+        >
+          Back to Shipping
+        </button>
+      </div>
+    </div>
+  );
+}

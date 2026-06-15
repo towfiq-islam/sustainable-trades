@@ -2,9 +2,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
-const allowedCountries = Country.getAllCountries().filter(
-  country => country.isoCode === "US" || country.isoCode === "CA",
-);
 import {
   getSalesTaxData,
   useAddSalesTax,
@@ -12,6 +9,10 @@ import {
 } from "@/Hooks/api/dashboard_api";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
+
+const allowedCountries = Country.getAllCountries().filter(
+  country => country.isoCode === "US" || country.isoCode === "CA",
+);
 
 type stateItem = {
   id: number;

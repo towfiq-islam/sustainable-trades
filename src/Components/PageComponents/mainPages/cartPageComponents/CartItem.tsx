@@ -13,6 +13,7 @@ import ShippingAddress from "@/Components/Modals/ShippingAddress";
 import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
+import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
 
 interface CartItem {
   id: number;
@@ -48,16 +49,17 @@ interface CartItem {
 
 interface CartProps {
   item: CartItem;
-  setCartList?: React.Dispatch<React.SetStateAction<any[]>>;
+  subTotal: number;
 }
 
-const CartItem = ({ item, setCartList }: CartProps) => {
+const CartItem = ({ item, subTotal }: CartProps) => {
   // States
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
+  const [orderReviewModal, setOrderReviewModal] = useState<boolean>(false);
   const [shippingAddressOpen, setShippingAddressOpen] =
     useState<boolean>(false);
-  const [formData, setFormData] = useState<any>([]);
+  const [formData, setFormData] = useState<any>({});
   const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
   // const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [cartItemId, setCartItemId] = useState<number | null>(null);
@@ -261,6 +263,23 @@ const CartItem = ({ item, setCartList }: CartProps) => {
           setFormData={setFormData}
           onNext={() => {
             setShippingAddressOpen(false);
+            setOrderReviewModal(true);
+          }}
+        />
+      </Modal>
+
+      <Modal open={orderReviewModal} onClose={() => setOrderReviewModal(false)}>
+        <OrderReviewModal
+          setFormData={setFormData}
+          formData={formData}
+          cartItems={item}
+          subTotal={subTotal}
+          onClose={() => {
+            setOrderReviewModal(false);
+            setShippingAddressOpen(true);
+          }}
+          onProceed={() => {
+            setOrderReviewModal(false);
             setPaypalOpen(true);
           }}
         />

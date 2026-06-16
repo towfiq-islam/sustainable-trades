@@ -1,8 +1,5 @@
 "use client";
-import { useCheckout } from "@/Hooks/api/cms_api";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { CgSpinnerTwo } from "react-icons/cg";
 
 type FormData = {
   first_name: string;

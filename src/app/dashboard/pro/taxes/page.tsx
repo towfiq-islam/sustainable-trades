@@ -10,6 +10,8 @@ import {
 } from "@/Hooks/api/dashboard_api";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
+import { FaLightbulb } from "react-icons/fa";
+import { IoMdSettings } from "react-icons/io";
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
@@ -143,9 +145,9 @@ export default function TaxRatePage() {
 
       {activeTab === "manual" ? (
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-[1.2fr_0.9fr] gap-6">
+          <div className="grid lg:grid-cols-[1.2fr_0.9fr] gap-5 items-start">
             {/* Left Card */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm relative">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-7 shadow-sm relative">
               {/* Active Status */}
               {user?.shop_info?.tax_provider === "manual" && (
                 <p className="absolute right-3 top-3 rounded-full px-3.5 py-1 text-sm text-white bg-accent-red">
@@ -324,47 +326,87 @@ export default function TaxRatePage() {
             </div>
 
             {/* Right Info Panel */}
-            <div className="bg-[#F9FCF9] border border-primary-green/20 rounded-2xl p-6">
-              <div className="space-y-8">
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-8 h-8 rounded-full bg-primary-green text-white flex items-center justify-center font-bold">
+            <div className="bg-[#F9FCF9] border border-primary-green/20 rounded-2xl p-5">
+              <div className="">
+                <div className="border-b border-primary-green pb-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="size-5.5 rounded-full bg-primary-green text-white flex items-center justify-center font-bold">
                       i
-                    </div>
+                    </p>
 
-                    <h3 className="font-bold text-lg">About Local Tax Rate</h3>
+                    <h3 className="font-bold">About Local Tax Rate</h3>
                   </div>
 
-                  <p className="text-gray-600 leading-relaxed">
-                    This option is ideal for sellers with a single physical
-                    location who only offer local pickup and all their products
-                    are taxed the same way.
-                  </p>
-
-                  <p className="text-gray-600 mt-3">
-                    You set one sales tax rate that will be applied to every
-                    order at checkout.
-                  </p>
-                </div>
-
-                <hr />
-
-                <div>
-                  <h4 className="font-semibold text-lg mb-2">How it works</h4>
-
-                  <p className="text-gray-600">
-                    The tax rate you enter here will be applied to all orders.
+                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
+                    <span>
+                      This option is designed for sellers who offer Local Pickup
+                      and apply the same sales tax rate to all of their
+                      products.
+                    </span>
+                    <span>
+                      It works well for businesses selling from a physical
+                      location, such as a farm, storefront, studio, workshop,
+                      farmers market, or pop-up event. The sales tax rate you
+                      enter here will be applied to Local Pickup orders during
+                      checkout.
+                    </span>
                   </p>
                 </div>
 
-                <hr />
+                <div className="border-b border-primary-green py-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="size-5.5 rounded-full bg-primary-green text-white flex items-center justify-center font-bold">
+                      i
+                    </p>
 
-                <div>
-                  <h4 className="font-semibold text-lg mb-2">Keep in mind</h4>
+                    <h3 className="font-bold">Important</h3>
+                  </div>
 
-                  <p className="text-gray-600">
-                    You are responsible for collecting and remitting sales tax
-                    according to your local, state, and federal obligations.
+                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
+                    <span>
+                      This option is for Local Pickup only. The local sales tax
+                      rate will be applied when the fulfillment option of a
+                      listing is set to Local Pickup. If a listing is set to
+                      Shipping or Local Pickup + Shipping, this rate will not be
+                      applied to orders where the shopper chooses shipping.
+                    </span>
+                  </p>
+                </div>
+
+                <div className="border-b border-primary-green py-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <IoMdSettings className="text-primary-green text-lg" />
+                    <h3 className="font-bold">How It Works</h3>
+                  </div>
+
+                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
+                    <span>
+                      Enter the sales tax rate for the location where you are
+                      selling. The rate will be applied to Local Pickup orders
+                      during checkout until it is updated or changed.
+                    </span>
+                  </p>
+                </div>
+
+                <div className="pt-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FaLightbulb className="text-lg text-primary-green" />
+                    <h3 className="font-bold">Keep in Mind</h3>
+                  </div>
+
+                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
+                    <span>
+                      You are responsible for collecting and remitting sales tax
+                      according to your local, state, and federal obligations.
+                    </span>
+                    <span>
+                      This option applies a single sales tax rate to all Local
+                      Pickup orders. It does not calculate tax based on the
+                      customer's location or individual product taxability
+                      codes. If you need location-based tax calculations or
+                      product-specific tax rules, we recommend using ZipTax
+                      Automated Sales Tax.
+                    </span>
                   </p>
                 </div>
               </div>
@@ -425,11 +467,11 @@ export default function TaxRatePage() {
                 </p>
 
                 <div className="mt-4 space-y-2 text-gray-700">
-                  <p className="flex gap-2 items-center">
+                  <p className="flex gap-2">
                     <input
                       type="checkbox"
                       checked
-                      className="accent-primary-green size-4"
+                      className="accent-primary-green size-4 mt-1"
                     />
                     <span>
                       <b>Free plan:</b> address-level sales tax calculation
@@ -437,11 +479,11 @@ export default function TaxRatePage() {
                     </span>
                   </p>
 
-                  <p className="flex gap-2 items-center">
+                  <p className="flex gap-2">
                     <input
                       type="checkbox"
                       checked
-                      className="accent-primary-green size-4"
+                      className="accent-primary-green size-4  mt-1"
                     />
                     <span>
                       <strong>Pro plan:</strong> product-level accuracy using
@@ -450,11 +492,11 @@ export default function TaxRatePage() {
                     </span>
                   </p>
 
-                  <p className="flex gap-2 items-center">
+                  <p className="flex gap-2">
                     <input
                       type="checkbox"
                       checked
-                      className="accent-primary-green size-4"
+                      className="accent-primary-green size-4  mt-1"
                     />
                     <span>
                       <strong>You're in control:</strong> enable only the states
@@ -508,7 +550,10 @@ export default function TaxRatePage() {
 
               {/* Right */}
               <div className="border border-primary-green/30 bg-[#FAFFFB] rounded-xl p-4">
-                <h4 className="font-semibold text-lg mb-2">💡 How it works</h4>
+                <h4 className="font-semibold text-lg mb-2 flex gap-1 items-center">
+                  <FaLightbulb className="text-primary-green" />
+                  How it works
+                </h4>
 
                 <p className="text-sm text-gray-600 leading-relaxed">
                   Once connected, ZipTax will calculate the correct sales tax

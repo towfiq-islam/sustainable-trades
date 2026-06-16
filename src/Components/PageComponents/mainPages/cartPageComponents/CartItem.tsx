@@ -274,6 +274,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           formData={formData}
           cartItems={item}
           subTotal={subTotal}
+          cart_id={cartId}
           onClose={() => {
             setOrderReviewModal(false);
             setShippingAddressOpen(true);

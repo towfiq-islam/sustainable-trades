@@ -28,11 +28,12 @@ type TaxForm = {
   country: string;
   state: string;
   rate: string;
+  is_digital_products: boolean;
+  is_shipping: boolean;
 };
 
 export default function TaxRatePage() {
   const { user } = useAuth();
-  console.log(user);
   const [apiKey, setApiKey] = useState(
     user?.shop_info?.ziptax_api_key ? user?.shop_info?.ziptax_api_key : "",
   );
@@ -106,6 +107,30 @@ export default function TaxRatePage() {
     }
   }, [taxData]);
 
+  useEffect(() => {
+    if (allTaxes?.data) {
+      let countryCode = "";
+
+      if (allTaxes.data.country === "United States") {
+        countryCode = "US";
+      } else if (allTaxes.data.country === "Canada") {
+        countryCode = "CA";
+      }
+
+      setCountry(countryCode);
+      setState(allTaxes.data.state);
+
+      reset({
+        country: countryCode,
+        state: allTaxes.data.state,
+        rate: allTaxes.data.rate,
+      });
+
+      setChargeOnServices(allTaxes.data.is_digital_products);
+      setChargeOnShipping(allTaxes.data.is_shipping);
+    }
+  }, [allTaxes, reset]);
+
   return (
     <section>
       <h2 className="section_title text-center !mb-4 md:!mb-7">Sales Tax</h2>
@@ -172,25 +197,20 @@ export default function TaxRatePage() {
                   </label>
 
                   <select
+                    value={country || ""}
                     {...register("country", {
                       required: "Country is required",
                     })}
                     className="w-full h-12 px-4 border border-gray-300 rounded-lg"
                     onChange={e => {
                       const selectedCountry = e.target.value;
-
                       setCountry(selectedCountry);
                       setState("");
-
-                      setValue("country", selectedCountry, {
-                        shouldValidate: true,
-                      });
-
+                      setValue("country", selectedCountry);
                       setValue("state", "");
                     }}
                   >
                     <option value="">Select Country</option>
-
                     {allowedCountries.map(country => (
                       <option key={country.isoCode} value={country.isoCode}>
                         {country.name}
@@ -281,7 +301,7 @@ export default function TaxRatePage() {
                   <button
                     type="button"
                     onClick={() => setChargeOnServices(!chargeOnServices)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    className={`cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                       chargeOnServices ? "bg-primary-green" : "bg-gray-300"
                     }`}
                   >
@@ -302,7 +322,7 @@ export default function TaxRatePage() {
                   <button
                     type="button"
                     onClick={() => setChargeOnShipping(!chargeOnShipping)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    className={`cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                       chargeOnShipping ? "bg-primary-green" : "bg-gray-300"
                     }`}
                   >

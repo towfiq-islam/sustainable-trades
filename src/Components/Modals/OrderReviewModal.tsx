@@ -1,6 +1,6 @@
 "use client";
+import { useApplyCoupon } from "@/Hooks/api/dashboard_api";
 import { useState } from "react";
-
 
 type Item = {
   id: number;
@@ -18,6 +18,7 @@ type Props = {
   formData: any;
   cartItems: any;
   subTotal: number;
+  cart_id: number | null;
 };
 
 function OrderItem({
@@ -46,10 +47,45 @@ export default function OrderReviewModal({
   formData,
   setFormData,
   cartItems,
+  cart_id,
   subTotal,
 }: Props) {
   const [promo, setPromo] = useState<string>("");
-  console.log(cartItems);
+  const { mutate: couponMutation, isPending } = useApplyCoupon();
+  const [couponCode, setCouponCode] = useState<number | null>(null);
+  const [couponType, setCouponType] = useState<string>("");
+
+  const handleApplyCoupon = () => {
+    const payload = {
+      cart_id,
+      coupon_code: promo,
+    };
+
+    couponMutation(payload, {
+      onSuccess: (res: any) => {
+        if (res?.success) {
+          setCouponCode(+res?.data?.discount_amount);
+          setCouponType(res?.data?.discount_type);
+
+          // setFormData((prev: any) => ({
+          //   ...prev,
+          //   coupon_code: promo,
+          //   discount_amount: res.data.discount_amount,
+          //   discount_type: res.data.discount_type,
+          // }));
+        }
+      },
+    });
+  };
+
+  const discountAmount =
+    couponCode && couponType === "percentage"
+      ? (subTotal * couponCode) / 100
+      : couponCode && couponType === "fixed"
+        ? couponCode
+        : 0;
+
+  const totalAfterDiscount = Math.max(0, subTotal - discountAmount);
 
   return (
     <div className="">
@@ -121,21 +157,28 @@ export default function OrderReviewModal({
           <input
             type="text"
             value={promo}
+            readOnly={isPending}
             onChange={e => setPromo(e.target.value)}
-            className="h-full w-full block outline-none"
+            className="h-full w-full block outline-none read-only:opacity-50 read-only:animate-pulse"
             placeholder="Enter promo code (If have)"
           />
 
           {promo && (
-            <button className="text-accent-red hover:underline cursor-pointer">
-              Apply
+            <button
+              disabled={isPending}
+              onClick={handleApplyCoupon}
+              className="text-accent-red hover:underline cursor-pointer"
+            >
+              {isPending ? "Applying... " : "Apply"}
             </button>
           )}
         </p>
 
-        <p className="mt-2 text-xs text-primary-green font-semibold">
-          Promo applied
-        </p>
+        {couponCode && (
+          <p className="mt-2 text-xs text-primary-green font-semibold">
+            Promo applied
+          </p>
+        )}
       </div>
 
       {/* Terms */}
@@ -173,10 +216,16 @@ export default function OrderReviewModal({
             />
           ))}
 
-          <div className="flex justify-between text-sm">
-            <span>Promo discount (50% off)</span>
-            <span>-$00.00</span>
-          </div>
+          {discountAmount > 0 && (
+            <div className="flex justify-between text-sm">
+              <span>
+                Promo Discount{" "}
+                {couponType === "percentage" ? `(${couponCode}% off)` : ""}
+              </span>
+
+              <span>-${discountAmount.toFixed(2)}</span>
+            </div>
+          )}
         </div>
 
         <div className="my-4 border-t border-gray-400" />
@@ -187,7 +236,7 @@ export default function OrderReviewModal({
               Total
             </span>
             <span className="text-xl font-semibold text-secondary-black">
-              ${subTotal}
+              ${totalAfterDiscount.toFixed(2)}
             </span>
           </div>
 

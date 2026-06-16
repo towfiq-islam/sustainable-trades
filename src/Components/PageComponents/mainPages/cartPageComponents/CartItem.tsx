@@ -65,6 +65,8 @@ const CartItem = ({ item, subTotal }: CartProps) => {
   const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
   const [fulfillmentType, setFulfillmentType] = useState<string>("");
+  const [shippingMethod, setShippingMethod] = useState("");
+  const [taxData, setTaxData] = useState({});
 
   // Query + Mutation
   const { mutate: removeCartItemMutation, isPending: cartItemPending } =
@@ -223,6 +225,14 @@ const CartItem = ({ item, subTotal }: CartProps) => {
         <button
           onClick={() => {
             setFulfillmentType(item?.fulfillment_type);
+            setShippingMethod(
+              item?.shop?.user?.onboarded &&
+                (item?.fulfillment_type === "shipping" ||
+                  item?.fulfillment_type ===
+                    "arrange_local_pickup_and_shipping")
+                ? "proceed"
+                : "local",
+            );
             setShippingOptionsOpen(true);
             setCartId(item?.id);
           }}
@@ -243,6 +253,8 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           membershipType={item?.shop?.user?.membership?.membership_type}
           fulfillmentType={fulfillmentType}
           isConnected={item?.shop?.user?.onboarded}
+          shippingMethod={shippingMethod}
+          setShippingMethod={setShippingMethod}
           onProceed={() => {
             setShippingOptionsOpen(false);
             setShippingAddressOpen(true);
@@ -260,7 +272,9 @@ const CartItem = ({ item, subTotal }: CartProps) => {
         onClose={() => setShippingAddressOpen(false)}
       >
         <ShippingAddress
+          shippingMethod={shippingMethod}
           setFormData={setFormData}
+          setTaxData={setTaxData}
           cart_id={cartId}
           onNext={() => {
             setShippingAddressOpen(false);
@@ -276,6 +290,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           cartItems={item}
           subTotal={subTotal}
           cart_id={cartId}
+          taxData={taxData}
           onClose={() => {
             setOrderReviewModal(false);
             setShippingAddressOpen(true);

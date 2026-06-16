@@ -26,10 +26,14 @@ const ShippingAddress = ({
   onNext,
   setFormData,
   cart_id,
+  shippingMethod,
+  setTaxData,
 }: {
   onNext: () => void;
   setFormData: any;
   cart_id: number | null;
+  shippingMethod: any;
+  setTaxData: any;
 }) => {
   const { user } = useAuth();
   const { mutate: shippingTaxMutation, isPending } = useGetShippingTax();
@@ -39,15 +43,21 @@ const ShippingAddress = ({
   const handleShippingTax = () => {
     const payload = {
       cart_id,
-      // shipping_option:
-      //   shippingMethod === "proceed"
-      //     ? "proceed_to_shipping"
-      //     : "arrange_local_pickup",
+      shipping_option:
+        shippingMethod === "proceed"
+          ? "proceed_to_shipping"
+          : "arrange_local_pickup",
       country,
       state,
     };
 
-    shippingTaxMutation(payload);
+    shippingTaxMutation(payload, {
+      onSuccess: (res: any) => {
+        if (res?.success) {
+          setTaxData(res?.data);
+        }
+      },
+    });
   };
 
   const {

@@ -19,6 +19,7 @@ type Props = {
   cartItems: any;
   subTotal: number;
   cart_id: number | null;
+  taxData: any;
 };
 
 function OrderItem({
@@ -49,11 +50,13 @@ export default function OrderReviewModal({
   cartItems,
   cart_id,
   subTotal,
+  taxData,
 }: Props) {
   const [promo, setPromo] = useState<string>("");
   const { mutate: couponMutation, isPending } = useApplyCoupon();
   const [couponCode, setCouponCode] = useState<number | null>(null);
   const [couponType, setCouponType] = useState<string>("");
+  console.log(taxData);
 
   const handleApplyCoupon = () => {
     const payload = {
@@ -86,6 +89,11 @@ export default function OrderReviewModal({
         : 0;
 
   const totalAfterDiscount = Math.max(0, subTotal - discountAmount);
+  const total = Math.max(
+    0,
+    totalAfterDiscount + taxData?.calculated_tax + taxData?.shipping_cost,
+  );
+  console.log(total);
 
   return (
     <div className="">
@@ -216,16 +224,28 @@ export default function OrderReviewModal({
             />
           ))}
 
-          {discountAmount > 0 && (
-            <div className="flex justify-between text-sm">
-              <span>
-                Promo Discount{" "}
-                {couponType === "percentage" ? `(${couponCode}% off)` : ""}
-              </span>
+          <div className="space-y-2">
+            {discountAmount > 0 && (
+              <div className="flex justify-between text-sm">
+                <span>
+                  Promo Discount{" "}
+                  {couponType === "percentage" ? `(${couponCode}% off)` : ""}
+                </span>
 
-              <span>-${discountAmount.toFixed(2)}</span>
+                <span>-${discountAmount.toFixed(2)}</span>
+              </div>
+            )}
+
+            <div className="flex justify-between text-sm">
+              <span>Est. Sales Tax ({taxData?.tax_rate}%)</span>
+              <span>${taxData?.calculated_tax}</span>
             </div>
-          )}
+
+            <div className="flex justify-between text-sm">
+              <span>Shipping *</span>
+              <span>${taxData?.shipping_cost}</span>
+            </div>
+          </div>
         </div>
 
         <div className="my-4 border-t border-gray-400" />
@@ -236,7 +256,7 @@ export default function OrderReviewModal({
               Total
             </span>
             <span className="text-xl font-semibold text-secondary-black">
-              ${totalAfterDiscount.toFixed(2)}
+              ${total.toFixed(2)}
             </span>
           </div>
 

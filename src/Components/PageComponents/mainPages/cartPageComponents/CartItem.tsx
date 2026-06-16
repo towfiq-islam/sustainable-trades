@@ -261,6 +261,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
       >
         <ShippingAddress
           setFormData={setFormData}
+          cart_id={cartId}
           onNext={() => {
             setShippingAddressOpen(false);
             setOrderReviewModal(true);

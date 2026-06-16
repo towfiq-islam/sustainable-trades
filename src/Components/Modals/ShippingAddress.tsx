@@ -1,6 +1,9 @@
 "use client";
+import { useGetShippingTax } from "@/Hooks/api/dashboard_api";
+import useAuth from "@/Hooks/useAuth";
 import { useForm } from "react-hook-form";
-
+import { Country, State } from "country-state-city";
+import { useState } from "react";
 type FormData = {
   first_name: string;
   last_name: string;
@@ -15,24 +18,51 @@ type FormData = {
   shipping_option: string;
 };
 
+const allowedCountries = Country.getAllCountries().filter(
+  country => country.isoCode === "US" || country.isoCode === "CA",
+);
+
 const ShippingAddress = ({
   onNext,
   setFormData,
+  cart_id,
 }: {
   onNext: () => void;
   setFormData: any;
+  cart_id: number | null;
 }) => {
+  const { user } = useAuth();
+  const { mutate: shippingTaxMutation, isPending } = useGetShippingTax();
+  const [country, setCountry] = useState<any>(null);
+  const [state, setState] = useState<any>(null);
+
+  const handleShippingTax = () => {
+    const payload = {
+      cart_id,
+      // shipping_option:
+      //   shippingMethod === "proceed"
+      //     ? "proceed_to_shipping"
+      //     : "arrange_local_pickup",
+      country,
+      state,
+    };
+
+    shippingTaxMutation(payload);
+  };
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    if (data) {
-      setFormData(data);
-      onNext();
-    }
+    const countryName = Country.getCountryByCode(country)?.name || "";
+
+    const payload = { ...data, country: countryName, state };
+    setFormData(payload);
+    onNext();
   };
 
   return (
@@ -49,6 +79,7 @@ const ShippingAddress = ({
             <input
               type="text"
               className="form-input"
+              defaultValue={user?.first_name}
               placeholder="Jon"
               {...register("first_name", {
                 required: "First name is required",
@@ -64,6 +95,7 @@ const ShippingAddress = ({
               type="text"
               className="form-input"
               placeholder="Doe"
+              defaultValue={user?.last_name}
               {...register("last_name", { required: "Last name is required" })}
             />
             {errors.last_name && (
@@ -79,6 +111,7 @@ const ShippingAddress = ({
             <input
               type="email"
               className="form-input"
+              defaultValue={user?.email}
               {...register("email", { required: "Email is required" })}
               placeholder="example@mail.com"
             />
@@ -92,6 +125,7 @@ const ShippingAddress = ({
             <input
               type="tel"
               className="form-input"
+              defaultValue={user?.phone}
               {...register("phone", { required: "Phone is required" })}
               placeholder="+1 (000) 000-0000"
             />
@@ -101,109 +135,140 @@ const ShippingAddress = ({
           </div>
         </div>
 
-        {/* Country + Address */}
+        {/* Country + State */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="form-label">Country *</label>
-            <input
-              type="text"
+            <label className="block font-semibold text-secondary-black mb-2">
+              Country *
+            </label>
+
+            <select
+              value={country || ""}
+              {...register("country", {
+                required: "Country is required",
+              })}
               className="form-input"
-              {...register("country", { required: "Country is required" })}
-              placeholder="USA"
-            />
+              onChange={e => {
+                const selectedCountry = e.target.value;
+                setCountry(selectedCountry);
+                setState("");
+                setValue("country", selectedCountry, {
+                  shouldValidate: true,
+                });
+                setValue("state", "");
+              }}
+            >
+              <option value="">Select Country</option>
+              {allowedCountries.map(country => (
+                <option key={country.isoCode} value={country.isoCode}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+
             {errors.country && (
-              <p className="form-error">{errors.country.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.country.message}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="form-label">Address *</label>
-            <input
-              type="text"
+            <label className="block font-semibold text-secondary-black mb-2">
+              State *
+            </label>
+
+            <select
+              {...register("state", {
+                required: "State is required",
+              })}
               className="form-input"
-              {...register("address", { required: "Address is required" })}
-              placeholder="Texas, Austin"
-            />
-            {errors.address && (
-              <p className="form-error">{errors.address.message}</p>
+              value={state}
+              onChange={e => {
+                const selectedState = e.target.value;
+                setState(selectedState);
+                setValue("state", selectedState, {
+                  shouldValidate: true,
+                });
+                handleShippingTax();
+              }}
+            >
+              <option value="">Select State / Province</option>
+
+              {State.getStatesOfCountry(country).map(item => (
+                <option key={item.isoCode} value={item.name}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+
+            {errors.state && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.state.message}
+              </p>
             )}
           </div>
         </div>
 
-        {/* State + City */}
+        {/* City + Zip */}
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="form-label">State *</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="State"
-              {...register("state", { required: "State is required" })}
-            />
-            {errors.state && (
-              <p className="form-error">{errors.state.message}</p>
-            )}
-          </div>
-
           <div>
             <label className="form-label">City *</label>
             <input
               type="text"
               className="form-input"
               placeholder="Austin"
+              defaultValue={user?.city}
               {...register("city", { required: "City is required" })}
             />
             {errors.city && <p className="form-error">{errors.city.message}</p>}
           </div>
-        </div>
 
-        {/* Apt/Suite + Postal Code  */}
-        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="form-label">Zip Code *</label>
             <input
               type="text"
               className="form-input"
               placeholder="12345"
+              defaultValue={user?.postal_code}
               {...register("postal_code", { required: "Zip code is required" })}
             />
             {errors.postal_code && (
               <p className="form-error">{errors.postal_code.message}</p>
             )}
           </div>
-
-          <div>
-            <label className="form-label">Apt / Suite (Optional)</label>
-            <input
-              type="text"
-              className="form-input"
-              {...register("apt")}
-              placeholder="Apartment / Suite"
-            />
-          </div>
         </div>
 
-        {/* Shipping Option */}
+        {/* Apt/Suite */}
         <div>
-          <label className="form-label">Shipping Option *</label>
-          <select
+          <label className="form-label">Apt / Suite (Optional)</label>
+          <input
+            type="text"
             className="form-input"
-            {...register("shipping_option", {
-              required: "Payment method is required",
-            })}
-          >
-            <option value="">Select pickup option</option>
-            <option value="pickup">Pickup</option>
-            <option value="shipping">Shipping</option>
-          </select>
-          {errors.shipping_option && (
-            <p className="form-error">{errors.shipping_option.message}</p>
+            defaultValue={user?.apt}
+            {...register("apt")}
+            placeholder="Apartment / Suite"
+          />
+        </div>
+
+        {/* Address */}
+        <div>
+          <label className="form-label">Address *</label>
+          <textarea
+            className="form-input"
+            rows={2}
+            defaultValue={user?.street_address}
+            {...register("address", { required: "Address is required" })}
+            placeholder="Texas, Austin"
+          ></textarea>
+          {errors.address && (
+            <p className="form-error">{errors.address.message}</p>
           )}
         </div>
 
         {/* Button */}
         <button type="submit" className="primary_btn cursor-pointer">
-          Continue to Payment
+          Review Order
         </button>
       </form>
     </>

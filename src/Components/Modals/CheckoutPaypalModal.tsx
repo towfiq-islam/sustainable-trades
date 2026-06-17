@@ -42,8 +42,7 @@ const CheckoutPaypalModal = ({
       {
         onSuccess: (data: any) => {
           if (data?.success) {
-            queryClient.invalidateQueries("get-product-cart" as any);
-            onClose();
+            router.push("/dashboard/customer/orders");
           }
         },
       },
@@ -124,8 +123,7 @@ const CheckoutPaypalModal = ({
                 const orderData = await response.json();
                 if (orderData?.success) {
                   toast.success(orderData?.message);
-                  queryClient.invalidateQueries("get-product-cart" as any);
-                  onClose();
+                  router.push("/dashboard/customer/orders");
                 }
               } catch (error) {
                 console.error(error);

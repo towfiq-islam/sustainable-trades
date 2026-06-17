@@ -207,6 +207,7 @@ const OrderDetailsPage = () => {
                       className="rounded size-full object-cover"
                     />
                   </figure>
+
                   <div className="flex flex-col gap-1">
                     <h5 className="text-[16px] sm:text-[20px] font-bold text-black">
                       {item?.product?.product_name}
@@ -246,7 +247,8 @@ const OrderDetailsPage = () => {
               Get Help
             </Link>
 
-            {getSingleOrder?.data?.status === "awaiting_payment" && (
+            {(getSingleOrder?.data?.status === "awaiting_payment" ||
+              getSingleOrder?.data?.status === "pending") && (
               <button
                 onClick={() => setPaypalOpen(true)}
                 className="p-2 rounded-[8px] border border-[#BFBEBE] text-[14px] md:text-[16px]  font-normal cursor-pointer w-full md:w-[250px] hover:scale-105 duration-500 ease-in-out bg-primary-green text-white disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"

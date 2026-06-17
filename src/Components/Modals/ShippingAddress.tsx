@@ -4,6 +4,7 @@ import useAuth from "@/Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
+
 type FormData = {
   first_name: string;
   last_name: string;
@@ -66,7 +67,17 @@ const ShippingAddress = ({
       onSuccess: (res: any) => {
         if (res?.success) {
           setTaxData(res?.data);
-          const payload = { ...data, country: countryName, state };
+
+          const payload = {
+            ...data,
+            country: countryName,
+            state,
+            shipping_option:
+              shippingMethod === "proceed"
+                ? "proceed_to_shipping"
+                : "arrange_local_pickup",
+            payment_method: "paypal",
+          };
           setFormData(payload);
           onNext();
         }

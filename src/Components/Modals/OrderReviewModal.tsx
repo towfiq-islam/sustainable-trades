@@ -68,13 +68,10 @@ export default function OrderReviewModal({
         if (res?.success) {
           setCouponCode(+res?.data?.discount_amount);
           setCouponType(res?.data?.discount_type);
-
-          // setFormData((prev: any) => ({
-          //   ...prev,
-          //   coupon_code: promo,
-          //   discount_amount: res.data.discount_amount,
-          //   discount_type: res.data.discount_type,
-          // }));
+          setFormData((prev: any) => ({
+            ...prev,
+            coupon_code: promo,
+          }));
         }
       },
     });

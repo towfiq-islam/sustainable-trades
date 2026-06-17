@@ -3,7 +3,7 @@ import { useGetShippingTax } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 type FormData = {
   first_name: string;
   last_name: string;
@@ -27,38 +27,20 @@ const ShippingAddress = ({
   setFormData,
   cart_id,
   shippingMethod,
+  formData,
   setTaxData,
 }: {
   onNext: () => void;
+  formData: any;
   setFormData: any;
   cart_id: number | null;
   shippingMethod: any;
   setTaxData: any;
 }) => {
   const { user } = useAuth();
-  const { mutate: shippingTaxMutation, isPending } = useGetShippingTax();
+  const { mutateAsync: shippingTaxMutation, isPending } = useGetShippingTax();
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
-
-  const handleShippingTax = () => {
-    const payload = {
-      cart_id,
-      shipping_option:
-        shippingMethod === "proceed"
-          ? "proceed_to_shipping"
-          : "arrange_local_pickup",
-      country,
-      state,
-    };
-
-    shippingTaxMutation(payload, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          setTaxData(res?.data);
-        }
-      },
-    });
-  };
 
   const {
     register,
@@ -69,11 +51,33 @@ const ShippingAddress = ({
 
   const onSubmit = async (data: FormData) => {
     const countryName = Country.getCountryByCode(country)?.name || "";
+    const taxData = {
+      cart_id,
+      shipping_option:
+        shippingMethod === "proceed"
+          ? "proceed_to_shipping"
+          : "arrange_local_pickup",
+      country: countryName,
+      state,
+      address: data?.address,
+    };
 
-    const payload = { ...data, country: countryName, state };
-    setFormData(payload);
-    onNext();
+    shippingTaxMutation(taxData, {
+      onSuccess: (res: any) => {
+        if (res?.success) {
+          setTaxData(res?.data);
+          const payload = { ...data, country: countryName, state };
+          setFormData(payload);
+          onNext();
+        }
+      },
+    });
   };
+
+  useEffect(() => {
+    if (formData?.address) setValue("address", formData?.address);
+    if (formData?.country) setValue("country", formData.country);
+  }, [formData, setValue]);
 
   return (
     <>
@@ -200,11 +204,9 @@ const ShippingAddress = ({
                 setValue("state", selectedState, {
                   shouldValidate: true,
                 });
-                handleShippingTax();
               }}
             >
               <option value="">Select State / Province</option>
-
               {State.getStatesOfCountry(country).map(item => (
                 <option key={item.isoCode} value={item.name}>
                   {item.name}
@@ -268,9 +270,11 @@ const ShippingAddress = ({
             className="form-input"
             rows={2}
             defaultValue={user?.street_address}
-            {...register("address", { required: "Address is required" })}
             placeholder="Texas, Austin"
-          ></textarea>
+            {...register("address", {
+              required: "Address is required",
+            })}
+          />
           {errors.address && (
             <p className="form-error">{errors.address.message}</p>
           )}

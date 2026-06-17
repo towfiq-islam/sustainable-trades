@@ -1062,18 +1062,13 @@ export const useApplyCoupon = () => {
   });
 };
 
-// Apply Coupon
+// Calculate Tax
 export const useGetShippingTax = () => {
   return useClientApi({
     method: "post",
     key: ["shipping-data"],
     isPrivate: true,
     endpoint: "/api/cart/shipping/calculate",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },

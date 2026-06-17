@@ -175,7 +175,7 @@ const page = () => {
 
                       <td className="py-4 px-4">{order?.total_quantity}</td>
                       <td className="py-4 px-4">${order?.total_amount}</td>
-                      <td className="py-4 px-4">Paypal</td>
+                      <td className="py-4 px-4">{order?.payment_method}</td>
                       <td className="py-4 px-4">
                         <span
                           className={`min-w-[100px] capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${

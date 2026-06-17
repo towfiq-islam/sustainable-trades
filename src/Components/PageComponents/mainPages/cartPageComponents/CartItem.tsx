@@ -274,6 +274,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
         <ShippingAddress
           shippingMethod={shippingMethod}
           setFormData={setFormData}
+          formData={formData}
           setTaxData={setTaxData}
           cart_id={cartId}
           onNext={() => {

@@ -56,7 +56,6 @@ export default function OrderReviewModal({
   const { mutate: couponMutation, isPending } = useApplyCoupon();
   const [couponCode, setCouponCode] = useState<number | null>(null);
   const [couponType, setCouponType] = useState<string>("");
-  console.log(taxData);
 
   const handleApplyCoupon = () => {
     const payload = {
@@ -93,7 +92,6 @@ export default function OrderReviewModal({
     0,
     totalAfterDiscount + taxData?.calculated_tax + taxData?.shipping_cost,
   );
-  console.log(total);
 
   return (
     <div className="">

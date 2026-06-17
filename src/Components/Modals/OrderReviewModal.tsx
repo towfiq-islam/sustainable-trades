@@ -1,6 +1,6 @@
 "use client";
+import { useApplyCoupon } from "@/Hooks/api/dashboard_api";
 import { useState } from "react";
-
 
 type Item = {
   id: number;
@@ -18,6 +18,8 @@ type Props = {
   formData: any;
   cartItems: any;
   subTotal: number;
+  cart_id: number | null;
+  taxData: any;
 };
 
 function OrderItem({
@@ -46,10 +48,47 @@ export default function OrderReviewModal({
   formData,
   setFormData,
   cartItems,
+  cart_id,
   subTotal,
+  taxData,
 }: Props) {
   const [promo, setPromo] = useState<string>("");
-  console.log(cartItems);
+  const { mutate: couponMutation, isPending } = useApplyCoupon();
+  const [couponCode, setCouponCode] = useState<number | null>(null);
+  const [couponType, setCouponType] = useState<string>("");
+
+  const handleApplyCoupon = () => {
+    const payload = {
+      cart_id,
+      coupon_code: promo,
+    };
+
+    couponMutation(payload, {
+      onSuccess: (res: any) => {
+        if (res?.success) {
+          setCouponCode(+res?.data?.discount_amount);
+          setCouponType(res?.data?.discount_type);
+          setFormData((prev: any) => ({
+            ...prev,
+            coupon_code: promo,
+          }));
+        }
+      },
+    });
+  };
+
+  const discountAmount =
+    couponCode && couponType === "percentage"
+      ? (subTotal * couponCode) / 100
+      : couponCode && couponType === "fixed"
+        ? couponCode
+        : 0;
+
+  const totalAfterDiscount = Math.max(0, subTotal - discountAmount);
+  const total = Math.max(
+    0,
+    totalAfterDiscount + taxData?.calculated_tax + taxData?.shipping_cost,
+  );
 
   return (
     <div className="">
@@ -121,21 +160,28 @@ export default function OrderReviewModal({
           <input
             type="text"
             value={promo}
+            readOnly={isPending}
             onChange={e => setPromo(e.target.value)}
-            className="h-full w-full block outline-none"
+            className="h-full w-full block outline-none read-only:opacity-50 read-only:animate-pulse"
             placeholder="Enter promo code (If have)"
           />
 
           {promo && (
-            <button className="text-accent-red hover:underline cursor-pointer">
-              Apply
+            <button
+              disabled={isPending}
+              onClick={handleApplyCoupon}
+              className="text-accent-red hover:underline cursor-pointer"
+            >
+              {isPending ? "Applying... " : "Apply"}
             </button>
           )}
         </p>
 
-        <p className="mt-2 text-xs text-primary-green font-semibold">
-          Promo applied
-        </p>
+        {couponCode && (
+          <p className="mt-2 text-xs text-primary-green font-semibold">
+            Promo applied
+          </p>
+        )}
       </div>
 
       {/* Terms */}
@@ -173,9 +219,27 @@ export default function OrderReviewModal({
             />
           ))}
 
-          <div className="flex justify-between text-sm">
-            <span>Promo discount (50% off)</span>
-            <span>-$00.00</span>
+          <div className="space-y-2">
+            {discountAmount > 0 && (
+              <div className="flex justify-between text-sm">
+                <span>
+                  Promo Discount{" "}
+                  {couponType === "percentage" ? `(${couponCode}% off)` : ""}
+                </span>
+
+                <span>-${discountAmount.toFixed(2)}</span>
+              </div>
+            )}
+
+            <div className="flex justify-between text-sm">
+              <span>Est. Sales Tax ({taxData?.tax_rate}%)</span>
+              <span>${taxData?.calculated_tax}</span>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span>Shipping *</span>
+              <span>${taxData?.shipping_cost}</span>
+            </div>
           </div>
         </div>
 
@@ -187,7 +251,7 @@ export default function OrderReviewModal({
               Total
             </span>
             <span className="text-xl font-semibold text-secondary-black">
-              ${subTotal}
+              ${total.toFixed(2)}
             </span>
           </div>
 

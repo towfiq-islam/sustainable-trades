@@ -151,7 +151,7 @@ const Page = () => {
       content: <></>,
       isModal: true,
     },
-    ...(singleOrder?.data?.shipping_option === "local_pickup"
+    ...(singleOrder?.data?.status === "local_pickup_requested"
       ? [
           {
             title: "Arrange Local Pickup",
@@ -171,7 +171,7 @@ const Page = () => {
   }
 
   const currentStatus = enabledSteps?.[enabledSteps.length - 1];
-  
+
   return (
     <>
       {/* Back Btn */}

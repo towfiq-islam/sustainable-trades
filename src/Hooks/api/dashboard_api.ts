@@ -253,7 +253,8 @@ export const useTaxes = () => {
     endpoint: "/api/shop-taxes",
     onSuccess: (data: any) => {
       if (data?.success) {
-        toast.success(data?.message || "Saving tax rate");
+        toast.success("Tax rate saved successfully");
+        queryClient.invalidateQueries("get-all-taxes" as any);
         queryClient.invalidateQueries("user" as any);
       }
     },
@@ -1040,5 +1041,36 @@ export const getAllTaxes = () => {
     isPrivate: true,
     key: ["get-all-taxes"],
     endpoint: "/api/shop-taxes-list",
+  });
+};
+
+// Apply Coupon
+export const useApplyCoupon = () => {
+  return useClientApi({
+    method: "post",
+    key: ["apply-coupon"],
+    isPrivate: true,
+    endpoint: `/api/apply-coupon`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Calculate Tax
+export const useGetShippingTax = () => {
+  return useClientApi({
+    method: "post",
+    key: ["shipping-data"],
+    isPrivate: true,
+    endpoint: "/api/cart/shipping/calculate",
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
   });
 };

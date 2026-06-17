@@ -61,10 +61,12 @@ const CartItem = ({ item, subTotal }: CartProps) => {
     useState<boolean>(false);
   const [formData, setFormData] = useState<any>({});
   const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
-  // const [successOpen, setSuccessOpen] = useState<boolean>(false);
+  const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
   const [fulfillmentType, setFulfillmentType] = useState<string>("");
+  const [shippingMethod, setShippingMethod] = useState("");
+  const [taxData, setTaxData] = useState({});
 
   // Query + Mutation
   const { mutate: removeCartItemMutation, isPending: cartItemPending } =
@@ -223,6 +225,14 @@ const CartItem = ({ item, subTotal }: CartProps) => {
         <button
           onClick={() => {
             setFulfillmentType(item?.fulfillment_type);
+            setShippingMethod(
+              item?.shop?.user?.onboarded &&
+                (item?.fulfillment_type === "shipping" ||
+                  item?.fulfillment_type ===
+                    "arrange_local_pickup_and_shipping")
+                ? "proceed"
+                : "local",
+            );
             setShippingOptionsOpen(true);
             setCartId(item?.id);
           }}
@@ -243,13 +253,15 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           membershipType={item?.shop?.user?.membership?.membership_type}
           fulfillmentType={fulfillmentType}
           isConnected={item?.shop?.user?.onboarded}
+          shippingMethod={shippingMethod}
+          setShippingMethod={setShippingMethod}
+          setSuccessOpen={setSuccessOpen}
           onProceed={() => {
             setShippingOptionsOpen(false);
             setShippingAddressOpen(true);
           }}
           onSuccess={() => {
             setShippingOptionsOpen(false);
-            // setSuccessOpen(true);
           }}
           onClose={() => setShippingOptionsOpen(false)}
         />
@@ -260,7 +272,11 @@ const CartItem = ({ item, subTotal }: CartProps) => {
         onClose={() => setShippingAddressOpen(false)}
       >
         <ShippingAddress
+          shippingMethod={shippingMethod}
           setFormData={setFormData}
+          formData={formData}
+          setTaxData={setTaxData}
+          cart_id={cartId}
           onNext={() => {
             setShippingAddressOpen(false);
             setOrderReviewModal(true);
@@ -274,6 +290,8 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           formData={formData}
           cartItems={item}
           subTotal={subTotal}
+          cart_id={cartId}
+          taxData={taxData}
           onClose={() => {
             setOrderReviewModal(false);
             setShippingAddressOpen(true);
@@ -287,6 +305,10 @@ const CartItem = ({ item, subTotal }: CartProps) => {
 
       <Modal open={paypalOpen} onClose={() => setPaypalOpen(false)}>
         <CheckoutPaypalModal cart_id={cartId} formData={formData} />
+      </Modal>
+
+      <Modal open={successOpen} onClose={() => setSuccessOpen(false)}>
+        <SuccessModal />
       </Modal>
     </div>
   );

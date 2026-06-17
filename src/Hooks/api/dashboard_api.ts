@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosSecure } from "../useAxiosSecure";
 import useAuth from "../useAuth";
 
@@ -61,9 +61,6 @@ export const getallListings = (status?: string, short_by?: string) => {
     key: ["get-all-listings", status, short_by],
     params: { status, short_by },
     endpoint: "/api/products",
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -247,6 +244,8 @@ export const useCreateDiscount = () => {
 
 // Create Taxes Hooks
 export const useTaxes = () => {
+  const queryClient = useQueryClient();
+
   return useClientApi({
     method: "post",
     key: ["save-taxes"],
@@ -254,7 +253,9 @@ export const useTaxes = () => {
     endpoint: "/api/shop-taxes",
     onSuccess: (data: any) => {
       if (data?.success) {
-        toast.success(data?.message || "Saving tax rate");
+        toast.success("Tax rate saved successfully");
+        queryClient.invalidateQueries("get-all-taxes" as any);
+        queryClient.invalidateQueries("user" as any);
       }
     },
     onError: (err: any) => {
@@ -271,9 +272,6 @@ export const getDiscount = (status: string) => {
     isPrivate: true,
     params: { status },
     endpoint: "/api/discounts",
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -355,9 +353,6 @@ export const useNotification = (page?: string) => {
     isPrivate: true,
     endpoint: "/api/notifications",
     params: { page },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -472,9 +467,6 @@ export const getMyOrders = (status?: string) => {
     isPrivate: true,
     endpoint: "/api/my-orders",
     params: { status },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -504,9 +496,6 @@ export const getCustomerReviews = (page?: string) => {
     key: ["get-customer-reviews", page],
     endpoint: "/api/my-reviews",
     params: { page },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -517,9 +506,6 @@ export const getMyOrderDetails = (order_id: number) => {
     isPrivate: true,
     key: ["get-order-details", order_id],
     endpoint: `/api/my-order/${order_id}`,
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -573,9 +559,6 @@ export const getOrders = (status: string, page: string) => {
     isPrivate: true,
     endpoint: "/api/orders",
     params: { status, page },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -697,9 +680,6 @@ export const getPayments = (status: string) => {
     isPrivate: true,
     endpoint: "/api/payment-report",
     params: { status },
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -710,9 +690,6 @@ export const getDashboardHomeData = () => {
     key: ["dashboard-home-data"],
     isPrivate: true,
     endpoint: "/api/vendor/dashboard",
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -723,9 +700,6 @@ export const getVisitorData = () => {
     key: ["visitor-data"],
     isPrivate: true,
     endpoint: "/api/vendor/dashboard/visits",
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -736,9 +710,6 @@ export const getOrderData = () => {
     key: ["order-data"],
     isPrivate: true,
     endpoint: "/api/vendor/dashboard/order",
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -749,9 +720,6 @@ export const getListingData = () => {
     key: ["listing-data"],
     isPrivate: true,
     endpoint: "/api/vendor/dashboard/listings",
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -762,9 +730,6 @@ export const getTradesData = () => {
     key: ["trades-data"],
     isPrivate: true,
     endpoint: "/api/vendor/dashboard/trades",
-    queryOptions: {
-      retry: false,
-    },
   });
 };
 
@@ -899,6 +864,8 @@ export const useDisconnectShippo = () => {
 
 // Add Sales Tax
 export const useAddSalesTax = () => {
+  const queryClient = useQueryClient();
+
   return useClientApi({
     method: "post",
     key: ["add-sales-tax"],
@@ -907,6 +874,7 @@ export const useAddSalesTax = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
+        queryClient.invalidateQueries("user" as any);
       }
     },
     onError: (err: any) => {
@@ -1060,6 +1028,47 @@ export const useLocalPickupPayment = (token: any) => {
         toast.success(data?.message);
       }
     },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Get All Taxes
+export const getAllTaxes = () => {
+  return useClientApi({
+    method: "get",
+    isPrivate: true,
+    key: ["get-all-taxes"],
+    endpoint: "/api/shop-taxes-list",
+  });
+};
+
+// Apply Coupon
+export const useApplyCoupon = () => {
+  return useClientApi({
+    method: "post",
+    key: ["apply-coupon"],
+    isPrivate: true,
+    endpoint: `/api/apply-coupon`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Calculate Tax
+export const useGetShippingTax = () => {
+  return useClientApi({
+    method: "post",
+    key: ["shipping-data"],
+    isPrivate: true,
+    endpoint: "/api/cart/shipping/calculate",
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },

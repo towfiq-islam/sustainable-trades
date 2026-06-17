@@ -55,7 +55,11 @@ const PaymentOptions = () => {
           : !cartData?.data || cartData?.data?.length === 0
             ? "No Cart Found"
             : cartData?.data?.cart?.map((item: any) => (
-                <CartItem key={item?.id} item={item} />
+                <CartItem
+                  subTotal={cartData?.data?.total_price}
+                  key={item?.id}
+                  item={item}
+                />
               ))}
       </div>
     </section>

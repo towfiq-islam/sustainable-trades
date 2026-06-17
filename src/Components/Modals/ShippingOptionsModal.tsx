@@ -26,6 +26,7 @@ type ShippingOptionsProps = {
   onClose: () => void;
   shippingMethod: string;
   setShippingMethod: React.Dispatch<React.SetStateAction<string>>;
+  setSuccessOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ShippingOptionsModal = ({
@@ -38,6 +39,7 @@ const ShippingOptionsModal = ({
   isConnected,
   shippingMethod,
   setShippingMethod,
+  setSuccessOpen,
 }: ShippingOptionsProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -78,6 +80,7 @@ const ShippingOptionsModal = ({
         toast.success(res.message);
         queryClient.invalidateQueries("get-product-cart" as any);
         onClose();
+        setSuccessOpen(true);
       },
     });
   };

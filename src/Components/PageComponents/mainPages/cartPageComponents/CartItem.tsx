@@ -61,7 +61,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
     useState<boolean>(false);
   const [formData, setFormData] = useState<any>({});
   const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
-  // const [successOpen, setSuccessOpen] = useState<boolean>(false);
+  const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
   const [fulfillmentType, setFulfillmentType] = useState<string>("");
@@ -255,13 +255,13 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           isConnected={item?.shop?.user?.onboarded}
           shippingMethod={shippingMethod}
           setShippingMethod={setShippingMethod}
+          setSuccessOpen={setSuccessOpen}
           onProceed={() => {
             setShippingOptionsOpen(false);
             setShippingAddressOpen(true);
           }}
           onSuccess={() => {
             setShippingOptionsOpen(false);
-            // setSuccessOpen(true);
           }}
           onClose={() => setShippingOptionsOpen(false)}
         />
@@ -305,6 +305,10 @@ const CartItem = ({ item, subTotal }: CartProps) => {
 
       <Modal open={paypalOpen} onClose={() => setPaypalOpen(false)}>
         <CheckoutPaypalModal cart_id={cartId} formData={formData} />
+      </Modal>
+
+      <Modal open={successOpen} onClose={() => setSuccessOpen(false)}>
+        <SuccessModal />
       </Modal>
     </div>
   );

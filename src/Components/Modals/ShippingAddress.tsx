@@ -75,8 +75,28 @@ const ShippingAddress = ({
   };
 
   useEffect(() => {
-    if (formData?.address) setValue("address", formData?.address);
-    if (formData?.country) setValue("country", formData.country);
+    if (formData?.first_name) setValue("first_name", formData?.first_name);
+    if (formData?.last_name) setValue("last_name", formData?.last_name);
+    if (formData?.email) setValue("email", formData?.email);
+    if (formData?.phone) setValue("phone", formData?.phone);
+    if (formData?.city) setValue("city", formData?.city);
+    if (formData?.postal_code) setValue("postal_code", formData?.postal_code);
+    if (formData?.apt) setValue("apt", formData?.apt);
+    if (formData?.address) setValue("address", formData.address);
+
+    if (formData?.country) {
+      const countryCode =
+        Country.getAllCountries().find(
+          c => c.name === formData.country || c.isoCode === formData.country,
+        )?.isoCode || "";
+      setCountry(countryCode);
+      setValue("country", countryCode);
+    }
+
+    if (formData?.state) {
+      setState(formData.state);
+      setValue("state", formData.state);
+    }
   }, [formData, setValue]);
 
   return (
@@ -281,7 +301,11 @@ const ShippingAddress = ({
         </div>
 
         {/* Button */}
-        <button type="submit" className="primary_btn cursor-pointer">
+        <button
+          type="submit"
+          disabled={isPending}
+          className="primary_btn cursor-pointer disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-70"
+        >
           Review Order
         </button>
       </form>

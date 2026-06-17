@@ -24,6 +24,9 @@ type ShippingOptionsProps = {
   onProceed: () => void;
   onSuccess: () => void;
   onClose: () => void;
+  shippingMethod: string;
+  setShippingMethod: React.Dispatch<React.SetStateAction<string>>;
+  setSuccessOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ShippingOptionsModal = ({
@@ -34,18 +37,13 @@ const ShippingOptionsModal = ({
   onProceed,
   onClose,
   isConnected,
+  shippingMethod,
+  setShippingMethod,
+  setSuccessOpen,
 }: ShippingOptionsProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [shippingMethod, setShippingMethod] = useState(
-    isConnected &&
-      (fulfillmentType === "shipping" ||
-        fulfillmentType === "arrange_local_pickup_and_shipping")
-      ? "proceed"
-      : "local",
-  );
-
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
   const { mutate: localPickupForPro, isPending: isPicking } =
     useLocalPickupPro(cart_id);
@@ -82,6 +80,7 @@ const ShippingOptionsModal = ({
         toast.success(res.message);
         queryClient.invalidateQueries("get-product-cart" as any);
         onClose();
+        setSuccessOpen(true);
       },
     });
   };

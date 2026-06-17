@@ -13,6 +13,7 @@ import ShippingAddress from "@/Components/Modals/ShippingAddress";
 import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
+import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
 
 interface CartItem {
   id: number;
@@ -48,21 +49,24 @@ interface CartItem {
 
 interface CartProps {
   item: CartItem;
-  setCartList?: React.Dispatch<React.SetStateAction<any[]>>;
+  subTotal: number;
 }
 
-const CartItem = ({ item, setCartList }: CartProps) => {
+const CartItem = ({ item, subTotal }: CartProps) => {
   // States
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
+  const [orderReviewModal, setOrderReviewModal] = useState<boolean>(false);
   const [shippingAddressOpen, setShippingAddressOpen] =
     useState<boolean>(false);
-  const [formData, setFormData] = useState<any>([]);
+  const [formData, setFormData] = useState<any>({});
   const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
-  // const [successOpen, setSuccessOpen] = useState<boolean>(false);
+  const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
   const [fulfillmentType, setFulfillmentType] = useState<string>("");
+  const [shippingMethod, setShippingMethod] = useState("");
+  const [taxData, setTaxData] = useState({});
 
   // Query + Mutation
   const { mutate: removeCartItemMutation, isPending: cartItemPending } =
@@ -221,6 +225,14 @@ const CartItem = ({ item, setCartList }: CartProps) => {
         <button
           onClick={() => {
             setFulfillmentType(item?.fulfillment_type);
+            setShippingMethod(
+              item?.shop?.user?.onboarded &&
+                (item?.fulfillment_type === "shipping" ||
+                  item?.fulfillment_type ===
+                    "arrange_local_pickup_and_shipping")
+                ? "proceed"
+                : "local",
+            );
             setShippingOptionsOpen(true);
             setCartId(item?.id);
           }}
@@ -241,13 +253,15 @@ const CartItem = ({ item, setCartList }: CartProps) => {
           membershipType={item?.shop?.user?.membership?.membership_type}
           fulfillmentType={fulfillmentType}
           isConnected={item?.shop?.user?.onboarded}
+          shippingMethod={shippingMethod}
+          setShippingMethod={setShippingMethod}
+          setSuccessOpen={setSuccessOpen}
           onProceed={() => {
             setShippingOptionsOpen(false);
             setShippingAddressOpen(true);
           }}
           onSuccess={() => {
             setShippingOptionsOpen(false);
-            // setSuccessOpen(true);
           }}
           onClose={() => setShippingOptionsOpen(false)}
         />
@@ -258,9 +272,32 @@ const CartItem = ({ item, setCartList }: CartProps) => {
         onClose={() => setShippingAddressOpen(false)}
       >
         <ShippingAddress
+          shippingMethod={shippingMethod}
           setFormData={setFormData}
+          formData={formData}
+          setTaxData={setTaxData}
+          cart_id={cartId}
           onNext={() => {
             setShippingAddressOpen(false);
+            setOrderReviewModal(true);
+          }}
+        />
+      </Modal>
+
+      <Modal open={orderReviewModal} onClose={() => setOrderReviewModal(false)}>
+        <OrderReviewModal
+          setFormData={setFormData}
+          formData={formData}
+          cartItems={item}
+          subTotal={subTotal}
+          cart_id={cartId}
+          taxData={taxData}
+          onClose={() => {
+            setOrderReviewModal(false);
+            setShippingAddressOpen(true);
+          }}
+          onProceed={() => {
+            setOrderReviewModal(false);
             setPaypalOpen(true);
           }}
         />
@@ -268,6 +305,10 @@ const CartItem = ({ item, setCartList }: CartProps) => {
 
       <Modal open={paypalOpen} onClose={() => setPaypalOpen(false)}>
         <CheckoutPaypalModal cart_id={cartId} formData={formData} />
+      </Modal>
+
+      <Modal open={successOpen} onClose={() => setSuccessOpen(false)}>
+        <SuccessModal />
       </Modal>
     </div>
   );

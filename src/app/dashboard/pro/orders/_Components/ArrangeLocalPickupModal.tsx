@@ -1,6 +1,7 @@
 import { useArrangeLocalPickupAddress } from "@/Hooks/api/dashboard_api";
 import { useForm } from "react-hook-form";
-
+import { Country, State } from "country-state-city";
+import { useState } from "react";
 type FormData = {
   first_name: string;
   last_name: string;
@@ -15,6 +16,10 @@ type FormData = {
   shipping_option: string;
 };
 
+const allowedCountries = Country.getAllCountries().filter(
+  country => country.isoCode === "US" || country.isoCode === "CA",
+);
+
 const ArrangeLocalPickupModal = ({
   order_id,
   onClose,
@@ -22,11 +27,14 @@ const ArrangeLocalPickupModal = ({
   order_id: number;
   onClose: () => void;
 }) => {
+  const [country, setCountry] = useState<any>(null);
+  const [state, setState] = useState<any>(null);
   const { mutateAsync: localPickupMutation, isPending } =
     useArrangeLocalPickupAddress(order_id);
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -106,50 +114,81 @@ const ArrangeLocalPickupModal = ({
           </div>
         </div> */}
 
-        {/* Country + Address */}
+        {/* Country + State */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="form-label">Country *</label>
-            <input
-              type="text"
+            <label className="block font-semibold text-secondary-black mb-2">
+              Country *
+            </label>
+
+            <select
+              value={country || ""}
+              {...register("country", {
+                required: "Country is required",
+              })}
               className="form-input"
-              {...register("country", { required: "Country is required" })}
-              placeholder="USA"
-            />
+              onChange={e => {
+                const selectedCountry = e.target.value;
+                setCountry(selectedCountry);
+                setState("");
+                setValue("country", selectedCountry, {
+                  shouldValidate: true,
+                });
+                setValue("state", "");
+              }}
+            >
+              <option value="">Select Country</option>
+              {allowedCountries.map(country => (
+                <option key={country.isoCode} value={country.isoCode}>
+                  {country.name}
+                </option>
+              ))}
+            </select>
+
             {errors.country && (
-              <p className="form-error">{errors.country.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.country.message}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="form-label">Address *</label>
-            <input
-              type="text"
+            <label className="block font-semibold text-secondary-black mb-2">
+              State *
+            </label>
+
+            <select
+              {...register("state", {
+                required: "State is required",
+              })}
               className="form-input"
-              {...register("address", { required: "Address is required" })}
-              placeholder="Texas, Austin"
-            />
-            {errors.address && (
-              <p className="form-error">{errors.address.message}</p>
+              value={state}
+              onChange={e => {
+                const selectedState = e.target.value;
+                setState(selectedState);
+                setValue("state", selectedState, {
+                  shouldValidate: true,
+                });
+              }}
+            >
+              <option value="">Select State / Province</option>
+              {State.getStatesOfCountry(country).map(item => (
+                <option key={item.isoCode} value={item.name}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+
+            {errors.state && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.state.message}
+              </p>
             )}
           </div>
         </div>
 
-        {/* State + City */}
+        {/* City + Zip code */}
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="form-label">State *</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="State"
-              {...register("state", { required: "State is required" })}
-            />
-            {errors.state && (
-              <p className="form-error">{errors.state.message}</p>
-            )}
-          </div>
-
           <div>
             <label className="form-label">City *</label>
             <input
@@ -160,10 +199,7 @@ const ArrangeLocalPickupModal = ({
             />
             {errors.city && <p className="form-error">{errors.city.message}</p>}
           </div>
-        </div>
 
-        {/* Apt/Suite + Postal Code  */}
-        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="form-label">Zip Code *</label>
             <input
@@ -176,16 +212,33 @@ const ArrangeLocalPickupModal = ({
               <p className="form-error">{errors.postal_code.message}</p>
             )}
           </div>
+        </div>
 
-          <div>
-            <label className="form-label">Apt / Suite (Optional)</label>
-            <input
-              type="text"
-              className="form-input"
-              {...register("apt")}
-              placeholder="Apartment / Suite"
-            />
-          </div>
+        {/* Apt/Suite */}
+        <div>
+          <label className="form-label">Apt / Suite (Optional)</label>
+          <input
+            type="text"
+            className="form-input"
+            {...register("apt")}
+            placeholder="Apartment / Suite"
+          />
+        </div>
+
+        {/* Address */}
+        <div>
+          <label className="form-label">Address *</label>
+          <textarea
+            className="form-input"
+            rows={2}
+            placeholder="Texas, Austin"
+            {...register("address", {
+              required: "Address is required",
+            })}
+          />
+          {errors.address && (
+            <p className="form-error">{errors.address.message}</p>
+          )}
         </div>
 
         {/* Button */}

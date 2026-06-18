@@ -1,10 +1,10 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Lato } from "next/font/google";
-import { Toaster } from "react-hot-toast";
 import AosProvider from "@/Provider/AosProvider/AosProvider";
 import AuthProvider from "@/Provider/AuthProvider/AuthProvider";
 import QueryProvider from "@/Provider/QueryProvider/QueryProvider";
+import ToastProvider from "@/Provider/ToastProvider/ToastProvider";
 
 // Fonts
 const lato = Lato({
@@ -34,10 +34,9 @@ export default async function RootLayout({
         <QueryProvider>
           <AuthProvider>
             <AosProvider>
-              <Toaster />
+              <ToastProvider />
               {children}
             </AosProvider>
-            <Toaster />
           </AuthProvider>
         </QueryProvider>
       </body>

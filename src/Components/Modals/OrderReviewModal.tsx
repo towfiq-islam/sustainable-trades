@@ -232,13 +232,13 @@ export default function OrderReviewModal({
             )}
 
             <div className="flex justify-between text-sm">
-              <span>Est. Sales Tax ({taxData?.tax_rate}%)</span>
-              <span>${taxData?.calculated_tax}</span>
+              <span>Est. Sales Tax ({taxData?.tax_rate?.toFixed(2)}%)</span>
+              <span>${taxData?.calculated_tax?.toFixed(2)}</span>
             </div>
 
             <div className="flex justify-between text-sm">
               <span>Shipping *</span>
-              <span>${taxData?.shipping_cost}</span>
+              <span>${taxData?.shipping_cost?.toFixed(2)}</span>
             </div>
           </div>
         </div>

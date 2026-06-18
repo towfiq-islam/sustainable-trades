@@ -61,7 +61,7 @@ const ShippingAddress = ({
           : "arrange_local_pickup",
       country: countryName,
       state,
-      address: data?.address,
+      address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
     };
 
     shippingTaxMutation(taxData, {
@@ -194,7 +194,7 @@ const ShippingAddress = ({
           <input
             className="form-input"
             defaultValue={user?.street_address}
-            placeholder="Texas, Austin"
+            placeholder="e.g. 200 Spectrum Center Dr"
             {...register("address", {
               required: "Address is required",
             })}

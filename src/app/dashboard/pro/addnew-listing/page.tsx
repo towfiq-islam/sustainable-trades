@@ -18,6 +18,7 @@ import {
   getProductSubCategoriesClient,
 } from "@/Hooks/api/cms_api";
 import { useRouter } from "next/navigation";
+import { MdInfo } from "react-icons/md";
 
 export type FormData = {
   shop_info_id: string | number;
@@ -197,17 +198,21 @@ const CreateListing = () => {
     const hasShippingCalculator = user?.shop_info?.shipping_setting !== null;
 
     if (!hasPaymentProcessor) {
-      toast.error(
-        "Please connect a payment processor before enabling shipping.",
-      );
+      toast("Please connect a payment processor before enabling shipping.", {
+        icon: <MdInfo className="text-4xl text-primary-red" />,
+      });
       setValue("fulfillment", "");
       return;
     }
 
     if (!hasShippingCalculator) {
-      toast.error(
+      toast(
         "Please configure a shipping calculator (Flat Rate, By Weight, or Shippo) before enabling shipping.",
+        {
+          icon: <MdInfo className="text-4xl text-primary-red" />,
+        },
       );
+
       setValue("fulfillment", "");
       return;
     }

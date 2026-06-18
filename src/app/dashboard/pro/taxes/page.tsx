@@ -12,6 +12,8 @@ import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
 import { FaLightbulb } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
+import { FiEye } from "react-icons/fi";
+import { IoEyeOffOutline } from "react-icons/io5";
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
@@ -35,6 +37,7 @@ type TaxForm = {
 export default function TaxRatePage() {
   const { user } = useAuth();
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [show, setShow] = useState(false);
   const [activeTab, setActiveTab] = useState<"manual" | "automatic">("manual");
   const { mutate, isPending } = useTaxes();
   const { mutate: addSalesTaxMutate, isPending: isAddingSalesTax } =
@@ -43,7 +46,7 @@ export default function TaxRatePage() {
   const [state, setState] = useState<any>(null);
   const { data: taxData } = getSalesTaxData();
   const { data: allTaxes } = getAllTaxes();
-  const [apiKey, setApiKey] = useState(taxData?.data?.ziptax_api_key || "");
+  const [apiKey, setApiKey] = useState("");
   const [chargeOnServices, setChargeOnServices] = useState(true);
   const [chargeOnShipping, setChargeOnShipping] = useState(false);
   const [states, setStates] = useState(taxData?.data?.states || []);
@@ -128,6 +131,10 @@ export default function TaxRatePage() {
       setChargeOnShipping(allTaxes.data.is_shipping);
     }
   }, [allTaxes, reset]);
+
+  useEffect(() => {
+    setApiKey(taxData?.data?.ziptax_api_key || "");
+  }, [taxData]);
 
   return (
     <section>
@@ -553,13 +560,21 @@ export default function TaxRatePage() {
                   ZipTax API Key
                 </label>
 
-                <input
-                  type="text"
-                  value={apiKey}
-                  onChange={e => setApiKey(e.target.value)}
-                  placeholder="Enter ZipTax API Key"
-                  className="w-full h-12 px-4 border rounded-lg"
-                />
+                <div className="relative">
+                  <input
+                    type={show ? "text" : "password"}
+                    value={apiKey}
+                    onChange={e => setApiKey(e.target.value)}
+                    placeholder="Enter ZipTax API Key"
+                    className="w-full h-12 px-4 pr-9 border rounded-lg"
+                  />
+                  <button
+                    onClick={() => setShow(!show)}
+                    className="text-xl absolute top-3.5 right-3 cursor-pointer"
+                  >
+                    {show ? <FiEye /> : <IoEyeOffOutline />}
+                  </button>
+                </div>
 
                 <p className="text-sm text-gray-500 mt-2">
                   🔒 Your API key is secure and encrypted.

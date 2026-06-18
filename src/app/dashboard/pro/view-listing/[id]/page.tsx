@@ -21,10 +21,10 @@ import { PuffLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
 
-// Define types for the API response and error
 interface UpdateProductResponse {
   success: boolean;
   message: string;
+  code: number;
   data: {
     id: number;
     shop_info_id: number;
@@ -54,7 +54,6 @@ interface UpdateProductResponse {
       tag: string;
     }>;
   };
-  code: number;
 }
 
 interface UpdateProductError {
@@ -80,15 +79,19 @@ interface KeptImage {
 }
 
 const Details = ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = use(params);
+  const { user } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { user } = useAuth();
   const isPro = user?.membership?.membership_type === "pro";
-  const { id } = use(params);
+  const hasPaymentProcessor = !!user?.onboarded;
+  const hasShippingCalculator =
+    user?.shop_info?.shipping_setting !== null &&
+    user?.shop_info?.shipping_setting !== undefined;
+
   const { data: listing, isLoading } = useGetSingleListing(id);
   const updateProduct = useupdateProduct(id);
   const deleteProduct = useDeleteProduct(id);
-
   const [images, setImages] = useState<string[]>([]);
   const [mainImage, setMainImage] = useState<string | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -119,6 +122,32 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const [keptImagePaths, setKeptImagePaths] = useState<string[]>([]);
   const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleFulfillmentChange = (value: string) => {
+    const requiresShipping =
+      value === "shipping" || value === "arrange_local_pickup_and_shipping";
+
+    if (!requiresShipping) {
+      setFulfillment(value);
+      return;
+    }
+
+    if (!hasPaymentProcessor) {
+      toast.error(
+        "Please connect a payment processor before enabling shipping.",
+      );
+      return;
+    }
+
+    if (!hasShippingCalculator) {
+      toast.error(
+        "Please configure a shipping calculator (Flat Rate, By Weight, or Shippo) before enabling shipping.",
+      );
+      return;
+    }
+
+    setFulfillment(value);
+  };
 
   // Use the useClientApi hook for deleting image
   const deleteImageMutation = useClientApi({
@@ -678,7 +707,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
           <div>
             <p className="font-semibold text-[20px] md:text-[24px] text-secondary-black">
               Listing Status:{" "}
-              <span className="px-3 py-2 text-white text-sm rounded-full bg-[#757575]">
+              <span className="px-3 py-2 text-white text-sm rounded-full bg-[#757575] capitalize">
                 {statusBadge}
               </span>
             </p>
@@ -800,7 +829,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             <select
               className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
               value={fulfillment}
-              onChange={e => setFulfillment(e.target.value)}
+              onChange={e => handleFulfillmentChange(e.target.value)}
               aria-label="Fulfillment"
             >
               <option value="">Select Fulfillment</option>

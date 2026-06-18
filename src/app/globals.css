@@ -78,6 +78,10 @@ body {
   @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2  lg:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray;
 }
 
+.shipping_form .form-input {
+  @apply py-1.5 md:py-2 rounded-[6px];
+}
+
 .form-error {
   @apply text-red-500 text-sm block mt-1.5;
 }

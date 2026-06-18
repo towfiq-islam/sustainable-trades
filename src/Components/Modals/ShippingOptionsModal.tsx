@@ -187,7 +187,8 @@ const ShippingOptionsModal = ({
             <p className="text-secondary-black text-[15px] mb-5">
               Schedule Pickup Please provide your contact information below and
               send a message to the seller to arrange a convenient time and
-              location for pickup.
+              location for pickup. Some members offer local delivery, feel free
+              to ask
             </p>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

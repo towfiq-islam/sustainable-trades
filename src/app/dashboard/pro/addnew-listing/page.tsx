@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import useAuth from "@/Hooks/useAuth";
+import toast from "react-hot-toast";
 import { Controller, useForm } from "react-hook-form";
 import { useAddProduct } from "@/Hooks/api/dashboard_api";
 import Header from "@/Components/BasicDashboardComponents/Header";
@@ -89,9 +90,9 @@ const CreateListing = () => {
       video: null,
     },
   });
+  const fulfillment = watch("fulfillment");
   const categoryId = watch("category_id");
   const subCategoryId = watch("sub_category_id");
-
   const categories: Category[] = categoriess?.data || [];
   const subcategories: SubCategory[] = subcategoriess?.data || [];
 
@@ -115,10 +116,7 @@ const CreateListing = () => {
     formData.append("unlimited_stock", data.unlimited_stock ? "1" : "0");
     formData.append("out_of_stock", data.out_of_stock ? "1" : "0");
     formData.append("is_featured", data.is_featured ? "1" : "0");
-
     data.tags.forEach(tag => formData.append("tags[]", tag));
-
-    // Use actual File objects
     imageFiles.forEach(file => formData.append("product_image[]", file));
     if (video) formData.append("video", video);
 
@@ -182,20 +180,41 @@ const CreateListing = () => {
 
     setMetaTags(uniqueTags);
     setValue("tags", uniqueTags);
-  }, [
-    categoryId,
-    subCategoryId,
-    categories,
-    subcategories,
-    setValue,
-  ]);
+  }, [categoryId, subCategoryId, categories, subcategories, setValue]);
 
   useEffect(() => {
     setValue("sub_category_id", "");
   }, [categoryId, setValue]);
 
+  useEffect(() => {
+    const requiresShipping =
+      fulfillment === "shipping" ||
+      fulfillment === "arrange_local_pickup_and_shipping";
+
+    if (!requiresShipping) return;
+
+    const hasPaymentProcessor = user?.onboarded;
+    const hasShippingCalculator = user?.shop_info?.shipping_setting !== null;
+
+    if (!hasPaymentProcessor) {
+      toast.error(
+        "Please connect a payment processor before enabling shipping.",
+      );
+      setValue("fulfillment", "");
+      return;
+    }
+
+    if (!hasShippingCalculator) {
+      toast.error(
+        "Please configure a shipping calculator (Flat Rate, By Weight, or Shippo) before enabling shipping.",
+      );
+      setValue("fulfillment", "");
+      return;
+    }
+  }, [fulfillment, user, setValue]);
+
   return (
-    <div>
+    <>
       <Header />
       <MembershipNotice isBasicMember={isBasicMember} />
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -377,7 +396,7 @@ const CreateListing = () => {
         {/* Submit / Cancel */}
         <FormActions isPending={isPending} />
       </form>
-    </div>
+    </>
   );
 };
 

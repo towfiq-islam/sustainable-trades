@@ -34,9 +34,6 @@ type TaxForm = {
 
 export default function TaxRatePage() {
   const { user } = useAuth();
-  const [apiKey, setApiKey] = useState(
-    user?.shop_info?.ziptax_api_key ? user?.shop_info?.ziptax_api_key : "",
-  );
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [activeTab, setActiveTab] = useState<"manual" | "automatic">("manual");
   const { mutate, isPending } = useTaxes();
@@ -46,6 +43,7 @@ export default function TaxRatePage() {
   const [state, setState] = useState<any>(null);
   const { data: taxData } = getSalesTaxData();
   const { data: allTaxes } = getAllTaxes();
+  const [apiKey, setApiKey] = useState(taxData?.data?.ziptax_api_key || "");
   const [chargeOnServices, setChargeOnServices] = useState(true);
   const [chargeOnShipping, setChargeOnShipping] = useState(false);
   const [states, setStates] = useState(taxData?.data?.states || []);

@@ -9,7 +9,7 @@ const ProDashboardMessage = () => {
     <div className="flex flex-col gap-[32px] md:flex-row justify-between">
       <div className="border border-accent-gray rounded-[8px] w-full md:w-3/5">
         <div className="flex justify-between p-4">
-          <h5 className="text-[16px] text-[#000] font-semibold text-center">
+          <h5 className="text-[16px] text-secondary-black font-semibold text-center">
             Messages
           </h5>
           <div className="relative">
@@ -28,14 +28,16 @@ const ProDashboardMessage = () => {
             <div className="flex gap-x-2 items-center">
               <Image src={Activity} alt="Activity" width={40} height={40} />
               <div className="">
-                <h5 className="text-[14px] text-[#000] font-semibold">You</h5>
+                <h5 className="text-[14px] text-secondary-black font-semibold">
+                  You
+                </h5>
                 <p className="text-[14px] text-[#67645F] font-normal">
                   Sent 2 hours ago{" "}
                 </p>
               </div>
             </div>
             <div className="">
-              <h5 className="text-[14px] text-[#000] font-semibold">
+              <h5 className="text-[14px] text-secondary-black font-semibold">
                 Re: Order#123456
               </h5>
               <p className="text-[14px] text-[#67645F] font-normal">
@@ -50,7 +52,7 @@ const ProDashboardMessage = () => {
             <div className="flex gap-x-2 items-center">
               <Image src={Activity} alt="Activity" width={40} height={40} />
               <div className="">
-                <h5 className="text-[14px] text-[#000] font-semibold">
+                <h5 className="text-[14px] text-secondary-black font-semibold">
                   Taylor Lesnicki
                 </h5>
                 <p className="text-[14px] text-[#67645F] font-normal">
@@ -59,7 +61,7 @@ const ProDashboardMessage = () => {
               </div>
             </div>
             <div className="">
-              <h5 className="text-[14px] text-[#000] font-semibold">
+              <h5 className="text-[14px] text-secondary-black font-semibold">
                 Re: Order#123456
               </h5>
               <p className="text-[14px] text-[#67645F] font-normal">
@@ -74,7 +76,7 @@ const ProDashboardMessage = () => {
             <div className="flex gap-x-2 items-center">
               <Image src={Activity} alt="Activity" width={40} height={40} />
               <div className="">
-                <h5 className="text-[14px] text-[#000] font-semibold">
+                <h5 className="text-[14px] text-secondary-black font-semibold">
                   Audrey Leitner
                 </h5>
                 <p className="text-[14px] text-[#67645F] font-normal">
@@ -83,7 +85,7 @@ const ProDashboardMessage = () => {
               </div>
             </div>
             <div className="">
-              <h5 className="text-[14px] text-[#000] font-semibold">
+              <h5 className="text-[14px] text-secondary-black font-semibold">
                 Re: Order#123456
               </h5>
               <p className="text-[14px] text-[#67645F] font-normal">
@@ -98,7 +100,7 @@ const ProDashboardMessage = () => {
             <div className="flex gap-x-2 items-center">
               <Image src={Activity} alt="Activity" width={40} height={40} />
               <div className="">
-                <h5 className="text-[14px] text-[#000] font-semibold">
+                <h5 className="text-[14px] text-secondary-black font-semibold">
                   Audrey Leitner
                 </h5>
                 <p className="text-[14px] text-[#67645F] font-normal">
@@ -107,7 +109,7 @@ const ProDashboardMessage = () => {
               </div>
             </div>
             <div className="">
-              <h5 className="text-[14px] text-[#000] font-semibold">
+              <h5 className="text-[14px] text-secondary-black font-semibold">
                 Re: Order#123456
               </h5>
               <p className="text-[14px] text-[#67645F] font-normal">

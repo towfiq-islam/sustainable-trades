@@ -63,7 +63,7 @@ const page = () => {
   return (
     <>
       <div className="flex flex-wrap justify-between items-center gap-3.5 lg:gap-0 mb-7">
-        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000]">
+        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-secondary-black">
           Orders
         </h2>
 
@@ -175,7 +175,11 @@ const page = () => {
 
                       <td className="py-4 px-4">{order?.total_quantity}</td>
                       <td className="py-4 px-4">${order?.total_amount}</td>
-                      <td className="py-4 px-4">{order?.payment_method === "paypal" ? "Paypal" : "Cash On Delivery"}</td>
+                      <td className="py-4 px-4">
+                        {order?.payment_method === "paypal"
+                          ? "Paypal"
+                          : "Cash On Delivery"}
+                      </td>
                       <td className="py-4 px-4">
                         <span
                           className={`min-w-[100px] capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${

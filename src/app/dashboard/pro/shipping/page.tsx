@@ -151,7 +151,7 @@ const Page = () => {
 
   return (
     <>
-      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000] border-b border-[#BFBEBE] pb-2">
+      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-secondary-black border-b border-[#BFBEBE] pb-2">
         Shipping
       </h2>
 

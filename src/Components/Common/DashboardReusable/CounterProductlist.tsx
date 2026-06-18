@@ -91,7 +91,7 @@ const CounterProductlist = () => {
                   className="w-20 h-20 md:w-24 md:h-24 rounded-lg object-cover"
                 />
                 <div className="flex-1">
-                  <h5 className="text-[#000] font-semibold underline mb-1 text-[14px] sm:text-[16px]">
+                  <h5 className="text-secondary-black font-semibold underline mb-1 text-[14px] sm:text-[16px]">
                     {trade.title}
                   </h5>
                   <p className="text-[12px] sm:text-[14px] font-normal text-secondary-black">

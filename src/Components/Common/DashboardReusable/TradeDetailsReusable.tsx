@@ -43,14 +43,12 @@ const TradeDetailsReusable = () => {
 
   const senderUserId = tradeSingleData?.data?.sender?.shop_info?.user_id;
 
-
   const { data: tradeSenderShopData, isLoading: shopLoading } =
     getShopDetails(senderUserId);
 
   const tradeSenderProduct = tradeSingleData?.data?.items?.find(
     (item: any) => item?.product?.shop?.user_id === +senderUserId,
   );
-
 
   if (tradeLoading || shopLoading) {
     return <div className="p-10 text-center">Loading Trade Details...</div>;
@@ -131,7 +129,7 @@ const TradeDetailsReusable = () => {
           </h4>
 
           <div className="flex gap-x-2 mt-4 items-center">
-            <h4 className="text-[14px] font-bold text-[#000] underline">
+            <h4 className="text-[14px] font-bold text-secondary-black underline">
               {tradeSenderShopData?.data?.shop_info?.shop_name}
             </h4>
             {Array.from({
@@ -145,7 +143,7 @@ const TradeDetailsReusable = () => {
           </div>
           <div className="flex gap-x-2 items-center mt-1">
             <LocationSvg1 />
-            <h5 className="text-[14px] underline cursor-pointer text-[#000] font-lato">
+            <h5 className="text-[14px] underline cursor-pointer text-secondary-black font-lato">
               {tradeSenderShopData?.data?.shop_info?.address?.display_my_address
                 ? tradeSenderShopData?.data?.shop_info?.address?.address_line_1
                 : `${tradeSenderShopData?.data?.shop_info?.address?.city}, ${tradeSenderShopData?.data?.shop_info?.address?.state}`}
@@ -271,7 +269,6 @@ const TradeDetailsReusable = () => {
                 } else if (btn === "Deny") {
                   router.push(`/dashboard/pro/trades/deny/${tradeId}`);
                 } else {
-                 ;
                 }
               }}
               className={`relative cursor-pointer py-[10px] border px-4 rounded-md font-lato font-semibold overflow-hidden

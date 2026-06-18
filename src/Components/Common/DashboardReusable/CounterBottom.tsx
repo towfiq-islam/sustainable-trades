@@ -202,7 +202,7 @@ const CounterBottom = () => {
             <h4 className="text-[18px] lg:text-[20px] font-semibold text-primary-green">
               Organic Bath Soaps
             </h4>
-            <h3 className="text-[22px] lg:text-[32px] font-semibold text-[#000] py-3">
+            <h3 className="text-[22px] lg:text-[32px] font-semibold text-secondary-black py-3">
               Coconut Bar Soap
             </h3>
             <ul>
@@ -219,7 +219,7 @@ const CounterBottom = () => {
               </li>
             </ul>
             <div className="flex gap-x-2 mt-4 items-center">
-              <h4 className="text-[14px] font-bold text-[#000] underline">
+              <h4 className="text-[14px] font-bold text-secondary-black underline">
                 Organic Bath Soaps
               </h4>
               <div className="flex gap-x-[2px]">
@@ -232,10 +232,10 @@ const CounterBottom = () => {
             </div>
             <div className="flex gap-x-2 items-center mt-1">
               <LocationSvg1 />
-              <h5 className="text-[14px] underline cursor-pointer text-[#000] font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-secondary-black font-lato">
                 13 mi. away -
               </h5>
-              <h5 className="text-[14px] underline cursor-pointer text-[#000] font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-secondary-black font-lato">
                 Denver, CO
               </h5>
             </div>

@@ -32,7 +32,7 @@ const ReuseableNotification = () => {
     <>
       <div className="bg-[#FFF] rounded-lg w-full mx-auto shadow-lg">
         <div className="border-b border-[#E5E5E5] flex gap-3 items-center justify-between p-3 md:p-5">
-          <h3 className="text-[30px] md:text-[36px] font-semibold text-[#000] flex items-center gap-x-2">
+          <h3 className="text-[30px] md:text-[36px] font-semibold text-secondary-black flex items-center gap-x-2">
             Notifications
           </h3>
 
@@ -81,11 +81,11 @@ const ReuseableNotification = () => {
                     </figure>
 
                     <div>
-                      <h3 className="text-[16px] font-bold text-[#000] mb-1">
+                      <h3 className="text-[16px] font-bold text-secondary-black mb-1">
                         {notification?.data?.subject}
                       </h3>
 
-                      <h4 className="text-[16px] font-normal text-[#000]">
+                      <h4 className="text-[16px] font-normal text-secondary-black">
                         {notification?.data?.message}
                       </h4>
                     </div>
@@ -95,7 +95,7 @@ const ReuseableNotification = () => {
                   </p>
                 </div>
               );
-            }
+            },
           )
         )}
 
@@ -115,7 +115,7 @@ const ReuseableNotification = () => {
                   disabled={!item.url}
                   dangerouslySetInnerHTML={{ __html: item.label }}
                 />
-              )
+              ),
             )}
           </div>
         )}

@@ -42,7 +42,7 @@ const Membershipreusable: React.FC<MembershipReusableProps> = ({
     <div>
       {/* Header and Tabs */}
       <div className="flex gap-3.5 md:gap-0 flex-col md:flex-row justify-between items-center">
-        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000]">
+        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-secondary-black">
           Membership Details
         </h2>
         <div className="flex gap-x-2 items-center border border-accent-gray rounded-[8px]">

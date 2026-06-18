@@ -214,7 +214,7 @@ const TradeDetailsBottom = () => {
                   className="w-24 h-24 rounded-lg object-cover"
                 />
                 <div className="flex-1">
-                  <h5 className="text-[#000] font-semibold underline mb-1 text-[16px]">
+                  <h5 className="text-secondary-black font-semibold underline mb-1 text-[16px]">
                     {trade.title}
                   </h5>
                   <p className="text-[14px] font-normal text-secondary-black">

@@ -444,7 +444,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
           </h3>
         </div>
         <Link href="/dashboard/pro/view-listing" className="shrink-0">
-          <button className="text-[#000] text-[16px] font-semibold flex gap-x-1 items-center border-2 border-secondary-black rounded-lg py-1.5 md:py-3 px-6 hover:bg-accent-red hover:text-white justify-center duration-300 cursor-pointer">
+          <button className="text-secondary-black text-[16px] font-semibold flex gap-x-1 items-center border-2 border-secondary-black rounded-lg py-1.5 md:py-3 px-6 hover:bg-accent-red hover:text-white justify-center duration-300 cursor-pointer">
             <MdArrowOutward />
             View Listings
           </button>

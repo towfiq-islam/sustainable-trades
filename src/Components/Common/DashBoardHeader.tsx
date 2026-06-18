@@ -12,7 +12,7 @@ const DashBoardHeader: React.FC<dashboardheaderprops> = ({
 }) => {
   return (
     <div className="flex flex-col lg:flex-row justify-between lg:items-center">
-      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold mb-2 md:mb-0 text-[#000]">
+      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold mb-2 md:mb-0 text-secondary-black">
         {heading}
       </h2>
       {/* <div className="flex flex-col md:flex-row gap-2 md:gap-4 md:items-center">

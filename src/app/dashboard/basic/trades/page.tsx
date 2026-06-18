@@ -58,7 +58,7 @@ const Page = () => {
   return (
     <div>
       <div className="flex flex-wrap gap-2.5 md:flex-nowrap justify-between items-center">
-        <h3 className="text-[30px] md:text-[40px] font-semibold text-[#000]">
+        <h3 className="text-[30px] md:text-[40px] font-semibold text-secondary-black">
           Trades
         </h3>
         <div className="relative w-full md:w-fit">
@@ -84,13 +84,13 @@ const Page = () => {
               className={`flex gap-1.5 md:gap-x-3 items-center text-[14px] sm:text-[16px] cursor-pointer pb-5  lg:px-15 xl:px-20 justify-center
                 ${
                   activeTab === tab.label
-                    ? "font-semibold text-[#000] relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[8px] after:bg-primary-green after:rounded-lg"
+                    ? "font-semibold text-secondary-black relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[8px] after:bg-primary-green after:rounded-lg"
                     : "text-secondary-black"
                 }`}
             >
               {tab.label}
               <span
-                className={`border rounded-[8px] px-1 py-0.5 sm:px-2 sm:py-[2px] text-[10px] sm:text-sm border-[#000]
+                className={`border rounded-[8px] px-1 py-0.5 sm:px-2 sm:py-[2px] text-[10px] sm:text-sm border-secondary-black
                   ${
                     activeTab === tab.label
                       ? " bg-[#D4E2CB] text-[#6D2D4E2CB8D9]"

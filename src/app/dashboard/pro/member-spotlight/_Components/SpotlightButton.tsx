@@ -9,7 +9,7 @@ const SpotlightButton = ({ isPro }: { isPro: boolean }) => {
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-0">
-        <h3 className="text-[30px] md:text-[40px] font-semibold text-[#000] flex items-center gap-x-2">
+        <h3 className="text-[30px] md:text-[40px] font-semibold text-secondary-black flex items-center gap-x-2">
           Member Spotlight
         </h3>
 

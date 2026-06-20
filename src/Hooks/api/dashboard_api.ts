@@ -552,13 +552,37 @@ export const useCancelMembership = () => {
 };
 
 // Get Orders
-export const getOrders = (status: string, page: string) => {
+export const getOrders = ({
+  status,
+  search,
+  page,
+  filter,
+  date_from,
+  date_to,
+  year,
+}: {
+  status?: string;
+  search?: string;
+  page?: string;
+  filter?: string;
+  date_from?: string;
+  date_to?: string;
+  year?: number;
+}) => {
   return useClientApi({
     method: "get",
-    key: ["get-orders", status, page],
+    key: ["get-orders", status, search, page, filter, date_from, date_to, year],
     isPrivate: true,
     endpoint: "/api/orders",
-    params: { status, page },
+    params: {
+      status,
+      search,
+      page,
+      filter,
+      date_from,
+      date_to,
+      year,
+    },
   });
 };
 

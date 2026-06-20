@@ -156,7 +156,11 @@ const page = () => {
                                         : "bg-gray-500"
                         }`}
                       >
-                        {order?.status}
+                        {order?.status === "local_pickup_requested"
+                          ? "Local pickup requested"
+                          : order?.status === "awaiting_payment"
+                            ? "Awaiting Payment"
+                            : order?.status}
                       </p>
                     </div>
                   </div>

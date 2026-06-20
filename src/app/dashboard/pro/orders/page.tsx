@@ -8,6 +8,9 @@ import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
 import VendorOrders from "./_Components/VendorOrders";
 import Modal from "@/Components/Common/Modal";
+import { Download } from "@/Components/Svg/SvgContainer";
+import { IoSearchOutline } from "react-icons/io5";
+import { CSVLink } from "react-csv";
 
 type orderItem = {
   id: number;
@@ -37,6 +40,10 @@ const page = () => {
   const [showNote, setShowNote] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<number | null>(null);
   const [page, setPage] = useState<string>("");
+  const [filter, setFilter] = useState("last_30_days");
+  const [dateRange, setDateRange] = useState({ from: "", to: "" });
+  const [year, setYear] = useState(2026);
+  const [search, setSearch] = useState("");
   const tabs = [
     "orders",
     "pending",
@@ -45,8 +52,46 @@ const page = () => {
     "cancelled",
     "purchased from another member",
   ];
-  const { data: allOrders, isLoading } = getOrders(status, page);
+
   const { mutate: cancelOrder, isPending: isCancelling } = useCancelOrder();
+  const { data: allOrders, isLoading } = getOrders({
+    status,
+    search,
+    page,
+    filter,
+    date_from: filter === "custom_date_range" ? dateRange.from : undefined,
+    date_to: filter === "custom_date_range" ? dateRange.to : undefined,
+    year: filter === "specific_year" ? year : undefined,
+  });
+
+  const headers = [
+    { label: "Order Number #", key: "order_number" },
+    { label: "Order Date", key: "order_date" },
+    { label: "Customer", key: "customer" },
+    { label: "Items", key: "total_quantity" },
+    { label: "Amount", key: "total_amount" },
+    { label: "Payment Method", key: "payment_method" },
+    { label: "Payment Status", key: "payment_status" },
+    { label: "Order Status", key: "status" },
+    { label: "FullFillment", key: "shipping_option" },
+    { label: "Notes", key: "note" },
+  ];
+
+  const csvData =
+    allOrders?.data?.data?.map((order: orderItem) => ({
+      order_number: order?.order_number,
+      order_date: moment(order?.created_at).format("ll"),
+      customer: `${order?.user?.first_name || ""} ${order?.user?.last_name || ""}`,
+      total_quantity: order?.total_quantity,
+      total_amount: `$${order?.total_amount}`,
+      payment_method:
+        order?.payment_method === "paypal" ? "Paypal" : "Cash On Delivery",
+      payment_status: order?.payment_status,
+      status: order?.status,
+      shipping_option:
+        order?.shipping_option === "local_pickup" ? "Local Pickup" : "Shipping",
+      note: order?.note || "",
+    })) || [];
 
   useEffect(() => {
     const handleWindowClick = () => {
@@ -67,37 +112,73 @@ const page = () => {
           Orders
         </h2>
 
-        {/* <div className="flex flex-wrap gap-2.5 md:gap-x-4 items-center">
-          <button
-            className="px-6 w-full md:w-fit rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer
-                      duration-300 ease-in-out flex gap-x-2 items-center h-[50px] hover:translate-y-1"
-          >
-            <Download />
-            Download File
-          </button>
+        <div className="flex flex-wrap gap-2.5 md:gap-x-4 items-center">
+          <div className="flex flex-wrap gap-3 md:gap-6 items-center w-full md:w-fit">
+            <CSVLink
+              data={csvData}
+              headers={headers}
+              filename={"orders-report.csv"}
+              className="w-full md:w-fit px-5 rounded-[8px] border border-light-green font-semibold text-secondary-black cursor-pointer duration-300 ease-in-out flex gap-x-2 items-center h-11.5 justify-center"
+            >
+              <Download />
+              Download File
+            </CSVLink>
+          </div>
+
           <div className="relative w-full md:w-fit">
             <input
               placeholder="Search Orders"
               type="search"
-              className="w-full lg:w-[300px] py-[10px] pl-4 pr-12 outline-0 border border-[#BFBEBE] rounded-[8px] text-[16px] text-[#67645F] font-normal"
+              onChange={e => setSearch(e.target.value)}
+              className="w-full lg:w-[300px] px-3 py-2.5 pl-9 outline-0 border border-gray-300 rounded-lg"
             />
 
-            <div className="absolute top-1/2 right-10 -translate-y-1/2 w-[1px] h-[60%] bg-[#BFBEBE]" />
-
-            <div className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500">
-              <FaSearch />
+            <div className="absolute top-1/2 left-3 -translate-y-1/2 text-lg">
+              <IoSearchOutline />
             </div>
           </div>
-          <div className="relative w-full md:w-fit">
-            <select className="border border-accent-gray rounded-[8px] cursor-pointer appearance-none outline-0 px-3 pr-10 py-[10px] w-full md:w-[190px] text-primary-green text-[14px] font-normal">
-              <option value="Last 30 Days">Last 30 Days</option>
-              <option value="Last 6 Month">Last 6 Month</option>
-              <option value="Last Year">Last Year</option>
-            </select>
 
-            <FaAngleDown className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-600 pointer-events-none" />
-          </div>
-        </div> */}
+          <select
+            className="w-full sm:w-[200px] border rounded-lg px-3 h-11.5 border-gray-300 outline-none"
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+          >
+            <option value="last_30_days">Last 30 Days</option>
+            <option value="year_to_date">Year to Date</option>
+            <option value="custom_date_range">Custom Date Range</option>
+            <option value="specific_year">Specific Year</option>
+          </select>
+
+          {/* Date range */}
+          {filter === "custom_date_range" && (
+            <div className="flex gap-2 mt-2">
+              <input
+                type="date"
+                onChange={e => setDateRange({ from: e.target.value, to: "" })}
+                className="border p-2 rounded"
+              />
+
+              <input
+                type="date"
+                onChange={e =>
+                  setDateRange(prev => ({ ...prev, to: e.target.value }))
+                }
+                className="border p-2 rounded"
+              />
+            </div>
+          )}
+
+          {/* Year */}
+          {filter === "specific_year" && (
+            <input
+              type="number"
+              value={year}
+              onChange={e => setYear(Number(e.target.value))}
+              className="border p-2 rounded mt-2"
+              placeholder="Enter year (e.g. 2024)"
+            />
+          )}
+        </div>
       </div>
 
       {/* Tabs */}

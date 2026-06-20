@@ -144,7 +144,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
             </p>
           ) : (
             <p className="flex gap-2 items-center">
-              <span>{user ? "Add to Cart" : "Buy Now"}</span>
+              <span>Add to Cart</span>
               <AddToCartSvg />
             </p>
           )}
@@ -244,9 +244,9 @@ const ProductDescription = ({ data }: descriptionProps) => {
 
       {/* Buy btn */}
       <button
-        disabled={data?.selling_option === "trade/barter"}
+        disabled={user || data?.selling_option === "trade/barter"}
         onClick={() => setGuestOpen(true)}
-        className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-semibold border-primary-green disabled:opacity-70 disabled:cursor-not-allowed"
+        className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-semibold border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
       >
         Buy it now
       </button>
@@ -264,7 +264,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
               setProductId(data?.id);
               setTradeOpen(true);
             }}
-            className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 border-off-green md:text-lg cursor-pointer py-2 md:py-3 bg-off-green text-primary-green rounded-lg shadow hover:text-primary-green hover:bg-transparent font-semibold"
+            className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 border-off-green md:text-lg cursor-pointer py-2 md:py-3 bg-off-green text-primary-green rounded-lg shadow hover:text-primary-green enabled:hover:bg-transparent font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
           >
             Trade
           </button>

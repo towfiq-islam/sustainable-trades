@@ -228,8 +228,8 @@ const CartItem = ({ item, subTotal }: CartProps) => {
             setShippingMethod(
               item?.shop?.user?.onboarded &&
                 (item?.fulfillment_type === "shipping" ||
-                  item?.fulfillment_type ===
-                    "arrange_local_pickup_and_shipping")
+                  item?.fulfillment_type === "both_local_pickup_and_shipping" ||
+                  item?.fulfillment_type === "both_shipping")
                 ? "proceed"
                 : "local",
             );

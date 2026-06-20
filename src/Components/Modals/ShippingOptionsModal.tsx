@@ -106,7 +106,8 @@ const ShippingOptionsModal = ({
         <p
           className={`flex gap-3 items-center mb-3 ${
             fulfillmentType === "arrange_local_pickup" ||
-            fulfillmentType === "Mixed"
+            fulfillmentType === "local_pickup" ||
+            fulfillmentType === "both_local_pickup"
               ? "opacity-80"
               : ""
           }`}
@@ -125,17 +126,20 @@ const ShippingOptionsModal = ({
                 return setErrorMessage(
                   "Shipping is not available for this product. This is a Basic Membership store, so online payment and shipping through the platform are not supported. Please choose the “Arrange Local Pickup” option to contact the seller directly and collect the product.",
                 );
+              } else if (membershipType === "pro" && !isConnected) {
+                return setErrorMessage(
+                  "Online checkout isn’t available for this item. This listing is from a Pro Member shop, but the shop does not currently have a payment processor connected, so payments cannot be completed through the platform. Please continue with Arrange Local Pickup to coordinate directly with the seller. Some members offer local delivery, feel free to ask.",
+                );
               } else if (fulfillmentType === "arrange_local_pickup") {
                 return setErrorMessage(
                   "This vendor only offers Local Pickup for this product. Please select 'Arrange Local Pickup' to continue.",
                 );
-              } else if (fulfillmentType === "Mixed") {
+              } else if (
+                fulfillmentType === "local_pickup" ||
+                fulfillmentType === "both_local_pickup"
+              ) {
                 return setErrorMessage(
-                  "One or more items in your cart are only available for local pickup. You can message the seller to arrange shipping for the other item if needed, but checkout will continue with local pickup for this order. If you prefer, you can cancel and place separate orders , one for pickup and one for shipping.",
-                );
-              } else if (membershipType === "pro" && !isConnected) {
-                return setErrorMessage(
-                  "Online checkout isn’t available for this item. This listing is from a Pro Member shop, but the shop does not currently have a payment processor connected, so payments cannot be completed through the platform. Please continue with Arrange Local Pickup to coordinate directly with the seller. Some members offer local delivery, feel free to ask.",
+                  "Shipping Unavailable. One or more items in your cart are only available for Local Pickup. To continue with this order, please proceed with Arrange Local Pickup. If you prefer shipping, you can contact the sellers to see if alternate arrangements are available, or place separate orders-one for Local Pickup and one for Shipping.",
                 );
               }
               setShippingMethod(e.target.value);
@@ -155,7 +159,10 @@ const ShippingOptionsModal = ({
 
         <p
           className={`flex gap-3 items-center mb-3 ${
-            fulfillmentType === "shipping" ? "opacity-80" : ""
+            fulfillmentType === "shipping" ||
+            fulfillmentType === "both_shipping"
+              ? "opacity-80"
+              : ""
           }`}
         >
           <input
@@ -168,6 +175,10 @@ const ShippingOptionsModal = ({
               if (fulfillmentType === "shipping") {
                 return setErrorMessage(
                   "This vendor only offers Shipping for this product. Please select 'Shipping' to continue.",
+                );
+              } else if (fulfillmentType === "both_shipping") {
+                return setErrorMessage(
+                  "Local Pickup Unavailable. One or more items in your cart are only available for Shipping. To continue with this order, please proceed with Shipping. If you prefer, you can place separate orders-one for Local Pickup, and one for Shipping-or contact the seller to see if local pickup arrangements are available.",
                 );
               }
               setShippingMethod(e.target.value);

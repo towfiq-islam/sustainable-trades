@@ -292,6 +292,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           subTotal={subTotal}
           cart_id={cartId}
           taxData={taxData}
+          shop_name={item?.shop?.shop_name}
           onClose={() => {
             setOrderReviewModal(false);
             setShippingAddressOpen(true);

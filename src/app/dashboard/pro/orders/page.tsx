@@ -19,6 +19,7 @@ type orderItem = {
   payment_status: string;
   created_at: string;
   total_quantity: number;
+  subscribe_website: number;
   total_amount: string;
   status: string;
   shipping_option: string;
@@ -217,6 +218,7 @@ const page = () => {
                   <th className="py-3 px-4 text-left">Order #</th>
                   <th className="py-3 px-4 text-left">Order Date</th>
                   <th className="py-3 px-4 text-left">Customer</th>
+                  <th className="py-3 px-4 text-left">Opt In</th>
                   <th className="py-3 px-4 text-left">Items</th>
                   <th className="py-3 px-4 text-left">Amount</th>
                   <th className="py-3 px-4 text-left">Payment Method</th>
@@ -254,6 +256,9 @@ const page = () => {
                         </div>
                       </td>
 
+                      <td className="py-4 px-4">
+                        {order?.subscribe_website ? "Yes" : "No"}
+                      </td>
                       <td className="py-4 px-4">{order?.total_quantity}</td>
                       <td className="py-4 px-4">${order?.total_amount}</td>
                       <td className="py-4 px-4">
@@ -261,6 +266,7 @@ const page = () => {
                           ? "Paypal"
                           : "Cash On Delivery"}
                       </td>
+
                       <td className="py-4 px-4">
                         <span
                           className={`min-w-[100px] capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${

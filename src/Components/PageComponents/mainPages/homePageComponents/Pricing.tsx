@@ -135,7 +135,7 @@ const Pricing = ({
                     }`}
                   >
                     <div>
-                      <figure className="size-8 md:size-12 rounded-full bg-[#B0DEDB] grid place-items-center">
+                      <figure className="size-8 md:size-12 rounded-full bg-accent-blue grid place-items-center">
                         <Image
                           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${image}`}
                           alt="logo"
@@ -172,7 +172,7 @@ const Pricing = ({
                             benefit_icon,
                           }) => (
                             <div key={id} className="flex gap-2 md:gap-3">
-                              <figure className="size-8 md:size-10 rounded-full bg-[#B0DEDB] grid place-items-center shrink-0">
+                              <figure className="size-8 md:size-10 rounded-full bg-accent-blue grid place-items-center shrink-0">
                                 <Image
                                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${benefit_icon}`}
                                   alt="image"

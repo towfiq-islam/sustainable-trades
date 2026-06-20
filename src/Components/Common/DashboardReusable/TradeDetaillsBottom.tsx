@@ -122,7 +122,7 @@ const TradeDetailsBottom = () => {
       {/* Chat Section */}
       <div className="w-1/2 border border-[#BFBEBE]  rounded-lg shadow-sm flex flex-col bg-white">
         {/* Header */}
-        <div className="bg-[#D4E2CB] px-4 py-3 border-b border-[#BFBEBE] flex items-center gap-3 rounded-t-lg">
+        <div className="bg-off-green px-4 py-3 border-b border-[#BFBEBE] flex items-center gap-3 rounded-t-lg">
           <img
             src="https://i.pravatar.cc/40?img=1"
             alt="Linda Anderson"
@@ -144,7 +144,7 @@ const TradeDetailsBottom = () => {
               <div
                 className={`max-w-xs p-3 rounded-lg text-sm ${
                   msg.isOwn
-                    ? "bg-[#D4E2CB] text-gray-800"
+                    ? "bg-off-green text-gray-800"
                     : "bg-gray-50 text-gray-800"
                 }`}
               >

@@ -201,7 +201,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
         {/* Selling Option */}
         <div>
           {data?.selling_option === "trade/barter" && (
-            <p className="size-6 shrink-0 rounded-full bg-[#D4E2CB] grid place-items-center">
+            <p className="size-6 shrink-0 rounded-full bg-off-green grid place-items-center">
               <SignSvg />
             </p>
           )}
@@ -215,7 +215,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
               <p className="size-6 shrink-0 rounded-full bg-accent-red grid place-items-center">
                 <DollarSvg />
               </p>
-              <p className="size-6 shrink-0 rounded-full bg-[#D4E2CB] grid place-items-center">
+              <p className="size-6 shrink-0 rounded-full bg-off-green grid place-items-center">
                 <SignSvg />
               </p>
             </div>
@@ -264,7 +264,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
               setProductId(data?.id);
               setTradeOpen(true);
             }}
-            className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 border-[#D4E2CB] md:text-lg cursor-pointer py-2 md:py-3 bg-[#D4E2CB] text-primary-green rounded-lg shadow hover:text-primary-green hover:bg-transparent font-semibold"
+            className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 border-off-green md:text-lg cursor-pointer py-2 md:py-3 bg-off-green text-primary-green rounded-lg shadow hover:text-primary-green hover:bg-transparent font-semibold"
           >
             Trade
           </button>

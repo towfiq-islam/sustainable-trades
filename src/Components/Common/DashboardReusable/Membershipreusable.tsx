@@ -113,7 +113,7 @@ const Membershipreusable: React.FC<MembershipReusableProps> = ({
                           key={benefit.id}
                           className="flex gap-3 items-center mb-3"
                         >
-                          <div className="size-10 rounded-full bg-[#B0DEDB] grid place-items-center">
+                          <div className="size-10 rounded-full bg-accent-blue grid place-items-center">
                             {benefit.benefit_icon ? (
                               <img
                                 src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${benefit.benefit_icon}`}

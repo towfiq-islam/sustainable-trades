@@ -37,7 +37,7 @@ const DetailsTab = () => {
               className={`flex-1 text-sm md:text-base text-center px-3 md:px-14 py-3 md:py-4 font-semibold
           ${
             activeTab === tab?.id
-              ? "bg-[#D4E2CB] text-secondary-black"
+              ? "bg-off-green text-secondary-black"
               : "text-secondary-gray"
           }
           ${idx === 0 && "rounded-tl-lg rounded-bl-none md:rounded-tr-none"}

@@ -458,7 +458,7 @@ const Page = () => {
                   endpoint: `/api/cancel-order/${order_id}`,
                 })
               }
-              className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] font-semibold text-[#8E2F2F] cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
+              className="py-4 px-6 rounded-[8px] border border-primary-red bg-[#FFE8E8] font-semibold text-primary-red cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
             >
               {isCancellingOrder ? "Cancelling...." : "Cancel Order"}
             </button>

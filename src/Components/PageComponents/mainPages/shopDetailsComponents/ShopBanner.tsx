@@ -104,7 +104,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
               </h3>
 
               {/* <div className="flex gap-3 items-center">
-                <figure className="size-6 md:size-10 bg-[#D4E2CB] rounded-full grid place-items-center cursor-pointer">
+                <figure className="size-6 md:size-10 bg-off-green rounded-full grid place-items-center cursor-pointer">
                   <Image
                     src={award}
                     alt="award"
@@ -160,7 +160,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
               <button
                 onClick={handleFollowShop}
                 disabled={isPending}
-                className="px-8 md:py-3.5 rounded-lg cursor-pointer shadow md:text-lg font-semibold text-primary-green bg-[#D4E2CB] duration-300 transition-transform hover:scale-105 w-full md:w-auto py-1.5"
+                className="px-8 md:py-3.5 rounded-lg cursor-pointer shadow md:text-lg font-semibold text-primary-green bg-off-green duration-300 transition-transform hover:scale-105 w-full md:w-auto py-1.5"
               >
                 {isPending ? (
                   <p className="flex gap-2 items-center justify-center">
@@ -211,7 +211,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
             </div>
 
             <div className="flex gap-2 items-center mb-2">
-              <p className="size-5 rounded-full bg-[#D4E2CB]"></p>
+              <p className="size-5 rounded-full bg-off-green"></p>
               <p className="text-lg text-accent-gray font-semibold">
                 {data?.trade_offers_count || 0} Trades
               </p>
@@ -261,8 +261,8 @@ const ShopBanner = ({ id, data }: BannerProps) => {
             <div className="flex  gap-3 items-center mt-4">
               {/* Trades */}
               <div className="flex  items-center gap-2">
-                <span className="flex items-center justify-center size-7 rounded-full bg-[#D4E2CB]">
-                  <p className="size-5 rounded-full bg-[#D4E2CB]"></p>
+                <span className="flex items-center justify-center size-7 rounded-full bg-off-green">
+                  <p className="size-5 rounded-full bg-off-green"></p>
                 </span>
                 <p className="text-lg text-gray-300 font-semibold">
                   {data?.trade_offers_count || 0} Trades

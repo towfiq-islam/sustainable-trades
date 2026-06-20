@@ -16,7 +16,7 @@ const SpotlightButton = ({ isPro }: { isPro: boolean }) => {
         {isPro && (
           <button
             onClick={() => setOpen(true)}
-            className="py-2 sm:py-4 px-6 bg-[#D4E2CB] rounded-[8px] border border-light-green text-[13px] md:text-[16px] font-semibold text-secondary-black cursor-pointer hover:translate-y-1 duration-300 ease-in-out h-[40px] md:h-[50px] w-full sm:w-fit flex items-center justify-center"
+            className="py-2 sm:py-4 px-6 bg-off-green rounded-[8px] border border-light-green text-[13px] md:text-[16px] font-semibold text-secondary-black cursor-pointer hover:translate-y-1 duration-300 ease-in-out h-[40px] md:h-[50px] w-full sm:w-fit flex items-center justify-center"
           >
             Apply for Community Member Spotlight
           </button>

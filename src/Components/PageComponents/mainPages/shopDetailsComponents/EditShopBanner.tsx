@@ -186,7 +186,7 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
               </div>
 
               <div className="flex gap-2 items-center">
-                <p className="flex justify-center items-center size-7 rounded-full bg-[#D4E2CB]">
+                <p className="flex justify-center items-center size-7 rounded-full bg-off-green">
                   <DThreeSvg />
                 </p>
                 <p className="text-secondary-black font-semibold">

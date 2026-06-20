@@ -317,7 +317,7 @@ const Page = () => {
               </button>
             </div>
 
-            <div className="border border-[#d4e2cb]/40 bg-[#d4e2cb]/20 rounded-lg p-5">
+            <div className="border border-off-green/40 bg-off-green/20 rounded-lg p-5">
               <div className="flex gap-3">
                 <div className="w-8 h-8 rounded-full bg-primary-green text-white flex items-center justify-center">
                   i
@@ -336,9 +336,9 @@ const Page = () => {
           {/* Right */}
           <div className="space-y-6">
             {/* Card 1 */}
-            <div className="border rounded-xl p-5 border-[#d4e2cb]/40 bg-[#d4e2cb]/20 text-[15px]">
+            <div className="border rounded-xl p-5 border-off-green/40 bg-off-green/20 text-[15px]">
               <div className="flex gap-4">
-                <div className="w-16 h-16 rounded-full bg-[#d4e2cb]/50 flex items-center justify-center shrink-0 text-2xl">
+                <div className="w-16 h-16 rounded-full bg-off-green/50 flex items-center justify-center shrink-0 text-2xl">
                   🛒
                 </div>
 
@@ -489,7 +489,7 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="border border-[#d4e2cb]/40 bg-[#d4e2cb]/40 rounded-lg font-semibold p-4">
+          <div className="border border-off-green/40 bg-off-green/40 rounded-lg font-semibold p-4">
             <p className="text-primary-green text-sm flex gap-2 items-center">
               <MdOutlineLocationOn className="text-xl" />
               This flat rate option is for U.S. and Canada only.
@@ -578,9 +578,9 @@ const Page = () => {
             </button>
           </div>
 
-          <div className="border border-[#d4e2cb]/30 bg-[#d4e2cb]/30 rounded-lg p-4">
+          <div className="border border-off-green/30 bg-off-green/30 rounded-lg p-4">
             <div className="text-primary-green text-sm flex gap-5 items-center">
-              <span className="shrink-0 bg-[#d4e2cb]/60 size-14 rounded-full grid place-items-center">
+              <span className="shrink-0 bg-off-green/60 size-14 rounded-full grid place-items-center">
                 <RiLightbulbFlashLine className="text-2xl" />
               </span>
 
@@ -595,7 +595,7 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="border border-[#d4e2cb]/30 bg-[#d4e2cb]/30 rounded-lg font-semibold -mt-2 p-4">
+          <div className="border border-off-green/30 bg-off-green/30 rounded-lg font-semibold -mt-2 p-4">
             <p className="text-gray-700 text-sm flex gap-2 items-center">
               <IoLocationSharp className="text-xl text-primary-green" />
               This weight-based rate option is for U.S. and Canada only.

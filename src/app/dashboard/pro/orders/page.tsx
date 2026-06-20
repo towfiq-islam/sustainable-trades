@@ -194,24 +194,37 @@ const page = () => {
 
                       <td className="py-4 px-4">
                         <span
-                          className={`min-w-[100px] text-white capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
+                          className={`min-w-[100px] ${order?.status === "processing" ? "text-primary-green" : order?.status === "shipped" ? "text-secondary-gray" : "text-white"} capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
                             order?.status === "delivered"
                               ? "bg-primary-green"
-                              : order?.status === "pending"
+                              : order?.status === "pending" ||
+                                  order?.status === "local_pickup_requested"
                                 ? "bg-accent-red"
-                                : order?.status === "pending"
-                                  ? "bg-blue-500"
-                                  : order?.status === "cancelled"
-                                    ? "bg-primary-red"
-                                    : "bg-gray-500"
+                                : order?.status === "confirmed"
+                                  ? "bg-dark-green"
+                                  : order?.status === "processing"
+                                    ? "bg-off-green"
+                                    : order?.status === "cancelled"
+                                      ? "bg-primary-red"
+                                      : order?.status === "shipped"
+                                        ? "bg-accent-blue"
+                                        : order?.status === "paid"
+                                          ? "bg-light-green"
+                                          : "bg-gray-500"
                           }`}
                         >
-                          {order?.status}
+                          {order?.status === "local_pickup_requested"
+                            ? "Local pickup requested"
+                            : order?.status === "awaiting_payment"
+                              ? "Awaiting Payment"
+                              : order?.status}
                         </span>
                       </td>
 
-                      <td className="py-4 px-4 capitalize">
-                        {order?.shipping_option}
+                      <td className="py-4 px-4">
+                        {order?.shipping_option === "local_pickup"
+                          ? "Local pickup"
+                          : "Shipping"}
                       </td>
 
                       <td className="py-4 px-4 capitalize">

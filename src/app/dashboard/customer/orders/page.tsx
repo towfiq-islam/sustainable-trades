@@ -137,16 +137,23 @@ const page = () => {
                       </h3>
 
                       <p
-                        className={`font-sans font-normal text-white px-3 text-sm py-1 rounded-lg capitalize ${
+                        className={`font-sans font-normal ${order?.status === "processing" ? "text-primary-green" : order?.status === "shipped" ? "text-secondary-gray" : "text-white"} px-3 text-sm py-1 rounded-lg capitalize ${
                           order?.status === "delivered"
                             ? "bg-primary-green"
-                            : order?.status === "pending"
+                            : order?.status === "pending" ||
+                                order?.status === "local_pickup_requested"
                               ? "bg-accent-red"
-                              : order?.status === "pending"
-                                ? "bg-blue-500"
-                                : order?.status === "cancelled"
-                                  ? "bg-primary-red"
-                                  : "bg-gray-500"
+                              : order?.status === "confirmed"
+                                ? "bg-dark-green"
+                                : order?.status === "processing"
+                                  ? "bg-off-green"
+                                  : order?.status === "cancelled"
+                                    ? "bg-primary-red"
+                                    : order?.status === "shipped"
+                                      ? "bg-accent-blue"
+                                      : order?.status === "paid"
+                                        ? "bg-light-green"
+                                        : "bg-gray-500"
                         }`}
                       >
                         {order?.status}

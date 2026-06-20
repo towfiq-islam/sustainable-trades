@@ -7,9 +7,12 @@
   --color-accent-red: #e48872;
   --color-primary-red: #8b200c;
   --color-secondary-gray: #4b4a47;
+  --color-dark-green: #274f4561;
+  --color-off-green: #D4E2CB;
   --color-secondary-black: #13141d;
   --color-accent-white: #fffdf8;
   --color-accent-gray: #a7a39c;
+  --color-accent-blue: #B0DEDB;
 
   /* Font Family */
   --font-lato: var(--font-lato);

@@ -64,7 +64,7 @@ const TradeLayout = ({ children, initialTab }: TradeLayoutProps) => {
                 className={`border rounded-[8px] px-2 py-[2px] text-sm border-secondary-black
                   ${
                     activeTab === tab.label
-                      ? " bg-[#D4E2CB] text-[#6D2D4E2CB8D9]"
+                      ? " bg-off-green text-[#6D2D4E2CB8D9]"
                       : "text-secondary-black"
                   }`}
               >

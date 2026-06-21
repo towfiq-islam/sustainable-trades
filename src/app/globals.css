@@ -7,9 +7,12 @@
   --color-accent-red: #e48872;
   --color-primary-red: #8b200c;
   --color-secondary-gray: #4b4a47;
+  --color-dark-green: #274f4561;
+  --color-off-green: #D4E2CB;
   --color-secondary-black: #13141d;
   --color-accent-white: #fffdf8;
   --color-accent-gray: #a7a39c;
+  --color-accent-blue: #B0DEDB;
 
   /* Font Family */
   --font-lato: var(--font-lato);
@@ -76,6 +79,10 @@ body {
 
 .form-input {
   @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2  lg:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray;
+}
+
+.shipping_form .form-input {
+  @apply py-1.5 md:py-2 rounded-[6px];
 }
 
 .form-error {

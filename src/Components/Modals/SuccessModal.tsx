@@ -5,7 +5,7 @@ const SuccessModal = () => {
   return (
     <div className="flex flex-col items-center text-center gap-6 p-5">
       <h3 className="text-4xl font-semibold text-primary-green">Success!</h3>
-      <p className="size-22 rounded-full grid place-items-center bg-[#B0DEDB]">
+      <p className="size-22 rounded-full grid place-items-center bg-accent-blue">
         <BigMessageSvg />
       </p>
 

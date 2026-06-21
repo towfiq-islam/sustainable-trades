@@ -92,7 +92,7 @@ const DiscountsPage = () => {
 
           {/* Create button */}
           <Link href="/dashboard/pro/discounts/create-discount">
-            <button className="hover:border-[#D4E2CB] hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2 px-5 text-[178px] md:text-[20px] font-semibold cursor-pointer w-full md:w-fit bg-[#D4E2CB] text-primary-green duration-500 ease-in-out">
+            <button className="hover:border-off-green hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2 px-5 text-[178px] md:text-[20px] font-semibold cursor-pointer w-full md:w-fit bg-off-green text-primary-green duration-500 ease-in-out">
               Create Discount
             </button>
           </Link>
@@ -107,8 +107,8 @@ const DiscountsPage = () => {
             onClick={() => setStatus(tab?.label)}
             className={`flex items-center justify-center gap-2 border-2 border-primary-green rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 cursor-pointer font-semibold capitalize ${
               status === tab?.label
-                ? "bg-[#D4E2CB] text-primary-green"
-                : "text-primary-green hover:bg-[#D4E2CB]"
+                ? "bg-off-green text-primary-green"
+                : "text-primary-green hover:bg-off-green"
             }`}
           >
             {tab?.label}
@@ -119,7 +119,7 @@ const DiscountsPage = () => {
         <button
           onClick={handleDelete}
           disabled={isPending}
-          className={`flex items-center justify-center gap-2 border-2 border-primary-green text-primary-green hover:bg-[#D4E2CB] rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 font-semibold capitalize ${
+          className={`flex items-center justify-center gap-2 border-2 border-primary-green text-primary-green hover:bg-off-green rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 font-semibold capitalize ${
             isPending ? "cursor-not-allowed" : "cursor-pointer"
           }`}
         >
@@ -207,7 +207,7 @@ const DiscountsPage = () => {
                   <Link
                     href={`/dashboard/pro/discounts/create-discount/${d?.id}`}
                   >
-                    <button className="py-2 px-2 md:text-sm rounded bg-[#D4E2CB] text-primary-green cursor-pointer flex gap-x-2 font-semibold">
+                    <button className="py-2 px-2 md:text-sm rounded bg-off-green text-primary-green cursor-pointer flex gap-x-2 font-semibold">
                       <Pen />
                       Edit
                     </button>

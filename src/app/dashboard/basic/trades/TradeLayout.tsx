@@ -29,7 +29,9 @@ const TradeLayout = ({ children, initialTab }: TradeLayoutProps) => {
     <div>
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h3 className="text-[40px] font-semibold text-[#000]">Trades</h3>
+        <h3 className="text-[40px] font-semibold text-secondary-black">
+          Trades
+        </h3>
         <div className="relative">
           <input
             placeholder="Search..."
@@ -53,16 +55,16 @@ const TradeLayout = ({ children, initialTab }: TradeLayoutProps) => {
               className={`flex gap-x-3 items-center text-[16px] cursor-pointer pb-5 px-20 justify-center
                 ${
                   activeTab === tab.label
-                    ? "font-semibold text-[#000] relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[8px] after:bg-primary-green after:rounded-lg"
+                    ? "font-semibold text-secondary-black relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[8px] after:bg-primary-green after:rounded-lg"
                     : "text-secondary-black"
                 }`}
             >
               {tab.label}
               <span
-                className={`border rounded-[8px] px-2 py-[2px] text-sm border-[#000]
+                className={`border rounded-[8px] px-2 py-[2px] text-sm border-secondary-black
                   ${
                     activeTab === tab.label
-                      ? " bg-[#D4E2CB] text-[#6D2D4E2CB8D9]"
+                      ? " bg-off-green text-[#6D2D4E2CB8D9]"
                       : "text-secondary-black"
                   }`}
               >

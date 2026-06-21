@@ -12,7 +12,7 @@ const DashBoardHeader: React.FC<dashboardheaderprops> = ({
 }) => {
   return (
     <div className="flex flex-col lg:flex-row justify-between lg:items-center">
-      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold mb-2 md:mb-0 text-[#000]">
+      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold mb-2 md:mb-0 text-secondary-black">
         {heading}
       </h2>
       {/* <div className="flex flex-col md:flex-row gap-2 md:gap-4 md:items-center">
@@ -27,7 +27,7 @@ const DashBoardHeader: React.FC<dashboardheaderprops> = ({
             </div>
             <div className="absolute top-0 right-10 w-[2px] bg-primary-green h-[35px] md:h-[45px]"></div>
           </div>
-          <button className="cursor-pointer bg-[#D4E2CB] py-2 md:py-3 px-4 rounded-[100px] text-primary-green w-full text-[13px] md:text-base lg:w-fit text-nowrap font-lato font-semibold hover:scale-104 duration-500 ease-in-out">
+          <button className="cursor-pointer bg-off-green py-2 md:py-3 px-4 rounded-[100px] text-primary-green w-full text-[13px] md:text-base lg:w-fit text-nowrap font-lato font-semibold hover:scale-104 duration-500 ease-in-out">
             Continue Shopping
           </button>
         </div> */}

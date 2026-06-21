@@ -1,12 +1,10 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Lato } from "next/font/google";
-import { Toaster } from "react-hot-toast";
-import { getSiteSettings } from "@/Hooks/api/cms_api";
 import AosProvider from "@/Provider/AosProvider/AosProvider";
 import AuthProvider from "@/Provider/AuthProvider/AuthProvider";
 import QueryProvider from "@/Provider/QueryProvider/QueryProvider";
-
+import ToastProvider from "@/Provider/ToastProvider/ToastProvider";
 
 // Fonts
 const lato = Lato({
@@ -20,6 +18,9 @@ const lato = Lato({
 export const metadata: Metadata = {
   title: "Sustainable Trades",
   description: "An E-commerce Website",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default async function RootLayout({
@@ -27,25 +28,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let faviconUrl = "/favicon.svg";
-  const siteSettings = await getSiteSettings();
-  if (siteSettings?.data?.favicon) {
-    faviconUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/${siteSettings.data.favicon}`;
-  }
-
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href={faviconUrl} />
-      </head>
       <body className={`${lato.variable} antialiased`}>
         <QueryProvider>
           <AuthProvider>
             <AosProvider>
-              <Toaster />
+              <ToastProvider />
               {children}
             </AosProvider>
-            <Toaster />
           </AuthProvider>
         </QueryProvider>
       </body>

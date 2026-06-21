@@ -111,7 +111,7 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
               {!profilePending && (
                 <label
                   htmlFor="profile"
-                  className="absolute right-2 top-1 bg-white size-10 cursor-pointer rounded-full grid place-items-center z-50 border border-gray-200"
+                  className="absolute right-2 top-1 bg-white size-10 cursor-pointer rounded-full grid place-items-center z-10 border border-gray-200"
                 >
                   <EditIconSvg />
                 </label>
@@ -186,7 +186,7 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
               </div>
 
               <div className="flex gap-2 items-center">
-                <p className="flex justify-center items-center size-7 rounded-full bg-[#D4E2CB]">
+                <p className="flex justify-center items-center size-7 rounded-full bg-off-green">
                   <DThreeSvg />
                 </p>
                 <p className="text-secondary-black font-semibold">

@@ -21,7 +21,7 @@ const EditOrderModal: React.FC<OrderNoteProps> = ({
         <div className="bg-white rounded-lg w-full max-w-xl p-3 md:p-6 relative">
           {/* Close Button */}
           <div className="flex justify-between py-1.5 md:py-3 border-b border-gray-300">
-            <h3 className="text-[24px] font-normal text-[#000]">
+            <h3 className="text-[24px] font-normal text-secondary-black">
               Shipping Details
             </h3>
             <button

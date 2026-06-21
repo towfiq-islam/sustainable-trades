@@ -7,6 +7,10 @@ import Modal from "@/Components/Common/Modal";
 import { MdOutlineLocationOn } from "react-icons/md";
 import { RiLightbulbFlashLine } from "react-icons/ri";
 import { IoLocationSharp } from "react-icons/io5";
+import { BsCartPlus } from "react-icons/bs";
+import { FaTruck } from "react-icons/fa";
+import { GiOpenBook } from "react-icons/gi";
+import shippoImg from "@/Assets/shippo.png";
 import {
   useFlatRate,
   useWeightRate,
@@ -22,6 +26,7 @@ import {
 } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
+import Image from "next/image";
 
 interface FlatRateForm {
   option_name: string;
@@ -92,6 +97,7 @@ const Page = () => {
         if (data?.success) {
           toast.success(data?.message);
           resetWeight();
+          setOpenWightModal(false);
           refetch();
         }
       },
@@ -151,7 +157,7 @@ const Page = () => {
 
   return (
     <>
-      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000] border-b border-[#BFBEBE] pb-2">
+      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-secondary-black border-b border-[#BFBEBE] pb-2">
         Shipping
       </h2>
 
@@ -164,10 +170,22 @@ const Page = () => {
                 Shipping Settings
               </h4>
 
-              <p className="text-secondary-black text-[13px] md:text-[16px] font-normal mb-5">
+              <p className="text-secondary-black text-[13px] md:text-[16px] font-normal mb-3">
                 Manage how shipping costs are calculated for your customers at
                 checkout. <br /> Choose the option that best fits your products
                 and fulfillment process.
+              </p>
+
+              <p className="text-secondary-black text-[13px] md:text-[16px] font-normal mb-5">
+                Please note: Shipping is only available for shops with an online
+                payment provider connected. <br /> To connect a payment
+                provider, go to Payments -{" "}
+                <Link
+                  className="underline text-primary-green"
+                  href="/dashboard/pro/payment-method"
+                >
+                  Payment Integration.
+                </Link>
               </p>
 
               <h5 className="text-secondary-black text-[13px] md:text-[16px] font-semibold">
@@ -317,7 +335,7 @@ const Page = () => {
               </button>
             </div>
 
-            <div className="border border-[#d4e2cb]/40 bg-[#d4e2cb]/20 rounded-lg p-5">
+            <div className="border border-off-green/40 bg-off-green/20 rounded-lg p-5">
               <div className="flex gap-3">
                 <div className="w-8 h-8 rounded-full bg-primary-green text-white flex items-center justify-center">
                   i
@@ -336,10 +354,10 @@ const Page = () => {
           {/* Right */}
           <div className="space-y-6">
             {/* Card 1 */}
-            <div className="border rounded-xl p-5 border-[#d4e2cb]/40 bg-[#d4e2cb]/20 text-[15px]">
+            <div className="border rounded-xl p-5 border-off-green/40 bg-off-green/20 text-[15px]">
               <div className="flex gap-4">
-                <div className="w-16 h-16 rounded-full bg-[#d4e2cb]/50 flex items-center justify-center shrink-0 text-2xl">
-                  🛒
+                <div className="w-16 h-16 rounded-full bg-off-green/50 text-primary-green flex items-center justify-center shrink-0 text-2xl">
+                  <BsCartPlus />
                 </div>
 
                 <div>
@@ -361,10 +379,10 @@ const Page = () => {
             </div>
 
             {/* Card 2 */}
-            <div className="border rounded-xl p-5 border-[#f4d09b91]  bg-[#f4d09b17] text-[15px]">
+            <div className="border rounded-xl p-5 border-off-green/40 bg-off-green/20  text-[15px]">
               <div className="flex gap-4">
-                <div className="w-16 h-16 rounded-full shrink-0 bg-[#FFF1D8] flex items-center justify-center text-2xl">
-                  🚚
+                <div className="w-16 h-16 rounded-full shrink-0 bg-off-green/50 text-primary-green flex items-center justify-center text-2xl">
+                  <FaTruck />
                 </div>
 
                 <div>
@@ -396,10 +414,10 @@ const Page = () => {
             </div>
 
             {/* Card 3 */}
-            <div className="border rounded-xl p-5 border-gray-300 bg-[#FAFAF8] text-[15px]">
+            <div className="border rounded-xl p-5 border-off-green/40 bg-off-green/20 text-[15px]">
               <div className="flex gap-4">
-                <div className="w-16 h-16 rounded-full bg-[#EEF3EA] flex items-center justify-center shrink-0 text-2xl">
-                  📖
+                <div className="w-16 h-16 rounded-full bg-off-green/50 text-primary-green flex items-center justify-center shrink-0 text-2xl">
+                  <GiOpenBook />
                 </div>
 
                 <div>
@@ -489,7 +507,7 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="border border-[#d4e2cb]/40 bg-[#d4e2cb]/40 rounded-lg font-semibold p-4">
+          <div className="border border-off-green/40 bg-off-green/40 rounded-lg font-semibold p-4">
             <p className="text-primary-green text-sm flex gap-2 items-center">
               <MdOutlineLocationOn className="text-xl" />
               This flat rate option is for U.S. and Canada only.
@@ -540,7 +558,7 @@ const Page = () => {
               <input
                 type="number"
                 className="form-input"
-                placeholder="kg"
+                placeholder="lbs"
                 {...registerWeight("min_weight", { required: true })}
               />
 
@@ -556,7 +574,7 @@ const Page = () => {
               <input
                 type="number"
                 className="form-input"
-                placeholder="kg"
+                placeholder="lbs"
                 {...registerWeight("max_weight", { required: true })}
               />
 
@@ -578,9 +596,9 @@ const Page = () => {
             </button>
           </div>
 
-          <div className="border border-[#d4e2cb]/30 bg-[#d4e2cb]/30 rounded-lg p-4">
+          <div className="border border-off-green/30 bg-off-green/30 rounded-lg p-4">
             <div className="text-primary-green text-sm flex gap-5 items-center">
-              <span className="shrink-0 bg-[#d4e2cb]/60 size-14 rounded-full grid place-items-center">
+              <span className="shrink-0 bg-off-green/60 size-14 rounded-full grid place-items-center">
                 <RiLightbulbFlashLine className="text-2xl" />
               </span>
 
@@ -595,7 +613,7 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="border border-[#d4e2cb]/30 bg-[#d4e2cb]/30 rounded-lg font-semibold -mt-2 p-4">
+          <div className="border border-off-green/30 bg-off-green/30 rounded-lg font-semibold -mt-2 p-4">
             <p className="text-gray-700 text-sm flex gap-2 items-center">
               <IoLocationSharp className="text-xl text-primary-green" />
               This weight-based rate option is for U.S. and Canada only.
@@ -655,13 +673,14 @@ const Page = () => {
         open={openConnectModal}
         onClose={() => setOpenConnectFlatModal(false)}
       >
+        <Image src={shippoImg} alt="shippo" className="w-2/5 mx-auto" />
         <h3 className="text-[#3D3D3D] text-[18px] md:text-[24px] font-bold text-center">
           {user?.shop_info?.shippo_connected
             ? "DISCONNECT FROM SHIPPO"
             : "CONNECT TO SHIPPO"}
         </h3>
 
-        <div className="px-6 py-6 space-y-5">
+        <div className="px-6 pt-3 pb-6 space-y-5">
           <p className="font-semibold text-secondary-black">
             Flexible, powerful shipping starting at $0/month (billed directly by
             Shippo)
@@ -697,7 +716,7 @@ const Page = () => {
             To learn more,{" "}
             <Link
               target="_blank"
-              href="https://support.goshippo.com/hc/en-us/articles/360003855652-Shippo-Subscription-Plan-Overview#h_bbb2a330-d818-489d-b316-26700ac76825"
+              href="https://support.goshippo.com/hc/en-us/articles/360003855652-Shippo-Subscription-Plan-Overview#h_01HNGBRQ4NXCKXWMCYQSQHC666"
               className="text-blue-500 underline"
             >
               view Shippo’s pricing plans here

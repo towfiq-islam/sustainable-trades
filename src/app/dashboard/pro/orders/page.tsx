@@ -69,6 +69,8 @@ const page = () => {
     { label: "Order Number #", key: "order_number" },
     { label: "Order Date", key: "order_date" },
     { label: "Customer", key: "customer" },
+    { label: "Email", key: "email" },
+    { label: "Opt In", key: "opt" },
     { label: "Items", key: "total_quantity" },
     { label: "Amount", key: "total_amount" },
     { label: "Payment Method", key: "payment_method" },
@@ -83,12 +85,19 @@ const page = () => {
       order_number: order?.order_number,
       order_date: moment(order?.created_at).format("ll"),
       customer: `${order?.user?.first_name || ""} ${order?.user?.last_name || ""}`,
+      email: order?.user?.email,
+      opt: order?.subscribe_website ? "Yes" : "No",
       total_quantity: order?.total_quantity,
       total_amount: `$${order?.total_amount}`,
       payment_method:
         order?.payment_method === "paypal" ? "Paypal" : "Cash On Delivery",
       payment_status: order?.payment_status,
-      status: order?.status,
+      status:
+        order?.status === "local_pickup_requested"
+          ? "Local pickup requested"
+          : order?.status === "awaiting_payment"
+            ? "Awaiting Payment"
+            : order?.status,
       shipping_option:
         order?.shipping_option === "local_pickup" ? "Local Pickup" : "Shipping",
       note: order?.note || "",

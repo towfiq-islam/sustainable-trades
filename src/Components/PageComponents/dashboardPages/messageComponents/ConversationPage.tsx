@@ -165,12 +165,17 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
     return () => clearTimeout(timeout);
   }, [chats]);
 
+  // Pusher Config
   useEffect(() => {
     if (!echo || !user?.id) return;
-    echo
-      .private(`chat-channel.${user.id}`)
+
+    const echoInstance = echo;
+    const channelName = `chat-channel.${user.id}`;
+
+    const channel = echo.private(channelName);
+    channel
       .listen("MessageSentEvent", (e: any) => {
-        console.log("🔔 New message event received from main:", e);
+        console.log("New message event received:", e);
         if (e?.data?.receiver_id === +user.id) {
           setChats(prev => {
             const exists = prev.some(msg => msg.id === e.data.id);
@@ -178,8 +183,16 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
           });
         }
         queryClient.invalidateQueries(["get-all-conversation"] as any);
+      })
+      .error((error: any) => {
+        console.error("Channel subscription error:", error);
       });
-  }, [echo, user?.id]);
+
+    // Cleanup
+    return () => {
+      echoInstance.leave(`chat-channel.${user.id}`);
+    };
+  }, [user?.id]);
 
   const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

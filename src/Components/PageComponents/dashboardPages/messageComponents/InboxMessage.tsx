@@ -52,7 +52,7 @@ const InboxMessage = ({ search, activeTab }: Props) => {
     echo
       .private(`conversation-channel.${user?.id}`)
       .listen("ConversationEvent", (e: any) => {
-        console.log("🔔 New message event received from main:", e);
+        console.log("🔔 New message event received:", e);
         if (+e?.receiverId === +user?.id) {
           queryClient.invalidateQueries(["get-all-conversation"] as any);
         }

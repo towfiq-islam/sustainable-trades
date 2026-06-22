@@ -28,7 +28,7 @@ const page = () => {
   return (
     <>
       <div className="flex flex-col gap-2.5 md:gap-0 md:flex-row justify-between md:items-center">
-        <h2 className="text-[40px] font-lato font-semibold text-[#000]">
+        <h2 className="text-[40px] font-lato font-semibold text-secondary-black">
           Payments
         </h2>
 

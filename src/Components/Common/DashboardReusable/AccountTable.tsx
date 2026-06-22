@@ -48,7 +48,7 @@ const AccountTable = ({
     <div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between gap-3 border-b border-gray-400 pb-2">
-        <h4 className="text-[20px] sm:text-[24px] font-semibold text-[#000]">
+        <h4 className="text-[20px] sm:text-[24px] font-semibold text-secondary-black">
           {title}
         </h4>
 

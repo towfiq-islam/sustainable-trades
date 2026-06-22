@@ -30,7 +30,7 @@ const Header = () => {
             : "/dashboard/pro/view-listing"
         }
       >
-        <button className="text-[#000] text-[16px] font-semibold flex gap-x-1 items-center border-2 border-secondary-black rounded-lg py-3 px-6 hover:bg-accent-red hover:text-white duration-300 cursor-pointer">
+        <button className="text-secondary-black font-semibold flex gap-x-1 items-center border-2 border-secondary-black rounded-lg py-3 px-6 hover:bg-accent-red hover:text-white duration-300 cursor-pointer hover:border-accent-red">
           <MdArrowOutward />
           View Listings
         </button>

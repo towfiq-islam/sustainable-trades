@@ -169,7 +169,7 @@ const Page = ({ params }: Props) => {
     <section className="pt-[34px] lg:pb-[96px] pb-[40px]">
       <Container>
         <div className="2xl:px-[220px]">
-          <h2 className="lg:text-[40px] text-[30px] lg:text-start text-center font-bold text-[#000]">
+          <h2 className="lg:text-[40px] text-[30px] lg:text-start text-center font-bold text-secondary-black">
             Comprehensive Edit
           </h2>
 

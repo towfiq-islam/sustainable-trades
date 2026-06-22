@@ -4,6 +4,7 @@ import useAuth from "@/Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
+import { Lock } from "lucide-react";
 
 type FormData = {
   first_name: string;
@@ -60,7 +61,7 @@ const ShippingAddress = ({
           : "arrange_local_pickup",
       country: countryName,
       state,
-      address: data?.address,
+      address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
     };
 
     shippingTaxMutation(taxData, {
@@ -112,11 +113,18 @@ const ShippingAddress = ({
 
   return (
     <>
-      <h3 className="text-light-green font-semibold text-lg mb-3">
+      <h3 className="text-light-green font-semibold text-xl mb-1">
         Shipping Options
       </h3>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <p className="text-gray-600 mb-8">
+        Please enter the address where your order will be shipped.
+      </p>
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-4 shipping_form"
+      >
         {/* First Name + Last Name */}
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -176,6 +184,63 @@ const ShippingAddress = ({
             />
             {errors.phone && (
               <p className="form-error">{errors.phone.message}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Address */}
+        <div>
+          <label className="form-label">Address *</label>
+          <input
+            className="form-input"
+            defaultValue={user?.street_address}
+            placeholder="e.g. 200 Spectrum Center Dr"
+            {...register("address", {
+              required: "Address is required",
+            })}
+          />
+          {errors.address && (
+            <p className="form-error">{errors.address.message}</p>
+          )}
+        </div>
+
+        {/* Apt/Suite */}
+        <div>
+          <label className="form-label">Apt / Suite (Optional)</label>
+          <input
+            type="text"
+            className="form-input"
+            defaultValue={user?.apt}
+            {...register("apt")}
+            placeholder="Apartment / Suite"
+          />
+        </div>
+
+        {/* City + Zip */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="form-label">City *</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Austin"
+              defaultValue={user?.city}
+              {...register("city", { required: "City is required" })}
+            />
+            {errors.city && <p className="form-error">{errors.city.message}</p>}
+          </div>
+
+          <div>
+            <label className="form-label">Zip Code *</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="12345"
+              defaultValue={user?.postal_code}
+              {...register("postal_code", { required: "Zip code is required" })}
+            />
+            {errors.postal_code && (
+              <p className="form-error">{errors.postal_code.message}</p>
             )}
           </div>
         </div>
@@ -253,64 +318,6 @@ const ShippingAddress = ({
           </div>
         </div>
 
-        {/* City + Zip */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="form-label">City *</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Austin"
-              defaultValue={user?.city}
-              {...register("city", { required: "City is required" })}
-            />
-            {errors.city && <p className="form-error">{errors.city.message}</p>}
-          </div>
-
-          <div>
-            <label className="form-label">Zip Code *</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="12345"
-              defaultValue={user?.postal_code}
-              {...register("postal_code", { required: "Zip code is required" })}
-            />
-            {errors.postal_code && (
-              <p className="form-error">{errors.postal_code.message}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Apt/Suite */}
-        <div>
-          <label className="form-label">Apt / Suite (Optional)</label>
-          <input
-            type="text"
-            className="form-input"
-            defaultValue={user?.apt}
-            {...register("apt")}
-            placeholder="Apartment / Suite"
-          />
-        </div>
-
-        {/* Address */}
-        <div>
-          <label className="form-label">Address *</label>
-          <textarea
-            className="form-input"
-            rows={2}
-            defaultValue={user?.street_address}
-            placeholder="Texas, Austin"
-            {...register("address", {
-              required: "Address is required",
-            })}
-          />
-          {errors.address && (
-            <p className="form-error">{errors.address.message}</p>
-          )}
-        </div>
-
         {/* Button */}
         <button
           type="submit"
@@ -320,6 +327,11 @@ const ShippingAddress = ({
           Review Order
         </button>
       </form>
+
+      <div className="flex items-center justify-center gap-2 mt-3 text-gray-500">
+        <Lock size={16} />
+        <span>Your information is secure and encrypted.</span>
+      </div>
     </>
   );
 };

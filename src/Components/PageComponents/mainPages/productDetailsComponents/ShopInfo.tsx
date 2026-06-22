@@ -36,7 +36,7 @@ const ShopInfo = ({ data }: shopProps) => {
 
   // Mutation
   const { mutate: followShopMutation, isPending } = useFollowShop(
-    data?.shop?.id
+    data?.shop?.id,
   );
 
   // Func for follow shop
@@ -74,7 +74,7 @@ const ShopInfo = ({ data }: shopProps) => {
 
       <button
         onClick={handleFollowShop}
-        className="bg-[#B0DEDB] md:text-xl font-semibold flex gap-3 items-center text-primary-green px-5 py-2 rounded-lg cursor-pointer hover:scale-95 transition-transform duration-500"
+        className="bg-accent-blue md:text-xl font-semibold flex gap-3 items-center text-primary-green px-5 py-2 rounded-lg cursor-pointer hover:scale-95 transition-transform duration-500"
       >
         {isPending ? (
           <p className="flex gap-2 items-center justify-center">

@@ -63,7 +63,7 @@ const VendorOrders = () => {
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
         },
-      }
+      },
     );
   };
 
@@ -86,7 +86,7 @@ const VendorOrders = () => {
                         Order Placed
                       </h3>
 
-                      <p className="font-sans font-normal text-[#000] text-[16px]">
+                      <p className="font-sans font-normal text-secondary-black text-[16px]">
                         {moment(order?.created_at).format("LL")}
                       </p>
                     </div>
@@ -96,7 +96,7 @@ const VendorOrders = () => {
                         Total
                       </h3>
 
-                      <p className="font-sans font-normal text-[#000] text-[16px]">
+                      <p className="font-sans font-normal text-secondary-black text-[16px]">
                         ${order?.total_amount}
                       </p>
                     </div>
@@ -107,19 +107,30 @@ const VendorOrders = () => {
                       </h3>
 
                       <p
-                        className={`font-sans font-normal text-white px-3 text-sm py-1 rounded-lg capitalize ${
+                        className={`font-sans font-normal ${order?.status === "processing" ? "text-primary-green" : order?.status === "shipped" ? "text-secondary-gray" : "text-white"} px-3 text-sm py-1 rounded-lg capitalize ${
                           order?.status === "delivered"
                             ? "bg-primary-green"
-                            : order?.status === "pending"
-                            ? "bg-accent-red"
-                            : order?.status === "pending"
-                            ? "bg-blue-500"
-                            : order?.status === "cancelled"
-                            ? "bg-primary-red"
-                            : "bg-gray-500"
+                            : order?.status === "pending" ||
+                                order?.status === "local_pickup_requested"
+                              ? "bg-accent-red"
+                              : order?.status === "confirmed"
+                                ? "bg-dark-green"
+                                : order?.status === "processing"
+                                  ? "bg-off-green"
+                                  : order?.status === "cancelled"
+                                    ? "bg-primary-red"
+                                    : order?.status === "shipped"
+                                      ? "bg-accent-blue"
+                                      : order?.status === "paid"
+                                        ? "bg-light-green"
+                                        : "bg-gray-500"
                         }`}
                       >
-                        {order?.status}
+                        {order?.status === "local_pickup_requested"
+                          ? "Local pickup requested"
+                          : order?.status === "awaiting_payment"
+                            ? "Awaiting Payment"
+                            : order?.status}
                       </p>
                     </div>
                   </div>
@@ -130,7 +141,7 @@ const VendorOrders = () => {
                         Order Number
                       </h3>
 
-                      <p className="font-sans font-normal text-[#000] text-[16px]">
+                      <p className="font-sans font-normal text-secondary-black text-[16px]">
                         {order?.order_number}
                       </p>
                     </div>
@@ -165,11 +176,11 @@ const VendorOrders = () => {
               <div className="pt-2 px-4 pb-4">
                 <div className="flex flex-col gap-2.5 sm:gap-0 sm:flex-row sm:justify-between sm:items-center">
                   <div>
-                    <h4 className="text-[16px] sm:text-[20px] font-bold text-[#000]">
+                    <h4 className="text-[16px] sm:text-[20px] font-bold text-secondary-black">
                       {order?.shop?.shop_name}
                     </h4>
 
-                    <p className="font-sans font-normal text-[#000] text-[13px] sm:text-[16px] pt-2 pb-3">
+                    <p className="font-sans font-normal text-secondary-black text-[13px] sm:text-[16px] pt-2 pb-3">
                       {order?.latest_order_status?.content}
                     </p>
 
@@ -188,7 +199,7 @@ const VendorOrders = () => {
                           </figure>
 
                           <div className="flex flex-col gap-1.5">
-                            <h5 className="text-[16px] sm:text-[20px] font-bold text-[#000]">
+                            <h5 className="text-[16px] sm:text-[20px] font-bold text-secondary-black">
                               {item?.product?.product_name}
                             </h5>
                             <h5 className="text-[#222]">
@@ -215,21 +226,21 @@ const VendorOrders = () => {
                         isOpen(true);
                         setOrderId(order?.id);
                       }}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
+                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-secondary-black cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
                     >
                       Track Package
                     </button>
 
                     <Link
                       href={`/dashboard/pro/orders/details/${order?.id}`}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-[#000] cursor-pointer text-center w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
+                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-secondary-black cursor-pointer text-center w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
                     >
                       View Order
                     </Link>
 
                     <Link
                       href={`/dashboard/${order?.shop?.user?.membership?.membership_type}/messages/inbox/${order?.shop?.user?.membership?.user_id}`}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal text-[#000] cursor-pointer w-full sm:w-[250px] text-center hover:scale-105 duration-500 ease-in-out"
+                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal text-secondary-black cursor-pointer w-full sm:w-[250px] text-center hover:scale-105 duration-500 ease-in-out"
                     >
                       Get Help
                     </Link>

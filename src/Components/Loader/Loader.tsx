@@ -732,6 +732,18 @@ export const OrderRowSkeleton = () => {
         <div className="h-4 w-14 bg-gray-200 rounded" />
       </td>
 
+      <td className="py-4 px-4">
+        <div className="h-4 w-14 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-4 w-14 bg-gray-200 rounded" />
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="h-4 w-12 bg-gray-200 rounded" />
+      </td>
+
       <td className="py-4 px-4 text-center">
         <div className="h-5 w-5 mx-auto bg-gray-200 rounded-full" />
       </td>

@@ -48,7 +48,7 @@ const page = () => {
           Accounting
         </h3>
 
-        <div className="flex flex-wrap gap-3 md:gap-6 items-center w-full md:w-fit ">
+        <div className="flex flex-wrap gap-3 md:gap-6 items-center w-full md:w-fit">
           <CSVLink
             data={accountingData?.data?.orders || []}
             headers={headers}

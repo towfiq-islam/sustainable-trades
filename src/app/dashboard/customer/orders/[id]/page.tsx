@@ -221,7 +221,7 @@ const OrderDetailsPage = () => {
 
                     <Link
                       href={`/product-details/${item?.product_id}`}
-                      className="text-sm px-2 mt-1 py-1.5 rounded-[8px] w-fit bg-[#D4E2CB] flex gap-2 cursor-pointer group"
+                      className="text-sm px-2 mt-1 py-1.5 rounded-[8px] w-fit bg-off-green flex gap-2 cursor-pointer group"
                     >
                       <Again className="transition-transform duration-500 group-hover:rotate-[260deg]" />
                       Buy it again

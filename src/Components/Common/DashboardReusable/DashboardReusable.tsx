@@ -140,13 +140,13 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
           <div className="border border-accent-gray rounded-[10px] w-full md:w-[380px]">
             <div className="p-3">
               <div className="flex justify-between">
-                <h5 className="text-[16px] text-[#000] font-semibold text-center">
+                <h5 className="text-[16px] text-secondary-black font-semibold text-center">
                   Inventory
                 </h5>
 
                 <Link
                   href={`/dashboard/${user?.membership?.membership_type}/listing`}
-                  className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+                  className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer"
                 >
                   More
                   <FaAngleRight />
@@ -174,7 +174,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
 
                     <div className="w-full">
                       <div className="flex w-full justify-between items-center">
-                        <h4 className="text-[14px] text-[#000] font-semibold truncate w-40">
+                        <h4 className="text-[14px] text-secondary-black font-semibold truncate w-40">
                           {item?.product_name}
                         </h4>
 
@@ -185,11 +185,11 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                         </h4>
                       </div>
 
-                      <p className="text-sm text-[#000] font-normal py-1 truncate">
+                      <p className="text-sm text-secondary-black font-normal py-1 truncate">
                         {item?.selling_option}
                       </p>
 
-                      <h6 className="text-[12px] text-[#000] font-semibold">
+                      <h6 className="text-[12px] text-secondary-black font-semibold">
                         {item?.out_of_stock ? "Out of stock" : "In Stock"}
                       </h6>
                     </div>
@@ -228,13 +228,13 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
       {/* Recent Activity */}
       <div className="border border-accent-gray rounded-[8px]">
         <div className="flex justify-between p-4">
-          <h5 className="text-[16px] text-[#000] font-semibold text-center">
+          <h5 className="text-[16px] text-secondary-black font-semibold text-center">
             Recent Activity
           </h5>
 
           <Link
             href={`/dashboard/${user?.membership?.membership_type}/notification`}
-            className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+            className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer"
           >
             More
             <FaAngleRight />
@@ -267,7 +267,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                   </figure>
 
                   <div className="">
-                    <h5 className="text-[14px] text-[#000] font-semibold">
+                    <h5 className="text-[14px] text-secondary-black font-semibold">
                       {item?.user?.name}
                     </h5>
                     <p className="text-[14px] text-[#67645F] font-normal">
@@ -277,7 +277,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                 </div>
 
                 <div>
-                  <h5 className="text-[14px] text-[#000] font-semibold">
+                  <h5 className="text-[14px] text-secondary-black font-semibold">
                     {item?.data?.subject}
                   </h5>
                   <p className="text-[14px] text-[#67645F] font-normal truncate">

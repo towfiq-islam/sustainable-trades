@@ -307,7 +307,7 @@ const CreateDiscount = () => {
             onClick={() => setDiscountType("code")}
             className={`px-4 py-[9px] md:py-[18px] rounded-l-md cursor-pointer text-[16px] md:text-[20px] text-primary-green font-semibold ${
               discountType === "code"
-                ? "bg-[#D4E2CB] border-2 border-primary-green "
+                ? "bg-off-green border-2 border-primary-green "
                 : "bg-white border-2 border-[#67645F]"
             }`}
           >
@@ -317,7 +317,7 @@ const CreateDiscount = () => {
             onClick={() => setDiscountType("auto")}
             className={`px-6 py-2 rounded-r-md cursor-pointer  text-[16px] md:text-[20px] text-primary-green font-semibold ${
               discountType === "auto"
-                ? "bg-[#D4E2CB] border-2 border-primary-green "
+                ? "bg-off-green border-2 border-primary-green "
                 : "bg-white border-2 border-[#67645F]"
             }`}
           >
@@ -373,7 +373,7 @@ const CreateDiscount = () => {
           }`}
         >
           <select
-            className="px-4 py-2.5 md:py-5 w-full bg-[#D4E2CB] rounded-l-md text-[#5C7F60] font-bold text-[13px] md:text-[16px] outline-0"
+            className="px-4 py-2.5 md:py-5 w-full bg-off-green rounded-l-md text-[#5C7F60] font-bold text-[13px] md:text-[16px] outline-0"
             value={promoType}
             onChange={e => setPromoType(e.target.value)}
           >
@@ -404,7 +404,7 @@ const CreateDiscount = () => {
           Applies To
         </h4>
         <select
-          className="mt-3 border border-[#3D3D3D] rounded-md px-4 py-2.5 md:py-5  w-full lg:w-[750px] bg-[#D4E2CB] text-[13px] md:text-[16px] font-bold text-primary-green"
+          className="mt-3 border border-[#3D3D3D] rounded-md px-4 py-2.5 md:py-5  w-full lg:w-[750px] bg-off-green text-[13px] md:text-[16px] font-bold text-primary-green"
           value={appliesTo}
           onChange={e => {
             setAppliesTo(e.target.value);
@@ -629,14 +629,14 @@ const CreateDiscount = () => {
         <button
           onClick={handleDiscard}
           disabled={isPending}
-          className="text-primary-green border-primary-green border rounded-[8px] px-16 py-2 md:py-4 text-base  md:text-[20px] font-semibold cursor-pointer hover:bg-[#D4E2CB] duration-500 ease-in-out disabled:opacity-50"
+          className="text-primary-green border-primary-green border rounded-[8px] px-16 py-2 md:py-4 text-base  md:text-[20px] font-semibold cursor-pointer hover:bg-off-green duration-500 ease-in-out disabled:opacity-50"
         >
           Discard
         </button>
         <button
           onClick={handleSave}
           disabled={isPending}
-          className="hover:border-[#D4E2CB] hover:border border hover:bg-transparent rounded-[8px] px-16 py-2 md:py-4 text-base md:text-[20px] font-semibold cursor-pointer bg-[#D4E2CB] w-full md:w-fit text-primary-green duration-500 ease-in-out disabled:opacity-50"
+          className="hover:border-off-green hover:border border hover:bg-transparent rounded-[8px] px-16 py-2 md:py-4 text-base md:text-[20px] font-semibold cursor-pointer bg-off-green w-full md:w-fit text-primary-green duration-500 ease-in-out disabled:opacity-50"
         >
           {isPending
             ? "Saving..."

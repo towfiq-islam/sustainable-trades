@@ -100,7 +100,7 @@ const ProductLocation = () => {
                         <div className="text-secondary-gray text-xs md:text-sm mt-2">
                           <div>
                             {product?.selling_option === "trade/barter" && (
-                              <p className="size-5.5 shrink-0 rounded-full bg-[#D4E2CB] grid place-items-center">
+                              <p className="size-5.5 shrink-0 rounded-full bg-off-green grid place-items-center">
                                 <SignSvg />
                               </p>
                             )}
@@ -115,7 +115,7 @@ const ProductLocation = () => {
                                 <p className="size-5.5 shrink-0 rounded-full bg-accent-red grid place-items-center">
                                   <DollarSvg />
                                 </p>
-                                <p className="size-5.5 shrink-0 rounded-full bg-[#D4E2CB] grid place-items-center">
+                                <p className="size-5.5 shrink-0 rounded-full bg-off-green grid place-items-center">
                                   <SignSvg />
                                 </p>
                               </div>

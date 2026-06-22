@@ -23,7 +23,7 @@ const Page = () => {
 
   return (
     <>
-      <h2 className="text-[25px] md:text-[40px] font-lato font-semibold text-[#000]">
+      <h2 className="text-[25px] md:text-[40px] font-lato font-semibold text-secondary-black">
         Listings
       </h2>
 

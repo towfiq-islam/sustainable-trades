@@ -148,7 +148,7 @@ const Product = ({
         {/* Selling Option */}
         <div>
           {product?.selling_option === "trade/barter" && (
-            <p className="size-6 shrink-0 rounded-full bg-[#D4E2CB] grid place-items-center">
+            <p className="size-6 shrink-0 rounded-full bg-off-green grid place-items-center">
               <SignSvg />
             </p>
           )}
@@ -162,7 +162,7 @@ const Product = ({
               <p className="size-6 shrink-0 rounded-full bg-accent-red grid place-items-center">
                 <DollarSvg />
               </p>
-              <p className="size-6 shrink-0 rounded-full bg-[#D4E2CB] grid place-items-center">
+              <p className="size-6 shrink-0 rounded-full bg-off-green grid place-items-center">
                 <SignSvg />
               </p>
             </div>

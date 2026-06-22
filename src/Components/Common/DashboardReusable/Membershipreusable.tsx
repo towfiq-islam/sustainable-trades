@@ -42,7 +42,7 @@ const Membershipreusable: React.FC<MembershipReusableProps> = ({
     <div>
       {/* Header and Tabs */}
       <div className="flex gap-3.5 md:gap-0 flex-col md:flex-row justify-between items-center">
-        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000]">
+        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-secondary-black">
           Membership Details
         </h2>
         <div className="flex gap-x-2 items-center border border-accent-gray rounded-[8px]">
@@ -113,7 +113,7 @@ const Membershipreusable: React.FC<MembershipReusableProps> = ({
                           key={benefit.id}
                           className="flex gap-3 items-center mb-3"
                         >
-                          <div className="size-10 rounded-full bg-[#B0DEDB] grid place-items-center">
+                          <div className="size-10 rounded-full bg-accent-blue grid place-items-center">
                             {benefit.benefit_icon ? (
                               <img
                                 src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/${benefit.benefit_icon}`}

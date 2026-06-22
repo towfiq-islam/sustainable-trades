@@ -10,7 +10,6 @@ interface QuantitySectionProps {
 
 const QuantitySection = ({
   control,
-  errors,
   watch,
   isBasicMember,
 }: QuantitySectionProps) => {
@@ -21,25 +20,6 @@ const QuantitySection = ({
       <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
         Quantity
       </h3>
-      {/* <Controller
-        name="product_quantity"
-        control={control}
-        rules={{
-          validate: value =>
-            !value ||
-            /^\d+$/.test(value.toString()) ||
-            "Quantity must be a number",
-        }}
-        render={({ field }) => (
-          <input
-            type="number"
-            {...field}
-            className={`w-full lg:w-[350px] border border-accent-gray rounded-lg p-2 md:p-4 mt-2 text-secondary-black font-normal outline-0 ${
-              isBasicMember ? "" : ""
-            }`}
-          />
-        )}
-      /> */}
 
       <Controller
         name="product_quantity"

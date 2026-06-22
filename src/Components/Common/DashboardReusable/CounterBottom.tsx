@@ -68,7 +68,7 @@ const CounterBottom = () => {
     <div className="flex flex-col lg:flex-row justify-between gap-10 border-b border-[#BFBEBE] md:pb-8 ">
       <div className="w-full lg:w-1/2 border border-[#BFBEBE]  rounded-lg shadow-sm flex flex-col bg-white mt-10">
         {/* Header */}
-        <div className="bg-[#D4E2CB] px-4 py-3 border-b border-[#BFBEBE] flex items-center gap-3 rounded-t-lg">
+        <div className="bg-off-green px-4 py-3 border-b border-[#BFBEBE] flex items-center gap-3 rounded-t-lg">
           <img
             src="https://i.pravatar.cc/40?img=1"
             alt="Linda Anderson"
@@ -90,7 +90,7 @@ const CounterBottom = () => {
               <div
                 className={`max-w-xs p-3 rounded-lg text-sm ${
                   msg.isOwn
-                    ? "bg-[#D4E2CB] text-gray-800"
+                    ? "bg-off-green text-gray-800"
                     : "bg-gray-100 text-gray-800"
                 }`}
               >
@@ -202,7 +202,7 @@ const CounterBottom = () => {
             <h4 className="text-[18px] lg:text-[20px] font-semibold text-primary-green">
               Organic Bath Soaps
             </h4>
-            <h3 className="text-[22px] lg:text-[32px] font-semibold text-[#000] py-3">
+            <h3 className="text-[22px] lg:text-[32px] font-semibold text-secondary-black py-3">
               Coconut Bar Soap
             </h3>
             <ul>
@@ -219,7 +219,7 @@ const CounterBottom = () => {
               </li>
             </ul>
             <div className="flex gap-x-2 mt-4 items-center">
-              <h4 className="text-[14px] font-bold text-[#000] underline">
+              <h4 className="text-[14px] font-bold text-secondary-black underline">
                 Organic Bath Soaps
               </h4>
               <div className="flex gap-x-[2px]">
@@ -232,10 +232,10 @@ const CounterBottom = () => {
             </div>
             <div className="flex gap-x-2 items-center mt-1">
               <LocationSvg1 />
-              <h5 className="text-[14px] underline cursor-pointer text-[#000] font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-secondary-black font-lato">
                 13 mi. away -
               </h5>
-              <h5 className="text-[14px] underline cursor-pointer text-[#000] font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-secondary-black font-lato">
                 Denver, CO
               </h5>
             </div>

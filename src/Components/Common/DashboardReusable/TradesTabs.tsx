@@ -144,7 +144,6 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
     }
   };
 
-
   return (
     <>
       {isLoading ? (
@@ -179,7 +178,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                       : trade.status === "sent"
                         ? "bg-blue-500"
                         : trade.status === "accepted"
-                          ? "bg-[#B0DEDB] text-black"
+                          ? "bg-accent-blue text-black"
                           : "bg-primary-red text-white"
                   }`}
                 >

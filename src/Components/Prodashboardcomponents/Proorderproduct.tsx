@@ -54,13 +54,13 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
       <div className="flex flex-col-reverse md:flex-row justify-between">
         <div className="flex gap-x-1 items-center">
           <h5 className="text-[16px] font-bold text-[#67645F]">Order ID</h5>
-          <p className="text-[14px] font-normal text-[#000]">
+          <p className="text-[14px] font-normal text-secondary-black">
             {data?.order_number}
           </p>
         </div>
         <div className="flex gap-x-1 items-center">
           <h5 className="text-[16px] font-bold text-[#67645F]">Date Ordered</h5>
-          <p className="text-[14px] font-normal text-[#000]">
+          <p className="text-[14px] font-normal text-secondary-black">
             {moment(data?.created_at).format("ll")}
           </p>
         </div>

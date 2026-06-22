@@ -20,6 +20,7 @@ type Props = {
   subTotal: number;
   cart_id: number | null;
   taxData: any;
+  shop_name: string;
 };
 
 function OrderItem({
@@ -51,6 +52,7 @@ export default function OrderReviewModal({
   cart_id,
   subTotal,
   taxData,
+  shop_name,
 }: Props) {
   const [promo, setPromo] = useState<string>("");
   const { mutate: couponMutation, isPending } = useApplyCoupon();
@@ -101,7 +103,16 @@ export default function OrderReviewModal({
       </p>
 
       {/* Newsletter */}
-      <div className="mt-4 space-y-2.5">
+      <div className="mt-2 space-y-2.5">
+        <p>
+          <span className="text-secondary-gray font-semibold text-sm">
+            Email:{" "}
+          </span>
+          <span className="flex items-center gap-2 text-sm text-gray-700">
+            {formData?.email}
+          </span>
+        </p>
+
         <label className="flex items-center gap-2 text-sm text-gray-700">
           <input
             type="checkbox"
@@ -129,7 +140,7 @@ export default function OrderReviewModal({
             }
             className="size-4 accent-primary-green cursor-pointer"
           />
-          Subscribe to Earth Essence newsletters
+          Subscribe to {shop_name} newsletters
         </label>
       </div>
 
@@ -143,6 +154,7 @@ export default function OrderReviewModal({
           <p>
             {formData?.first_name} {formData?.last_name}
           </p>
+          <p>{formData?.phone}</p>
           <p>{formData?.address}</p>
           {formData?.apt && <p>{formData.apt}</p>}
           <p>
@@ -232,13 +244,13 @@ export default function OrderReviewModal({
             )}
 
             <div className="flex justify-between text-sm">
-              <span>Est. Sales Tax ({taxData?.tax_rate}%)</span>
-              <span>${taxData?.calculated_tax}</span>
+              <span>Est. Sales Tax ({taxData?.tax_rate?.toFixed(2)}%)</span>
+              <span>${taxData?.calculated_tax?.toFixed(2)}</span>
             </div>
 
             <div className="flex justify-between text-sm">
               <span>Shipping *</span>
-              <span>${taxData?.shipping_cost}</span>
+              <span>${taxData?.shipping_cost?.toFixed(2)}</span>
             </div>
           </div>
         </div>

@@ -21,7 +21,7 @@ const page = () => {
 
   return (
     <>
-      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-[#000]">
+      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-secondary-black">
         Store Payments
       </h2>
 

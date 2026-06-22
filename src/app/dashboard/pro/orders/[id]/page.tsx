@@ -187,7 +187,9 @@ const Page = () => {
 
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between">
-        <h3 className="text-[40px] font-semibold text-[#000]">Order Details</h3>
+        <h3 className="text-[40px] font-semibold text-secondary-black">
+          Order Details
+        </h3>
         <div className="flex gap-x-3">
           <button
             className="py-4 px-6 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out"
@@ -204,7 +206,7 @@ const Page = () => {
         <div className="w-full lg:w-[65%] 2xl:w-[75%]">
           {/* Order Status Dropdown */}
           <div className="my-4">
-            <h4 className="text-[#000] font-bold text-[16px] mb-3">
+            <h4 className="text-secondary-black font-bold text-[16px] mb-3">
               Order Status
             </h4>
 
@@ -310,7 +312,7 @@ const Page = () => {
                   {/* Label */}
                   <h5
                     className={`mt-3 text-center text-[14px] font-medium ${
-                      isCompleted ? "text-[#000]" : "text-accent-gray"
+                      isCompleted ? "text-secondary-black" : "text-accent-gray"
                     }`}
                   >
                     {step.label}
@@ -351,11 +353,11 @@ const Page = () => {
                   else setOpenIndex(openIndex === idx ? null : idx);
                 }}
               >
-                <h4 className="text-[#000] font-bold text-[16px]">
+                <h4 className="text-secondary-black font-bold text-[16px]">
                   {item.title}
                 </h4>
                 {item.isModal ? (
-                  <Pen className="text-[#000]" />
+                  <Pen className="text-secondary-black" />
                 ) : (
                   <FaAngleDown
                     className={`transition-transform duration-300 ${
@@ -380,7 +382,7 @@ const Page = () => {
           ))}
 
           <div className="border border-gray-300 p-4 rounded-lg">
-            <h2 className="text-[24px] font-normal text-[#000]">
+            <h2 className="text-[24px] font-normal text-secondary-black">
               Message to Buyer
             </h2>
 
@@ -456,7 +458,7 @@ const Page = () => {
                   endpoint: `/api/cancel-order/${order_id}`,
                 })
               }
-              className="py-4 px-6 rounded-[8px] border border-[#8E2F2F] bg-[#FFE8E8] font-semibold text-[#8E2F2F] cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
+              className="py-4 px-6 rounded-[8px] border border-primary-red bg-[#FFE8E8] font-semibold text-primary-red cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
             >
               {isCancellingOrder ? "Cancelling...." : "Cancel Order"}
             </button>

@@ -74,7 +74,7 @@ const Community = async () => {
                   href={`/shop-details?view=${"customer"}&id=${
                     item?.user?.shop_info?.user_id
                   }&listing_id=${item?.user?.shop_info?.id}`}
-                  className="px-4 text-[12px] py-2 rounded-lg font-semibold flex gap-2 items-center bg-[#D4E2CB] text-primary-green w-fit cursor-pointer duration-500 transition-transform hover:scale-105"
+                  className="px-4 text-[12px] py-2 rounded-lg font-semibold flex gap-2 items-center bg-off-green text-primary-green w-fit cursor-pointer duration-500 transition-transform hover:scale-105"
                 >
                   View Shop
                   <RightSvg />

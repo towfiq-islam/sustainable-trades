@@ -21,39 +21,39 @@ const ProdashboardStatistics = () => {
         <div className="border border-accent-gray p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
             <div className="flex justify-between">
-              <h5 className="text-[16px] text-[#000] font-semibold text-center">
+              <h5 className="text-[16px] text-secondary-black font-semibold text-center">
                 Listings
               </h5>
-              <h6 className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer">
+              <h6 className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer">
                 More
                 <FaAngleRight />
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Active
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {listingData?.data?.active_listings}
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Expired
               </h5>
 
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {listingData?.data?.inactive_listings}
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Sold out
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {listingData?.data?.sold_out_listings}
               </h6>
             </div>
@@ -63,38 +63,38 @@ const ProdashboardStatistics = () => {
         <div className="border border-accent-gray p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
             <div className="flex justify-between">
-              <h5 className="text-[16px] text-[#000] font-semibold text-center">
+              <h5 className="text-[16px] text-secondary-black font-semibold text-center">
                 Orders
               </h5>
-              <h6 className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer">
+              <h6 className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer">
                 More
                 <FaAngleRight />
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 New
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {orderData?.data?.new_orders}
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Shipped
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {orderData?.data?.shipped_orders}
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Completed
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {orderData?.data?.completed_orders}
               </h6>
             </div>
@@ -104,37 +104,37 @@ const ProdashboardStatistics = () => {
         <div className="border border-accent-gray p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
             <div className="flex justify-between">
-              <h5 className="text-[16px] text-[#000] font-semibold text-center">
+              <h5 className="text-[16px] text-secondary-black font-semibold text-center">
                 Trades
               </h5>
-              <h6 className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer">
+              <h6 className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer">
                 More
                 <FaAngleRight />
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Pending
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {tradeData?.data?.pending_trades}
               </h6>
             </div>
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Accepted
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {tradeData?.data?.accepted_trades}
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Completed
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {tradeData?.data?.completed_trades}
               </h6>
             </div>
@@ -144,38 +144,38 @@ const ProdashboardStatistics = () => {
         <div className="border border-accent-gray p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
             <div className="flex justify-between">
-              <h5 className="text-[16px] text-[#000] font-semibold text-center">
+              <h5 className="text-[16px] text-secondary-black font-semibold text-center">
                 Visitors
               </h5>
-              <h6 className="text-[16px] text-[#000] font-semibold text-center flex gap-x-1 items-center cursor-pointer">
+              <h6 className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer">
                 More
                 <FaAngleRight />
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Total Visits
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {visitorData?.data?.total_visits}
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Today's visit
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {visitorData?.data?.today_visits}
               </h6>
             </div>
 
             <div className="flex justify-between">
-              <h5 className="text-[14px] text-[#000] font-semibold text-center">
+              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
                 Last Month Visit
               </h5>
-              <h6 className="text-[14px] text-[#000] font-semibold">
+              <h6 className="text-[14px] text-secondary-black font-semibold">
                 {visitorData?.data?.last_month_visits}
               </h6>
             </div>

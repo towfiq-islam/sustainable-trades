@@ -19,10 +19,9 @@ import {
   NotificationSvg,
 } from "@/Components/Svg/SvgContainer";
 import Sidebar from "@/Components/Common/Sidebar";
-import { getProductCart, getSiteSettingsClient } from "@/Hooks/api/cms_api";
+import { getProductCart } from "@/Hooks/api/cms_api";
 
 const BasicNavbar = ({ dynamicPage }: any) => {
-  const { data: siteSettings } = getSiteSettingsClient();
   const { data: cartData } = getProductCart();
 
   const navLins = [
@@ -132,7 +131,7 @@ const BasicNavbar = ({ dynamicPage }: any) => {
               <Link href="/">
                 <figure className="size-10 md:size-14 rounded-full relative">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${siteSettings?.data?.logo}`}
+                    src="/favicon.svg"
                     alt="logo"
                     fill
                     unoptimized

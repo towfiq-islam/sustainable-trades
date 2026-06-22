@@ -4,11 +4,16 @@ import Link from "next/link";
 import echo from "@/lib/echo";
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getAllConversation } from "@/Hooks/api/chat_api";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { ConversationCardSkeleton } from "@/Components/Loader/Loader";
+
+type Props = {
+  search: string;
+  activeTab: string;
+};
 
 type Participant = {
   id: number;
@@ -31,7 +36,7 @@ type conversationItem = {
   };
 };
 
-const InboxMessage = ({ search, activeTab }: any) => {
+const InboxMessage = ({ search, activeTab }: Props) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { data: allConversation, isLoading } = getAllConversation({
@@ -70,9 +75,9 @@ const InboxMessage = ({ search, activeTab }: any) => {
                 user?.membership?.membership_type === "pro"
                   ? "pro"
                   : user?.role === "vendor" &&
-                    user?.membership?.membership_type === "basic"
-                  ? "basic"
-                  : "customer"
+                      user?.membership?.membership_type === "basic"
+                    ? "basic"
+                    : "customer"
               }/messages/inbox/${
                 conversation?.participants[0]?.participant_id
               }`}
@@ -91,7 +96,7 @@ const InboxMessage = ({ search, activeTab }: any) => {
                   ) : (
                     <span className="text-xl font-bold text-white">
                       {conversation?.participants[0]?.participant?.first_name?.at(
-                        0
+                        0,
                       )}
                     </span>
                   )}
@@ -123,7 +128,7 @@ const InboxMessage = ({ search, activeTab }: any) => {
                 </p>
               </div>
             </Link>
-          )
+          ),
         )
       ) : (
         <div className="pt-20 flex justify-center items-center flex-col gap-1">

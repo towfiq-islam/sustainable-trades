@@ -29,12 +29,16 @@ export const getAllConversation = ({
 // Get Single Conversation
 export const getSingleConversation = (
   id: number,
-  type: "private" | "order"
+  type: "private" | "order",
 ) => {
   return useClientApi({
     method: "get",
     isPrivate: true,
     enabled: !!id,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
     key: ["get-single-conversation", id, type],
     endpoint: `/api/message?receiver_id=${id}&type=${type}`,
     queryOptions: {

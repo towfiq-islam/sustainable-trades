@@ -17,6 +17,14 @@ import EmojiPicker from "emoji-picker-react";
 
 // ---- Types ----
 
+type Attachment = {
+  id: number;
+  file_name: string;
+  file_path: string;
+  isLocal: boolean;
+  file_type: string;
+};
+
 type CartProductImage = { id: number; product_id: number; image: string };
 
 type CartProduct = {
@@ -50,10 +58,12 @@ export type MessageItem = {
   receiver_id?: number;
   conversation_id?: number;
   message: string;
+  message_type: string;
   created_at: string;
   status?: string;
   cart?: Cart | null;
   order?: Order | null;
+  attachments?: Attachment[];
   sender?: {
     first_name: string;
     last_name: string | null;
@@ -146,12 +156,33 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
   const onEmojiClick = (emojiData: any) => {
     setMessage(prev => prev + emojiData.emoji);
   };
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      console.log(file);
-    }
+    const files = Array.from(e.target.files || []);
+
+    setSelectedFiles(prev => [...prev, ...files]);
+
+    const imagePreviews = files
+      .filter(file => file.type.startsWith("image/"))
+      .map(file => URL.createObjectURL(file));
+
+    setPreviewUrls(prev => [...prev, ...imagePreviews]);
+  };
+
+  const removeAttachment = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+
+    setPreviewUrls(prev => {
+      const url = prev[index];
+
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
+
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   const [chats, setChats] = useState<MessageItem[]>([]);
@@ -161,6 +192,12 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
   const { data: singleConversation, isLoading: chatLoading } =
     getSingleConversation(conversationId, type);
+
+  useEffect(() => {
+    return () => {
+      previewUrls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [previewUrls]);
 
   useEffect(() => {
     if (singleConversation?.data?.messages) {
@@ -209,9 +246,18 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
 
   const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!message.trim()) return toast.error("Please enter your message");
+    if (!message.trim() && selectedFiles.length === 0)
+      return toast.error("Please enter your message or add an attachment");
 
     const tempId = Date.now();
+    const tempAttachments = selectedFiles.map((file, index) => ({
+      id: -(index + 1),
+      file_name: file.name,
+      file_path: URL.createObjectURL(file),
+      file_type: file.type,
+      isLocal: true,
+    }));
+
     setChats(prev => [
       ...prev,
       {
@@ -220,19 +266,32 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
         message: message.trim(),
         created_at: new Date().toISOString(),
         status: "sending",
+        message_type: selectedFiles?.length > 0 ? "file" : "text",
+        attachments: tempAttachments,
       },
     ]);
     setMessage("");
     (e.target as HTMLFormElement).reset();
 
-    const payload: Record<string, any> = {
-      receiver_id: conversationId,
-      message,
-      ...(type === "order" && { type: "order" }),
-    };
+    const formData = new FormData();
 
-    sendMessageMutation(payload, {
+    formData.append("receiver_id", String(conversationId));
+    if (message) {
+      formData.append("message", message);
+    }
+
+    if (type === "order") {
+      formData.append("type", "order");
+    }
+
+    selectedFiles.forEach(file => {
+      formData.append("file[]", file);
+    });
+
+    sendMessageMutation(formData, {
       onSuccess: (res: any) => {
+        setSelectedFiles([]);
+
         setChats(prev =>
           prev.map(msg =>
             msg.id === tempId
@@ -318,16 +377,17 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
               msg.status === "sending"
                 ? "bg-gray-50 opacity-80"
                 : msg.status === "failed"
-                  ? "bg-red-100 border border-red-400 text-red-700"
+                  ? "bg-red-100 border border-red-300 text-primary-red"
                   : "bg-accent-white";
 
-            // Rewrite dashboard links in plain messages based on user role
             const formattedMessage = msg.message
-              .replace(
-                /\/dashboard\/pro\/orders\/(\d+)/g,
-                `/dashboard/${dashboardSegment}/orders/$1`,
-              )
-              .replace(/\n/g, "<br />");
+              ? msg.message
+                  .replace(
+                    /\/dashboard\/pro\/orders\/(\d+)/g,
+                    `/dashboard/${dashboardSegment}/orders/$1`,
+                  )
+                  .replace(/\n/g, "<br />")
+              : "";
 
             return (
               <div
@@ -358,9 +418,34 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
                     <div
                       className={`relative text-[15px] font-lato leading-[160%] py-3 px-3.5 rounded-[6px] shadow ${bubbleClass}`}
                     >
-                      <p
-                        dangerouslySetInnerHTML={{ __html: formattedMessage }}
-                      />
+                      <div>
+                        {msg.message && (
+                          <p
+                            dangerouslySetInnerHTML={{
+                              __html: formattedMessage,
+                            }}
+                          />
+                        )}
+
+                        {msg?.attachments && msg?.attachments?.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {msg.attachments?.map(file => {
+                              const imageUrl = (file as any).isLocal
+                                ? file.file_path
+                                : `${process.env.NEXT_PUBLIC_SITE_URL}/${file.file_path}`;
+
+                              return (
+                                <img
+                                  key={file.id}
+                                  src={imageUrl}
+                                  alt={file.file_name}
+                                  className="w-32 h-32 rounded-lg object-cover border border-gray-200"
+                                />
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
                       <span className="text-xs text-gray-500 text-end block mt-1">
                         {time}
                       </span>
@@ -405,6 +490,38 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
         )}
       </div>
 
+      {/* Preview File */}
+      {selectedFiles.length > 0 && (
+        <div className="mb-3 flex flex-wrap gap-3">
+          {selectedFiles.map((file, index) => (
+            <div
+              key={index}
+              className="relative border border-gray-200 rounded-lg overflow-hidden"
+            >
+              {file.type.startsWith("image/") ? (
+                <img
+                  src={previewUrls[index]}
+                  alt={file.name}
+                  className="w-20 h-20 object-cover"
+                />
+              ) : (
+                <div className="w-20 h-20 flex items-center justify-center bg-gray-100 text-xs p-2 text-center">
+                  {file.name}
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => removeAttachment(index)}
+                className="absolute top-1 right-1 bg-primary-red cursor-pointer text-white rounded-full w-5 h-5 text-xs"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Footer */}
       <form onSubmit={handleSend} className="flex items-center gap-3">
         <p className="px-5 py-3 border border-gray-300 text-sm text-[#071431] w-full rounded-lg relative">
@@ -448,6 +565,8 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
             <input
               id="attachment"
               type="file"
+              multiple
+              accept="image/*"
               className="hidden"
               onChange={handleFileSelect}
             />

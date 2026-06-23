@@ -12,6 +12,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
 import { useEffect, useRef, useState } from "react";
 import { getSingleConversation, useSendMessage } from "@/Hooks/api/chat_api";
+import { FiPaperclip, FiSmile, FiSend } from "react-icons/fi";
+import EmojiPicker from "emoji-picker-react";
 
 // ---- Types ----
 
@@ -140,6 +142,17 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
   const { user } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const onEmojiClick = (emojiData: any) => {
+    setMessage(prev => prev + emojiData.emoji);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      console.log(file);
+    }
+  };
 
   const [chats, setChats] = useState<MessageItem[]>([]);
   const [message, setMessage] = useState("");
@@ -394,26 +407,67 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
 
       {/* Footer */}
       <form onSubmit={handleSend} className="flex items-center gap-3">
-        <input
-          type="text"
-          placeholder="Type your message...."
-          disabled={isPending}
-          onChange={e => setMessage(e.target.value)}
-          className={`border border-gray-300 px-5 py-3 text-sm text-[#071431] w-full outline-0 rounded-lg ${
-            isPending && "cursor-not-allowed opacity-80"
-          }`}
-        />
+        <p className="px-5 py-3 border border-gray-300 text-sm text-[#071431] w-full rounded-lg relative">
+          <input
+            type="text"
+            placeholder="Type your message...."
+            disabled={isPending}
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            className={`outline-none w-full h-full ${
+              isPending && "cursor-not-allowed opacity-80"
+            }`}
+          />
+
+          {/* Emoji */}
+          <div className="absolute top-3 right-14 text-secondary-gray cursor-pointer">
+            <button
+              type="button"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className="cursor-pointer"
+            >
+              <FiSmile size={20} />
+            </button>
+
+            {showEmojiPicker && (
+              <div className="absolute bottom-12 right-0 z-50">
+                <EmojiPicker onEmojiClick={onEmojiClick} />
+              </div>
+            )}
+          </div>
+
+          {/* Attachment */}
+          <p>
+            <label
+              htmlFor="attachment"
+              className="absolute top-1/2 -translate-y-1/2 right-4 text-secondary-gray cursor-pointer"
+            >
+              <FiPaperclip size={20} />
+            </label>
+
+            <input
+              id="attachment"
+              type="file"
+              className="hidden"
+              onChange={handleFileSelect}
+            />
+          </p>
+        </p>
+
         <button
           type="submit"
           disabled={isPending}
-          className={`bg-primary-green text-white px-7 py-3 font-semibold rounded-lg shrink-0 ${
+          className={`bg-primary-green text-white px-5 py-2.5 font-semibold rounded-lg shrink-0 ${
             isPending ? "cursor-not-allowed opacity-90" : "cursor-pointer"
           }`}
         >
           {isPending ? (
             <ImSpinner9 className="text-white text-lg animate-spin" />
           ) : (
-            "Send"
+            <span className="flex gap-2 items-center">
+              <FiSend size={18} />
+              Send
+            </span>
           )}
         </button>
       </form>

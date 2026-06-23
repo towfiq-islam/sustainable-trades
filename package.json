@@ -16,6 +16,7 @@
     "axios": "^1.9.0",
     "clsx": "^2.1.1",
     "country-state-city": "^3.2.1",
+    "emoji-picker-react": "^4.19.1",
     "laravel-echo": "^2.2.4",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.544.0",

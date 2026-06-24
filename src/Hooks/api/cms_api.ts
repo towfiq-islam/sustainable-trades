@@ -342,7 +342,7 @@ export const useAddToCart = (product_id: any) => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        queryClient.invalidateQueries("get-product-cart" as any);
+        queryClient.invalidateQueries("user" as any);
       }
     },
     onError: (err: any) => {

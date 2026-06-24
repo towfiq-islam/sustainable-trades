@@ -1,14 +1,12 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "@/Components/Common/Container";
 import { CartSvg, DownSvg, ProfileSvg } from "@/Components/Svg/SvgContainer";
 import Sidebar from "@/Components/Common/Sidebar";
-import { getSiteSettingsClient } from "@/Hooks/api/cms_api";
 
 const DefaultNavbar = ({ user, dynamicPage }: any) => {
-  const { data: siteSettings } = getSiteSettingsClient();
   const [showPopover, setShowPopover] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
@@ -45,7 +43,7 @@ const DefaultNavbar = ({ user, dynamicPage }: any) => {
             <Link href="/">
               <figure className="size-10 md:size-14 rounded-full relative">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_SITE_URL}/${siteSettings?.data?.logo}`}
+                  src="/favicon.svg"
                   alt="logo"
                   fill
                   unoptimized

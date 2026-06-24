@@ -1,6 +1,5 @@
 "use client";
 import "swiper/css";
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import "swiper/css/pagination";
@@ -103,6 +102,7 @@ const HomeBanner = ({ data }: bannerProps) => {
           })}
         </Swiper>
       </header>
+      
       <header className="md:hidden block px-5  ">
         <Swiper
           modules={[Autoplay]}

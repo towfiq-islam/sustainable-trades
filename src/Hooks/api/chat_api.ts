@@ -76,8 +76,5 @@ export const getLocalPickupConversation = () => {
     isPrivate: true,
     key: ["get-local-pickup-conversation"],
     endpoint: "/api/local-pickup/conversation",
-    queryOptions: {
-      retry: false,
-    },
   });
 };

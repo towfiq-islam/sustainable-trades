@@ -8,12 +8,9 @@ import OurMission from "./_Components/OurMission";
 import CommunityMember from "./_Components/CommunityMember";
 import Pricing from "./_Components/Pricing";
 import Subscribe from "./_Components/Subscribe";
-import { getSpotlightData } from "@/Hooks/api/cms_api";
 import GetUserLocation from "@/lib/GetUserLocation";
 
-const Page = async () => {
-  const spotlightData = await getSpotlightData();
-
+const Page = () => {
   return (
     <>
       <HomeBanner />
@@ -37,7 +34,7 @@ const Page = async () => {
       </Suspense>
 
       <Suspense fallback={"Loading...."}>
-        <CommunityMember data={spotlightData?.data} has_community={true} />
+        <CommunityMember />
       </Suspense>
 
       <Pricing

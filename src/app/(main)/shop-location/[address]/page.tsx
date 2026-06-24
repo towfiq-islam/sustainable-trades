@@ -9,10 +9,9 @@ import {
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
 import { Navigation } from "swiper/modules";
-import React, { use, useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Subscribe from "@/app/(main)/_Components/Subscribe";
-import CommunityMember from "@/app/(main)/_Components/CommunityMember";
 import LocalMagicMarker from "@/Components/PageComponents/mainPages/shopPageComponents/LocalMagicMarker";
 import Product from "@/Components/Common/Product";
 import Container from "@/Components/Common/Container";
@@ -23,6 +22,7 @@ import {
   SingleShopSkeleton,
 } from "@/Components/Loader/Loader";
 import { AiOutlineFileUnknown } from "react-icons/ai";
+import MemberSpotlight from "../../_Components/MemberSpotlight";
 
 type categoryItem = {
   id: number;
@@ -203,7 +203,7 @@ const page = ({ params }: Props) => {
 
       {/* Community Member */}
       <div className="my-20">
-        <CommunityMember data={spotlightData?.data} />
+        <MemberSpotlight data={spotlightData?.data} />
       </div>
 
       {/* Subscribe */}

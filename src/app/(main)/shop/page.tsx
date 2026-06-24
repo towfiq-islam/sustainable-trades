@@ -21,7 +21,7 @@ import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { SingleShopSkeleton } from "@/Components/Loader/Loader";
 import MagicMarkers from "@/app/(main)/_Components/MagicMarkers";
 import Subscribe from "@/app/(main)/_Components/Subscribe";
-import CommunityMember from "@/app/(main)/_Components/CommunityMember";
+import MemberSpotlight from "../_Components/MemberSpotlight";
 
 type categoryItem = {
   id: number;
@@ -236,7 +236,7 @@ const page = () => {
       </Container>
 
       <div className="py-10 md:py-16">
-        <CommunityMember data={spotlightData?.data} has_community={true} />
+        <MemberSpotlight data={spotlightData?.data} has_community={true} />
       </div>
       <Subscribe />
     </>

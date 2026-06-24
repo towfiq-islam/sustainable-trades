@@ -158,6 +158,7 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
   };
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -439,7 +440,8 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
                                   key={file.id}
                                   src={imageUrl}
                                   alt={file.file_name}
-                                  className="w-32 h-32 rounded-lg object-cover border border-gray-200"
+                                  onClick={() => setPreviewImage(imageUrl)}
+                                  className="w-32 h-32 rounded-lg object-cover border border-gray-200 cursor-pointer hover:opacity-90 transition"
                                 />
                               );
                             })}
@@ -590,6 +592,33 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
           )}
         </button>
       </form>
+
+      {/* Preview chat attachment */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative max-w-5xl max-h-[90vh] rounded-lg"
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setPreviewImage(null)}
+              className="absolute -top-10 right-0 text-white text-3xl cursor-pointer"
+            >
+              ×
+            </button>
+
+            <img
+              src={previewImage}
+              alt="Preview"
+              className="max-w-full max-h-[90vh] rounded-lg object-contain"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };

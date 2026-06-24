@@ -292,7 +292,8 @@ const Page = () => {
               onClick={() => handleShippingMethodChange("shippo")}
               className={`px-4 py-4 border rounded-lg w-full cursor-pointer transition-all ${isSetting && "animate-pulse"}
                    ${
-                     user?.shop_info?.shipping_setting === "shippo"
+                     user?.shop_info?.shipping_setting === "shippo" &&
+                     user?.shop_info?.shippo_connected
                        ? "border-primary-green bg-[#F2EFE8]"
                        : "border-gray-300 hover:border-primary-green"
                    }`}
@@ -301,7 +302,10 @@ const Page = () => {
                 <div className="flex items-center gap-3">
                   <input
                     type="radio"
-                    checked={user?.shop_info?.shipping_setting === "shippo"}
+                    checked={
+                      user?.shop_info?.shipping_setting === "shippo" &&
+                      user?.shop_info?.shippo_connected
+                    }
                     readOnly
                     disabled={!user?.shop_info?.shippo_connected}
                     className="h-4 w-4 accent-primary-green cursor-pointer"
@@ -311,11 +315,12 @@ const Page = () => {
                 </div>
 
                 <div className="flex gap-2 items-center">
-                  {user?.shop_info?.shipping_setting === "shippo" && (
-                    <span className="bg-primary-green text-white px-3 py-1 rounded-full text-sm">
-                      Active
-                    </span>
-                  )}
+                  {user?.shop_info?.shipping_setting === "shippo" &&
+                    user?.shop_info?.shippo_connected && (
+                      <span className="bg-primary-green text-white px-3 py-1 rounded-full text-sm">
+                        Active
+                      </span>
+                    )}
                 </div>
               </div>
 

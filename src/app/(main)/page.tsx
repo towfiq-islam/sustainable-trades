@@ -1,37 +1,45 @@
-import {
-  getBannerData,
-  getHowItWorksData,
-  getMissionData,
-  getProductCategories,
-  getSpotlightData,
-} from "@/Hooks/api/cms_api";
+import { Suspense } from "react";
+import HomeBanner from "./_Components/HomeBanner";
+import HowItWorks from "./_Components/HowItWorks";
+import MagicMarkers from "./_Components/MagicMarkers";
+import FeaturedShops from "./_Components/FeaturedShop";
+import ExploreProduct from "./_Components/ExploreProduct";
+import OurMission from "./_Components/OurMission";
+import CommunityMember from "./_Components/CommunityMember";
+import Pricing from "./_Components/Pricing";
+import Subscribe from "./_Components/Subscribe";
+import { getSpotlightData } from "@/Hooks/api/cms_api";
 import GetUserLocation from "@/lib/GetUserLocation";
-import ExploreProduct from "@/Components/PageComponents/mainPages/homePageComponents/ExploreProduct";
-import FeaturedShops from "@/Components/PageComponents/mainPages/homePageComponents/FeaturedShop";
-import Pricing from "@/Components/PageComponents/mainPages/homePageComponents/Pricing";
-import HomeBanner from "@/Components/PageComponents/mainPages/homePageComponents/HomeBanner";
-import HowItWorks from "@/Components/PageComponents/mainPages/homePageComponents/HowItWorks";
-import OurMission from "@/Components/PageComponents/mainPages/homePageComponents/OurMission";
-import Subscribe from "@/Components/PageComponents/mainPages/homePageComponents/Subscribe";
-import MagicMarkers from "@/Components/PageComponents/mainPages/homePageComponents/MagicMarkers";
-import CommunityMember from "@/Components/PageComponents/mainPages/homePageComponents/CommunityMember";
 
 const Page = async () => {
-  const bannerData = await getBannerData();
-  const howItWorksData = await getHowItWorksData();
-  const missionData = await getMissionData();
-  const productCategories = await getProductCategories();
   const spotlightData = await getSpotlightData();
 
   return (
     <>
-      <HomeBanner data={bannerData?.data} />
-      <HowItWorks data={howItWorksData?.data} />
-      <MagicMarkers />
+      <HomeBanner />
+
+      <Suspense fallback={"Loading...."}>
+        <HowItWorks />
+      </Suspense>
+
+      <Suspense fallback={"Loading...."}>
+        <MagicMarkers />
+      </Suspense>
+
       <FeaturedShops />
-      <ExploreProduct data={productCategories?.data} />
-      <OurMission data={missionData?.data} />
-      <CommunityMember data={spotlightData?.data} has_community={true} />
+
+      <Suspense fallback={"Loading...."}>
+        <ExploreProduct />
+      </Suspense>
+
+      <Suspense fallback={"Loading...."}>
+        <OurMission />
+      </Suspense>
+
+      <Suspense fallback={"Loading...."}>
+        <CommunityMember data={spotlightData?.data} has_community={true} />
+      </Suspense>
+
       <Pricing
         description="No matter how you want to manage your shop, we got you covered!"
         button1="Annual Billing"

@@ -1,7 +1,7 @@
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Container from "@/Components/Common/Container";
+import { getProductCategories } from "@/Hooks/api/cms_api";
 
 type categoryItem = {
   id: number;
@@ -9,11 +9,9 @@ type categoryItem = {
   image: string;
 };
 
-interface categoryProps {
-  data: categoryItem[];
-}
+const ExploreProduct = async () => {
+  const productCategories = await getProductCategories();
 
-const ExploreProduct = ({ data }: categoryProps) => {
   return (
     <section className="py-12 bg-primary-green">
       <Container>
@@ -22,7 +20,7 @@ const ExploreProduct = ({ data }: categoryProps) => {
         </h2>
 
         <div className="grid grid-cols-2  lg:grid-cols-4 gap-x-10 gap-y-16">
-          {data?.map(({ id, name, image }) => (
+          {productCategories?.data?.map(({ id, name, image }: categoryItem) => (
             <Link
               key={id}
               href={`/category-details/${id}`}

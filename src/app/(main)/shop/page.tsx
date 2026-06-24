@@ -19,9 +19,9 @@ import Product from "@/Components/Common/Product";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { SingleShopSkeleton } from "@/Components/Loader/Loader";
-import MagicMarkers from "@/Components/PageComponents/mainPages/homePageComponents/MagicMarkers";
-import Subscribe from "@/Components/PageComponents/mainPages/homePageComponents/Subscribe";
-import CommunityMember from "@/Components/PageComponents/mainPages/homePageComponents/CommunityMember";
+import MagicMarkers from "@/app/(main)/_Components/MagicMarkers";
+import Subscribe from "@/app/(main)/_Components/Subscribe";
+import CommunityMember from "@/app/(main)/_Components/CommunityMember";
 
 type categoryItem = {
   id: number;

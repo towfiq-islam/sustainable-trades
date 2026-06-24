@@ -33,7 +33,7 @@ interface bannerProps {
   data: bannerItem[];
 }
 
-const HomeBanner = ({ data }: bannerProps) => {
+const BannerSlider = ({ data }: bannerProps) => {
   return (
     <>
       <header className="hidden md:block relative h-[600px] overflow-hidden">
@@ -166,4 +166,4 @@ const HomeBanner = ({ data }: bannerProps) => {
   );
 };
 
-export default HomeBanner;
+export default BannerSlider;

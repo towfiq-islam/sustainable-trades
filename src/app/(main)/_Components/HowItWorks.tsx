@@ -1,7 +1,7 @@
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Container from "@/Components/Common/Container";
+import { getHowItWorksData } from "@/Hooks/api/cms_api";
 
 type workItem = {
   id: number;
@@ -10,18 +10,16 @@ type workItem = {
   image: string;
 };
 
-interface worksProps {
-  data: workItem[];
-}
+const HowItWorks = async () => {
+  const howItWorksData = await getHowItWorksData();
 
-const HowItWorks = ({ data }: worksProps) => {
   return (
     <section id="how-it-works" className="py-10 md:py-20">
       <Container>
         <h2 className="section_title text-center">How It Works</h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 gap-10 text-center mb-10">
-          {data?.map(item => (
+          {howItWorksData?.data?.map((item: workItem) => (
             <div key={item?.id} className="space-y-3">
               <figure className="size-15 lg:size-24 xl:size-40 mx-auto relative">
                 <Image

@@ -1,27 +1,25 @@
 "use client";
-
 import React, { useRef, useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { FaAngleRight, FaPlay, FaPlus } from "react-icons/fa";
 import { MdArrowOutward, MdDelete } from "react-icons/md";
-import Preview from "../../../../../../Assets/tomato.png";
+import Preview from "@/Assets/fallbackimage.png";
 import Image from "next/image";
 import Link from "next/link";
 import {
   useDeleteProduct,
   useGetSingleListing,
   useupdateProduct,
-  useRequestApproval,
 } from "@/Hooks/api/dashboard_api";
 import {
   getProductCategoriesClient,
   getProductSubCategoriesClient,
 } from "@/Hooks/api/cms_api";
-import useAuth from "@/Hooks/useAuth";
-import toast from "react-hot-toast";
 import { PuffLoader } from "react-spinners";
+import toast from "react-hot-toast";
+import useClientApi from "@/Hooks/useClientApi";
 
-// Define types for the API response and error
 interface UpdateProductResponse {
   success: boolean;
   message: string;
@@ -73,20 +71,19 @@ interface DeleteProductError {
   };
 }
 
-interface DetailsProps {
-  id: string | number;
+interface KeptImage {
+  id: number;
+  relativePath: string;
+  fullPath: string;
 }
 
 const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const router = useRouter();
-  const { user } = useAuth();
-
+  const queryClient = useQueryClient();
   const { id } = use(params);
   const { data: listing, isLoading } = useGetSingleListing(id);
-
   const updateProduct = useupdateProduct(id);
   const deleteProduct = useDeleteProduct(id);
-  const requestApproval = useRequestApproval(id);
 
   const [images, setImages] = useState<string[]>([]);
   const [mainImage, setMainImage] = useState<string | null>(null);
@@ -110,13 +107,34 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   const [sellingOption, setSellingOption] = useState("");
   const { data: categoriesData } = getProductCategoriesClient();
   const { data: subcategoriesData } = getProductSubCategoriesClient();
-
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [keptImages, setKeptImages] = useState<KeptImage[]>([]);
+  const [keptRelativePaths, setKeptRelativePaths] = useState<string[]>([]);
   const [keptImagePaths, setKeptImagePaths] = useState<string[]>([]);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [hasExistingVideo, setHasExistingVideo] = useState(false);
+  const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+
+  // Use the useClientApi hook for deleting image
+  const deleteImageMutation = useClientApi({
+    method: "delete",
+    isPrivate: true,
+    key: ["image-delete"],
+    endpoint: "/api/image-delete",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message || "Image deleted successfully");
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || "Failed to delete image");
+    },
+  });
 
   const updateLocalStateWithProductData = (
     productData: UpdateProductResponse["data"],
@@ -134,24 +152,33 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
       productData.meta_tags?.map((tag: { tag: string }) => tag.tag) || [],
     );
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-    const imageUrls =
-      productData.images?.map((img: { image: string }) =>
-        img.image.startsWith("http") ? img.image : `${baseUrl}/${img.image}`,
-      ) || [];
-    setExistingImages(imageUrls);
-    setKeptImagePaths(imageUrls);
-    setImages(imageUrls);
-    if (imageUrls.length > 0) setMainImage(imageUrls[0]);
+    const kept: KeptImage[] =
+      productData.images?.map((img: { id: number; image: string }) => {
+        const rel = img.image.startsWith("http")
+          ? img.image.replace(`${baseUrl}/`, "")
+          : img.image;
+        const full = rel.startsWith("http") ? rel : `${baseUrl}/${rel}`;
+        return { id: img.id, relativePath: rel, fullPath: full };
+      }) || [];
 
-    setVideoUrl(productData.video ? `${baseUrl}/${productData.video}` : null);
-    setShowPlayButton(!productData.video);
-    setVideoFile(null); // Clear any pending file
+    setKeptImages(kept);
+    setKeptRelativePaths(kept.map(i => i.relativePath));
+    setKeptImagePaths(kept.map(i => i.fullPath));
+    setExistingImages(kept.map(i => i.fullPath));
+    setImages(kept.map(i => i.fullPath));
+    if (kept.length > 0) setMainImage(kept[0].fullPath);
 
-    // ✅ Set Category & Subcategory by ID
+    const existingVideo = productData.video
+      ? `${baseUrl}/${productData.video}`
+      : null;
+    setVideoUrl(existingVideo);
+    setShowPlayButton(!existingVideo);
+    setVideoFile(null);
+    setHasExistingVideo(!!productData.video);
+
+    // Set Category & Subcategory by ID
     setCategory(productData.category_id?.toString() || "");
     setSubcategory(productData.sub_category_id?.toString() || "");
-
     setFulfillment(productData.fulfillment || "");
     setSellingOption(productData.selling_option || "");
     setImageFiles([]);
@@ -183,6 +210,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
       const objectUrl = URL.createObjectURL(file);
       setVideoUrl(objectUrl);
       setShowPlayButton(true);
+      setHasExistingVideo(false);
 
       setTimeout(() => {
         videoRef.current?.load();
@@ -192,19 +220,84 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
 
   const handleRemoveImage = (imageUrl: string, isNew: boolean) => {
     if (isNew) {
+      // Remove from new files
       const fileIndex = imageFiles.findIndex(
         file => URL.createObjectURL(file) === imageUrl,
       );
       if (fileIndex > -1) {
         setImageFiles(prev => prev.filter((_, idx) => idx !== fileIndex));
+        URL.revokeObjectURL(imageUrl);
       }
-      setImages(prev => prev.filter(url => url !== imageUrl));
-      if (mainImage === imageUrl) setMainImage(null);
+
+      // Remove from images array
+      const updatedImages = images.filter(url => url !== imageUrl);
+      setImages(updatedImages);
+
+      // Update mainImage
+      if (mainImage === imageUrl) {
+        setMainImage(updatedImages[0] || null);
+      }
     } else {
-      setKeptImagePaths(prev => prev.filter(path => path !== imageUrl));
-      setImages(prev => prev.filter(url => url !== imageUrl));
-      if (mainImage === imageUrl)
-        setMainImage(keptImagePaths[0] || existingImages[0] || null);
+      // For existing images
+      const img = keptImages.find(i => i.fullPath === imageUrl);
+      if (!img) {
+        console.error("Image not found in keptImages");
+        return;
+      }
+
+      // Set deleting state
+      setDeletingIds(prev => new Set([...prev, img.id]));
+
+      // Now delete from server using the hook
+      deleteImageMutation.mutate(
+        { endpoint: `/api/image-delete/${img.id}` },
+        {
+          onSuccess: () => {
+            // Remove from state on success
+
+            const updatedKept = keptImages.filter(i => i.id !== img.id);
+            setKeptImages(updatedKept);
+            setKeptRelativePaths(updatedKept.map(i => i.relativePath));
+            setKeptImagePaths(updatedKept.map(i => i.fullPath));
+
+            const updatedImages = images.filter(url => url !== imageUrl);
+            setImages(updatedImages);
+
+            if (mainImage === imageUrl) {
+              setMainImage(updatedImages[0] || null);
+            }
+
+            // Invalidate and refetch the listing query
+            queryClient.invalidateQueries({ queryKey: ["singleListing", id] });
+
+            // Remove from deleting state
+            setDeletingIds(prev => {
+              const newSet = new Set(prev);
+              newSet.delete(img.id);
+              return newSet;
+            });
+          },
+          onError: (error: any) => {
+            console.error("Delete image failed:", error);
+            // Remove from deleting state
+            setDeletingIds(prev => {
+              const newSet = new Set(prev);
+              newSet.delete(img.id);
+              return newSet;
+            });
+          },
+        },
+      );
+    }
+  };
+
+  const handleRemoveVideo = () => {
+    setVideoUrl(null);
+    setVideoFile(null);
+    setShowPlayButton(true);
+    setHasExistingVideo(false);
+    if (videoRef.current?.src.startsWith("blob:")) {
+      URL.revokeObjectURL(videoRef.current.src);
     }
   };
 
@@ -244,14 +337,67 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
   };
 
   const handleUpdateListing = async () => {
-    try {
-      const data = await requestApproval.refetch();
-      if (data?.data?.success) {
-        toast("Approval requested successfully");
+    // Optional: Client-side validation
+    if (keptImages.length === 0 && imageFiles.length === 0) {
+      if (!confirm("This will remove all images from the listing. Continue?")) {
+        return;
       }
-    } catch (err) {
-      toast("Approval request failed");
     }
+    if (!productName.trim()) {
+      alert("Product name is required.");
+      return;
+    }
+
+    const formData = new FormData();
+
+    // Append text fields
+    formData.append("product_name", productName);
+    formData.append("product_price", price.replace("$", "").trim());
+    formData.append("cost", cost.replace("$", "").trim());
+    formData.append("weight", weight);
+    if (quantity.trim() !== "") {
+      formData.append("product_quantity", quantity);
+    }
+    formData.append("unlimited_stock", unlimitedStock ? "1" : "0");
+    formData.append("out_of_stock", outOfStock ? "1" : "0");
+    formData.append("description", description);
+    formData.append("category_id", category);
+    formData.append("sub_category_id", subcategory);
+    formData.append("fulfillment", fulfillment);
+    formData.append("selling_option", sellingOption);
+    formData.append("is_featured", Featured ? "1" : "0");
+
+    // Meta tags
+    metaTags.forEach(tag => {
+      formData.append(`tags[]`, tag);
+    });
+
+    // Keep existing images by ID
+    keptImages.forEach(img => {
+      formData.append(`keep_image_ids[]`, img.id.toString());
+    });
+
+    // New image files only
+    imageFiles.forEach(file => {
+      formData.append(`product_image[]`, file);
+    });
+
+    // Video: append new file or clear if removed
+    if (videoFile) {
+      formData.append("video", videoFile);
+    } else if (hasExistingVideo) {
+      formData.append("video", ""); // Signal to clear existing video
+    }
+
+    // Trigger the mutation
+    updateProduct.mutate(formData, {
+      onSuccess: (data: UpdateProductResponse) => {
+        updateLocalStateWithProductData(data.data);
+      },
+      onError: (error: UpdateProductError) => {
+        console.error("Update failed:", error);
+      },
+    });
   };
 
   // Handle delete listing
@@ -290,7 +436,6 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
       ? "Active"
       : listing?.data?.status || "Pending";
 
-  // Combined images for preview (existing kept + new previews)
   const previewImages = [
     ...keptImagePaths,
     ...images.filter(url => !keptImagePaths.includes(url)),
@@ -310,7 +455,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
 
-        <Link href="/dashboard/basic/view-listing" className="block shrink-0">
+        <Link href="/dashboard/basic/listing" className="block shrink-0">
           <button className="text-secondary-black text-[16px] font-semibold flex gap-x-1 items-center border-2 border-secondary-black rounded-lg py-1.5 md:py-3 px-6 hover:bg-accent-red hover:text-white justify-center duration-300 cursor-pointer">
             <MdArrowOutward />
             View Listings
@@ -348,7 +493,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                 />
               </div>
             ) : (
-              <div className="w-full relative h-[400px] md:h-[500px] flex items-center justify-center  rounded-lg text-gray-400 outline-none">
+              <div className="w-full relative h-[400px] md:h-[500px] flex items-center justify-center  rounded-lg text-gray-400 outline-none border border-gray-200">
                 <Image
                   src={Preview}
                   alt="Main Preview"
@@ -361,24 +506,39 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
 
             {/* Thumbnails */}
             <div className="flex gap-2 flex-wrap mt-3">
-              {previewImages.map((src, idx) => (
-                <div key={idx} className="relative">
-                  <img
-                    src={src}
-                    alt="preview"
-                    className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg border cursor-pointer hover:opacity-80"
-                    onClick={() => setMainImage(src)}
-                  />
-                  <button
-                    onClick={() =>
-                      handleRemoveImage(src, !keptImagePaths.includes(src))
-                    }
-                    className="absolute top-0 right-0 bg-primary-red text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-                  >
-                    x
-                  </button>
-                </div>
-              ))}
+              {previewImages.map((src, idx) => {
+                const isNewImage = !keptImagePaths.includes(src);
+                const currentImg = isNewImage
+                  ? null
+                  : keptImages.find(i => i.fullPath === src);
+                const isDeleting =
+                  !!currentImg && deletingIds.has(currentImg.id);
+                return (
+                  <div key={idx} className="relative">
+                    <img
+                      src={src}
+                      alt="preview"
+                      className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+                      onClick={() => setMainImage(src)}
+                    />
+                    <button
+                      onClick={() =>
+                        !isDeleting && handleRemoveImage(src, isNewImage)
+                      }
+                      disabled={isDeleting}
+                      className={`absolute top-0 right-0 bg-primary-red text-white rounded-full w-5 h-5 flex items-center justify-center text-xs ${
+                        isDeleting ? "cursor-not-allowed opacity-50" : ""
+                      }`}
+                    >
+                      {isDeleting ? (
+                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                      ) : (
+                        "x"
+                      )}
+                    </button>
+                  </div>
+                );
+              })}
               <label className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-[#F5F5F5] rounded-lg cursor-pointer">
                 <FaPlus />
                 <input
@@ -446,7 +606,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             <h3 className="text-[17px] md:text-[20px] text-secondary-black font-semibold">
               Listing Approval Process
             </h3>
-            <p className="text-[16px]] text-[#67645F] mt-2 max-w-[400px]">
+            <p className="text-[16px] text-[#67645F] mt-2 max-w-[400px]">
               In the video, share details about how and where your product was
               made, how your food was grown, and how it aligns with our
               sustainability guidelines. This helps us maintain the quality and
@@ -467,11 +627,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                 {videoUrl && (
                   <button
                     className="px-4 py-2 border rounded-lg"
-                    onClick={() => {
-                      setVideoUrl(null);
-                      setVideoFile(null);
-                      setShowPlayButton(true);
-                    }}
+                    onClick={handleRemoveVideo}
                   >
                     Remove video
                   </button>
@@ -576,7 +732,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4  outline-0"
             />
           </div>
-          {/* Category Dropdown */}
+
           {/* Category Dropdown */}
           <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
             Category
@@ -586,13 +742,13 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             value={category}
             onChange={e => {
               setCategory(e.target.value);
-              setSubcategory(""); // reset when category changes
+              setSubcategory("");
             }}
           >
             <option value="">Select Category</option>
             {categoriesData?.data?.map((cat: any) => (
               <option key={cat.id} value={String(cat.id)}>
-                {cat.name || cat.category_name} {/* handle both cases */}
+                {cat.name || cat.category_name}
               </option>
             ))}
           </select>
@@ -612,8 +768,8 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                 {subcategoriesData.data
                   ?.filter(
                     (sub: any) =>
-                      String(sub.category_id) === String(category) || // match by parent category
-                      String(sub.id) === String(subcategory), // keep saved subcategory visible
+                      String(sub.category_id) === String(category) ||
+                      String(sub.id) === String(subcategory),
                   )
                   .map((sub: any) => (
                     <option key={sub.id} value={String(sub.id)}>
@@ -624,21 +780,18 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
           )}
 
+          {/* Fulfillment */}
           <div>
             <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
               Fulfillment
             </h3>
             <select
-              className="w-full border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
+              disabled
+              className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 opacity-60"
               value={fulfillment}
               onChange={e => setFulfillment(e.target.value)}
             >
-              <option value="">Select Fulfillment</option>
-              <option value="Arrange Local Pickup">Arrange Local Pickup</option>
-              <option value="Shipping">Shipping</option>
-              <option value="Arrange Local Pickup or Shipping">
-                Arrange Local Pickup and Shipping
-              </option>
+              <option value="arrange_local_pickup">Arrange Local Pickup</option>
             </select>
           </div>
 
@@ -662,7 +815,9 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
                 type="text"
                 value={newTag}
                 onChange={e => setNewTag(e.target.value)}
+                onKeyPress={e => e.key === "Enter" && handleAddTag()}
                 className="flex-1  border text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 pl-10 "
+                placeholder="Add a meta tag"
               />
               <button
                 onClick={handleAddTag}
@@ -683,19 +838,18 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               onChange={e => setSellingOption(e.target.value)}
             >
               <option value="">Choose Below</option>
-              <option value="Trade/Barter">Trade/Barter</option>
-              <option value="For Sale or Trade Barter">
+              <option value="trade/barter">Trade/Barter</option>
+              <option value="for_sale_or_trade_barter">
                 For Sale or Trade Barter
               </option>
-              <option value="For Sale">For Sale</option>
+              <option value="for_sale">For Sale</option>
             </select>
           </div>
 
           {/* Save */}
         </div>
       </div>
-
-      {/* <div className="flex flex-col sm:flex-row justify-between mt-5 md:mt-10 items-center">
+      <div className="flex flex-col sm:flex-row justify-between mt-5 md:mt-10 items-center">
         <button
           onClick={handleDeleteListing}
           disabled={deleteProduct.isPending}
@@ -706,14 +860,12 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
         </button>
         <button
           onClick={handleUpdateListing}
-          disabled={requestApproval.isFetching}
-          className="bg-accent-red w-full sm:w-fit text-white py-2.5 md:py-5 px-12 cursor-pointer rounded-lg font-semibold duration-300 ease-in-out hover:bg-[#a34739] mt-3 md:mt-6 disabled:opacity-50"
+          disabled={updateProduct.isPending}
+          className="bg-accent-red w-full sm:w-fit text-white py-2.5 md:py-5 px-12 cursor-pointer rounded-lg font-semibold hover:bg-[#a34739] mt-3 md:mt-6 disabled:opacity-50"
         >
-          {requestApproval.isFetching
-            ? "Requesting Approval..."
-            : "Request Approval"}
+          {updateProduct.isPending ? "Updating..." : "Update Listing"}
         </button>
-      </div> */}
+      </div>
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
@@ -736,7 +888,7 @@ const Details = ({ params }: { params: Promise<{ id: string }> }) => {
               <button
                 onClick={confirmDelete}
                 disabled={deleteProduct.isPending}
-                className="px-4 py-2 bg-primary-red text-white rounded-lg cursor-pointer hover:bg-red-700 disabled:opacity-50"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg cursor-pointer hover:bg-red-700 disabled:opacity-50"
               >
                 {deleteProduct.isPending ? "Deleting..." : "Delete"}
               </button>

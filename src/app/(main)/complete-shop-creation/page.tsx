@@ -36,7 +36,7 @@ const page = () => {
             href={`${
               user?.membership?.membership_type === "basic"
                 ? "/dashboard/basic/create-listing"
-                : "/dashboard/pro/addnew-listing"
+                : "/dashboard/pro/create-listing"
             }`}
             className="auth-secondary-btn md:mt-0 mt-3 w-full md:w-fit"
           >

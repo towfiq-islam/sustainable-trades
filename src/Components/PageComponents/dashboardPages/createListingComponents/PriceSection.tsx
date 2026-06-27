@@ -1,10 +1,10 @@
-import { FormData } from "@/app/dashboard/basic/create-listing/page";
 import { Controller, Control, FieldErrors, FieldError } from "react-hook-form";
+import { FormData } from "./CreateListing";
 
 interface PriceSectionProps {
-  control: Control<FormData>;
   errors: FieldErrors<FormData>;
   isBasicMember: boolean;
+  control: any;
 }
 
 const PriceSection = ({
@@ -81,7 +81,7 @@ const PriceSection = ({
         )}
       </div>
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <h3
           className={`text-[20px] md:text-[24px] font-semibold ${
             isBasicMember ? "text-gray-400" : "text-secondary-black"
@@ -116,7 +116,7 @@ const PriceSection = ({
             {getErrorMessage("weight")}
           </p>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

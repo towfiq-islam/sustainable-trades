@@ -1,5 +1,5 @@
+import { FormData } from "./CreateListing";
 import { Controller, UseFormReturn, UseFormWatch } from "react-hook-form";
-import { FormData } from "@/app/dashboard/basic/create-listing/page"; // import your shared type
 
 type Category = {
   id: number | string;

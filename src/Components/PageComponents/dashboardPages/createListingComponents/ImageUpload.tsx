@@ -1,10 +1,10 @@
+import { FormData } from "./CreateListing";
 import { UseFormSetValue, UseFormWatch } from "react-hook-form";
-import { FormData } from "@/app/dashboard/basic/create-listing/page";
 
 interface ImageUploadProps {
-  imageFiles: File[]; // actual files
+  imageFiles: File[];
   setImageFiles: React.Dispatch<React.SetStateAction<File[]>>;
-  previewImages: string[]; // for preview only
+  previewImages: string[];
   setPreviewImages: React.Dispatch<React.SetStateAction<string[]>>;
   setValue: UseFormSetValue<FormData>;
   watch: UseFormWatch<FormData>;
@@ -21,13 +21,9 @@ const ImageUpload = ({
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files).slice(0, 4);
-
-      // Combine with existing files and keep max 4
       const combinedFiles = [...imageFiles, ...selectedFiles].slice(0, 4);
       setImageFiles(combinedFiles);
-      setValue("images", combinedFiles);
-
-      // Combine previews
+      setValue("images", combinedFiles, { shouldValidate: true });
       const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
       const combinedPreviews = [...previewImages, ...newPreviews].slice(0, 4);
       setPreviewImages(combinedPreviews);
@@ -45,7 +41,7 @@ const ImageUpload = ({
   };
 
   return (
-    <div>
+    <>
       <div className="grid grid-cols-2 md:grid-cols-2 gap-3 mt-2">
         {previewImages.length > 0 ? (
           previewImages.map((img, idx) => (
@@ -58,7 +54,7 @@ const ImageUpload = ({
               <button
                 type="button"
                 onClick={() => handleRemoveImage(idx)}
-                className="absolute top-2 right-2 bg-black text-white px-2 py-1 rounded"
+                className="absolute top-2 right-2 bg-black text-white px-2 py-1 rounded cursor-pointer"
               >
                 ×
               </button>
@@ -75,6 +71,7 @@ const ImageUpload = ({
           </div>
         )}
       </div>
+
       <div className="mt-3">
         <label className="flex items-center justify-center gap-2 w-full py-2 md:py-4 bg-white rounded-lg cursor-pointer border-2 border-dashed border-black hover:bg-gray-100 transition-colors">
           <svg
@@ -100,7 +97,7 @@ const ImageUpload = ({
           />
         </label>
       </div>
-    </div>
+    </>
   );
 };
 

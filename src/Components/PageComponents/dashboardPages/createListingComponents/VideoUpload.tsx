@@ -1,6 +1,6 @@
-import { FormData } from "@/app/dashboard/basic/create-listing/page";
 import { useMemo, useRef, useState } from "react";
 import { UseFormSetValue } from "react-hook-form";
+import { FormData } from "./CreateListing";
 
 interface VideoUploadProps {
   video: File | null;

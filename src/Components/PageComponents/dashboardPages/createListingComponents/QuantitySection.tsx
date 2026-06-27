@@ -1,5 +1,5 @@
 import { Controller, UseFormReturn } from "react-hook-form";
-import { FormData } from "@/app/dashboard/basic/create-listing/page";
+import { FormData } from "./CreateListing";
 
 interface QuantitySectionProps {
   control: UseFormReturn<FormData>["control"];

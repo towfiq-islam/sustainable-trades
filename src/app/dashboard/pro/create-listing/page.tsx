@@ -1,7 +1,7 @@
 import CreateListing from "@/Components/PageComponents/dashboardPages/createListingComponents/CreateListing";
 
 const page = () => {
-  return <CreateListing variant="basic" />;
+  return <CreateListing variant="pro" />;
 };
 
 export default page;

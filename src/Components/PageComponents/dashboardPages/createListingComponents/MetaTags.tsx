@@ -1,5 +1,5 @@
-import { FormData } from "@/app/dashboard/basic/create-listing/page";
 import { useState } from "react";
+import { FormData } from "./CreateListing";
 import { UseFormSetValue } from "react-hook-form";
 
 interface MetaTagsProps {

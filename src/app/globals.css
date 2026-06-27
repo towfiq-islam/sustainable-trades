@@ -149,7 +149,7 @@ option:hover {
   @apply !border-none !outline-none;
 }
 
-@theme inline {
+/* @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -271,4 +271,4 @@ option:hover {
   html {
     @apply font-sans;
   }
-}
+} */

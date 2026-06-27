@@ -85,47 +85,41 @@ const Page = () => {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 xl:gap-6 mt-10">
           {data?.data?.map((product: ProductItem) => (
-            <Link
-              href={`/dashboard/basic/view-listing/view-details/${product.id}`}
+            <div
+              key={product?.id}
+              className="relative border border-[#e5e5e5] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 group"
             >
-              <div
-                key={product?.id}
-                className="relative border border-[#e5e5e5] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 group cursor-pointer"
-              >
-                {/* Image */}
-                <div className="relative w-full h-[250px]">
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product.images[0].image}`}
-                    alt={product.product_name}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
+              {/* Image */}
+              <div className="relative w-full h-[250px]">
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product.images[0].image}`}
+                  alt={product.product_name}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
 
-                  <Link
-                    href={`/dashboard/basic/view-listing/edit-listing/${product.id}`}
-                  >
-                    <button
-                      className="absolute top-3 right-3 bg-white rounded-full p-2 shadow cursor-pointer border border-primary-green 
+                <Link href={`/dashboard/basic/listing/${product.id}`}>
+                  <button
+                    className="absolute top-3 right-3 bg-white rounded-full p-2 shadow cursor-pointer border border-primary-green 
                       opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 
                       transition-all duration-300 ease-in-out"
-                    >
-                      <FiEdit2 size={18} className="text-primary-green" />
-                    </button>
-                  </Link>
-                </div>
-
-                {/* Info */}
-                <div className="p-4">
-                  <h3 className="text-[18px] md:text-[20px] font-medium text-secondary-black truncate">
-                    {product?.product_name}
-                  </h3>
-                  <p className="text-base md:text-[20px] font-semibold text-secondary-black mt-1">
-                    ${product?.product_price}
-                  </p>
-                </div>
+                  >
+                    <FiEdit2 size={18} className="text-primary-green" />
+                  </button>
+                </Link>
               </div>
-            </Link>
+
+              {/* Info */}
+              <div className="p-4">
+                <h3 className="text-[18px] md:text-[20px] font-medium text-secondary-black truncate">
+                  {product?.product_name}
+                </h3>
+                <p className="text-base md:text-[20px] font-semibold text-secondary-black mt-1">
+                  ${product?.product_price}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
       )}

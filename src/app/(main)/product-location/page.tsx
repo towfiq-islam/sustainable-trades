@@ -11,8 +11,7 @@ import useAuth from "@/Hooks/useAuth";
 import { Navigation } from "swiper/modules";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import Subscribe from "@/Components/PageComponents/mainPages/homePageComponents/Subscribe";
-import CommunityMember from "@/Components/PageComponents/mainPages/homePageComponents/CommunityMember";
+import Subscribe from "@/app/(main)/_Components/Subscribe";
 import Product from "@/Components/Common/Product";
 import Container from "@/Components/Common/Container";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
@@ -23,6 +22,7 @@ import {
 } from "@/Components/Loader/Loader";
 import { AiOutlineFileUnknown } from "react-icons/ai";
 import ProductLocation from "@/Components/PageComponents/mainPages/shopPageComponents/ProductLocation";
+import MemberSpotlight from "../_Components/MemberSpotlight";
 
 type categoryItem = {
   id: number;
@@ -198,7 +198,7 @@ const page = () => {
 
       {/* Community Member */}
       <div className="my-20">
-        <CommunityMember data={spotlightData?.data} />
+        <MemberSpotlight data={spotlightData?.data} />
       </div>
 
       {/* Subscribe */}

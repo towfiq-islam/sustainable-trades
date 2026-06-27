@@ -12,8 +12,18 @@ import { useQueryClient } from "@tanstack/react-query";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
 import { useEffect, useRef, useState } from "react";
 import { getSingleConversation, useSendMessage } from "@/Hooks/api/chat_api";
+import { FiPaperclip, FiSmile, FiSend } from "react-icons/fi";
+import EmojiPicker from "emoji-picker-react";
 
 // ---- Types ----
+
+type Attachment = {
+  id: number;
+  file_name: string;
+  file_path: string;
+  isLocal: boolean;
+  file_type: string;
+};
 
 type CartProductImage = { id: number; product_id: number; image: string };
 
@@ -48,10 +58,12 @@ export type MessageItem = {
   receiver_id?: number;
   conversation_id?: number;
   message: string;
+  message_type: string;
   created_at: string;
   status?: string;
   cart?: Cart | null;
   order?: Order | null;
+  attachments?: Attachment[];
   sender?: {
     first_name: string;
     last_name: string | null;
@@ -140,6 +152,39 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
   const { user } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const onEmojiClick = (emojiData: any) => {
+    setMessage(prev => prev + emojiData.emoji);
+  };
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+
+    setSelectedFiles(prev => [...prev, ...files]);
+
+    const imagePreviews = files
+      .filter(file => file.type.startsWith("image/"))
+      .map(file => URL.createObjectURL(file));
+
+    setPreviewUrls(prev => [...prev, ...imagePreviews]);
+  };
+
+  const removeAttachment = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+
+    setPreviewUrls(prev => {
+      const url = prev[index];
+
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
+
+      return prev.filter((_, i) => i !== index);
+    });
+  };
 
   const [chats, setChats] = useState<MessageItem[]>([]);
   const [message, setMessage] = useState("");
@@ -148,6 +193,12 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
   const { mutate: sendMessageMutation, isPending } = useSendMessage();
   const { data: singleConversation, isLoading: chatLoading } =
     getSingleConversation(conversationId, type);
+
+  useEffect(() => {
+    return () => {
+      previewUrls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [previewUrls]);
 
   useEffect(() => {
     if (singleConversation?.data?.messages) {
@@ -196,9 +247,18 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
 
   const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!message.trim()) return toast.error("Please enter your message");
+    if (!message.trim() && selectedFiles.length === 0)
+      return toast.error("Please enter your message or add an attachment");
 
     const tempId = Date.now();
+    const tempAttachments = selectedFiles.map((file, index) => ({
+      id: -(index + 1),
+      file_name: file.name,
+      file_path: URL.createObjectURL(file),
+      file_type: file.type,
+      isLocal: true,
+    }));
+
     setChats(prev => [
       ...prev,
       {
@@ -207,19 +267,32 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
         message: message.trim(),
         created_at: new Date().toISOString(),
         status: "sending",
+        message_type: selectedFiles?.length > 0 ? "file" : "text",
+        attachments: tempAttachments,
       },
     ]);
     setMessage("");
     (e.target as HTMLFormElement).reset();
 
-    const payload: Record<string, any> = {
-      receiver_id: conversationId,
-      message,
-      ...(type === "order" && { type: "order" }),
-    };
+    const formData = new FormData();
 
-    sendMessageMutation(payload, {
+    formData.append("receiver_id", String(conversationId));
+    if (message) {
+      formData.append("message", message);
+    }
+
+    if (type === "order") {
+      formData.append("type", "order");
+    }
+
+    selectedFiles.forEach(file => {
+      formData.append("file[]", file);
+    });
+
+    sendMessageMutation(formData, {
       onSuccess: (res: any) => {
+        setSelectedFiles([]);
+
         setChats(prev =>
           prev.map(msg =>
             msg.id === tempId
@@ -305,16 +378,17 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
               msg.status === "sending"
                 ? "bg-gray-50 opacity-80"
                 : msg.status === "failed"
-                  ? "bg-red-100 border border-red-400 text-red-700"
+                  ? "bg-red-100 border border-red-300 text-primary-red"
                   : "bg-accent-white";
 
-            // Rewrite dashboard links in plain messages based on user role
             const formattedMessage = msg.message
-              .replace(
-                /\/dashboard\/pro\/orders\/(\d+)/g,
-                `/dashboard/${dashboardSegment}/orders/$1`,
-              )
-              .replace(/\n/g, "<br />");
+              ? msg.message
+                  .replace(
+                    /\/dashboard\/pro\/orders\/(\d+)/g,
+                    `/dashboard/${dashboardSegment}/orders/$1`,
+                  )
+                  .replace(/\n/g, "<br />")
+              : "";
 
             return (
               <div
@@ -345,9 +419,35 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
                     <div
                       className={`relative text-[15px] font-lato leading-[160%] py-3 px-3.5 rounded-[6px] shadow ${bubbleClass}`}
                     >
-                      <p
-                        dangerouslySetInnerHTML={{ __html: formattedMessage }}
-                      />
+                      <div>
+                        {msg.message && (
+                          <p
+                            dangerouslySetInnerHTML={{
+                              __html: formattedMessage,
+                            }}
+                          />
+                        )}
+
+                        {msg?.attachments && msg?.attachments?.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {msg.attachments?.map(file => {
+                              const imageUrl = (file as any).isLocal
+                                ? file.file_path
+                                : `${process.env.NEXT_PUBLIC_SITE_URL}/${file.file_path}`;
+
+                              return (
+                                <img
+                                  key={file.id}
+                                  src={imageUrl}
+                                  alt={file.file_name}
+                                  onClick={() => setPreviewImage(imageUrl)}
+                                  className="w-32 h-32 rounded-lg object-cover border border-gray-200 cursor-pointer hover:opacity-90 transition"
+                                />
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
                       <span className="text-xs text-gray-500 text-end block mt-1">
                         {time}
                       </span>
@@ -392,31 +492,133 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
         )}
       </div>
 
+      {/* Preview File */}
+      {selectedFiles.length > 0 && (
+        <div className="mb-3 flex flex-wrap gap-3">
+          {selectedFiles.map((file, index) => (
+            <div
+              key={index}
+              className="relative border border-gray-200 rounded-lg overflow-hidden"
+            >
+              {file.type.startsWith("image/") ? (
+                <img
+                  src={previewUrls[index]}
+                  alt={file.name}
+                  className="w-20 h-20 object-cover"
+                />
+              ) : (
+                <div className="w-20 h-20 flex items-center justify-center bg-gray-100 text-xs p-2 text-center">
+                  {file.name}
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => removeAttachment(index)}
+                className="absolute top-1 right-1 bg-primary-red cursor-pointer text-white rounded-full w-5 h-5 text-xs"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Footer */}
       <form onSubmit={handleSend} className="flex items-center gap-3">
-        <input
-          type="text"
-          placeholder="Type your message...."
-          disabled={isPending}
-          onChange={e => setMessage(e.target.value)}
-          className={`border border-gray-300 px-5 py-3 text-sm text-[#071431] w-full outline-0 rounded-lg ${
-            isPending && "cursor-not-allowed opacity-80"
-          }`}
-        />
+        <p className="px-5 py-3 border border-gray-300 text-sm text-[#071431] w-full rounded-lg relative">
+          <input
+            type="text"
+            placeholder="Type your message...."
+            disabled={isPending}
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            className={`outline-none w-full h-full ${
+              isPending && "cursor-not-allowed opacity-80"
+            }`}
+          />
+
+          {/* Emoji */}
+          <div className="absolute top-3 right-14 text-secondary-gray cursor-pointer">
+            <button
+              type="button"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className="cursor-pointer"
+            >
+              <FiSmile size={20} />
+            </button>
+
+            {showEmojiPicker && (
+              <div className="absolute bottom-12 right-0 z-50">
+                <EmojiPicker onEmojiClick={onEmojiClick} />
+              </div>
+            )}
+          </div>
+
+          {/* Attachment */}
+          <p>
+            <label
+              htmlFor="attachment"
+              className="absolute top-1/2 -translate-y-1/2 right-4 text-secondary-gray cursor-pointer"
+            >
+              <FiPaperclip size={20} />
+            </label>
+
+            <input
+              id="attachment"
+              type="file"
+              multiple
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileSelect}
+            />
+          </p>
+        </p>
+
         <button
           type="submit"
           disabled={isPending}
-          className={`bg-primary-green text-white px-7 py-3 font-semibold rounded-lg shrink-0 ${
+          className={`bg-primary-green text-white px-5 py-2.5 font-semibold rounded-lg shrink-0 ${
             isPending ? "cursor-not-allowed opacity-90" : "cursor-pointer"
           }`}
         >
           {isPending ? (
             <ImSpinner9 className="text-white text-lg animate-spin" />
           ) : (
-            "Send"
+            <span className="flex gap-2 items-center">
+              <FiSend size={18} />
+              Send
+            </span>
           )}
         </button>
       </form>
+
+      {/* Preview chat attachment */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative max-w-5xl max-h-[90vh] rounded-lg"
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setPreviewImage(null)}
+              className="absolute -top-10 right-0 text-white text-3xl cursor-pointer"
+            >
+              ×
+            </button>
+
+            <img
+              src={previewImage}
+              alt="Preview"
+              className="max-w-full max-h-[90vh] rounded-lg object-contain"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };

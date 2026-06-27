@@ -65,7 +65,7 @@ const Page = () => {
         </div>
 
         <Link
-          href="/dashboard/pro/addnew-listing"
+          href="/dashboard/pro/create-listing"
           className="h-[45px] md:h-[60px] rounded-[8px] bg-accent-red text-[16px] font-semibold text-secondary-black cursor-pointer hover:bg-transparent duration-500 ease-in-out border border-accent-red w-full md:w-[190px] flex gap-x-2 justify-center items-center"
         >
           <FaPlus />

@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
-import Container from "@/Components/Common/Container";
+import { FaHeart } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
-import { getAllFollowList, getMyOrderDetails } from "@/Hooks/api/dashboard_api";
+import Container from "@/Components/Common/Container";
 import Product from "@/Components/Common/Product";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { useSearchParams } from "next/navigation";
 import { getAllListings } from "@/Hooks/api/cms_api";
+import { getAllFollowList, getMyOrderDetails } from "@/Hooks/api/dashboard_api";
 import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
 
 export default function Page() {
@@ -56,34 +57,102 @@ export default function Page() {
         </div>
 
         {/* Order Summary */}
-        <div className="rounded-lg bg-[#F5F5F5] px-10 py-7 shadow-sm">
-          <div className="grid gap-8 lg:grid-cols-2">
+        <div className="rounded-lg bg-[#F5F5F5] px-6 py-5 shadow-sm">
+          <div className="grid gap-12 lg:grid-cols-2">
             {/* Left */}
             <div>
-              <h3 className="mb-1.5 text-lg text-secondary-black/70 font-semibold">
+              <h3 className="mb-1 text-lg font-bold text-secondary-black">
                 Order No.
               </h3>
 
-              <p className="mb-5 font-medium text-secondary-black/70">
+              <p className="mb-5 text-sm font-medium text-secondary-black/60">
                 {singleOrder?.data?.order_number}
               </p>
 
-              <p className="max-w-md leading-7 text-gray-700">
-                Your order has been processed! The seller will provide updates
-                as they become available. For any questions or assistance,
-                please contact the seller directly. If you're a member, check
-                your messages. If you're a guest shopper, check your email. We
-                sincerely appreciate your support. Thank you for choosing to
-                shop local—together we rise, together we thrive!
+              <div className="flex items-center gap-3 mb-5 pb-5 border-b border-gray-300">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-green text-white">
+                  <FaCheck size={18} />
+                </div>
+                <p className="text-lg font-bold text-primary-green">
+                  Your order has been processed!
+                </p>
+              </div>
+
+              {/* Account holder */}
+              <div className="flex gap-4 items-start mb-4 pb-4 border-b border-gray-300">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
+                  {/* person icon */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="size-5"
+                  >
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-semibold text-[#325b47] mb-1">
+                    If you have a Sustainable Shopper account:
+                  </p>
+                  <p className="text-sm text-gray-600 leading-6">
+                    Go to the Orders tab on your dashboard and find the order
+                    and click View Details. You can track the status of your
+                    order from there.
+                  </p>
+                </div>
+              </div>
+
+              {/* Guest shopper */}
+              <div className="flex gap-4 items-start mb-6 pb-5 border-b border-gray-300">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
+                  {/* email icon */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="size-5"
+                  >
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="m2 7 10 7 10-7" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-semibold text-[#325b47] mb-1">
+                    If you were a guest shopper:
+                  </p>
+                  <p className="text-sm text-gray-600 leading-6">
+                    Consider creating a free Sustainable Shopper account{" "}
+                    <Link
+                      href="/auth/register?role=customer"
+                      className="underline font-medium"
+                    >
+                      here.
+                    </Link>{" "}
+                    If not, check your email for order details and updates.
+                  </p>
+                </div>
+              </div>
+
+              {/* Footer message */}
+              <p className="text-gray-700 leading-7">
+                Thank you for choosing to {singleOrder?.data?.shop?.shop_name}.
+                <br />
+                <span className="flex gap-2 items-center">
+                  Together we rise, together we thrive!
+                  <FaHeart className="text-primary-green" />
+                </span>
               </p>
             </div>
 
             {/* Right */}
             <div>
-              <div className="overflow-hidden rounded-lg h-[250px] w-10/12 mx-auto">
+              <div className="overflow-hidden rounded-lg h-[300px] w-full">
                 {mapShops.length > 0 && (
                   <ShopsMap
-                    height="250px"
+                    height="300px"
                     shops={mapShops}
                     shopLoading={isLoading}
                   />
@@ -92,32 +161,45 @@ export default function Page() {
 
               {/* Progress */}
               <div className="mt-5 flex items-center justify-center">
-                <div className="flex w-full max-w-xs items-center justify-between relative">
-                  {/* Connector */}
-                  <div
-                    className={`absolute top-5 left-0 w-full border-t border-dashed border-primary-green}`}
-                  />
+                <div className="flex w-full max-w-sm items-center justify-between relative">
+                  {/* Connector left */}
+                  <div className="absolute top-5 left-[10%] w-[37%] border-t-2 border-dashed border-[#325b47]" />
+                  {/* Connector right */}
+                  <div className="absolute top-5 left-[53%] w-[37%] border-t-2 border-dashed border-gray-300" />
 
-                  {/* Step 1 */}
-                  <div className="flex flex-col items-start z-10">
+                  {/* Step 1 — Purchased */}
+                  <div className="flex flex-col items-center z-10">
                     <div className="flex size-10 items-center justify-center rounded-full bg-[#325b47] text-white">
                       <FaCheck />
                     </div>
-                    <span className="mt-2 text-xs text-gray-500">Purchase</span>
-                  </div>
-
-                  {/* Step 2 */}
-                  <div className="flex flex-col items-center z-10">
-                    <div className="size-8 rounded-full bg-[#6d8f80]" />
                     <span className="mt-2 text-xs text-gray-500">
-                      Processed
+                      Purchased
                     </span>
                   </div>
 
-                  {/* Step 3 */}
-                  <div className="flex flex-col items-end z-10">
-                    <div className="size-8 rounded-full bg-[#b5d1c2]" />
-                    <span className="mt-2 text-xs text-gray-500">Ready</span>
+                  {/* Step 2 — Shipped */}
+                  <div className="flex flex-col items-center z-10">
+                    <div className="flex size-10 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="size-5"
+                      >
+                        <path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" />
+                        <circle cx="5.5" cy="18.5" r="1.5" />
+                        <circle cx="18.5" cy="18.5" r="1.5" />
+                      </svg>
+                    </div>
+                    <span className="mt-2 text-xs text-gray-500">Shipped</span>
+                  </div>
+
+                  {/* Step 3 — Delivered */}
+                  <div className="flex flex-col items-center z-10">
+                    <div className="size-10 rounded-full bg-off-green/70" />
+                    <span className="mt-2 text-xs text-gray-500">
+                      Delivered
+                    </span>
                   </div>
                 </div>
               </div>

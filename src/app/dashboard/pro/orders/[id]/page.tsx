@@ -116,7 +116,7 @@ const Page = () => {
     {
       title: "Customer Details",
       content: (
-        <div className="text-secondary-gray text-[14px] py-2">
+        <div className="text-secondary-gray text-[14px] pb-2">
           <p>
             <strong>Name:</strong> {singleOrder?.data?.user?.first_name}{" "}
             {singleOrder?.data?.user?.last_name}
@@ -124,25 +124,30 @@ const Page = () => {
           <p>
             <strong>Email:</strong> {singleOrder?.data?.user?.email}
           </p>
+          <p>
+            <strong>Phone:</strong> {singleOrder?.data?.user?.phone}
+          </p>
         </div>
       ),
     },
     {
       title: "Shipping Address",
       content: (
-        <div className="text-secondary-gray text-[14px] py-2">
+        <div className="text-sm text-secondary-gray">
+          <p>{singleOrder?.data?.shipping_address?.address}</p>
+          {singleOrder?.data?.shipping_address?.apt && (
+            <p>{singleOrder?.data?.shipping_address.apt}</p>
+          )}
           <p>
-            <strong>Name:</strong>{" "}
-            {singleOrder?.data?.shipping_address?.first_name}{" "}
-            {singleOrder?.data?.shipping_address?.last_name}
+            {singleOrder?.data?.shipping_address?.city}
+            {singleOrder?.data?.shipping_address?.state
+              ? `, ${singleOrder?.data?.shipping_address.state}`
+              : ""}
+            {singleOrder?.data?.shipping_address?.postal_code
+              ? ` ${singleOrder?.data?.shipping_address.postal_code}`
+              : ""}
           </p>
-          <p>
-            <strong>Phone:</strong> {singleOrder?.data?.shipping_address?.phone}
-          </p>
-          <p>
-            <strong>Address:</strong>{" "}
-            {singleOrder?.data?.shipping_address?.address}
-          </p>
+          <p>{singleOrder?.data?.shipping_address?.country}</p>
         </div>
       ),
     },
@@ -174,36 +179,33 @@ const Page = () => {
 
   return (
     <>
-      {/* Back Btn */}
-      <button
-        onClick={() => router.back()}
-        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
-      >
-        <span className="group-hover:-translate-x-1 duration-300 transition-transform">
-          <GoBackSvg />
-        </span>
-        <span>Back</span>
-      </button>
-
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row justify-between">
-        <h3 className="text-[40px] font-semibold text-secondary-black">
-          Order Details
-        </h3>
-        <div className="flex gap-x-3">
-          <button
-            className="py-4 px-6 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out"
-            onClick={() => isOpen(true)}
-          >
-            Track Package
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="pt-8 flex flex-col lg:flex-row justify-between gap-x-6">
+      <div className="flex flex-col lg:flex-row justify-between gap-10">
         {/* Left Side */}
         <div className="w-full lg:w-[65%] 2xl:w-[75%]">
+          <button
+            onClick={() => router.back()}
+            className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
+          >
+            <span className="group-hover:-translate-x-1 duration-300 transition-transform">
+              <GoBackSvg />
+            </span>
+            <span>Back</span>
+          </button>
+
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row items-center justify-between">
+            <h3 className="text-3xl font-semibold text-secondary-black">
+              Order Details
+            </h3>
+
+            <button
+              className="py-3 px-4 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out"
+              onClick={() => isOpen(true)}
+            >
+              Track Package
+            </button>
+          </div>
+
           {/* Order Status Dropdown */}
           <div className="my-4">
             <h4 className="text-secondary-black font-bold text-[16px] mb-3">
@@ -353,9 +355,10 @@ const Page = () => {
                   else setOpenIndex(openIndex === idx ? null : idx);
                 }}
               >
-                <h4 className="text-secondary-black font-bold text-[16px]">
+                <h4 className="text-secondary-black font-semibold">
                   {item.title}
                 </h4>
+
                 {item.isModal ? (
                   <Pen className="text-secondary-black" />
                 ) : (

@@ -132,7 +132,7 @@ const Settings = () => {
                   />
                 ) : user?.avatar ? (
                   <img
-                    src={user.avatar}
+                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${user.avatar}`}
                     alt="Current avatar"
                     className="w-full h-full object-cover"
                   />
@@ -282,7 +282,7 @@ const Settings = () => {
           type="submit"
           form="settings-form"
           disabled={isPending}
-          className="auth-secondary-btn sm:w-[150px] disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
+          className="auth-secondary-btn disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
         >
           {isPending ? "Saving..." : "Update Settings"}
         </button>

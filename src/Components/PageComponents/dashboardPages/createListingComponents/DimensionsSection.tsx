@@ -29,11 +29,8 @@ const DimensionsSection = ({
             name="length"
             control={control}
             rules={{
-              required: "Length is required",
-              pattern: {
-                value: /^\d+(\.\d+)?$/,
-                message: "Invalid length",
-              },
+              required: isBasicMember ? false : "Length is required",
+              pattern: { value: /^\d+(\.\d+)?$/, message: "Invalid length" },
             }}
             render={({ field }) => (
               <input
@@ -62,11 +59,8 @@ const DimensionsSection = ({
             name="width"
             control={control}
             rules={{
-              required: "Width is required",
-              pattern: {
-                value: /^\d+(\.\d+)?$/,
-                message: "Invalid width",
-              },
+              required: isBasicMember ? false : "Width is required",
+              pattern: { value: /^\d+(\.\d+)?$/, message: "Invalid width" },
             }}
             render={({ field }) => (
               <input
@@ -95,11 +89,8 @@ const DimensionsSection = ({
             name="height"
             control={control}
             rules={{
-              required: "Height is required",
-              pattern: {
-                value: /^\d+(\.\d+)?$/,
-                message: "Invalid height",
-              },
+              required: isBasicMember ? false : "Height is required",
+              pattern: { value: /^\d+(\.\d+)?$/, message: "Invalid height" },
             }}
             render={({ field }) => (
               <input

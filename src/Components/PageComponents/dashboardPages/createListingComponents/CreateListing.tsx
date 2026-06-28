@@ -328,8 +328,8 @@ const CreateListing = ({
             <DimensionsSection
               control={control}
               errors={errors}
-              // isBasicMember={isBasicMember}
-              isBasicMember={false}
+              isBasicMember={isBasicMember}
+              // isBasicMember={false}
             />
 
             {/* Description */}

@@ -9,7 +9,7 @@ const page = () => {
   const [page, setPage] = useState<string>("");
   const { data: reviews, isLoading } = getShopReviews(
     user?.shop_info?.id,
-    page
+    page,
   );
 
   return <Review reviews={reviews} isLoading={isLoading} setPage={setPage} />;

@@ -12,11 +12,11 @@
   --color-primary-red: #8b200c;
   --color-secondary-gray: #4b4a47;
   --color-dark-green: #274f4561;
-  --color-off-green: #D4E2CB;
+  --color-off-green: #d4e2cb;
   --color-secondary-black: #13141d;
   --color-accent-white: #fffdf8;
   --color-accent-gray: #a7a39c;
-  --color-accent-blue: #B0DEDB;
+  --color-accent-blue: #b0dedb;
 
   /* Font Family */
   --font-lato: var(--font-lato);
@@ -54,7 +54,7 @@ html {
 }
 
 .primary_btn {
-  @apply block w-full py-1.5 md:py-3 bg-primary-green text-accent-white text-[14px] font-semibold md:text-[17px] duration-300 transition-all hover:scale-[0.97] rounded-lg shadow cursor-pointer enabled:hover:bg-transparent enabled:hover:text-primary-green border-2 border-primary-green text-center disabled:cursor-not-allowed disabled:opacity-70;
+  @apply block w-full py-1.5 md:py-3 bg-primary-green text-accent-white text-[14px] font-medium md:text-[17px] duration-300 transition-all enabled:hover:scale-[0.97] rounded-lg shadow cursor-pointer enabled:hover:bg-transparent enabled:hover:text-primary-green border-2 border-primary-green text-center disabled:cursor-not-allowed disabled:opacity-60;
 }
 
 .auth-secondary-btn {

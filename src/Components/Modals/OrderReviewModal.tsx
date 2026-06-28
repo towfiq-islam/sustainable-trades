@@ -94,24 +94,27 @@ export default function OrderReviewModal({
 
   return (
     <div className="">
-      <h2 className="text-xl text-light-green font-semibold">
+      <h2 className="text-lg text-light-green font-semibold">
         Review your order details
       </h2>
 
-      <p className="mt-2 font-semibold text-secondary-gray">
+      <p className="mt-0.5 font-semibold text-[15px] text-secondary-gray">
         Shipping and Payment Information.
       </p>
 
-      {/* Newsletter */}
-      <div className="mt-2 space-y-2.5">
-        <p>
-          <span className="text-secondary-gray font-semibold text-sm">
-            Email:{" "}
-          </span>
-          <span className="flex items-center gap-2 text-sm text-gray-700">
-            {formData?.email}
-          </span>
-        </p>
+      {/* Customer Info */}
+      <div className="mt-3 space-y-2 border-b text-gray-300 pb-4">
+        <div className="mb-2.5">
+          <p className="text-secondary-gray font-semibold text-sm mb-1">
+            Customer Details:{" "}
+          </p>
+
+          <p className="flex items-center gap-2 text-sm text-gray-700">
+            {formData?.first_name} {formData?.last_name}
+          </p>
+          <p className="text-sm text-gray-700">{formData?.email}</p>
+          <p className="text-sm text-gray-700">{formData?.phone}</p>
+        </div>
 
         <label className="flex items-center gap-2 text-sm text-gray-700">
           <input
@@ -144,17 +147,13 @@ export default function OrderReviewModal({
         </label>
       </div>
 
-      {/* Shipping */}
-      <div className="mt-5">
+      {/* Shipping Info */}
+      <div className="mt-3">
         <h3 className="font-semibold text-secondary-gray">
-          Shipping Information
+          Shipping Information:
         </h3>
 
-        <div className="mt-1.5 text-sm text-gray-700">
-          <p>
-            {formData?.first_name} {formData?.last_name}
-          </p>
-          <p>{formData?.phone}</p>
+        <div className="mt-1 text-sm text-gray-700">
           <p>{formData?.address}</p>
           {formData?.apt && <p>{formData.apt}</p>}
           <p>
@@ -167,7 +166,7 @@ export default function OrderReviewModal({
       </div>
 
       {/* Promo */}
-      <div className="mt-5">
+      <div className="mt-4">
         <p className="flex gap-3 items-center justify-between border border-primary-green px-3 py-2.5 text-sm rounded-[6px]">
           <input
             type="text"
@@ -197,7 +196,7 @@ export default function OrderReviewModal({
       </div>
 
       {/* Terms */}
-      <div className="mt-5 border-t text-gray-400 pt-4">
+      <div className="mt-4">
         <label className="flex items-start gap-3 text-secondary-gray text-sm">
           <input
             type="checkbox"
@@ -220,9 +219,9 @@ export default function OrderReviewModal({
 
       {/* Order Summary */}
       <div className="mt-5">
-        <h3 className="text-xl font-semibold text-secondary-gray">Subtotal</h3>
+        <h3 className="text-lg font-semibold text-secondary-gray">Subtotal</h3>
 
-        <div className="mt-3 space-y-4">
+        <div className="mt-2 space-y-4">
           {cartItems?.cart_items?.map((item: Item) => (
             <OrderItem
               title={item?.product?.product_name}
@@ -255,7 +254,7 @@ export default function OrderReviewModal({
           </div>
         </div>
 
-        <div className="my-4 border-t border-gray-400" />
+        <div className="my-4 border-t border-gray-300" />
 
         <div className="space-y-2">
           <div className="flex justify-between">
@@ -276,8 +275,9 @@ export default function OrderReviewModal({
       {/* Buttons */}
       <div className="mt-6 space-y-3">
         <button
+          disabled={!formData?.terms_and_condition}
           onClick={() => onProceed()}
-          className="w-full rounded-md bg-primary-green py-3 font-semibold text-white cursor-pointer"
+          className="w-full primary_btn"
         >
           Checkout
         </button>

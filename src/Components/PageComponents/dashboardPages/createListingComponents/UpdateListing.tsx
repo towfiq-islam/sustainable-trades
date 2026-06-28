@@ -262,7 +262,6 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
   }, [listing]);
 
   // ── Auto meta-tags when category / subcategory changes ────────────────────
-  // Only runs after initial hydration (when categories are loaded)
 
   useEffect(() => {
     if (!categories.length) return;
@@ -286,13 +285,7 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
     setValue("tags", unique);
   }, [categoryId, subCategoryId, categories, subcategories]);
 
-  // Reset sub-category when category changes
-  useEffect(() => {
-    setValue("sub_category_id", "");
-  }, [categoryId, setValue]);
-
   // ── Shipping guard (pro only) ──────────────────────────────────────────────
-
   useEffect(() => {
     if (!config.shippingGuard) return;
     const requiresShipping =
@@ -996,6 +989,10 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
                 render={({ field }) => (
                   <select
                     {...field}
+                    onChange={e => {
+                      field.onChange(e);
+                      setValue("sub_category_id", "");
+                    }}
                     className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                   >
                     <option value="">Select Category</option>

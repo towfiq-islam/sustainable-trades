@@ -76,8 +76,8 @@ export type ConversationType = "private" | "order";
 interface ConversationPageProps {
   conversationId: number;
   type: ConversationType;
+  compact?: boolean;
 }
-
 // ---- Helpers ----
 
 function getDashboardSegment(user: any): string {
@@ -148,7 +148,11 @@ function AttachedItemCard({
 
 // ---- Main Component ----
 
-const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
+const ConversationPage = ({
+  conversationId,
+  type,
+  compact,
+}: ConversationPageProps) => {
   const { user } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -247,10 +251,8 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
 
   const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!message.trim() && selectedFiles.length === 0)
-      return toast.error("Please enter your message or add an attachment");
-
     const tempId = Date.now();
+
     const tempAttachments = selectedFiles.map((file, index) => ({
       id: -(index + 1),
       file_name: file.name,
@@ -317,23 +319,27 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
 
   return (
     <section className="h-full flex flex-col justify-between">
-      {/* Header */}
       <div>
-        <button
-          onClick={() => router.back()}
-          className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
-        >
-          <span className="group-hover:-translate-x-1 duration-300 transition-transform">
-            <GoBackSvg />
-          </span>
-          <span>Back</span>
-        </button>
+        {/* Header */}
+        {!compact && (
+          <button
+            onClick={() => router.back()}
+            className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
+          >
+            <span className="group-hover:-translate-x-1 duration-300 transition-transform">
+              <GoBackSvg />
+            </span>
+            <span>Back</span>
+          </button>
+        )}
 
-        <div className="border-t-2 border-b-2 py-2.5 border-gray-200 flex gap-5 items-center">
+        <div
+          className={`border-t-2 border-b-2 py-2.5 border-gray-200 flex items-center  ${compact ? "gap-3" : "gap-5"}`}
+        >
           <figure
-            className={`size-14 rounded-full border border-gray-100 grid place-items-center relative ${
-              chatLoading ? "bg-gray-200 animate-pulse" : "bg-accent-red"
-            }`}
+            className={`rounded-full border border-gray-100 grid place-items-center relative
+              ${compact ? "size-12" : "size-14"}
+              ${chatLoading ? "bg-gray-200 animate-pulse" : "bg-accent-red"}`}
           >
             {participant?.avatar ? (
               <Image
@@ -353,7 +359,9 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
           {chatLoading ? (
             <h3 className="animate-pulse w-40 h-5 rounded bg-gray-200" />
           ) : (
-            <h3 className="text-xl font-bold text-secondary-black flex gap-1 items-center">
+            <h3
+              className={`${compact ? "text-base" : "text-xl"} font-bold text-secondary-black flex gap-1 items-center`}
+            >
               <span>{participant?.first_name}</span>
               <span>{participant?.last_name}</span>
             </h3>
@@ -364,7 +372,7 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
       {/* Body */}
       <div
         ref={chatContainerRef}
-        className="grow bg-[#eff4ebd3] my-4 p-5 rounded space-y-3 overflow-y-auto chat-scrollbar"
+        className={`grow bg-[#eff4ebd3] my-4 rounded space-y-3 overflow-y-auto chat-scrollbar  ${compact ? "p-3" : "p-5"}`}
       >
         {chatLoading ? (
           <div className="h-full flex justify-center items-center">
@@ -395,7 +403,7 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
                 key={msg.id}
                 className={`flex gap-3 ${isSender ? "justify-end" : "justify-start"}`}
               >
-                {!isSender && (
+                {!compact && !isSender && (
                   <figure className="size-11 rounded-full relative shrink-0 grid place-items-center bg-accent-red">
                     {msg.sender?.avatar ? (
                       <Image
@@ -417,7 +425,7 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
                   {/* Plain message */}
                   {!msg.cart && !msg.order && (
                     <div
-                      className={`relative text-[15px] font-lato leading-[160%] py-3 px-3.5 rounded-[6px] shadow ${bubbleClass}`}
+                      className={`${compact ? "text-sm py-2 px-3" : "text-[15px] py-3 px-3.5"} relative font-lato leading-[160%] rounded-[6px] shadow ${bubbleClass}`}
                     >
                       <div>
                         {msg.message && (
@@ -448,7 +456,9 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
                           </div>
                         )}
                       </div>
-                      <span className="text-xs text-gray-500 text-end block mt-1">
+                      <span
+                        className={` ${compact ? "text-[10px]" : "text-xs mt-1"} text-gray-500 text-end block`}
+                      >
                         {time}
                       </span>
                     </div>
@@ -526,7 +536,9 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
 
       {/* Footer */}
       <form onSubmit={handleSend} className="flex items-center gap-3">
-        <p className="px-5 py-3 border border-gray-300 text-sm text-[#071431] w-full rounded-lg relative">
+        <p
+          className={`${compact ? "px-3 py-2.5" : "px-5 py-3"} border border-gray-300 text-sm text-[#071431] w-full rounded-lg relative`}
+        >
           <input
             type="text"
             placeholder="Type your message...."
@@ -539,48 +551,52 @@ const ConversationPage = ({ conversationId, type }: ConversationPageProps) => {
           />
 
           {/* Emoji */}
-          <div className="absolute top-3 right-14 text-secondary-gray cursor-pointer">
-            <button
-              type="button"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="cursor-pointer"
-            >
-              <FiSmile size={20} />
-            </button>
+          {!compact && (
+            <div className="absolute top-3 right-14 text-secondary-gray cursor-pointer">
+              <button
+                type="button"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                className="cursor-pointer"
+              >
+                <FiSmile size={20} />
+              </button>
 
-            {showEmojiPicker && (
-              <div className="absolute bottom-12 right-0 z-50">
-                <EmojiPicker onEmojiClick={onEmojiClick} />
-              </div>
-            )}
-          </div>
+              {showEmojiPicker && (
+                <div className="absolute bottom-12 right-0 z-50">
+                  <EmojiPicker onEmojiClick={onEmojiClick} />
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Attachment */}
-          <p>
-            <label
-              htmlFor="attachment"
-              className="absolute top-1/2 -translate-y-1/2 right-4 text-secondary-gray cursor-pointer"
-            >
-              <FiPaperclip size={20} />
-            </label>
+          {!compact && (
+            <p>
+              <label
+                htmlFor="attachment"
+                className="absolute top-1/2 -translate-y-1/2 right-4 text-secondary-gray cursor-pointer"
+              >
+                <FiPaperclip size={20} />
+              </label>
 
-            <input
-              id="attachment"
-              type="file"
-              multiple
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileSelect}
-            />
-          </p>
+              <input
+                id="attachment"
+                type="file"
+                multiple
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileSelect}
+              />
+            </p>
+          )}
         </p>
 
         <button
           type="submit"
-          disabled={isPending}
-          className={`bg-primary-green text-white px-5 py-2.5 font-semibold rounded-lg shrink-0 ${
-            isPending ? "cursor-not-allowed opacity-90" : "cursor-pointer"
-          }`}
+          disabled={
+            isPending || (!message.trim() && selectedFiles.length === 0)
+          }
+          className={`bg-primary-green cursor-pointer text-white py-2.5 font-medium rounded-lg shrink-0 disabled:cursor-not-allowed disabled:opacity-70 ${compact ? "text-sm px-3.5" : "px-5"}`}
         >
           {isPending ? (
             <ImSpinner9 className="text-white text-lg animate-spin" />

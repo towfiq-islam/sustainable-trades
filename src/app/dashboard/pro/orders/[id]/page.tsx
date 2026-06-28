@@ -16,11 +16,11 @@ import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import { useForm } from "react-hook-form";
 import { useSendMessage } from "@/Hooks/api/chat_api";
-import { CgSpinnerTwo } from "react-icons/cg";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
 import ArrangeLocalPickupModal from "../_Components/ArrangeLocalPickupModal";
+import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 
 interface FormValues {
   message: string;
@@ -384,59 +384,37 @@ const Page = () => {
             </div>
           ))}
 
-          <div className="border border-gray-300 p-4 rounded-lg">
-            <h2 className="text-[24px] font-normal text-secondary-black">
-              Message to Buyer
-            </h2>
-
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <textarea
-                placeholder="Enter Message"
-                className="py-2 px-3 rounded-[8px] border border-gray-300 cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full mt-5 h-[280px]"
-                {...register("message", {
-                  required: "Message is required",
-                })}
+          {/* Chat */}
+          <div className="border border-gray-300 rounded-lg overflow-hidden">
+            <div className="px-4 pt-4 pb-2 border-b border-gray-200">
+              <h2 className="text-[16px] font-semibold text-secondary-black">
+                Chat with Buyer
+              </h2>
+            </div>
+            <div className="h-[480px] flex flex-col p-3">
+              <ConversationPage
+                conversationId={singleOrder?.data?.user_id}
+                type="private"
+                compact={true}
               />
-
-              <div className="flex flex-col gap-y-3 mt-5">
-                <button
-                  type="submit"
-                  disabled={isSending}
-                  className={`auth-secondary-btn w-full ${
-                    isSending
-                      ? "!cursor-not-allowed opacity-85"
-                      : "cursor-pointer"
-                  }`}
-                >
-                  {isSending ? (
-                    <p className="flex gap-2 items-center justify-center">
-                      <CgSpinnerTwo className="animate-spin text-xl" />
-                      <span>Please wait....</span>
-                    </p>
-                  ) : (
-                    "Send Messages"
-                  )}
-                </button>
-
-                <Link
-                  href={`/dashboard/${
-                    singleOrder?.data?.user?.role === "vendor" &&
-                    singleOrder?.data?.user?.membership?.membership_type ===
-                      "pro"
-                      ? "pro"
-                      : singleOrder?.data?.user?.role === "vendor" &&
-                          singleOrder?.data?.user?.membership
-                            ?.membership_type === "basic"
-                        ? "basic"
-                        : "customer"
-                  }/messages/inbox/${singleOrder?.data?.user_id}`}
-                  className="auth-primary-btn !text-center"
-                >
-                  Go to Messages
-                </Link>
-              </div>
-            </form>
+            </div>
           </div>
+
+          <Link
+            className="primary_btn"
+            href={`/dashboard/${
+              singleOrder?.data?.user?.role === "vendor" &&
+              singleOrder?.data?.user?.membership?.membership_type === "pro"
+                ? "pro"
+                : singleOrder?.data?.user?.role === "vendor" &&
+                    singleOrder?.data?.user?.membership?.membership_type ===
+                      "basic"
+                  ? "basic"
+                  : "customer"
+            }/messages/inbox/${singleOrder?.data?.user_id}`}
+          >
+            Go to Messages Board
+          </Link>
 
           <button
             disabled={!singleOrder?.data?.note}
@@ -453,19 +431,17 @@ const Page = () => {
             View Note
           </button>
 
-          <div className="mt-12">
-            <button
-              disabled={isCancellingOrder}
-              onClick={() =>
-                cancelOrder({
-                  endpoint: `/api/cancel-order/${order_id}`,
-                })
-              }
-              className="py-4 px-6 rounded-[8px] border border-primary-red bg-[#FFE8E8] font-semibold text-primary-red cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
-            >
-              {isCancellingOrder ? "Cancelling...." : "Cancel Order"}
-            </button>
-          </div>
+          <button
+            disabled={isCancellingOrder}
+            onClick={() =>
+              cancelOrder({
+                endpoint: `/api/cancel-order/${order_id}`,
+              })
+            }
+            className="py-4 px-6 rounded-[8px] border border-primary-red bg-[#FFE8E8] font-semibold text-primary-red cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
+          >
+            {isCancellingOrder ? "Cancelling...." : "Cancel Order"}
+          </button>
         </div>
       </div>
 

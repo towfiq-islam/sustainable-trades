@@ -69,7 +69,7 @@ export default function Page() {
         </div>
 
         <div className="flex w-full lg:w-fit flex-wrap gap-2 lg:gap-4 lg:items-center">
-          <Link href="/dashboard/pro/addnew-listing">
+          <Link href="/dashboard/pro/create-listing">
             <button
               className="h-[45px] lg:h-[50px] w-full lg:w-fit rounded-[8px] bg-accent-red text-[16px] font-semibold text-secondary-black cursor-pointer
              hover:bg-transparent duration-500 ease-in-out border border-accent-red px-6"

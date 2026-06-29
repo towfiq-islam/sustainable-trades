@@ -4,12 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   FacebookSvg,
-  GlobeSvg,
   InstagramSvg,
   LinkedinSvg,
   PinterestSvg,
 } from "@/Components/Svg/SvgContainer";
-import { getSocialLinks } from "@/Hooks/api/cms_api";
+import { getSiteSettings, getSocialLinks } from "@/Hooks/api/cms_api";
 
 const helpUsLinks = [
   { id: 1, label: "How-To Tutorials", path: "/help/how-to-tutorials" },
@@ -17,10 +16,11 @@ const helpUsLinks = [
   { id: 3, label: "Contacts", path: "/help/contact" },
 ];
 
-const Footer = async ({ siteSettings, dynamicPage }: any) => {
+const Footer = async ({ dynamicPage }: any) => {
   const footer_title_class =
     "text-xl font-bold text-accent-white leading-[ 140%] tracking-[0.2px] mb-3";
   const socialLinks = await getSocialLinks();
+  const siteSettings = await getSiteSettings();
 
   return (
     <footer className="bg-primary-green pt-10 pb-5">
@@ -120,7 +120,7 @@ const Footer = async ({ siteSettings, dynamicPage }: any) => {
         <div className="flex flex-col md:flex-row w-full md:items-center justify-between text-accent-white tracking-[0.16px] mb-5">
           {/* Left - Copyright */}
           <p className="md:text-base text-xs text-center md:text-left mb-7 md:mb-0">
-            {siteSettings?.copyright_text}
+            {siteSettings?.data?.copyright_text}
           </p>
 
           {/* Right */}

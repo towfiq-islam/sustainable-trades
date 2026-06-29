@@ -44,7 +44,7 @@ const LocalPickupMessage = () => {
     echo
       .private(`local-pickup-conversation-channel.${user?.id}`)
       .listen("LocalPickupConversationEvent", (e: any) => {
-        console.log("🔔 New message event received from local pickup:", e);
+        console.log("New message event received:", e);
         if (+e?.receiverId === +user?.id) {
           queryClient.invalidateQueries([
             "get-local-pickup-conversation",

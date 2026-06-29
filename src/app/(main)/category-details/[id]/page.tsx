@@ -17,10 +17,10 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { SingleShopSkeleton } from "@/Components/Loader/Loader";
 import { FaCheck } from "react-icons/fa6";
-import MagicMarkers from "@/Components/PageComponents/mainPages/homePageComponents/MagicMarkers";
-import Subscribe from "@/Components/PageComponents/mainPages/homePageComponents/Subscribe";
-import CommunityMember from "@/Components/PageComponents/mainPages/homePageComponents/CommunityMember";
+import MagicMarkers from "@/app/(main)/_Components/MagicMarkers";
+import Subscribe from "@/app/(main)/_Components/Subscribe";
 import useAuth from "@/Hooks/useAuth";
+import MemberSpotlight from "@/app/(main)/_Components/MemberSpotlight";
 
 type categoryItem = {
   id: number;
@@ -186,7 +186,7 @@ const page = ({ params }: any) => {
       </Container>
 
       <div className="py-10 md:py-16">
-        <CommunityMember data={spotlightData?.data} has_community={true} />
+        <MemberSpotlight data={spotlightData?.data} has_community={true} />
       </div>
       <Subscribe />
     </>

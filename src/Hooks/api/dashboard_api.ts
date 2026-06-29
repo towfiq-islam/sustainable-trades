@@ -1,8 +1,8 @@
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { axiosSecure } from "../useAxiosSecure";
-import useAuth from "../useAuth";
+import { axiosSecure } from "@/Hooks/useAxiosSecure";
+import useAuth from "@/Hooks/useAuth";
 
 // Add Product
 export const useAddProduct = () => {

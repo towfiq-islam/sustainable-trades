@@ -1,14 +1,12 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "@/Components/Common/Container";
 import { CartSvg, DownSvg, ProfileSvg } from "@/Components/Svg/SvgContainer";
 import Sidebar from "@/Components/Common/Sidebar";
-import { getSiteSettingsClient } from "@/Hooks/api/cms_api";
 
 const DefaultNavbar = ({ user, dynamicPage }: any) => {
-  const { data: siteSettings } = getSiteSettingsClient();
   const [showPopover, setShowPopover] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
@@ -45,7 +43,7 @@ const DefaultNavbar = ({ user, dynamicPage }: any) => {
             <Link href="/">
               <figure className="size-10 md:size-14 rounded-full relative">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_SITE_URL}/${siteSettings?.data?.logo}`}
+                  src="/favicon.svg"
                   alt="logo"
                   fill
                   unoptimized
@@ -83,7 +81,7 @@ const DefaultNavbar = ({ user, dynamicPage }: any) => {
               {/* Popover */}
               <div
                 onClick={e => e.stopPropagation()}
-                className={`absolute top-10 right-0 bg-gray-50 shadow-lg border z-50 space-y-2 w-[100px] py-3 px-4 border-gray-100 rounded-lg duration-300 transition-all ${
+                className={`absolute top-14 right-0 bg-gray-50 shadow-lg border z-50 space-y-1.5 w-[100px] py-3 px-4 border-gray-100 rounded-lg duration-300 transition-all ${
                   showPopover
                     ? "opacity-100 scale-100"
                     : "opacity-0 pointer-events-none scale-95"
@@ -92,7 +90,7 @@ const DefaultNavbar = ({ user, dynamicPage }: any) => {
                 <Link
                   href="/auth/choose-package"
                   onClick={() => setShowPopover(false)}
-                  className={`flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold`}
+                  className={`flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold font-medium`}
                 >
                   Sign Up
                 </Link>
@@ -100,7 +98,7 @@ const DefaultNavbar = ({ user, dynamicPage }: any) => {
                 <Link
                   href="/auth/login"
                   onClick={() => setShowPopover(false)}
-                  className={`flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold`}
+                  className={`flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold font-medium`}
                 >
                   Log In
                 </Link>

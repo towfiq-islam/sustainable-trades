@@ -373,16 +373,7 @@ const Page = () => {
 
           <Link
             className="primary_btn"
-            href={`/dashboard/${
-              singleOrder?.data?.user?.role === "vendor" &&
-              singleOrder?.data?.user?.membership?.membership_type === "pro"
-                ? "pro"
-                : singleOrder?.data?.user?.role === "vendor" &&
-                    singleOrder?.data?.user?.membership?.membership_type ===
-                      "basic"
-                  ? "basic"
-                  : "customer"
-            }/messages/inbox/${singleOrder?.data?.user_id}`}
+            href={`/dashboard/pro/messages/inbox/${singleOrder?.data?.user_id}`}
           >
             Go to Messages Board
           </Link>

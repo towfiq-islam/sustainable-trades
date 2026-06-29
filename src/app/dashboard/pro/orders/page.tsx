@@ -6,7 +6,6 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
-import VendorOrders from "./_Components/VendorOrders";
 import Modal from "@/Components/Common/Modal";
 import { Download } from "@/Components/Svg/SvgContainer";
 import { IoSearchOutline } from "react-icons/io5";
@@ -19,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/Components/ui/select";
+import OrdersList from "@/Components/PageComponents/dashboardPages/Orders/OrdersList";
 const filters = [
   {
     label: "Last 30 Days",
@@ -265,7 +265,11 @@ const page = () => {
       </div>
 
       {isActive === "purchased from another member" ? (
-        <VendorOrders />
+        <OrdersList
+          role="pro"
+          reviewBasePath="/dashboard/pro/reviews"
+          orderBasePath="/dashboard/pro/orders/details"
+        />
       ) : (
         <div className="w-full pt-10">
           {/* Desktop Table */}

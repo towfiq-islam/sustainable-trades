@@ -77,7 +77,7 @@ const page = () => {
   };
 
   return (
-    <section>
+    <>
       <DashBoardHeader heading="Yours Orders" placeholder="Search Orders" />
 
       <ul className="flex flex-wrap md:flex-nowrap gap-2 lg:gap-x-6 py-6">
@@ -275,7 +275,7 @@ const page = () => {
                       href={`/dashboard/${order?.shop?.user?.membership?.membership_type}/messages/inbox/${order?.shop?.user?.membership?.user_id}`}
                       className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal text-black cursor-pointer w-full sm:w-[250px] text-center hover:scale-105 duration-500 ease-in-out"
                     >
-                      Get Help
+                      Message Seller
                     </Link>
 
                     {order?.note && (
@@ -311,7 +311,7 @@ const page = () => {
         </h3>
         <p className="leading-[164%] text-gray-700">"{note}"</p>
       </Modal>
-    </section>
+    </>
   );
 };
 

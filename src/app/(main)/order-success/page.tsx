@@ -9,8 +9,10 @@ import { useSearchParams } from "next/navigation";
 import { getAllListings } from "@/Hooks/api/cms_api";
 import { getAllFollowList, getMyOrderDetails } from "@/Hooks/api/dashboard_api";
 import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
+import useAuth from "@/Hooks/useAuth";
 
 export default function Page() {
+  const { user } = useAuth();
   const searchParams = useSearchParams();
   const order_id = Number(searchParams.get("order_id"));
   const shop_id = Number(searchParams.get("shop_id"));
@@ -18,6 +20,7 @@ export default function Page() {
     getAllFollowList();
   const { data: singleOrder, isLoading } = getMyOrderDetails(order_id);
   const { data: products, isLoading: shopLoading } = getAllListings(shop_id);
+  console.log(singleOrder?.data);
 
   const mapShops = singleOrder?.data?.shop
     ? [
@@ -65,9 +68,12 @@ export default function Page() {
                 Order No.
               </h3>
 
-              <p className="mb-5 text-sm font-medium text-secondary-black/60">
+              <Link
+                href={`/dashboard/${user?.membership?.membership_type}/orders/${order_id}`}
+                className="mb-5 text-sm font-medium text-secondary-black/60 block hover:underline"
+              >
                 {singleOrder?.data?.order_number}
-              </p>
+              </Link>
 
               <div className="flex items-center gap-3 mb-5 pb-5 border-b border-gray-300">
                 <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-green text-white">

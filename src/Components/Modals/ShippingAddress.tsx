@@ -1,10 +1,10 @@
 "use client";
+import { Lock } from "lucide-react";
 import { useGetShippingTax } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
-import { Lock } from "lucide-react";
 
 type FormData = {
   first_name: string;
@@ -39,7 +39,7 @@ const ShippingAddress = ({
   shippingMethod: any;
   setTaxData: any;
 }) => {
-  const { user } = useAuth();
+  const { user, longitude, latitude } = useAuth();
   const { mutateAsync: shippingTaxMutation, isPending } = useGetShippingTax();
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
@@ -62,6 +62,8 @@ const ShippingAddress = ({
       country: countryName,
       state,
       address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
+      latitude,
+      longitude,
     };
 
     shippingTaxMutation(taxData, {

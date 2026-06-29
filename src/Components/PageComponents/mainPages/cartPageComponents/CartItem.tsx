@@ -14,11 +14,13 @@ import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
+import Link from "next/link";
 
 interface CartItem {
   id: number;
   fulfillment_type: string;
   shop: {
+    id: number;
     user: {
       onboarded: boolean;
       membership: {
@@ -38,6 +40,7 @@ interface CartItem {
   cart_items: {
     id: number;
     quantity: number;
+    product_id: number;
     price: string;
     product: {
       images: { image: string }[];
@@ -101,9 +104,12 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           </figure>
 
           {/* Shop Name */}
-          <h3 className="text-xl font-semibold text-primary-green">
+          <Link
+            href={`/shop-details?view=${"customer"}&id=${item?.shop?.user_id}&listing_id=${item?.shop?.id}`}
+            className="text-xl font-semibold text-primary-green block hover:underline"
+          >
             {item?.shop?.shop_name}
-          </h3>
+          </Link>
         </div>
 
         {/* Shop Location */}
@@ -159,9 +165,12 @@ const CartItem = ({ item, subTotal }: CartProps) => {
             <div className="grow">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3">
                 {/* Product Name */}
-                <h3 className="text-xl font-semibold text-secondary-black">
+                <Link
+                  href={`/product-details/${cart?.product_id}`}
+                  className="text-xl font-semibold text-secondary-black block hover:underline"
+                >
                   {cart?.product?.product_name}
-                </h3>
+                </Link>
 
                 {/* Product Price */}
                 <p className="text-2xl font-bold">${cart?.price}</p>

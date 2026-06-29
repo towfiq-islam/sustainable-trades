@@ -20,7 +20,7 @@ export default function Page() {
     getAllFollowList();
   const { data: singleOrder, isLoading } = getMyOrderDetails(order_id);
   const { data: products, isLoading: shopLoading } = getAllListings(shop_id);
-  console.log(singleOrder?.data);
+  console.log(singleOrder?.data?.shipping_distance_miles?.toFixed(2));
 
   const mapShops = singleOrder?.data?.shop
     ? [

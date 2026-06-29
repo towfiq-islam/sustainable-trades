@@ -62,8 +62,6 @@ const ShippingAddress = ({
       country: countryName,
       state,
       address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
-      latitude,
-      longitude,
     };
 
     shippingTaxMutation(taxData, {
@@ -75,6 +73,8 @@ const ShippingAddress = ({
             ...data,
             country: countryName,
             state,
+            latitude,
+            longitude,
             shipping_option:
               shippingMethod === "proceed"
                 ? "proceed_to_shipping"

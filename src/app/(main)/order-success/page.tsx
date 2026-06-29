@@ -138,7 +138,7 @@ export default function Page() {
 
               {/* Footer message */}
               <p className="text-gray-700 leading-7">
-                Thank you for choosing to {singleOrder?.data?.shop?.shop_name}.
+                Thank you for choosing to shop local.
                 <br />
                 <span className="flex gap-2 items-center">
                   Together we rise, together we thrive!

@@ -279,7 +279,7 @@ const OrderDetailsPage = () => {
 
             <div className="h-[480px] flex flex-col p-3">
               <ConversationPage
-                conversationId={getSingleOrder?.data?.user_id}
+                conversationId={getSingleOrder?.data?.shop?.user_id}
                 type="private"
                 compact={true}
               />

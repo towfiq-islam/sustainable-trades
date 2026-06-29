@@ -317,7 +317,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
               {/* Popover */}
               <div
                 onClick={e => e.stopPropagation()}
-                className={`absolute top-16 right-0 bg-white drop-shadow z-50 space-y-2 w-[135px] py-3 px-4 border-gray-50 rounded-lg duration-300 transition-all ${
+                className={`absolute top-16 right-0 bg-white drop-shadow z-50 space-y-1.5 w-[145px] py-3 px-4 border-gray-50 rounded-lg duration-300 transition-all ${
                   showPopover
                     ? "opacity-100 scale-100"
                     : "opacity-0 pointer-events-none scale-95"
@@ -332,14 +332,14 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
                         ? "/dashboard/pro/home"
                         : "/dashboard/basic/home"
                   }`}
-                  className="flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold"
+                  className="flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold font-medium cursor-pointer"
                 >
                   Dashboard
                 </Link>
 
                 <button
                   onClick={() => logoutMutation()}
-                  className="flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold cursor-pointer"
+                  className="flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold font-medium cursor-pointer"
                 >
                   {isPending ? "Logging out..." : "Log Out"}
                 </button>

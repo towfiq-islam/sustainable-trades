@@ -12,8 +12,8 @@ import Container from "@/Components/Common/Container";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 
-const LowerNavbar = ({ dynamicPage }: any) => {
-  const { user, setSearch } = useAuth();
+const LowerNavbar = ({ user, dynamicPage }: any) => {
+  const { setSearch } = useAuth();
   const navLins = [
     { id: 1, label: "Home", path: "/" },
     { id: 2, label: "Shop", path: "/shop" },

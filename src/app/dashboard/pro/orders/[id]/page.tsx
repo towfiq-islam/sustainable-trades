@@ -14,20 +14,11 @@ import {
 } from "@/Hooks/api/dashboard_api";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
-import { useForm } from "react-hook-form";
-import { useSendMessage } from "@/Hooks/api/chat_api";
-import toast from "react-hot-toast";
 import Link from "next/link";
-import useAuth from "@/Hooks/useAuth";
 import ArrangeLocalPickupModal from "../_Components/ArrangeLocalPickupModal";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 
-interface FormValues {
-  message: string;
-}
-
 const Page = () => {
-  const { user } = useAuth();
   const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);
@@ -41,10 +32,7 @@ const Page = () => {
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
   const { mutate: updateStatusMutation } = useUpdateOrderStatus();
-  const { mutate: sendMessageMutation, isPending: isSending } =
-    useSendMessage();
   const { data: singleOrder, isLoading } = getSingleOrder(order_id);
-  const { register, handleSubmit, reset } = useForm<FormValues>();
   const orderHistory = singleOrder?.data?.order_status_history ?? [];
   const { mutate: cancelOrder, isPending: isCancellingOrder } =
     useCancelOrder();
@@ -75,34 +63,16 @@ const Page = () => {
     ?.map((item: any) => normalizeStatus(item.content))
     .filter(Boolean);
 
-  const onSubmit = async (data: FormValues) => {
-    const customizedData =
-      `This message is sent from ${user?.shop_info?.shop_name} shop.\n` +
-      `Shop owner: ${user?.first_name} ${
-        user?.last_name && user?.last_name
-      }\n` +
-      `Order Number: ${singleOrder?.data?.order_number}\n` +
-      `Order Details: <a href="${
-        user?.role === "vendor"
-          ? `${window.location.origin}/dashboard/pro/orders/${order_id}`
-          : `${window.location.origin}/dashboard/customer/orders/${order_id}`
-      }"  target="_blank" style="text-decoration: underline color: blue">Click here</a>\n` +
-      `Message: ${data?.message}`;
-
-    const payload = {
-      message: customizedData,
-      receiver_id: singleOrder?.data?.user_id,
-    };
-
-    await sendMessageMutation(payload, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          toast.success(data?.message);
-          reset();
-        }
-      },
-    });
-  };
+  // const customizedData =
+  //   `This message is sent from ${user?.shop_info?.shop_name} shop.\n` +
+  //   `Shop owner: ${user?.first_name} ${user?.last_name && user?.last_name}\n` +
+  //   `Order Number: ${singleOrder?.data?.order_number}\n` +
+  //   `Order Details: <a href="${
+  //     user?.role === "vendor"
+  //       ? `${window.location.origin}/dashboard/pro/orders/${order_id}`
+  //       : `${window.location.origin}/dashboard/customer/orders/${order_id}`
+  //   }"  target="_blank" style="text-decoration: underline color: blue">Click here</a>\n` +
+  //   `Message: ${data?.message}`;
 
   useEffect(() => {
     const newHeights = contentRefs.current.map((ref, idx) => {
@@ -118,14 +88,15 @@ const Page = () => {
       content: (
         <div className="text-secondary-gray text-[14px] pb-2">
           <p>
-            <strong>Name:</strong> {singleOrder?.data?.user?.first_name}{" "}
-            {singleOrder?.data?.user?.last_name}
+            <strong>Name:</strong>{" "}
+            {singleOrder?.data?.shipping_address?.first_name}{" "}
+            {singleOrder?.data?.shipping_address?.last_name}
           </p>
           <p>
-            <strong>Email:</strong> {singleOrder?.data?.user?.email}
+            <strong>Email:</strong> {singleOrder?.data?.shipping_address?.email}
           </p>
           <p>
-            <strong>Phone:</strong> {singleOrder?.data?.user?.phone}
+            <strong>Phone:</strong> {singleOrder?.data?.shipping_address?.phone}
           </p>
         </div>
       ),
@@ -402,16 +373,7 @@ const Page = () => {
 
           <Link
             className="primary_btn"
-            href={`/dashboard/${
-              singleOrder?.data?.user?.role === "vendor" &&
-              singleOrder?.data?.user?.membership?.membership_type === "pro"
-                ? "pro"
-                : singleOrder?.data?.user?.role === "vendor" &&
-                    singleOrder?.data?.user?.membership?.membership_type ===
-                      "basic"
-                  ? "basic"
-                  : "customer"
-            }/messages/inbox/${singleOrder?.data?.user_id}`}
+            href={`/dashboard/pro/messages/inbox/${singleOrder?.data?.user_id}`}
           >
             Go to Messages Board
           </Link>

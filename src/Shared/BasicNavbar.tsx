@@ -10,6 +10,7 @@ import useAuth from "@/Hooks/useAuth";
 import { usePathname } from "next/navigation";
 import { useLogout } from "@/Hooks/api/auth_api";
 import { useEffect, useState } from "react";
+import { FiLogOut } from "react-icons/fi";
 import Container from "@/Components/Common/Container";
 import {
   CartSvg2,
@@ -19,6 +20,7 @@ import {
   NotificationSvg,
 } from "@/Components/Svg/SvgContainer";
 import Sidebar from "@/Components/Common/Sidebar";
+import { FaUser } from "react-icons/fa";
 
 const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
   const navLins = [
@@ -317,32 +319,65 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
               {/* Popover */}
               <div
                 onClick={e => e.stopPropagation()}
-                className={`absolute top-16 right-0 bg-white drop-shadow z-50 space-y-2 w-[135px] py-3 px-4 border-gray-50 rounded-lg duration-300 transition-all ${
+                className={`bg-white border border-gray-100 z-50 rounded-xl w-60 absolute right-0 top-full mt-3 p-4   translate-y-2 hidden lg:block overflow-hidden duration-300 transition-all ${
                   showPopover
                     ? "opacity-100 scale-100"
                     : "opacity-0 pointer-events-none scale-95"
                 }`}
               >
-                <Link
-                  href={`${
-                    user?.role === "customer"
-                      ? "/dashboard/customer/orders"
-                      : user?.role === "vendor" &&
-                          user?.membership?.membership_type === "pro"
-                        ? "/dashboard/pro/home"
-                        : "/dashboard/basic/home"
-                  }`}
-                  className="flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold"
-                >
-                  Dashboard
-                </Link>
+                <div className="flex gap-3 items-center mb-4">
+                  <figure className="size-11 bg-primary-pink rounded-full grid place-items-center shrink-0 overflow-hidden relative">
+                    {user?.avatar ? (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${user?.avatar}`}
+                        alt="user"
+                        fill
+                        className="rounded-full size-full object-cover"
+                      />
+                    ) : (
+                      <p className="text-white font-medium capitalize">
+                        {user?.first_name.at(0)}
+                      </p>
+                    )}
+                  </figure>
 
-                <button
-                  onClick={() => logoutMutation()}
-                  className="flex gap-2.5 items-center text-primary-green text-[17px] duration-300 transition-all hover:font-semibold cursor-pointer"
-                >
-                  {isPending ? "Logging out..." : "Log Out"}
-                </button>
+                  <div>
+                    <h3 className="font-semibold truncate">
+                      {user?.first_name} {user?.last_name}
+                    </h3>
+                    <p className="text-gray-500 text-sm truncate max-w-38">
+                      {user?.email}
+                    </p>
+                  </div>
+                </div>
+
+                <hr className="border-gray-200" />
+
+                <div className="mt-4 flex flex-col gap-3 text-gray-700 text-sm">
+                  <Link
+                    href={`${
+                      user?.role === "customer"
+                        ? "/dashboard/customer/orders"
+                        : user?.role === "vendor" &&
+                            user?.membership?.membership_type === "pro"
+                          ? "/dashboard/pro/home"
+                          : "/dashboard/basic/home"
+                    }`}
+                    className="flex gap-2 items-center hover:text-primary-green font-semibold duration-200 transition"
+                  >
+                    <FaUser />
+                    Dashboard
+                  </Link>
+
+                  <button
+                    disabled={isPending}
+                    onClick={() => logoutMutation()}
+                    className="flex gap-2 items-center text-primary-red font-semibold duration-200 cursor-pointer transition disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-70"
+                  >
+                    <FiLogOut />
+                    Log Out
+                  </button>
+                </div>
               </div>
             </div>
 

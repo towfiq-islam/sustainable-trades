@@ -3,10 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 import moment from "moment";
 import { useState } from "react";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { getMyOrders, useDownloadInvoice } from "@/Hooks/api/dashboard_api";
 import OrderCardSkeleton from "@/Components/Loader/Loader";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
+
+type OrdersListProps = {
+  role: "customer" | "pro";
+  showHeader?: boolean;
+  showTabs?: boolean;
+  reviewBasePath: string;
+  orderBasePath: string;
+};
 
 type ProductImg = {
   image: string;
@@ -14,6 +23,8 @@ type ProductImg = {
 
 type SingleItem = {
   product_id: number;
+  total_price: string;
+  quantity: number;
   product: {
     product_name: string;
     product_price: string;
@@ -27,6 +38,7 @@ type orderItem = {
   total_amount: string;
   status: string;
   order_number: string;
+  note: string;
   shop: {
     shop_name: string;
     user: {
@@ -42,11 +54,22 @@ type orderItem = {
   };
 };
 
-const VendorOrders = () => {
+const OrdersList = ({
+  role,
+  showHeader,
+  showTabs,
+  reviewBasePath,
+  orderBasePath,
+}: OrdersListProps) => {
+  const [isActive, setIsActive] = useState("orders");
+  const [status, setStatus] = useState<string>("");
   const [orderId, setOrderId] = useState<number | null>(null);
   const [open, isOpen] = useState<boolean>(false);
+  const tabs = ["orders", "pending", "confirmed", "delivered", "cancelled"];
   const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
-  const { data: myOrders, isLoading } = getMyOrders();
+  const { data: myOrders, isLoading } = getMyOrders(status);
+  const [showNote, setShowNote] = useState<boolean>(false);
+  const [note, setNote] = useState<string>("");
 
   // Func for download Invoice pdf
   const handleDownloadInvoice = (order_id: number) => {
@@ -68,7 +91,32 @@ const VendorOrders = () => {
   };
 
   return (
-    <div className="w-full pt-10">
+    <section className="pt-10">
+      {showHeader && (
+        <DashBoardHeader heading="Yours Orders" placeholder="Search Orders" />
+      )}
+
+      {showTabs && (
+        <ul className="flex flex-wrap md:flex-nowrap gap-2 lg:gap-x-6 py-6">
+          {tabs?.map((tab: string, index: number) => (
+            <li
+              key={tab}
+              onClick={() => {
+                setIsActive(tab);
+                setStatus(tab === "orders" ? "" : tab);
+              }}
+              className={`text-[15px] lg:text-[20px] font-bold text-black px-3 md:px-6 py-2 w-fit flex-1 text-nowrap cursor-pointer capitalize ${
+                isActive === tab
+                  ? "border-b-[3px] border-light-green"
+                  : "border-b border-[#BFBEBE]"
+              } ${index === tabs.length - 1 ? "flex-1" : "sm:shrink-0"}`}
+            >
+              {tab}
+            </li>
+          ))}
+        </ul>
+      )}
+
       <div className="flex flex-col gap-6">
         {isLoading ? (
           [1, 2, 3]?.map((_, idx) => <OrderCardSkeleton key={idx} />)
@@ -86,7 +134,7 @@ const VendorOrders = () => {
                         Order Placed
                       </h3>
 
-                      <p className="font-sans font-normal text-secondary-black text-[16px]">
+                      <p className="font-sans font-normal text-black text-[16px]">
                         {moment(order?.created_at).format("LL")}
                       </p>
                     </div>
@@ -96,7 +144,7 @@ const VendorOrders = () => {
                         Total
                       </h3>
 
-                      <p className="font-sans font-normal text-secondary-black text-[16px]">
+                      <p className="font-sans font-normal text-black text-[16px]">
                         ${order?.total_amount}
                       </p>
                     </div>
@@ -141,7 +189,7 @@ const VendorOrders = () => {
                         Order Number
                       </h3>
 
-                      <p className="font-sans font-normal text-secondary-black text-[16px]">
+                      <p className="font-sans font-normal text-black text-[16px]">
                         {order?.order_number}
                       </p>
                     </div>
@@ -176,11 +224,11 @@ const VendorOrders = () => {
               <div className="pt-2 px-4 pb-4">
                 <div className="flex flex-col gap-2.5 sm:gap-0 sm:flex-row sm:justify-between sm:items-center">
                   <div>
-                    <h4 className="text-[16px] sm:text-[20px] font-bold text-secondary-black">
+                    <h4 className="text-[16px] sm:text-[20px] font-bold text-black">
                       {order?.shop?.shop_name}
                     </h4>
 
-                    <p className="font-sans font-normal text-secondary-black text-[13px] sm:text-[16px] pt-2 pb-3">
+                    <p className="font-sans font-normal text-black text-[13px] sm:text-[16px] pt-2 pb-3">
                       {order?.latest_order_status?.content}
                     </p>
 
@@ -197,18 +245,21 @@ const VendorOrders = () => {
                               className="rounded size-full object-cover"
                             />
                           </figure>
-
                           <div className="flex flex-col gap-1.5">
-                            <h5 className="text-[16px] sm:text-[20px] font-bold text-secondary-black">
+                            <h5 className="text-[16px] sm:text-[20px] font-bold text-black">
                               {item?.product?.product_name}
                             </h5>
                             <h5 className="text-[#222]">
-                              Price: ${item?.product?.product_price}
+                              Price: ${item?.total_price}
+                            </h5>
+
+                            <h5 className="text-[#222]">
+                              Qty: {item?.quantity}
                             </h5>
 
                             {order?.status === "delivered" && (
                               <Link
-                                href={`/dashboard/pro/reviews/${item?.product_id}`}
+                                href={`${reviewBasePath}/${item.product_id}`}
                                 className="px-3 py-1 rounded-full cursor-pointer border text-sm w-fit font-semibold border-primary-green"
                               >
                                 Write review
@@ -220,45 +271,66 @@ const VendorOrders = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-4 ">
+                  <div className="flex flex-col gap-3">
                     <button
                       onClick={() => {
                         isOpen(true);
                         setOrderId(order?.id);
                       }}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-secondary-black cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
+                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-black cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
                     >
                       Track Package
                     </button>
 
                     <Link
-                      href={`/dashboard/pro/orders/details/${order?.id}`}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-secondary-black cursor-pointer text-center w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
+                      href={`${orderBasePath}/${order.id}`}
+                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-black cursor-pointer text-center w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
                     >
                       View Order
                     </Link>
 
                     <Link
                       href={`/dashboard/${order?.shop?.user?.membership?.membership_type}/messages/inbox/${order?.shop?.user?.membership?.user_id}`}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal text-secondary-black cursor-pointer w-full sm:w-[250px] text-center hover:scale-105 duration-500 ease-in-out"
+                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal text-black cursor-pointer w-full sm:w-[250px] text-center hover:scale-105 duration-500 ease-in-out"
                     >
-                      Get Help
+                      Message Seller
                     </Link>
+
+                    {order?.note && (
+                      <button
+                        onClick={() => {
+                          setNote(order?.note);
+                          setShowNote(true);
+                        }}
+                        className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-black cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
+                      >
+                        View note
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           ))
         ) : (
-          <p className="text-red-500 font-semibold text-lg">No Orders Found</p>
+          <p className="text-primary-red font-semibold text-lg">
+            No Orders Found
+          </p>
         )}
       </div>
 
       <Modal open={open} onClose={() => isOpen(false)}>
         <TrackPackageModal order_id={orderId} />
       </Modal>
-    </div>
+
+      <Modal open={showNote} onClose={() => setShowNote(false)}>
+        <h3 className="text-xl font-semibold text-primary-green mb-2">
+          Order Note
+        </h3>
+        <p className="leading-[164%] text-gray-700">"{note}"</p>
+      </Modal>
+    </section>
   );
 };
 
-export default VendorOrders;
+export default OrdersList;

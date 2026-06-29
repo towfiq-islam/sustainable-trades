@@ -231,7 +231,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <PrivateLayout>
       <section className=" flex flex-col">
         {/* Dashboard Header */}
-        <DashboardHeader setOpen={setOpen} />
+        <DashboardHeader setOpen={setOpen} user={user} />
 
         {/* Dashboard Content */}
         <main className="flex overflow-x-hidden grow">

@@ -46,7 +46,7 @@ const Navbar = ({ dynamicPage }: any) => {
         )}
 
         {/* Lower Navbar*/}
-        <LowerNavbar dynamicPage={dynamicPage} />
+        <LowerNavbar user={user} dynamicPage={dynamicPage} />
       </nav>
 
       {/* Scroll to top */}

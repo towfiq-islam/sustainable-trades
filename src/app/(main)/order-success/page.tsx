@@ -161,6 +161,9 @@ export default function Page() {
                     height="300px"
                     shops={mapShops}
                     shopLoading={isLoading}
+                    shippingDistanceMiles={
+                      singleOrder?.data?.shipping_distance_miles ?? null
+                    }
                   />
                 )}
               </div>

@@ -8,6 +8,7 @@ import {
   useJsApiLoader,
 } from "@react-google-maps/api";
 import { useRouter } from "next/navigation";
+import { MdOutlineLocationOn } from "react-icons/md";
 
 interface Address {
   id: number;
@@ -47,6 +48,7 @@ interface ShopsMapProps {
   hoveredShop?: Shop | null;
   shopLoading?: boolean;
   height?: string;
+  shippingDistanceMiles?: number | null;
 }
 
 // Spiderfy positions for overlapping markers
@@ -86,6 +88,7 @@ const ShopsMap: React.FC<ShopsMapProps> = ({
   hoveredShop,
   shopLoading,
   height,
+  shippingDistanceMiles,
 }) => {
   const containerStyle = {
     width: "100%",
@@ -228,12 +231,21 @@ const ShopsMap: React.FC<ShopsMapProps> = ({
                     <img
                       src={`${process.env.NEXT_PUBLIC_SITE_URL}/${selected.shop_info.shop_image}`}
                       alt={selected.shop_info.shop_name}
-                      className="w-12 h-12 object-cover rounded-md"
+                      className="size-16 object-cover rounded-md"
                     />
                   )}
-                  <span className="text-sm font-semibold group-hover:underline text-primary-green">
-                    {selected.shop_info.shop_name}
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold group-hover:underline text-primary-green">
+                      {selected.shop_info.shop_name}
+                      </span>
+                      
+                    {shippingDistanceMiles != null && (
+                      <span className="text-xs text-gray-600 flex gap-1 items-center mt-1">
+                        <MdOutlineLocationOn className="text-base"/>
+                        {shippingDistanceMiles.toFixed(2)} miles away
+                      </span>
+                    )}
+                  </div>
                 </>
               )}
             </div>

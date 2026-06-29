@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import Container from "@/Components/Common/Container";
 import { UpArrowSvg } from "@/Components/Svg/SvgContainer";
 
-const Navbar = ({ siteSettings, dynamicPage }: any) => {
+const Navbar = ({ dynamicPage }: any) => {
   const { user } = useAuth();
   const pathname = usePathname();
 
@@ -33,20 +33,20 @@ const Navbar = ({ siteSettings, dynamicPage }: any) => {
         {user &&
         (user?.role === "customer" ||
           (user?.role === "vendor" && user?.membership)) ? (
-          <BasicNavbar dynamicPage={dynamicPage} siteSettings={siteSettings} />
-        ) : (
-          <DefaultNavbar
+          <BasicNavbar
+            cart_quantity={
+              user?.cart?.cart_items?.length > 0
+                ? user?.cart?.cart_items?.length
+                : 0
+            }
             dynamicPage={dynamicPage}
-            user={user}
-            siteSettings={siteSettings}
           />
+        ) : (
+          <DefaultNavbar dynamicPage={dynamicPage} user={user} />
         )}
 
         {/* Lower Navbar*/}
-        {/* {(!user || (user?.role === "vendor" && !user?.membership)) && (
-          <LowerNavbar dynamicPage={dynamicPage} />
-        )} */}
-        <LowerNavbar dynamicPage={dynamicPage} />
+        <LowerNavbar user={user} dynamicPage={dynamicPage} />
       </nav>
 
       {/* Scroll to top */}

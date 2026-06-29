@@ -1,4 +1,4 @@
-import Pricing from "@/Components/PageComponents/mainPages/homePageComponents/Pricing";
+import Pricing from "@/app/(main)/_Components/Pricing";
 
 const page = () => {
   return (

@@ -7,13 +7,13 @@ import h3 from "@/Assets/h3.svg";
 import h4 from "@/Assets/h4.svg";
 import h5 from "@/Assets/h5.svg";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "@/Components/Common/Container";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 
-const LowerNavbar = ({ dynamicPage }: any) => {
-  const { user, setSearch } = useAuth();
+const LowerNavbar = ({ user, dynamicPage }: any) => {
+  const { setSearch } = useAuth();
   const navLins = [
     { id: 1, label: "Home", path: "/" },
     { id: 2, label: "Shop", path: "/shop" },

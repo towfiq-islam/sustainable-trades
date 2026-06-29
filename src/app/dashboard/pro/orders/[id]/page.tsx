@@ -14,20 +14,11 @@ import {
 } from "@/Hooks/api/dashboard_api";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
-import { useForm } from "react-hook-form";
-import { useSendMessage } from "@/Hooks/api/chat_api";
-import { CgSpinnerTwo } from "react-icons/cg";
-import toast from "react-hot-toast";
 import Link from "next/link";
-import useAuth from "@/Hooks/useAuth";
 import ArrangeLocalPickupModal from "../_Components/ArrangeLocalPickupModal";
-
-interface FormValues {
-  message: string;
-}
+import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 
 const Page = () => {
-  const { user } = useAuth();
   const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);
@@ -41,10 +32,7 @@ const Page = () => {
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
   const { mutate: updateStatusMutation } = useUpdateOrderStatus();
-  const { mutate: sendMessageMutation, isPending: isSending } =
-    useSendMessage();
   const { data: singleOrder, isLoading } = getSingleOrder(order_id);
-  const { register, handleSubmit, reset } = useForm<FormValues>();
   const orderHistory = singleOrder?.data?.order_status_history ?? [];
   const { mutate: cancelOrder, isPending: isCancellingOrder } =
     useCancelOrder();
@@ -75,34 +63,16 @@ const Page = () => {
     ?.map((item: any) => normalizeStatus(item.content))
     .filter(Boolean);
 
-  const onSubmit = async (data: FormValues) => {
-    const customizedData =
-      `This message is sent from ${user?.shop_info?.shop_name} shop.\n` +
-      `Shop owner: ${user?.first_name} ${
-        user?.last_name && user?.last_name
-      }\n` +
-      `Order Number: ${singleOrder?.data?.order_number}\n` +
-      `Order Details: <a href="${
-        user?.role === "vendor"
-          ? `${window.location.origin}/dashboard/pro/orders/${order_id}`
-          : `${window.location.origin}/dashboard/customer/orders/${order_id}`
-      }"  target="_blank" style="text-decoration: underline color: blue">Click here</a>\n` +
-      `Message: ${data?.message}`;
-
-    const payload = {
-      message: customizedData,
-      receiver_id: singleOrder?.data?.user_id,
-    };
-
-    await sendMessageMutation(payload, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          toast.success(data?.message);
-          reset();
-        }
-      },
-    });
-  };
+  // const customizedData =
+  //   `This message is sent from ${user?.shop_info?.shop_name} shop.\n` +
+  //   `Shop owner: ${user?.first_name} ${user?.last_name && user?.last_name}\n` +
+  //   `Order Number: ${singleOrder?.data?.order_number}\n` +
+  //   `Order Details: <a href="${
+  //     user?.role === "vendor"
+  //       ? `${window.location.origin}/dashboard/pro/orders/${order_id}`
+  //       : `${window.location.origin}/dashboard/customer/orders/${order_id}`
+  //   }"  target="_blank" style="text-decoration: underline color: blue">Click here</a>\n` +
+  //   `Message: ${data?.message}`;
 
   useEffect(() => {
     const newHeights = contentRefs.current.map((ref, idx) => {
@@ -116,13 +86,17 @@ const Page = () => {
     {
       title: "Customer Details",
       content: (
-        <div className="text-secondary-gray text-[14px] py-2">
+        <div className="text-secondary-gray text-[14px] pb-2">
           <p>
-            <strong>Name:</strong> {singleOrder?.data?.user?.first_name}{" "}
-            {singleOrder?.data?.user?.last_name}
+            <strong>Name:</strong>{" "}
+            {singleOrder?.data?.shipping_address?.first_name}{" "}
+            {singleOrder?.data?.shipping_address?.last_name}
           </p>
           <p>
-            <strong>Email:</strong> {singleOrder?.data?.user?.email}
+            <strong>Email:</strong> {singleOrder?.data?.shipping_address?.email}
+          </p>
+          <p>
+            <strong>Phone:</strong> {singleOrder?.data?.shipping_address?.phone}
           </p>
         </div>
       ),
@@ -130,19 +104,21 @@ const Page = () => {
     {
       title: "Shipping Address",
       content: (
-        <div className="text-secondary-gray text-[14px] py-2">
+        <div className="text-sm text-secondary-gray">
+          <p>{singleOrder?.data?.shipping_address?.address}</p>
+          {singleOrder?.data?.shipping_address?.apt && (
+            <p>{singleOrder?.data?.shipping_address.apt}</p>
+          )}
           <p>
-            <strong>Name:</strong>{" "}
-            {singleOrder?.data?.shipping_address?.first_name}{" "}
-            {singleOrder?.data?.shipping_address?.last_name}
+            {singleOrder?.data?.shipping_address?.city}
+            {singleOrder?.data?.shipping_address?.state
+              ? `, ${singleOrder?.data?.shipping_address.state}`
+              : ""}
+            {singleOrder?.data?.shipping_address?.postal_code
+              ? ` ${singleOrder?.data?.shipping_address.postal_code}`
+              : ""}
           </p>
-          <p>
-            <strong>Phone:</strong> {singleOrder?.data?.shipping_address?.phone}
-          </p>
-          <p>
-            <strong>Address:</strong>{" "}
-            {singleOrder?.data?.shipping_address?.address}
-          </p>
+          <p>{singleOrder?.data?.shipping_address?.country}</p>
         </div>
       ),
     },
@@ -174,36 +150,33 @@ const Page = () => {
 
   return (
     <>
-      {/* Back Btn */}
-      <button
-        onClick={() => router.back()}
-        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
-      >
-        <span className="group-hover:-translate-x-1 duration-300 transition-transform">
-          <GoBackSvg />
-        </span>
-        <span>Back</span>
-      </button>
-
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row justify-between">
-        <h3 className="text-[40px] font-semibold text-secondary-black">
-          Order Details
-        </h3>
-        <div className="flex gap-x-3">
-          <button
-            className="py-4 px-6 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out"
-            onClick={() => isOpen(true)}
-          >
-            Track Package
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="pt-8 flex flex-col lg:flex-row justify-between gap-x-6">
+      <div className="flex flex-col lg:flex-row justify-between gap-10">
         {/* Left Side */}
         <div className="w-full lg:w-[65%] 2xl:w-[75%]">
+          <button
+            onClick={() => router.back()}
+            className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
+          >
+            <span className="group-hover:-translate-x-1 duration-300 transition-transform">
+              <GoBackSvg />
+            </span>
+            <span>Back</span>
+          </button>
+
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row items-center justify-between">
+            <h3 className="text-3xl font-semibold text-secondary-black">
+              Order Details
+            </h3>
+
+            <button
+              className="py-3 px-4 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out"
+              onClick={() => isOpen(true)}
+            >
+              Track Package
+            </button>
+          </div>
+
           {/* Order Status Dropdown */}
           <div className="my-4">
             <h4 className="text-secondary-black font-bold text-[16px] mb-3">
@@ -353,9 +326,10 @@ const Page = () => {
                   else setOpenIndex(openIndex === idx ? null : idx);
                 }}
               >
-                <h4 className="text-secondary-black font-bold text-[16px]">
+                <h4 className="text-secondary-black font-semibold">
                   {item.title}
                 </h4>
+
                 {item.isModal ? (
                   <Pen className="text-secondary-black" />
                 ) : (
@@ -381,59 +355,28 @@ const Page = () => {
             </div>
           ))}
 
-          <div className="border border-gray-300 p-4 rounded-lg">
-            <h2 className="text-[24px] font-normal text-secondary-black">
-              Message to Buyer
-            </h2>
-
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <textarea
-                placeholder="Enter Message"
-                className="py-2 px-3 rounded-[8px] border border-gray-300 cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full mt-5 h-[280px]"
-                {...register("message", {
-                  required: "Message is required",
-                })}
+          {/* Chat */}
+          <div className="border border-gray-300 rounded-lg overflow-hidden">
+            <div className="px-4 pt-4 pb-2 border-b border-gray-200">
+              <h2 className="text-[16px] font-semibold text-secondary-black">
+                Chat with Buyer
+              </h2>
+            </div>
+            <div className="h-[480px] flex flex-col p-3">
+              <ConversationPage
+                conversationId={singleOrder?.data?.user_id}
+                type="private"
+                compact={true}
               />
-
-              <div className="flex flex-col gap-y-3 mt-5">
-                <button
-                  type="submit"
-                  disabled={isSending}
-                  className={`auth-secondary-btn w-full ${
-                    isSending
-                      ? "!cursor-not-allowed opacity-85"
-                      : "cursor-pointer"
-                  }`}
-                >
-                  {isSending ? (
-                    <p className="flex gap-2 items-center justify-center">
-                      <CgSpinnerTwo className="animate-spin text-xl" />
-                      <span>Please wait....</span>
-                    </p>
-                  ) : (
-                    "Send Messages"
-                  )}
-                </button>
-
-                <Link
-                  href={`/dashboard/${
-                    singleOrder?.data?.user?.role === "vendor" &&
-                    singleOrder?.data?.user?.membership?.membership_type ===
-                      "pro"
-                      ? "pro"
-                      : singleOrder?.data?.user?.role === "vendor" &&
-                          singleOrder?.data?.user?.membership
-                            ?.membership_type === "basic"
-                        ? "basic"
-                        : "customer"
-                  }/messages/inbox/${singleOrder?.data?.user_id}`}
-                  className="auth-primary-btn !text-center"
-                >
-                  Go to Messages
-                </Link>
-              </div>
-            </form>
+            </div>
           </div>
+
+          <Link
+            className="primary_btn"
+            href={`/dashboard/pro/messages/inbox/${singleOrder?.data?.user_id}`}
+          >
+            Go to Messages Board
+          </Link>
 
           <button
             disabled={!singleOrder?.data?.note}
@@ -450,19 +393,17 @@ const Page = () => {
             View Note
           </button>
 
-          <div className="mt-12">
-            <button
-              disabled={isCancellingOrder}
-              onClick={() =>
-                cancelOrder({
-                  endpoint: `/api/cancel-order/${order_id}`,
-                })
-              }
-              className="py-4 px-6 rounded-[8px] border border-primary-red bg-[#FFE8E8] font-semibold text-primary-red cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
-            >
-              {isCancellingOrder ? "Cancelling...." : "Cancel Order"}
-            </button>
-          </div>
+          <button
+            disabled={isCancellingOrder}
+            onClick={() =>
+              cancelOrder({
+                endpoint: `/api/cancel-order/${order_id}`,
+              })
+            }
+            className="py-4 px-6 rounded-[8px] border border-primary-red bg-[#FFE8E8] font-semibold text-primary-red cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
+          >
+            {isCancellingOrder ? "Cancelling...." : "Cancel Order"}
+          </button>
         </div>
       </div>
 

@@ -6,11 +6,37 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
-import VendorOrders from "./_Components/VendorOrders";
 import Modal from "@/Components/Common/Modal";
 import { Download } from "@/Components/Svg/SvgContainer";
 import { IoSearchOutline } from "react-icons/io5";
 import { CSVLink } from "react-csv";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/Components/ui/select";
+import OrdersList from "@/Components/PageComponents/dashboardPages/Orders/OrdersList";
+const filters = [
+  {
+    label: "Last 30 Days",
+    value: "last_30_days",
+  },
+  {
+    label: "Year to Date",
+    value: "year_to_date",
+  },
+  {
+    label: "Custom Date Range",
+    value: "custom_date_range",
+  },
+  {
+    label: "Specific Year",
+    value: "specific_year",
+  },
+];
 
 type orderItem = {
   id: number;
@@ -148,7 +174,30 @@ const page = () => {
             </div>
           </div>
 
-          <select
+          <Select value={filter} onValueChange={value => setFilter(value)}>
+            <SelectTrigger className="w-full sm:w-[200px] border ring-0 shadow-none cursor-pointer rounded-lg px-3 py-5.5 border-gray-300 outline-none">
+              <SelectValue placeholder="Select Filter" />
+            </SelectTrigger>
+            <SelectContent
+              position="popper"
+              sideOffset={4}
+              className=" bg-white border-0 shadow-none ring-gray-200"
+            >
+              <SelectGroup className="border-0">
+                {filters?.map(item => (
+                  <SelectItem
+                    key={item?.label}
+                    value={item?.value}
+                    className="cursor-pointer py-2 hover:bg-gray-100"
+                  >
+                    {item?.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          {/* <select
             className="w-full sm:w-[200px] border rounded-lg px-3 h-11.5 border-gray-300 outline-none"
             value={filter}
             onChange={e => setFilter(e.target.value)}
@@ -157,7 +206,7 @@ const page = () => {
             <option value="year_to_date">Year to Date</option>
             <option value="custom_date_range">Custom Date Range</option>
             <option value="specific_year">Specific Year</option>
-          </select>
+          </select> */}
 
           {/* Date range */}
           {filter === "custom_date_range" && (
@@ -216,7 +265,11 @@ const page = () => {
       </div>
 
       {isActive === "purchased from another member" ? (
-        <VendorOrders />
+        <OrdersList
+          role="pro"
+          reviewBasePath="/dashboard/pro/reviews"
+          orderBasePath="/dashboard/pro/orders/details"
+        />
       ) : (
         <div className="w-full pt-10">
           {/* Desktop Table */}

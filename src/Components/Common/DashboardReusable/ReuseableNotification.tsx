@@ -66,17 +66,18 @@ const ReuseableNotification = () => {
                   className="border-b border-[#E5E5E5] flex justify-between p-2.5 md:p-5 items-center"
                 >
                   <div className="flex gap-2.5 md:gap-x-5 items-center">
-                    <figure className="rounded-full size-[50px] md:size-[65px] grid place-items-center bg-accent-red text-white text-xl font-semibold">
+                    <figure className="rounded-full size-[50px] md:size-[65px] grid place-items-center bg-accent-red text-white font-semibold relative">
                       {notification?.user?.avatar ? (
                         <Image
                           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${notification?.user?.avatar}`}
                           alt="profile"
-                          height={500}
-                          width={500}
+                          fill
                           className="rounded-full size-full object-cover"
                         />
                       ) : (
-                        <h3>{notification?.user?.name?.at(0)}</h3>
+                        <h3 className="text-xl">
+                          {notification?.user?.name?.at(0)}
+                        </h3>
                       )}
                     </figure>
 

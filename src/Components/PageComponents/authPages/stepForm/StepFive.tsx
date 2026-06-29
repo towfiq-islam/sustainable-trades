@@ -1,5 +1,5 @@
 import React from "react";
-import Pricing from "@/Components/PageComponents/mainPages/homePageComponents/Pricing";
+import Pricing from "@/app/(main)/_Components/Pricing";
 
 const StepFive = ({ step, setStep }: any) => {
   return (

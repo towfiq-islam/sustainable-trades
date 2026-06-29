@@ -8,7 +8,7 @@ import { ProductDetailsSkeleton } from "@/Components/Loader/Loader";
 import ProductGallery from "@/Components/PageComponents/mainPages/productDetailsComponents/ProductGallery";
 import ProductReviews from "@/Components/PageComponents/mainPages/productDetailsComponents/ProductReviews";
 import MoreProduct from "@/Components/PageComponents/mainPages/productDetailsComponents/MoreProduct";
-import Subscribe from "@/Components/PageComponents/mainPages/homePageComponents/Subscribe";
+import Subscribe from "@/app/(main)/_Components/Subscribe";
 import ShopInfo from "@/Components/PageComponents/mainPages/productDetailsComponents/ShopInfo";
 import ProductDescription from "@/Components/PageComponents/mainPages/productDetailsComponents/ProductDescription";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";

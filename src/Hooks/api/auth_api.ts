@@ -5,13 +5,12 @@ import useClientApi from "@/Hooks/useClientApi";
 import { useQueryClient } from "@tanstack/react-query";
 
 // Get User Data
-export const useGetUserData = (token: any) => {
+export const useGetUserData = (isAuthenticated: any) => {
   return useClientApi({
     method: "get",
-    key: ["user", token],
-    enabled: !!token,
+    key: ["user", isAuthenticated],
+    enabled: !!isAuthenticated,
     endpoint: "/api/users/data",
-    isPrivate: true,
     queryOptions: {
       refetchInterval: 1000 * 60 * 60,
     },
@@ -20,7 +19,7 @@ export const useGetUserData = (token: any) => {
 
 // Create Shop
 export const useCreateShop = () => {
-  const { setToken } = useAuth();
+  const { setAuthenticated } = useAuth();
 
   return useClientApi({
     method: "post",
@@ -31,7 +30,7 @@ export const useCreateShop = () => {
     },
     onSuccess: (data: any) => {
       if (data?.success) {
-        setToken(data?.data?.token);
+        setAuthenticated(true);
         toast.success(data?.message);
       }
     },
@@ -47,7 +46,7 @@ export const useEditShop = () => {
     method: "post",
     key: ["edit-shop"],
     endpoint: "/api/shop/owner-data-update",
-    isPrivate: true,
+
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -84,7 +83,7 @@ export const useRegister = () => {
 // Login
 export const useLogin = () => {
   const router = useRouter();
-  const { setToken } = useAuth();
+  const { setAuthenticated } = useAuth();
 
   return useClientApi({
     method: "post",
@@ -95,8 +94,9 @@ export const useLogin = () => {
         data?.success &&
         (data?.data?.role === "customer" || data?.data?.membership)
       ) {
-        setToken(data?.data?.token);
+        setAuthenticated(true);
         toast.success(data?.message);
+
         router.push(
           `${
             data?.data?.role === "customer"
@@ -108,7 +108,7 @@ export const useLogin = () => {
           }`,
         );
       } else {
-        setToken(data?.data?.token);
+        setAuthenticated(true);
         toast.error("Please choose a plan");
         router.push(`/auth/create-shop?step=${5}`);
       }
@@ -122,16 +122,15 @@ export const useLogin = () => {
 // Logout
 export const useLogout = () => {
   const router = useRouter();
-  const { clearToken } = useAuth();
+  const { clearAuthorization } = useAuth();
 
   return useClientApi({
     method: "post",
     key: ["logout"],
-    isPrivate: true,
     endpoint: "/api/users/logout",
     onSuccess: (data: any) => {
       if (data?.success) {
-        clearToken();
+        clearAuthorization();
         toast.success(data?.message);
         router.replace("/auth/login");
       }
@@ -207,7 +206,7 @@ export const useUpdateUser = () => {
     method: "post",
     key: ["update-user"],
     endpoint: "/api/users/data/update",
-    isPrivate: true,
+
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);

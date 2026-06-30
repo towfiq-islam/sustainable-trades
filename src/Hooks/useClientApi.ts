@@ -1,13 +1,11 @@
 "use client";
+import { api } from "@/lib/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { axiosSecure } from "@/Hooks/useAxiosSecure";
-import { axiosPublic } from "@/Hooks/useAxiosPublic";
 
 type apiProps = {
   key?: any[];
   endpoint?: string;
   method?: "get" | "post" | "put" | "delete";
-  isPrivate?: boolean;
   onSuccess?: any;
   onError?: any;
   queryOptions?: any;
@@ -21,7 +19,6 @@ type apiProps = {
 export default function useClientApi({
   endpoint,
   method = "get",
-  isPrivate = false,
   key,
   onSuccess,
   onError,
@@ -32,13 +29,11 @@ export default function useClientApi({
   axiosOptions,
   enabled = true,
 }: apiProps): any {
-  const axiosInstance = (isPrivate ? axiosSecure : axiosPublic) as any;
-
   if (method === "get") {
     return useQuery({
       queryKey: key,
       queryFn: async () => {
-        const res = await axiosInstance.get(endpoint, { params, headers });
+        const res = await api.get(endpoint!, { params, headers });
         return res.data;
       },
       enabled,
@@ -60,13 +55,13 @@ export default function useClientApi({
       let res;
 
       if (method.toLowerCase() === "delete") {
-        res = await axiosInstance.delete(dynamicEndpoint, {
+        res = await api.delete(dynamicEndpoint, {
           data: payload,
           headers,
           ...axiosOptions,
         });
       } else {
-        res = await axiosInstance[method](dynamicEndpoint, payload, {
+        res = await api[method](dynamicEndpoint, payload, {
           headers,
           ...axiosOptions,
         });

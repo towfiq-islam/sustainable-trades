@@ -6,6 +6,7 @@ import AuthProvider from "@/Provider/AuthProvider/AuthProvider";
 import QueryProvider from "@/Provider/QueryProvider/QueryProvider";
 import ToastProvider from "@/Provider/ToastProvider/ToastProvider";
 import { cn } from "@/lib/utils";
+import ReduxProvider from "@/Provider/ReduxProvider/ReduxProvider";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -34,14 +35,16 @@ export default async function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className={`${lato.variable} antialiased`}>
-        <QueryProvider>
-          <AuthProvider>
-            <AosProvider>
-              <ToastProvider />
-              {children}
-            </AosProvider>
-          </AuthProvider>
-        </QueryProvider>
+        <ReduxProvider>
+          <QueryProvider>
+            <AuthProvider>
+              <AosProvider>
+                <ToastProvider />
+                {children}
+              </AosProvider>
+            </AuthProvider>
+          </QueryProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

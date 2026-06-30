@@ -1,6 +1,5 @@
 "use client";
 import { useLocalPickupPayment } from "@/Hooks/api/dashboard_api";
-import { getItem } from "@/lib/localStorage";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -10,7 +9,6 @@ import { CgSpinnerTwo } from "react-icons/cg";
 const CheckoutPaypalModal = ({
   cart_id,
   formData,
-  onClose,
   isLocalPayment = false,
 }: {
   cart_id: number | null;
@@ -21,7 +19,6 @@ const CheckoutPaypalModal = ({
   const { mutate: localPickupPayment, isPending: isConnecting } =
     useLocalPickupPayment(cart_id);
   const queryClient = useQueryClient();
-  const token = getItem("token");
   const router = useRouter();
 
   const initialOptions = {
@@ -85,9 +82,9 @@ const CheckoutPaypalModal = ({
                   `${process.env.NEXT_PUBLIC_SITE_URL}/api/local-pickup/checkout/${cart_id}`,
                   {
                     method: "POST",
+                    credentials: "include",
                     headers: {
                       "Content-Type": "application/json",
-                      Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
                       payment_method: "paypal",
@@ -110,9 +107,9 @@ const CheckoutPaypalModal = ({
                   `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture`,
                   {
                     method: "POST",
+                    credentials: "include",
                     headers: {
                       "Content-Type": "application/json",
-                      Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
                       paypal_order_id: data?.orderID,
@@ -146,9 +143,9 @@ const CheckoutPaypalModal = ({
                   `${process.env.NEXT_PUBLIC_SITE_URL}/api/checkout/${cart_id}`,
                   {
                     method: "POST",
+                    credentials: "include",
                     headers: {
                       "Content-Type": "application/json",
-                      Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
                       ...formData,
@@ -171,9 +168,9 @@ const CheckoutPaypalModal = ({
                   `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture`,
                   {
                     method: "POST",
+                    credentials: "include",
                     headers: {
                       "Content-Type": "application/json",
-                      Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
                       paypal_order_id: data?.orderID,

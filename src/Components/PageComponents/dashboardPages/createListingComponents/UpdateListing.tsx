@@ -196,7 +196,6 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
   // ── Image delete mutation ──────────────────────────────────────────────────
   const deleteImageMutation = useClientApi({
     method: "delete",
-    isPrivate: true,
     key: ["image-delete"],
     endpoint: "/api/image-delete",
     onSuccess: (data: any) => {

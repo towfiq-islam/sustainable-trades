@@ -9,7 +9,9 @@ export const useAddProduct = () => {
   return useClientApi({
     method: "post",
     key: ["add-product"],
-
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
     endpoint: `/api/products-store`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -27,7 +29,9 @@ export const useupdateProduct = (id: string | number) => {
   return useClientApi({
     method: "post",
     key: ["update-product"],
-
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
     endpoint: `/api/product/update/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) toast.success(data.message);
@@ -57,7 +61,6 @@ export const useDeleteProduct = (id: string | number) => {
 export const getallListings = (status?: string, short_by?: string) => {
   return useClientApi({
     method: "get",
-
     key: ["get-all-listings", status, short_by],
     params: { status, short_by },
     endpoint: "/api/products",
@@ -69,7 +72,6 @@ export const useGetSingleListing = (id: string | number) => {
   return useClientApi({
     method: "get",
     key: ["get-single-listing", id],
-
     endpoint: `/api/product/${id}`,
   });
 };
@@ -79,7 +81,6 @@ export const useRequestApproval = (id: string | number) => {
   return useClientApi({
     method: "get",
     key: ["request-approval"],
-
     endpoint: `/api/product/request-approval/${id}`,
     onSuccess: (data: any) => {
       if (data?.success)
@@ -96,7 +97,6 @@ export const getmemberShipspotlight = () => {
   return useClientApi({
     method: "get",
     key: ["get-membership-spotlight"],
-
     endpoint: "/api/spotlight-applications",
   });
 };
@@ -106,7 +106,6 @@ export const getAllFollowList = () => {
   return useClientApi({
     method: "get",
     key: ["get-all-followlist"],
-
     endpoint: "/api/my-favorites",
   });
 };
@@ -115,7 +114,6 @@ export const getAllShoplist = () => {
   return useClientApi({
     method: "get",
     key: ["get-all-shoplist"],
-
     endpoint: "/api/follow-shops",
   });
 };
@@ -129,7 +127,6 @@ export const useTradesdata = (sent?: string) => {
   return useClientApi({
     method: "get",
     key: ["get-trades", sent],
-
     endpoint,
   });
 };
@@ -139,7 +136,6 @@ export const useTradeCounts = () => {
   return useClientApi({
     method: "get",
     key: ["get-count"],
-
     endpoint: "/api/trade-count",
   });
 };
@@ -173,7 +169,6 @@ export const useSingleTradeOffer = (id: any) => {
   return useClientApi({
     method: "get",
     key: ["single-trade-offer", id],
-
     endpoint: `/api/trade-offer/${id}`,
   });
 };
@@ -183,7 +178,6 @@ export const useTradeShopProduct = (id: any) => {
   return useClientApi({
     method: "get",
     key: ["trade-shop-product", id],
-
     endpoint: `/api/trade-shop-product/${id}`,
   });
 };
@@ -193,7 +187,6 @@ export const useTradeSendProduct = (id: any) => {
   return useClientApi({
     method: "post",
     key: ["send-trade-counter-offer", id],
-
     endpoint: `/api/send-trade-counter-offer/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -211,7 +204,6 @@ export const useDeleteAccount = () => {
   return useClientApi({
     method: "delete",
     key: ["delete-account"],
-
     endpoint: "/api/users/delete",
     onSuccess: (data: any) => {
       if (data?.success)
@@ -228,7 +220,6 @@ export const useCreateDiscount = () => {
   return useClientApi({
     method: "post",
     key: ["create-discount"],
-
     endpoint: "/api/discounts",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -248,7 +239,6 @@ export const useTaxes = () => {
   return useClientApi({
     method: "post",
     key: ["save-taxes"],
-
     endpoint: "/api/shop-taxes",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -268,7 +258,6 @@ export const getDiscount = (status: string) => {
   return useClientApi({
     method: "get",
     key: ["get-discount", status],
-
     params: { status },
     endpoint: "/api/discounts",
   });
@@ -281,7 +270,6 @@ export const useFlatRate = () => {
   return useClientApi({
     method: "post",
     key: ["flat-rate"],
-
     endpoint: "/api/flat-rates",
     onSuccess: () => {
       queryClient.invalidateQueries("flat-rate" as any);
@@ -296,7 +284,6 @@ export const useWeightRate = () => {
   return useClientApi({
     method: "post",
     key: ["weight-rate"],
-
     endpoint: "/api/weight_ranges",
     onError: (err: any) => {
       toast.error(
@@ -311,7 +298,6 @@ export const useWeightRateDelete = () => {
   return useClientApi({
     method: "delete",
     key: ["weight-rate-delete"],
-
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message || "Weight rate deleted successfully");
@@ -330,7 +316,6 @@ export const useWeightRateget = () => {
   return useClientApi({
     method: "get",
     key: ["get-weight"],
-
     endpoint: "/api/weight_ranges",
   });
 };
@@ -349,7 +334,6 @@ export const useNotification = (page?: string) => {
   return useClientApi({
     method: "get",
     key: ["get-notifications", page],
-
     endpoint: "/api/notifications",
     params: { page },
   });
@@ -360,7 +344,6 @@ export const useTodaysNotification = () => {
   return useClientApi({
     method: "get",
     key: ["get-todays-notifications"],
-
     endpoint: "/api/notifications/today",
   });
 };
@@ -370,7 +353,6 @@ export const useDiscountGetById = (id?: string) => {
   return useClientApi({
     method: "get",
     key: ["discount-get-by-id", id],
-
     endpoint: `/api/discount/${id}`,
   });
 };
@@ -390,7 +372,6 @@ export const useDiscountUpdate = (id?: string) => {
   return useClientApi({
     method: "post",
     key: ["discount-update", id],
-
     endpoint: `/api/discount-update/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -407,7 +388,6 @@ export const useDiscountStatusChange = (id: any) => {
   return useClientApi({
     method: "post",
     key: ["discount-status-change"],
-
     endpoint: `/api/status-discount-codes/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) {

@@ -1,5 +1,33 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import baseQueryWithInterceptor from "@/redux/api/baseQueryWithInterceptor";
+import {
+  BaseQueryFn,
+  FetchArgs,
+  FetchBaseQueryError,
+} from "@reduxjs/toolkit/query";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+// import { removeUser } from "@/redux/features/auth/authSlice";
+
+const baseQuery = fetchBaseQuery({
+  baseUrl: process.env.NEXT_PUBLIC_SITE_URL,
+  credentials: "include",
+});
+
+const baseQueryWithInterceptor: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  const result = await baseQuery(args, api, extraOptions);
+  const status = result.error?.status;
+
+  // Handle 401 interceptor
+  if (status === 401) {
+    console.log("Unauthenticated. Logging out...");
+    // api.dispatch(removeUser());
+  }
+
+  return result;
+};
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -8,7 +36,7 @@ export const apiSlice = createApi({
   refetchOnFocus: true,
   refetchOnReconnect: true,
 
-  tagTypes: ["demo1", "demo2"],
+  tagTypes: ["user"],
 
   endpoints: () => ({}),
 });

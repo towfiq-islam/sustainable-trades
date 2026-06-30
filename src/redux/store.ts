@@ -1,4 +1,5 @@
 import {
+  persistReducer,
   persistStore,
   FLUSH,
   REHYDRATE,
@@ -10,10 +11,19 @@ import {
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "@/redux/api/apiSlice";
 import authReducer from "@/redux/slices/authSlice";
+import createWebStorage from "redux-persist/es/storage/createWebStorage";
+const localStorage = createWebStorage("local");
+
+const authPersistConfig = {
+  key: "auth",
+  storage: localStorage,
+};
+
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
+    auth: persistedAuthReducer,
 
     [apiSlice.reducerPath]: apiSlice.reducer,
   },

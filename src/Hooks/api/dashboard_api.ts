@@ -1,15 +1,15 @@
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { axiosSecure } from "@/Hooks/useAxiosSecure";
 import useAuth from "@/Hooks/useAuth";
+import { api } from "@/lib/api";
 
 // Add Product
 export const useAddProduct = () => {
   return useClientApi({
     method: "post",
     key: ["add-product"],
-    isPrivate: true,
+
     endpoint: `/api/products-store`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -27,7 +27,7 @@ export const useupdateProduct = (id: string | number) => {
   return useClientApi({
     method: "post",
     key: ["update-product"],
-    isPrivate: true,
+
     endpoint: `/api/product/update/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) toast.success(data.message);
@@ -42,7 +42,7 @@ export const useDeleteProduct = (id: string | number) => {
   return useClientApi({
     method: "delete",
     key: ["delete-product", id],
-    isPrivate: true,
+
     endpoint: `/api/product/delete/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) toast.success(data.message);
@@ -57,7 +57,7 @@ export const useDeleteProduct = (id: string | number) => {
 export const getallListings = (status?: string, short_by?: string) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
+
     key: ["get-all-listings", status, short_by],
     params: { status, short_by },
     endpoint: "/api/products",
@@ -69,7 +69,7 @@ export const useGetSingleListing = (id: string | number) => {
   return useClientApi({
     method: "get",
     key: ["get-single-listing", id],
-    isPrivate: true,
+
     endpoint: `/api/product/${id}`,
   });
 };
@@ -79,7 +79,7 @@ export const useRequestApproval = (id: string | number) => {
   return useClientApi({
     method: "get",
     key: ["request-approval"],
-    isPrivate: true,
+
     endpoint: `/api/product/request-approval/${id}`,
     onSuccess: (data: any) => {
       if (data?.success)
@@ -96,7 +96,7 @@ export const getmemberShipspotlight = () => {
   return useClientApi({
     method: "get",
     key: ["get-membership-spotlight"],
-    isPrivate: true,
+
     endpoint: "/api/spotlight-applications",
   });
 };
@@ -106,7 +106,7 @@ export const getAllFollowList = () => {
   return useClientApi({
     method: "get",
     key: ["get-all-followlist"],
-    isPrivate: true,
+
     endpoint: "/api/my-favorites",
   });
 };
@@ -115,7 +115,7 @@ export const getAllShoplist = () => {
   return useClientApi({
     method: "get",
     key: ["get-all-shoplist"],
-    isPrivate: true,
+
     endpoint: "/api/follow-shops",
   });
 };
@@ -129,7 +129,7 @@ export const useTradesdata = (sent?: string) => {
   return useClientApi({
     method: "get",
     key: ["get-trades", sent],
-    isPrivate: true,
+
     endpoint,
   });
 };
@@ -139,7 +139,7 @@ export const useTradeCounts = () => {
   return useClientApi({
     method: "get",
     key: ["get-count"],
-    isPrivate: true,
+
     endpoint: "/api/trade-count",
   });
 };
@@ -149,7 +149,6 @@ export const useCancelTrade = () => {
   return useClientApi({
     method: "get",
     key: ["cancel-trade"],
-    isPrivate: true,
   });
 };
 
@@ -157,7 +156,7 @@ export const useCancelTrade = () => {
 export const useApproveTrade = () => {
   return useMutation({
     mutationFn: (id: any) =>
-      axiosSecure.get(`/api/trade-offer-approve/${id}`).then(res => res.data),
+      api.get(`/api/trade-offer-approve/${id}`).then(res => res.data),
   });
 };
 
@@ -165,7 +164,7 @@ export const useApproveTrade = () => {
 export const useCancel = () => {
   return useMutation({
     mutationFn: (id: any) =>
-      axiosSecure.get(`/api/trade-offer-cancel/${id}`).then(res => res.data),
+      api.get(`/api/trade-offer-cancel/${id}`).then(res => res.data),
   });
 };
 
@@ -174,7 +173,7 @@ export const useSingleTradeOffer = (id: any) => {
   return useClientApi({
     method: "get",
     key: ["single-trade-offer", id],
-    isPrivate: true,
+
     endpoint: `/api/trade-offer/${id}`,
   });
 };
@@ -184,7 +183,7 @@ export const useTradeShopProduct = (id: any) => {
   return useClientApi({
     method: "get",
     key: ["trade-shop-product", id],
-    isPrivate: true,
+
     endpoint: `/api/trade-shop-product/${id}`,
   });
 };
@@ -194,7 +193,7 @@ export const useTradeSendProduct = (id: any) => {
   return useClientApi({
     method: "post",
     key: ["send-trade-counter-offer", id],
-    isPrivate: true,
+
     endpoint: `/api/send-trade-counter-offer/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -212,7 +211,7 @@ export const useDeleteAccount = () => {
   return useClientApi({
     method: "delete",
     key: ["delete-account"],
-    isPrivate: true,
+
     endpoint: "/api/users/delete",
     onSuccess: (data: any) => {
       if (data?.success)
@@ -229,7 +228,7 @@ export const useCreateDiscount = () => {
   return useClientApi({
     method: "post",
     key: ["create-discount"],
-    isPrivate: true,
+
     endpoint: "/api/discounts",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -249,7 +248,7 @@ export const useTaxes = () => {
   return useClientApi({
     method: "post",
     key: ["save-taxes"],
-    isPrivate: true,
+
     endpoint: "/api/shop-taxes",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -269,7 +268,7 @@ export const getDiscount = (status: string) => {
   return useClientApi({
     method: "get",
     key: ["get-discount", status],
-    isPrivate: true,
+
     params: { status },
     endpoint: "/api/discounts",
   });
@@ -282,7 +281,7 @@ export const useFlatRate = () => {
   return useClientApi({
     method: "post",
     key: ["flat-rate"],
-    isPrivate: true,
+
     endpoint: "/api/flat-rates",
     onSuccess: () => {
       queryClient.invalidateQueries("flat-rate" as any);
@@ -297,7 +296,7 @@ export const useWeightRate = () => {
   return useClientApi({
     method: "post",
     key: ["weight-rate"],
-    isPrivate: true,
+
     endpoint: "/api/weight_ranges",
     onError: (err: any) => {
       toast.error(
@@ -312,7 +311,7 @@ export const useWeightRateDelete = () => {
   return useClientApi({
     method: "delete",
     key: ["weight-rate-delete"],
-    isPrivate: true,
+
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message || "Weight rate deleted successfully");
@@ -331,7 +330,7 @@ export const useWeightRateget = () => {
   return useClientApi({
     method: "get",
     key: ["get-weight"],
-    isPrivate: true,
+
     endpoint: "/api/weight_ranges",
   });
 };
@@ -340,7 +339,7 @@ export const useTradeCounterProduct = (id: any) => {
   return useClientApi({
     method: "get",
     key: ["trade-counter-product", id],
-    isPrivate: true,
+
     endpoint: `/api/trade-shop-product/${id}`,
   });
 };
@@ -350,7 +349,7 @@ export const useNotification = (page?: string) => {
   return useClientApi({
     method: "get",
     key: ["get-notifications", page],
-    isPrivate: true,
+
     endpoint: "/api/notifications",
     params: { page },
   });
@@ -361,7 +360,7 @@ export const useTodaysNotification = () => {
   return useClientApi({
     method: "get",
     key: ["get-todays-notifications"],
-    isPrivate: true,
+
     endpoint: "/api/notifications/today",
   });
 };
@@ -371,7 +370,7 @@ export const useDiscountGetById = (id?: string) => {
   return useClientApi({
     method: "get",
     key: ["discount-get-by-id", id],
-    isPrivate: true,
+
     endpoint: `/api/discount/${id}`,
   });
 };
@@ -381,7 +380,7 @@ export const useMembershipget = () => {
   return useClientApi({
     method: "get",
     key: ["get-membership"],
-    isPrivate: true,
+
     endpoint: "/api/subscriptions",
   });
 };
@@ -391,7 +390,7 @@ export const useDiscountUpdate = (id?: string) => {
   return useClientApi({
     method: "post",
     key: ["discount-update", id],
-    isPrivate: true,
+
     endpoint: `/api/discount-update/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -408,7 +407,7 @@ export const useDiscountStatusChange = (id: any) => {
   return useClientApi({
     method: "post",
     key: ["discount-status-change"],
-    isPrivate: true,
+
     endpoint: `/api/status-discount-codes/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -426,7 +425,7 @@ export const useBulkDeleteDiscount = () => {
   return useClientApi({
     method: "delete",
     key: ["bulk-delete-discount"],
-    isPrivate: true,
+
     endpoint: "/api/delete-discount-codes",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -446,7 +445,7 @@ export const useImageDelete = (id: any) => {
   return useClientApi({
     method: "delete",
     key: ["image-delete"],
-    isPrivate: true,
+
     endpoint: `/image-delete/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -464,7 +463,7 @@ export const getMyOrders = (status?: string) => {
   return useClientApi({
     method: "get",
     key: ["get-my-orders", status],
-    isPrivate: true,
+
     endpoint: "/api/my-orders",
     params: { status },
   });
@@ -475,7 +474,7 @@ export const useAddReview = (order_id: number) => {
   return useClientApi({
     method: "post",
     key: ["add-review", order_id],
-    isPrivate: true,
+
     endpoint: `/api/add-review/${order_id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -492,7 +491,7 @@ export const useAddReview = (order_id: number) => {
 export const getCustomerReviews = (page?: string) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
+
     key: ["get-customer-reviews", page],
     endpoint: "/api/my-reviews",
     params: { page },
@@ -503,7 +502,7 @@ export const getCustomerReviews = (page?: string) => {
 export const getMyOrderDetails = (order_id: number) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
+
     key: ["get-order-details", order_id],
     endpoint: `/api/my-order/${order_id}`,
   });
@@ -514,7 +513,7 @@ export const useDownloadInvoice = () => {
   return useClientApi({
     method: "post",
     key: ["download-invoice"],
-    isPrivate: true,
+
     axiosOptions: {
       responseType: "blob",
     },
@@ -525,7 +524,7 @@ export const useDownloadInvoice = () => {
 export const getOrderHistory = (order_id: number | null) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
+
     key: ["get-order-history", order_id],
     endpoint: `/api/my-order/${order_id}/history`,
   });
@@ -537,7 +536,7 @@ export const useCancelMembership = () => {
   return useClientApi({
     method: "post",
     key: ["cancel-membership"],
-    isPrivate: true,
+
     endpoint: "/api/paypal/cancel-membership",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -572,7 +571,7 @@ export const getOrders = ({
   return useClientApi({
     method: "get",
     key: ["get-orders", status, search, page, filter, date_from, date_to, year],
-    isPrivate: true,
+
     endpoint: "/api/orders",
     params: {
       status,
@@ -592,7 +591,7 @@ export const useUpdateOrderStatus = () => {
   return useClientApi({
     method: "post",
     key: ["update-order-status"],
-    isPrivate: true,
+
     onSuccess: (data: any) => {
       if (data?.success) {
         queryClient.invalidateQueries("get-orders" as any);
@@ -609,7 +608,7 @@ export const useUpdateOrderStatus = () => {
 export const getSingleOrder = (order_id: number | null) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
+
     key: ["get-single-order", order_id],
     endpoint: `/api/order/${order_id}`,
   });
@@ -620,7 +619,7 @@ export const useOrderNote = (order_id: number) => {
   return useClientApi({
     method: "post",
     key: ["add-order-note", order_id],
-    isPrivate: true,
+
     endpoint: `/api/order-note/${order_id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -640,7 +639,7 @@ export const useOnboarding = () => {
   return useClientApi({
     method: "post",
     key: ["onboarding"],
-    isPrivate: true,
+
     endpoint: "/api/paypal/onboard",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -661,7 +660,7 @@ export const useDisconnectOnboarding = () => {
   return useClientApi({
     method: "post",
     key: ["account-disconnect"],
-    isPrivate: true,
+
     endpoint: "/api/paypal/disconnect",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -682,7 +681,7 @@ export const useReconnectOnboarding = () => {
   return useClientApi({
     method: "post",
     key: ["account-reconnect"],
-    isPrivate: true,
+
     endpoint: "/api/paypal/reconnect",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -701,7 +700,7 @@ export const getPayments = (status: string) => {
   return useClientApi({
     method: "get",
     key: ["get-payments", status],
-    isPrivate: true,
+
     endpoint: "/api/payment-report",
     params: { status },
   });
@@ -712,7 +711,7 @@ export const getDashboardHomeData = () => {
   return useClientApi({
     method: "get",
     key: ["dashboard-home-data"],
-    isPrivate: true,
+
     endpoint: "/api/vendor/dashboard",
   });
 };
@@ -722,7 +721,7 @@ export const getVisitorData = () => {
   return useClientApi({
     method: "get",
     key: ["visitor-data"],
-    isPrivate: true,
+
     endpoint: "/api/vendor/dashboard/visits",
   });
 };
@@ -732,7 +731,7 @@ export const getOrderData = () => {
   return useClientApi({
     method: "get",
     key: ["order-data"],
-    isPrivate: true,
+
     endpoint: "/api/vendor/dashboard/order",
   });
 };
@@ -742,7 +741,7 @@ export const getListingData = () => {
   return useClientApi({
     method: "get",
     key: ["listing-data"],
-    isPrivate: true,
+
     endpoint: "/api/vendor/dashboard/listings",
   });
 };
@@ -752,7 +751,7 @@ export const getTradesData = () => {
   return useClientApi({
     method: "get",
     key: ["trades-data"],
-    isPrivate: true,
+
     endpoint: "/api/vendor/dashboard/trades",
   });
 };
@@ -762,7 +761,7 @@ export const getLatestProducts = () => {
   return useClientApi({
     method: "get",
     key: ["latest-products"],
-    isPrivate: true,
+
     endpoint: "/api/latest-products",
   });
 };
@@ -773,7 +772,7 @@ export const useDeleteAllNotifications = () => {
   return useClientApi({
     method: "delete",
     key: ["delete-all-notifications"],
-    isPrivate: true,
+
     endpoint: "/api/notifications/clear-all",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -792,7 +791,7 @@ export const getAccountingData = (params: any) => {
   return useClientApi({
     method: "get",
     key: ["get-accounting", params],
-    isPrivate: true,
+
     endpoint: "/api/accounting/summary",
     params,
   });
@@ -803,7 +802,7 @@ export const getTradeAndBarterData = (params: any) => {
   return useClientApi({
     method: "get",
     key: ["get-trade-and-barter", params],
-    isPrivate: true,
+
     endpoint: "/api/barters-and-trades/summary",
     params,
   });
@@ -816,7 +815,7 @@ export const useCancelOrder = () => {
   return useClientApi({
     method: "post",
     key: ["cancel-order"],
-    isPrivate: true,
+
     onSuccess: (data: any) => {
       if (data?.success) {
         queryClient.invalidateQueries("get-orders" as any);
@@ -851,7 +850,7 @@ export const useConnectShippo = () => {
   return useClientApi({
     method: "post",
     key: ["connect-shippo"],
-    isPrivate: true,
+
     endpoint: "/api/shippo/connect",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -872,7 +871,7 @@ export const useDisconnectShippo = () => {
   return useClientApi({
     method: "post",
     key: ["disconnect-shippo"],
-    isPrivate: true,
+
     endpoint: "/api/shippo/disconnect",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -893,7 +892,7 @@ export const useAddSalesTax = () => {
   return useClientApi({
     method: "post",
     key: ["add-sales-tax"],
-    isPrivate: true,
+
     endpoint: "/api/sales-tax",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -912,7 +911,7 @@ export const getSalesTaxData = () => {
   return useClientApi({
     method: "get",
     key: ["get-sales-tax"],
-    isPrivate: true,
+
     endpoint: "/api/sales-tax",
   });
 };
@@ -925,7 +924,7 @@ export const useSyncShippo = () => {
   return useClientApi({
     method: "post",
     key: ["sync-shippo"],
-    isPrivate: true,
+
     endpoint: `/api/shippo/sync-carriers-accounts/${user?.id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -946,7 +945,7 @@ export const usePickCarrier = () => {
   return useClientApi({
     method: "post",
     key: ["pick-carrier"],
-    isPrivate: true,
+
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
@@ -966,7 +965,7 @@ export const useChangeLabelType = () => {
   return useClientApi({
     method: "post",
     key: ["change-label-type"],
-    isPrivate: true,
+
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
@@ -986,7 +985,7 @@ export const useSetShipping = () => {
   return useClientApi({
     method: "post",
     key: ["set-shipping"],
-    isPrivate: true,
+
     endpoint: "/api/shipping-settings",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -1004,7 +1003,7 @@ export const useGetFlatRate = () => {
   return useClientApi({
     method: "get",
     key: ["flat-rate"],
-    isPrivate: true,
+
     endpoint: "/api/flat-rate",
   });
 };
@@ -1014,7 +1013,7 @@ export const useLocalPickupPro = (id: number | null) => {
   return useClientApi({
     method: "post",
     key: ["pro-local-pickup", id],
-    isPrivate: true,
+
     endpoint: `/api/local-pickup/orders/cart/${id}`,
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
@@ -1027,7 +1026,7 @@ export const useArrangeLocalPickupAddress = (id: number) => {
   return useClientApi({
     method: "post",
     key: ["arrange-local-pickup-address", id],
-    isPrivate: true,
+
     endpoint: `/api/order/${id}/local-pickup/arrange`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -1041,12 +1040,12 @@ export const useArrangeLocalPickupAddress = (id: number) => {
 };
 
 // Local pickup payment
-export const useLocalPickupPayment = (token: any) => {
+export const useLocalPickupPayment = (id: any) => {
   return useClientApi({
     method: "post",
-    key: ["local-pickup-payment", token],
-    isPrivate: true,
-    endpoint: `/api/local-pickup/checkout/${token}`,
+    key: ["local-pickup-payment", id],
+
+    endpoint: `/api/local-pickup/checkout/${id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
@@ -1062,7 +1061,7 @@ export const useLocalPickupPayment = (token: any) => {
 export const getAllTaxes = () => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
+
     key: ["get-all-taxes"],
     endpoint: "/api/shop-taxes-list",
   });
@@ -1073,7 +1072,7 @@ export const useApplyCoupon = () => {
   return useClientApi({
     method: "post",
     key: ["apply-coupon"],
-    isPrivate: true,
+
     endpoint: `/api/apply-coupon`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -1091,7 +1090,7 @@ export const useGetShippingTax = () => {
   return useClientApi({
     method: "post",
     key: ["shipping-data"],
-    isPrivate: true,
+
     endpoint: "/api/cart/shipping/calculate",
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);

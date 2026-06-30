@@ -14,7 +14,6 @@ export const getAllConversation = ({
 }) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
     key: ["get-all-conversation", name, unread, sent],
     endpoint: "/api/conversation",
     params: { name, unread, sent },
@@ -33,7 +32,6 @@ export const getSingleConversation = (
 ) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
     enabled: !!id,
     headers: {
       "Content-Type": "application/json",
@@ -56,7 +54,6 @@ export const useSendMessage = () => {
   return useClientApi({
     method: "post",
     key: ["send-message"],
-    isPrivate: true,
     endpoint: "/api/message/send",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -73,7 +70,6 @@ export const useSendMessage = () => {
 export const getLocalPickupConversation = () => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
     key: ["get-local-pickup-conversation"],
     endpoint: "/api/local-pickup/conversation",
   });

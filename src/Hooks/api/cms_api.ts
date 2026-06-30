@@ -222,7 +222,6 @@ export const getProductSubCategoriesClient = () => {
 export const getShopDetails = (id: number) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
     key: ["get-shop-details", id],
     enabled: !!id,
     endpoint: `/api/shop/${id}`,
@@ -233,7 +232,6 @@ export const getShopDetails = (id: number) => {
 export const getFeaturedListings = (id: number) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
     key: ["get-featured-listings", id],
     enabled: !!id,
     endpoint: `/api/shop/products/featured/${id}`,
@@ -262,7 +260,6 @@ export const getAllListings = (
     ],
     enabled: !!id,
     endpoint: `/api/shop/products/${id}`,
-    isPrivate: true,
     params: { category_id, sub_category_id, short_by, search, page },
   });
 };
@@ -274,7 +271,6 @@ export const useFollowShop = (shop_id: number) => {
   return useClientApi({
     method: "post",
     key: ["follow-shop", shop_id],
-    isPrivate: true,
     endpoint: `/api/follow-shop/${shop_id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -295,7 +291,6 @@ export const useAddFavorite = () => {
   return useClientApi({
     method: "post",
     key: ["add-favorite"],
-    isPrivate: true,
     onSuccess: (data: any) => {
       if (data?.success) {
         queryClient.invalidateQueries("get-all-listings" as any);
@@ -313,7 +308,6 @@ export const useAddFavorite = () => {
 export const getProductDetails = (id: number, lat: number, lng: number) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
     key: ["get-product-details", id, lat, lng],
     enabled: !!id,
     params: { lat, lng },
@@ -325,7 +319,6 @@ export const getProductDetails = (id: number, lat: number, lng: number) => {
 export const getProductCart = () => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
     key: ["get-product-cart"],
     endpoint: "/api/cart",
   });
@@ -337,7 +330,6 @@ export const useAddToCart = (product_id: any) => {
   return useClientApi({
     method: "post",
     key: ["add-to-cart"],
-    isPrivate: true,
     endpoint: `/api/add-to-cart/${product_id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -357,7 +349,6 @@ export const useRemoveFromCart = (cart_Item_id: number | null) => {
   return useClientApi({
     method: "delete",
     key: ["remove-from-cart"],
-    isPrivate: true,
     endpoint: `/api/cart/item/remove/${cart_Item_id}`,
     onSuccess: (data: any) => {
       queryClient.invalidateQueries("get-product-cart" as any);
@@ -375,7 +366,6 @@ export const useRemoveCart = (cart_id: number | null) => {
   return useClientApi({
     method: "delete",
     key: ["remove-cart"],
-    isPrivate: true,
     endpoint: `/api/cart/remove/${cart_id}`,
     onSuccess: (data: any) => {
       queryClient.invalidateQueries("get-product-cart" as any);
@@ -393,7 +383,6 @@ export const useClearCart = () => {
   return useClientApi({
     method: "delete",
     key: ["clear-cart"],
-    isPrivate: true,
     endpoint: "/api/cart/empty",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -413,7 +402,6 @@ export const useUpdateCart = (cart_id: number | null) => {
   return useClientApi({
     method: "post",
     key: ["update-cart"],
-    isPrivate: true,
     endpoint: `/api/cart/update/${cart_id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -433,7 +421,6 @@ export const useUpdateShopPhoto = () => {
   return useClientApi({
     method: "post",
     key: ["update-shop-photo"],
-    isPrivate: true,
     endpoint: "/api/shop/image-update",
     headers: {
       "Content-Type": "multipart/form-data",
@@ -456,7 +443,6 @@ export const useUpdateShopBanner = () => {
   return useClientApi({
     method: "post",
     key: ["update-shop-banner"],
-    isPrivate: true,
     endpoint: "/api/shop/banner-update",
     headers: {
       "Content-Type": "multipart/form-data",
@@ -480,7 +466,6 @@ export const getTradeShopProducts = (id: number | null) => {
     key: ["get-trade-products", id],
     enabled: !!id,
     endpoint: `/api/trade-shop-product/${id}`,
-    isPrivate: true,
   });
 };
 
@@ -489,7 +474,6 @@ export const useTradeSendOffer = () => {
   return useClientApi({
     method: "post",
     key: ["trade-send-offer"],
-    isPrivate: true,
     endpoint: "/api/trade-offer/create",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -507,7 +491,6 @@ export const useSpotlightApplication = () => {
   return useClientApi({
     method: "post",
     key: ["spotlight-application"],
-    isPrivate: true,
     endpoint: "/api/spotlight-applications",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -538,7 +521,6 @@ export const getCategoryDetails = (
 ) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
     key: ["get-category-details", id, lat, lng, page],
     enabled: !!id,
     endpoint: `/api/category/${id}`,
@@ -560,7 +542,6 @@ export const getAllShopsClient = (address: string, page: string) => {
 export const getFeaturedProducts = () => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
     key: ["get-featured-products"],
     endpoint: `/api/is-featured-product`,
   });
@@ -574,7 +555,6 @@ export const getNearbyProducts = (
 ) => {
   return useClientApi({
     method: "get",
-    isPrivate: true,
     key: ["nearby-products", lat, lng, nearbyPage],
     endpoint: "/api/nearby-product",
     params: { lat, lng, page: nearbyPage },
@@ -625,7 +605,6 @@ export const useCheckout = (cart_id: number | null) => {
   return useClientApi({
     method: "post",
     key: ["checkout", cart_id],
-    isPrivate: true,
     endpoint: `/api/checkout/${cart_id}`,
     onSuccess: (data: any) => {
       if (data?.status || data?.success) {

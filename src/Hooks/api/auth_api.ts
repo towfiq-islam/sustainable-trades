@@ -30,7 +30,7 @@ export const useCreateShop = () => {
     },
     onSuccess: (data: any) => {
       if (data?.success) {
-        setAuthenticated(true);
+        setAuthenticated();
         toast.success(data?.message);
       }
     },
@@ -94,7 +94,7 @@ export const useLogin = () => {
         data?.success &&
         (data?.data?.role === "customer" || data?.data?.membership)
       ) {
-        setAuthenticated(true);
+        setAuthenticated();
         toast.success(data?.message);
 
         router.push(
@@ -108,7 +108,7 @@ export const useLogin = () => {
           }`,
         );
       } else {
-        setAuthenticated(true);
+        setAuthenticated();
         toast.error("Please choose a plan");
         router.push(`/auth/create-shop?step=${5}`);
       }

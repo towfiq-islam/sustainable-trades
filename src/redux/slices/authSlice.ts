@@ -1,24 +1,41 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {
-  user: null,
+interface AuthState {
+  isAuthenticated: boolean;
+  latitude: number | null;
+  longitude: number | null;
+  search: string;
+}
+
+const initialState: AuthState = {
   isAuthenticated: false,
+  latitude: null,
+  longitude: null,
+  search: "",
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action) => {
-      state.user = action.payload;
+    setUser: state => {
       state.isAuthenticated = true;
     },
     removeUser: state => {
-      state.user = null;
       state.isAuthenticated = false;
+    },
+    setLatitude: (state, action: PayloadAction<number>) => {
+      state.latitude = action.payload;
+    },
+    setLongitude: (state, action: PayloadAction<number>) => {
+      state.longitude = action.payload;
+    },
+    setSearch: (state, action: PayloadAction<string>) => {
+      state.search = action.payload;
     },
   },
 });
 
-export const { setUser, removeUser } = authSlice.actions;
+export const { setUser, removeUser, setLatitude, setLongitude, setSearch } =
+  authSlice.actions;
 export default authSlice.reducer;

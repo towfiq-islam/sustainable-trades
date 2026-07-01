@@ -41,6 +41,7 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["user"],
     }),
 
     logout: builder.mutation<any, void>({
@@ -48,6 +49,7 @@ export const authApi = apiSlice.injectEndpoints({
         url: "/api/users/logout",
         method: "POST",
       }),
+      invalidatesTags: ["user"],
     }),
 
     resetPassword: builder.mutation<any, any>({

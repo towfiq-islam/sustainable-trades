@@ -5,7 +5,7 @@ import {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-// import { removeUser } from "@/redux/features/auth/authSlice";
+import { removeUser } from "@/redux/slices/authSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_SITE_URL,
@@ -23,7 +23,8 @@ const baseQueryWithInterceptor: BaseQueryFn<
   // Handle 401 interceptor
   if (status === 401) {
     console.log("Unauthenticated. Logging out...");
-    // api.dispatch(removeUser());
+    api.dispatch(removeUser());
+    api.dispatch(apiSlice.util.resetApiState()); // Wipe all cached queries
   }
 
   return result;

@@ -26,13 +26,12 @@ type formData = {
 };
 
 const Page = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
   const { setAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [login, { isLoading }] = useLoginMutation();
-  // const { user, isAuthenticated } = useSelector(state => state.auth);
-  // console.log(user, isAuthenticated);
+  const { user } = useAuth();
+  console.log(user)
 
   const {
     register,
@@ -48,20 +47,20 @@ const Page = () => {
         res?.success &&
         (res?.data?.role === "customer" || res?.data?.membership)
       ) {
-        setAuthenticated(true);
+        setAuthenticated();
         toast.success(res?.message);
-        router.push(
-          `${
-            res?.data?.role === "customer"
-              ? "/dashboard/customer/orders"
-              : res?.data?.role === "vendor" &&
-                  res?.data?.membership?.membership_type === "pro"
-                ? "/dashboard/pro/home"
-                : "/dashboard/basic/home"
-          }`,
-        );
+        // router.push(
+        //   `${
+        //     res?.data?.role === "customer"
+        //       ? "/dashboard/customer/orders"
+        //       : res?.data?.role === "vendor" &&
+        //           res?.data?.membership?.membership_type === "pro"
+        //         ? "/dashboard/pro/home"
+        //         : "/dashboard/basic/home"
+        //   }`,
+        // );
       } else {
-        setAuthenticated(true);
+        setAuthenticated();
         toast.error("Please choose a plan");
         router.push(`/auth/create-shop?step=${5}`);
       }

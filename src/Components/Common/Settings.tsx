@@ -1,10 +1,13 @@
 "use client";
-import { useLogout, useUpdateUser } from "@/Hooks/api/auth_api";
+import { useUpdateUser } from "@/Hooks/api/auth_api";
 import { useDeleteAccount } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
+import { useLogoutMutation } from "@/redux/api/authApi";
+import { useAppDispatch } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { FaRegEdit } from "react-icons/fa";
 
 type SettingsFormValues = {
@@ -22,7 +25,8 @@ type SettingsFormValues = {
 
 const Settings = () => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, clearAuthorization } = useAuth();
+  const dispatch = useAppDispatch();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [modalType, setModalType] = useState<"logout" | "delete" | null>(null);
   const hiddenFileInputRef = useRef<HTMLInputElement | null>(null);
@@ -34,7 +38,7 @@ const Settings = () => {
     formState: { errors },
   } = useForm<SettingsFormValues>();
 
-  const { mutate: logoutMutation, isPending: isWorking } = useLogout();
+  const [logout, { isLoading }] = useLogoutMutation();
   const { mutate: deleteMutation, isPending: isDeleting } = useDeleteAccount();
   const { mutate: updateUser, isPending } = useUpdateUser();
 
@@ -72,17 +76,19 @@ const Settings = () => {
 
   const handleConfirm = () => {
     if (modalType === "logout") {
-      logoutMutation(undefined, {
-        onSuccess: () => {
-          setModalType(null);
-          router.push("/auth/login");
-        },
-      });
+      logout()
+        .unwrap()
+        .then(() => {
+          toast.success("Logged out successfully");
+          router.replace("/auth/login");
+          dispatch(clearAuthorization());
+        });
     } else if (modalType === "delete") {
       deleteMutation(undefined, {
         onSuccess: () => {
+          toast.success("Account deleted successfully");
           setModalType(null);
-          router.push("/auth/login");
+          router.replace("/auth/login");
         },
       });
     }
@@ -325,7 +331,7 @@ const Settings = () => {
               </button>
               <button
                 onClick={handleConfirm}
-                disabled={isDeleting || isWorking}
+                disabled={isDeleting || isLoading}
                 className={`px-4 py-2 rounded-lg text-white cursor-pointer disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-70 ${
                   modalType === "logout" ? "bg-primary-green" : "bg-primary-red"
                 }`}

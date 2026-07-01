@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   CartSvg2,
@@ -10,9 +10,11 @@ import {
   MessageSvg,
   NotificationSvg,
 } from "@/Components/Svg/SvgContainer";
-import { useLogout } from "@/Hooks/api/auth_api";
 import { FaUser } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
+import { useLogoutMutation } from "@/redux/api/authApi";
+import { useAppDispatch } from "@/redux/store";
+import toast from "react-hot-toast";
 
 const navLins = [
   { id: 1, label: "Home", path: "/" },
@@ -31,7 +33,9 @@ interface DashboardHeaderProps {
 
 const DashboardHeader = ({ user, setOpen }: DashboardHeaderProps) => {
   const pathname = usePathname();
-  const { mutate: logoutMutation, isPending } = useLogout();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [logout, { isLoading }] = useLogoutMutation();
   const [showPopover, setShowPopover] = useState<boolean>(false);
 
   useEffect(() => {
@@ -242,8 +246,16 @@ const DashboardHeader = ({ user, setOpen }: DashboardHeaderProps) => {
                 </Link>
 
                 <button
-                  disabled={isPending}
-                  onClick={() => logoutMutation()}
+                  disabled={isLoading}
+                  onClick={() =>
+                    logout()
+                      .unwrap()
+                      .then(() => {
+                        toast.success("Logged out successfully");
+                        router.push("/auth/login");
+                        dispatch(user.clearAuthorization());
+                      })
+                  }
                   className="flex gap-2 items-center text-primary-red font-semibold duration-200 cursor-pointer transition disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-70"
                 >
                   <FiLogOut />

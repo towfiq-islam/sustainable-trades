@@ -460,7 +460,7 @@ export const useUpdateShopBanner = () => {
 };
 
 // Trade Shop Product
-export const getTradeShopProducts = (id: number | null) => {
+export const getTradeShopProducts = (id: any | null) => {
   return useClientApi({
     method: "get",
     key: ["get-trade-products", id],
@@ -562,7 +562,7 @@ export const getNearbyProducts = (
 };
 
 // Shop Reviews
-export const getShopReviews = (id: number, page: string) => {
+export const getShopReviews = (id: any, page: string) => {
   return useClientApi({
     method: "get",
     key: ["shop-reviews", id, page],

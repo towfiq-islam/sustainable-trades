@@ -7,8 +7,7 @@ import h3 from "@/Assets/h3.svg";
 import h4 from "@/Assets/h4.svg";
 import h5 from "@/Assets/h5.svg";
 import useAuth from "@/Hooks/useAuth";
-import { usePathname } from "next/navigation";
-import { useLogout } from "@/Hooks/api/auth_api";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FiLogOut } from "react-icons/fi";
 import Container from "@/Components/Common/Container";
@@ -21,6 +20,9 @@ import {
 } from "@/Components/Svg/SvgContainer";
 import Sidebar from "@/Components/Common/Sidebar";
 import { FaUser } from "react-icons/fa";
+import { useLogoutMutation } from "@/redux/api/authApi";
+import { useAppDispatch } from "@/redux/store";
+import toast from "react-hot-toast";
 
 const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
   const navLins = [
@@ -81,13 +83,15 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
     },
   ];
 
-  const { user } = useAuth();
+  const { user, clearAuthorization } = useAuth();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const pathname = usePathname();
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [showPopover, setShowPopover] = useState<boolean>(false);
   const [activeSubMenu, setActiveSubMenu] = useState<number>(0);
-  const { mutate: logoutMutation, isPending } = useLogout();
+  const [logout, { isLoading }] = useLogoutMutation();
 
   useEffect(() => {
     const handleWindowClick = () => {
@@ -370,8 +374,16 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
                   </Link>
 
                   <button
-                    disabled={isPending}
-                    onClick={() => logoutMutation()}
+                    disabled={isLoading}
+                    onClick={() =>
+                      logout()
+                        .unwrap()
+                        .then(() => {
+                          toast.success("Logged out successfully");
+                          router.replace("/auth/login");
+                          dispatch(clearAuthorization());
+                        })
+                    }
                     className="flex gap-2 items-center text-primary-red font-semibold duration-200 cursor-pointer transition disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-70"
                   >
                     <FiLogOut />

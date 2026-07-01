@@ -265,7 +265,7 @@ const ConversationPage = ({
       ...prev,
       {
         id: tempId,
-        sender_id: user?.id,
+        sender_id: user!.id,
         message: message.trim(),
         created_at: new Date().toISOString(),
         status: "sending",

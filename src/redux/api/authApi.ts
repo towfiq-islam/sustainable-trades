@@ -1,8 +1,18 @@
-import { apiSlice } from "./apiSlice";
+import { apiSlice } from "@/redux/api/apiSlice";
+
+import type {
+  ApiResponse,
+  LoginRequest,
+  RegisterRequest,
+  ResetPasswordRequest,
+  User,
+  VerifyEmailRequest,
+  VerifyOtpRequest,
+} from "@/Types/auth";
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    getUserData: builder.query<any, void>({
+    getUserData: builder.query<ApiResponse<User>, void>({
       query: () => ({
         url: "/api/users/data",
         method: "GET",
@@ -11,23 +21,26 @@ export const authApi = apiSlice.injectEndpoints({
       providesTags: ["user"],
     }),
 
-    createShop: builder.mutation<any, FormData>({
+    login: builder.mutation<ApiResponse<User>, LoginRequest>({
       query: body => ({
-        url: "/api/shop/owners",
+        url: "/api/users/login",
         method: "POST",
         body,
       }),
+
+      invalidatesTags: ["user"],
     }),
 
-    editShop: builder.mutation<any, FormData>({
-      query: body => ({
-        url: "/api/shop/owner-data-update",
+    logout: builder.mutation<ApiResponse<null>, void>({
+      query: () => ({
+        url: "/api/users/logout",
         method: "POST",
-        body,
       }),
+
+      invalidatesTags: ["user"],
     }),
 
-    register: builder.mutation<any, any>({
+    register: builder.mutation<ApiResponse<User>, RegisterRequest>({
       query: body => ({
         url: "/api/users/register",
         method: "POST",
@@ -35,32 +48,33 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    login: builder.mutation<any, any>({
+    createShop: builder.mutation<ApiResponse<User>, FormData>({
       query: body => ({
-        url: "/api/users/login",
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: ["user"],
-    }),
-
-    logout: builder.mutation<any, void>({
-      query: () => ({
-        url: "/api/users/logout",
-        method: "POST",
-      }),
-      invalidatesTags: ["user"],
-    }),
-
-    resetPassword: builder.mutation<any, any>({
-      query: body => ({
-        url: "/api/users/login/reset-password",
+        url: "/api/shop/owners",
         method: "POST",
         body,
       }),
     }),
 
-    verifyEmail: builder.mutation<any, any>({
+    editShop: builder.mutation<ApiResponse<User>, FormData>({
+      query: body => ({
+        url: "/api/shop/owner-data-update",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    updateUser: builder.mutation<ApiResponse<User>, FormData>({
+      query: body => ({
+        url: "/api/users/data/update",
+        method: "POST",
+        body,
+      }),
+
+      invalidatesTags: ["user"],
+    }),
+
+    verifyEmail: builder.mutation<ApiResponse<null>, VerifyEmailRequest>({
       query: body => ({
         url: "/api/users/login/email-verify",
         method: "POST",
@@ -68,7 +82,7 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    verifyOTP: builder.mutation<any, any>({
+    verifyOTP: builder.mutation<ApiResponse<null>, VerifyOtpRequest>({
       query: body => ({
         url: "/api/users/login/otp-verify",
         method: "POST",
@@ -76,26 +90,25 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    updateUser: builder.mutation<any, any>({
+    resetPassword: builder.mutation<ApiResponse<null>, ResetPasswordRequest>({
       query: body => ({
-        url: "/api/users/data/update",
+        url: "/api/users/login/reset-password",
         method: "POST",
         body,
       }),
-      invalidatesTags: ["user"],
     }),
   }),
 });
 
 export const {
   useGetUserDataQuery,
-  useCreateShopMutation,
-  useEditShopMutation,
-  useRegisterMutation,
   useLoginMutation,
   useLogoutMutation,
-  useResetPasswordMutation,
+  useRegisterMutation,
+  useCreateShopMutation,
+  useEditShopMutation,
+  useUpdateUserMutation,
   useVerifyEmailMutation,
   useVerifyOTPMutation,
-  useUpdateUserMutation,
+  useResetPasswordMutation,
 } = authApi;

@@ -244,7 +244,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
 
       {/* Buy btn */}
       <button
-        disabled={user || data?.selling_option === "trade/barter"}
+        disabled={!!user || data?.selling_option === "trade/barter"}
         onClick={() => setGuestOpen(true)}
         className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-semibold border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
       >

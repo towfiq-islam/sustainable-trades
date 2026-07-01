@@ -4,19 +4,6 @@ import { useRouter } from "next/navigation";
 import useClientApi from "@/Hooks/useClientApi";
 import { useQueryClient } from "@tanstack/react-query";
 
-// Get User Data
-export const useGetUserData = (isAuthenticated: any) => {
-  return useClientApi({
-    method: "get",
-    key: ["user", isAuthenticated],
-    enabled: !!isAuthenticated,
-    endpoint: "/api/users/data",
-    queryOptions: {
-      refetchInterval: 1000 * 60 * 60,
-    },
-  });
-};
-
 // Create Shop
 export const useCreateShop = () => {
   const { setAuthenticated } = useAuth();
@@ -72,67 +59,6 @@ export const useRegister = () => {
       if (data?.success) {
         toast.success(data?.message);
         router.push("/auth/login");
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Login
-export const useLogin = () => {
-  const router = useRouter();
-  const { setAuthenticated } = useAuth();
-
-  return useClientApi({
-    method: "post",
-    key: ["login"],
-    endpoint: "/api/users/login",
-    onSuccess: (data: any) => {
-      if (
-        data?.success &&
-        (data?.data?.role === "customer" || data?.data?.membership)
-      ) {
-        setAuthenticated();
-        toast.success(data?.message);
-
-        router.push(
-          `${
-            data?.data?.role === "customer"
-              ? "/dashboard/customer/orders"
-              : data?.data?.role === "vendor" &&
-                  data?.data?.membership?.membership_type === "pro"
-                ? "/dashboard/pro/home"
-                : "/dashboard/basic/home"
-          }`,
-        );
-      } else {
-        setAuthenticated();
-        toast.error("Please choose a plan");
-        router.push(`/auth/create-shop?step=${5}`);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Logout
-export const useLogout = () => {
-  const router = useRouter();
-  const { clearAuthorization } = useAuth();
-
-  return useClientApi({
-    method: "post",
-    key: ["logout"],
-    endpoint: "/api/users/logout",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        clearAuthorization();
-        toast.success(data?.message);
-        router.replace("/auth/login");
       }
     },
     onError: (err: any) => {

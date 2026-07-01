@@ -48,10 +48,13 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
   password_confirmation: string;
+  agree_to_terms: number;
+  role: string | null;
 }
 
 export interface VerifyEmailRequest {
@@ -67,5 +70,4 @@ export interface ResetPasswordRequest {
   email: string;
   password: string;
   password_confirmation: string;
-  otp: string;
 }

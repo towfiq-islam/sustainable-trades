@@ -1,20 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import shopBg from "@/Assets/shoppers.png";
 import magicBg from "@/Assets/magic_markers.png";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   AppleLogoSvg,
   FacebookLogoSvg,
   GoogleLogoSvg,
 } from "@/Components/Svg/SvgContainer";
-import { useRegister } from "@/Hooks/api/auth_api";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { FiEye } from "react-icons/fi";
 import { FiEyeOff } from "react-icons/fi";
+import { useRegisterMutation } from "@/redux/api/authApi";
+import toast from "react-hot-toast";
 
 type formData = {
   first_name: string;
@@ -26,12 +27,13 @@ type formData = {
 };
 
 export default function page() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const selected_role = searchParams.get("role");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
-  const { mutateAsync: registerMutation, isPending } = useRegister();
+  const [registrationMutation, { isLoading }] = useRegisterMutation();
 
   const {
     register,
@@ -41,13 +43,23 @@ export default function page() {
   } = useForm<formData>();
 
   const password = watch("password");
+
   const onSubmit = async (data: formData) => {
     const payload = {
       ...data,
       agree_to_terms: data.agree_to_terms ? 1 : 0,
       role: selected_role,
     };
-    await registerMutation(payload);
+
+    try {
+      const res = await registrationMutation(payload).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        router.push("/auth/login");
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (
@@ -225,12 +237,12 @@ export default function page() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={isPending}
+              disabled={isLoading}
               className={`px-10 py-1.5 sm:py-3 md:py-4 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white md:font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green text-sm md:text-lg block w-full ${
-                isPending ? "cursor-not-allowed" : "cursor-pointer"
+                isLoading ? "cursor-not-allowed" : "cursor-pointer"
               }`}
             >
-              {isPending ? (
+              {isLoading ? (
                 <p className="flex gap-2 items-center justify-center">
                   <CgSpinnerTwo className="animate-spin text-xl" />
                   <span>Please wait....</span>

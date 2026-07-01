@@ -4,18 +4,21 @@ import { LuEye } from "react-icons/lu";
 import { useForm } from "react-hook-form";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { FaRegEyeSlash } from "react-icons/fa6";
-import { useResetPassword } from "@/Hooks/api/auth_api";
 import Container from "@/Components/Common/Container";
+import { useResetPasswordMutation } from "@/redux/api/authApi";
+import toast from "react-hot-toast";
+import { useParams, useRouter } from "next/navigation";
 
 type formData = {
   password: string;
   password_confirmation: string;
 };
 
-const page = ({ params }: any) => {
+const page = () => {
   // Mutation
-  const { email } = params;
-  const { mutateAsync: verifyOtpMutation, isPending } = useResetPassword();
+  const router = useRouter();
+  const { email } = useParams();
+  const [passwordReset, { isLoading }] = useResetPasswordMutation();
 
   // States
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -30,12 +33,20 @@ const page = ({ params }: any) => {
     formState: { errors },
   } = useForm<formData>();
 
-  const onSubmit = async (data: formData) => {
-    const payload = { email: decodeURIComponent(email), ...data };
-    await verifyOtpMutation(payload);
-  };
-
   const password = watch("password");
+
+  const onSubmit = async (data: formData) => {
+    const payload = { email: decodeURIComponent(email as string), ...data };
+    try {
+      const res = await passwordReset(payload).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        router.push("/auth/login");
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
+  };
 
   return (
     <Container>
@@ -113,13 +124,13 @@ const page = ({ params }: any) => {
 
             {/* Submit btn */}
             <button
-              disabled={isPending}
+              disabled={isLoading}
               type="submit"
               className={`px-10 sm:py-3 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green md:text-lg block w-full ${
-                isPending ? "cursor-not-allowed" : "cursor-pointer"
+                isLoading ? "cursor-not-allowed" : "cursor-pointer"
               }`}
             >
-              {isPending ? (
+              {isLoading ? (
                 <div className="flex gap-2 items-center justify-center">
                   <CgSpinnerTwo className="animate-spin text-xl" />
                   <span>Changing...</span>

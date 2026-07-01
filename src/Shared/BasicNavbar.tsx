@@ -330,7 +330,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
                 }`}
               >
                 <div className="flex gap-3 items-center mb-4">
-                  <figure className="size-11 bg-primary-pink rounded-full grid place-items-center shrink-0 overflow-hidden relative">
+                  <figure className="size-11 bg-accent-red border-gray-200 rounded-full grid place-items-center shrink-0 overflow-hidden relative">
                     {user?.avatar ? (
                       <Image
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${user?.avatar}`}

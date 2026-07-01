@@ -199,22 +199,6 @@ export const useTradeSendProduct = (id: any) => {
   });
 };
 
-// Delete Account API
-export const useDeleteAccount = () => {
-  return useClientApi({
-    method: "delete",
-    key: ["delete-account"],
-    endpoint: "/api/users/delete",
-    onSuccess: (data: any) => {
-      if (data?.success)
-        toast.success(data.message || "Account deleted successfully!");
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to delete account");
-    },
-  });
-};
-
 // Create Discount
 export const useCreateDiscount = () => {
   return useClientApi({
@@ -1072,6 +1056,27 @@ export const useGetShippingTax = () => {
     key: ["shipping-data"],
 
     endpoint: "/api/cart/shipping/calculate",
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Edit Shop
+export const useEditShop = () => {
+  return useClientApi({
+    method: "post",
+    key: ["edit-shop"],
+    endpoint: "/api/shop/owner-data-update",
+
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },

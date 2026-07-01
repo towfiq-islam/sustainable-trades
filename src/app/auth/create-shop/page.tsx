@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useCreateShop } from "@/Hooks/api/auth_api";
 import Container from "@/Components/Common/Container";
 import { useForm, FormProvider } from "react-hook-form";
 import { CheckSvg, StepSvg } from "@/Components/Svg/SvgContainer";
@@ -11,6 +10,8 @@ import StepFour from "@/Components/PageComponents/authPages/stepForm/StepFour";
 import StepFive from "@/Components/PageComponents/authPages/stepForm/StepFive";
 import StepThree from "@/Components/PageComponents/authPages/stepForm/StepThree";
 import toast from "react-hot-toast";
+import { useCreateShopMutation } from "@/redux/api/authApi";
+import useAuth from "@/Hooks/useAuth";
 
 type StepItem = {
   smLabel: string;
@@ -19,11 +20,12 @@ type StepItem = {
 };
 
 const page = () => {
+  const { setAuthenticated } = useAuth();
   const searchParams = useSearchParams();
   const formRef = useRef<HTMLDivElement | null>(null);
   const newStep = Number(searchParams.get("step"));
   const [step, setStep] = useState<number>(1);
-  const { mutateAsync: createShopMutation, isPending } = useCreateShop();
+  const [createShop, { isLoading }] = useCreateShopMutation();
   const onNext = () => setStep(prev => Math.min(prev + 1, steps.length));
   const onPrev = () => setStep(prev => Math.max(prev - 1, 1));
 
@@ -106,11 +108,50 @@ const page = () => {
       setStep(step + 1);
     } else {
       const payload = { ...data };
+
       delete payload.coverPhotoPreview;
       delete payload.shopPhotoPreview;
       delete payload.profilePhotoPreview;
-      await createShopMutation(payload);
-      setStep(step + 1);
+
+      const formData = new FormData();
+
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value === null || value === undefined || value === "") {
+          return;
+        }
+
+        // File
+        if (value instanceof File) {
+          formData.append(key, value);
+          return;
+        }
+
+        // Multiple files
+        if (Array.isArray(value) && value.length && value[0] instanceof File) {
+          value.forEach(file => formData.append(`${key}[]`, file));
+          return;
+        }
+
+        // Array of strings/numbers
+        if (Array.isArray(value)) {
+          value.forEach(item => formData.append(`${key}[]`, String(item)));
+          return;
+        }
+
+        formData.append(key, String(value));
+      });
+
+      try {
+        const res = await createShop(formData).unwrap();
+
+        if (res?.success) {
+          toast.success(res?.message);
+          setStep(step + 1);
+          setAuthenticated();
+        }
+      } catch (err: any) {
+        toast.error(err?.data?.message);
+      }
     }
   };
 
@@ -169,7 +210,7 @@ const page = () => {
               totalSteps={steps.length}
               onNext={onNext}
               onPrev={onPrev}
-              isPending={isPending}
+              isPending={isLoading}
             />
           </form>
         </FormProvider>

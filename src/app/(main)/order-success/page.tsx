@@ -6,10 +6,10 @@ import Container from "@/Components/Common/Container";
 import Product from "@/Components/Common/Product";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { useSearchParams } from "next/navigation";
-import { getAllListings } from "@/Hooks/api/cms_api";
 import { getAllFollowList, getMyOrderDetails } from "@/Hooks/api/dashboard_api";
 import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
 import useAuth from "@/Hooks/useAuth";
+import { useGetAllProductsUnderShopQuery } from "@/redux/api/productApi";
 
 export default function Page() {
   const { user } = useAuth();
@@ -19,7 +19,10 @@ export default function Page() {
   const { data: myFavorites, isLoading: isFavoriteLoading } =
     getAllFollowList();
   const { data: singleOrder, isLoading } = getMyOrderDetails(order_id);
-  const { data: products, isLoading: shopLoading } = getAllListings(shop_id);
+  const { data: products, isFetching: isShopLoading } =
+    useGetAllProductsUnderShopQuery({
+      id: shop_id,
+    });
 
   const mapShops = singleOrder?.data?.shop
     ? [
@@ -262,7 +265,7 @@ export default function Page() {
           <h2 className="text-xl font-semibold">More From This Shop</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-5">
-            {shopLoading ? (
+            {isShopLoading ? (
               [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
             ) : products?.data?.data?.length > 0 ? (
               products?.data?.data?.map((item: any) => (

@@ -163,7 +163,7 @@ export const useNewsletter = () => {
 };
 
 // Featured Shops
-export const getFeaturedShops = (lat: number, lng: number) => {
+export const getFeaturedShops = (lat: number | null, lng: number | null) => {
   return useClientApi({
     method: "get",
     key: ["get-featured-shops", lat, lat],
@@ -305,7 +305,7 @@ export const useAddFavorite = () => {
 };
 
 // Product Details
-export const getProductDetails = (id: number, lat: number, lng: number) => {
+export const getProductDetails = (id: number, lat: number | null, lng: number | null) => {
   return useClientApi({
     method: "get",
     key: ["get-product-details", id, lat, lng],
@@ -515,8 +515,8 @@ export const getMembershipSpotlightClient = () => {
 // Category Details
 export const getCategoryDetails = (
   id: number | null,
-  lat: number,
-  lng: number,
+  lat: number | null,
+  lng: number | null,
   page: string,
 ) => {
   return useClientApi({
@@ -549,8 +549,8 @@ export const getFeaturedProducts = () => {
 
 // Nearby Products
 export const getNearbyProducts = (
-  lat: number,
-  lng: number,
+  lat: number | null,
+  lng: number | null,
   nearbyPage: string,
 ) => {
   return useClientApi({
@@ -586,8 +586,8 @@ export const getProductReviews = (id: number, page: string) => {
 // All Products
 export const getAllProducts = (
   search: string,
-  lat: number,
-  lng: number,
+  lat: any,
+  lng: any,
   page: string,
 ) => {
   return useClientApi({

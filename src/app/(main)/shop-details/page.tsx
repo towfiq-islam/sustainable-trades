@@ -7,7 +7,6 @@ import {
   ShopPoliciesSkeleton,
 } from "@/Components/Loader/Loader";
 import {
-  getAllListings,
   getFeaturedListings,
   getProductCategoriesClient,
   getProductSubCategoriesClient,
@@ -24,6 +23,7 @@ import ShopListing from "@/Components/PageComponents/mainPages/shopDetailsCompon
 import ShopReviews from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopReviews";
 import DetailsTab from "@/Components/PageComponents/mainPages/shopDetailsComponents/DetailsTab";
 import EditShopBanner from "@/Components/PageComponents/mainPages/shopDetailsComponents/EditShopBanner";
+import { useGetAllProductsUnderShopQuery } from "@/redux/api/productApi";
 
 const page = () => {
   // Hook
@@ -53,14 +53,19 @@ const page = () => {
     listing_id,
     reviewPage,
   );
-  const { data: allListings, isLoading: listingsLoading } = getAllListings(
-    listing_id,
-    category_id,
-    sub_category_id,
-    short_by,
-    search,
-    page,
-  );
+
+  const { data: products, isFetching: isShopLoading } =
+    useGetAllProductsUnderShopQuery(
+      {
+        id: listing_id,
+        category_id,
+        sub_category_id,
+        short_by,
+        search,
+        page,
+      },
+      { skip: !listing_id },
+    );
 
   return (
     <>
@@ -83,14 +88,14 @@ const page = () => {
       {/* Shop Listings */}
       <ShopListing
         featuredListings={featuredListings?.data}
-        allListings={allListings?.data}
+        allListings={products?.data}
         setSearch={setSearch}
         setCategory={setCategory}
         setSubCategory={setSubCategory}
         setSortBy={setSortBy}
         setPage={setPage}
         featuredLoading={featuredLoading}
-        listingsLoading={listingsLoading}
+        listingsLoading={isShopLoading}
         categoryLoading={categoryLoading}
         subCategoryLoading={subCategoryLoading}
         productCategories={productCategories?.data}

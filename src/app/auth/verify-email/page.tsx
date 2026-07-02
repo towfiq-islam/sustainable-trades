@@ -1,7 +1,9 @@
 "use client";
 import Container from "@/Components/Common/Container";
-import { useVerifyEmail } from "@/Hooks/api/auth_api";
+import { useVerifyEmailMutation } from "@/redux/api/authApi";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 
 type formData = {
@@ -10,7 +12,8 @@ type formData = {
 
 const page = () => {
   // Mutation
-  const { mutateAsync: verifyEmailMutation, isPending } = useVerifyEmail();
+  const router = useRouter();
+  const [verifyEmail, { isLoading }] = useVerifyEmailMutation();
 
   // Form Data
   const {
@@ -20,7 +23,16 @@ const page = () => {
   } = useForm<formData>();
 
   const onSubmit = async (data: formData) => {
-    await verifyEmailMutation(data);
+    try {
+      const res: any = await verifyEmail(data).unwrap();
+
+      if (res?.success) {
+        toast.success(res?.message);
+        router.push(`/auth/verify-otp/${res?.data?.email}`);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (
@@ -51,13 +63,13 @@ const page = () => {
 
           {/* Submit btn */}
           <button
-            disabled={isPending}
+            disabled={isLoading}
             type="submit"
             className={`px-10 sm:py-3 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green md:text-lg block w-full ${
-              isPending ? "cursor-not-allowed" : "cursor-pointer"
+              isLoading ? "cursor-not-allowed" : "cursor-pointer"
             }`}
           >
-            {isPending ? (
+            {isLoading ? (
               <div className="flex gap-2 items-center justify-center">
                 <CgSpinnerTwo className="animate-spin text-xl" />
                 <span>Verifying...</span>

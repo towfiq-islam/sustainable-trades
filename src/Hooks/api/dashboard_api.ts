@@ -4,94 +4,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuth from "@/Hooks/useAuth";
 import { api } from "@/lib/api";
 
-// Add Product
-export const useAddProduct = () => {
-  return useClientApi({
-    method: "post",
-    key: ["add-product"],
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    endpoint: `/api/products-store`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// update product
-export const useupdateProduct = (id: string | number) => {
-  return useClientApi({
-    method: "post",
-    key: ["update-product"],
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    endpoint: `/api/product/update/${id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) toast.success(data.message);
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-// delete product
-export const useDeleteProduct = (id: string | number) => {
-  return useClientApi({
-    method: "delete",
-    key: ["delete-product", id],
-
-    endpoint: `/api/product/delete/${id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) toast.success(data.message);
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Get All Listings
-export const getallListings = (status?: string, short_by?: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-all-listings", status, short_by],
-    params: { status, short_by },
-    endpoint: "/api/products",
-  });
-};
-
-// Fetch a single product/listing by ID
-export const useGetSingleListing = (id: string | number) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-single-listing", id],
-    endpoint: `/api/product/${id}`,
-  });
-};
-
-// useRequestApproval
-export const useRequestApproval = (id: string | number) => {
-  return useClientApi({
-    method: "get",
-    key: ["request-approval"],
-    endpoint: `/api/product/request-approval/${id}`,
-    onSuccess: (data: any) => {
-      if (data?.success)
-        toast.success(data.message || "Approval requested successfully!");
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to request approval");
-    },
-  });
-};
-
 // Get All Spotlight
 export const getmemberShipspotlight = () => {
   return useClientApi({
@@ -195,22 +107,6 @@ export const useTradeSendProduct = (id: any) => {
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Delete Account API
-export const useDeleteAccount = () => {
-  return useClientApi({
-    method: "delete",
-    key: ["delete-account"],
-    endpoint: "/api/users/delete",
-    onSuccess: (data: any) => {
-      if (data?.success)
-        toast.success(data.message || "Account deleted successfully!");
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to delete account");
     },
   });
 };
@@ -736,16 +632,6 @@ export const getTradesData = () => {
   });
 };
 
-// Latest Products
-export const getLatestProducts = () => {
-  return useClientApi({
-    method: "get",
-    key: ["latest-products"],
-
-    endpoint: "/api/latest-products",
-  });
-};
-
 // Delete all notifications
 export const useDeleteAllNotifications = () => {
   const queryClient = useQueryClient();
@@ -1072,6 +958,27 @@ export const useGetShippingTax = () => {
     key: ["shipping-data"],
 
     endpoint: "/api/cart/shipping/calculate",
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Edit Shop
+export const useEditShop = () => {
+  return useClientApi({
+    method: "post",
+    key: ["edit-shop"],
+    endpoint: "/api/shop/owner-data-update",
+
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },

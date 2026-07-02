@@ -107,7 +107,7 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
               onChange={handleBannerChange}
             />
 
-            <figure className="size-[180px] -mb-10 relative bg-gray-300 grid place-items-center rounded-full border-[5px] border-white">
+            <figure className="size-[180px] -mb-10 bg-gray-300 grid place-items-center rounded-full border-[5px] border-white relative">
               {!profilePending && (
                 <label
                   htmlFor="profile"
@@ -214,7 +214,7 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
                   {data?.shop_info?.shop_name}
                 </p>
               </div>
-              <figure className="size-14 shrink-0 rounded-full bg-accent-red grid place-items-center font-semibold text-lg overflow-hidden">
+              <figure className="size-14 shrink-0 rounded-full bg-accent-red grid place-items-center font-semibold text-lg overflow-hidden relative">
                 {data?.avatar ? (
                   <Image
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.avatar}`}

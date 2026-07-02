@@ -238,32 +238,6 @@ export const getFeaturedListings = (id: number) => {
   });
 };
 
-// All Listings
-export const getAllListings = (
-  id: number,
-  category_id?: string,
-  sub_category_id?: string,
-  short_by?: string,
-  search?: string,
-  page?: string,
-) => {
-  return useClientApi({
-    method: "get",
-    key: [
-      "get-all-listings",
-      id,
-      category_id,
-      sub_category_id,
-      short_by,
-      search,
-      page,
-    ],
-    enabled: !!id,
-    endpoint: `/api/shop/products/${id}`,
-    params: { category_id, sub_category_id, short_by, search, page },
-  });
-};
-
 // Follow Shop
 export const useFollowShop = (shop_id: number) => {
   const queryClient = useQueryClient();
@@ -305,7 +279,11 @@ export const useAddFavorite = () => {
 };
 
 // Product Details
-export const getProductDetails = (id: number, lat: number | null, lng: number | null) => {
+export const getProductDetails = (
+  id: number,
+  lat: number | null,
+  lng: number | null,
+) => {
   return useClientApi({
     method: "get",
     key: ["get-product-details", id, lat, lng],
@@ -460,7 +438,7 @@ export const useUpdateShopBanner = () => {
 };
 
 // Trade Shop Product
-export const getTradeShopProducts = (id: number | null) => {
+export const getTradeShopProducts = (id: any | null) => {
   return useClientApi({
     method: "get",
     key: ["get-trade-products", id],
@@ -562,7 +540,7 @@ export const getNearbyProducts = (
 };
 
 // Shop Reviews
-export const getShopReviews = (id: number, page: string) => {
+export const getShopReviews = (id: any, page: string) => {
   return useClientApi({
     method: "get",
     key: ["shop-reviews", id, page],

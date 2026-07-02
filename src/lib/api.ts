@@ -1,4 +1,3 @@
-import useAuth from "@/Hooks/useAuth";
 import axios from "axios";
 
 export const api = axios.create({
@@ -16,10 +15,8 @@ api.interceptors.response.use(
 
   async error => {
     const status = error?.response?.status;
-    const { clearAuthorization } = useAuth();
 
     if (status === 401 || status === 403) {
-      clearAuthorization();
       console.log("Unauthenticated. Redirecting to login...");
     }
 

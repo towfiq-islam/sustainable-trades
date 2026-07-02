@@ -1,6 +1,5 @@
 "use client";
 import React, { use, useEffect } from "react";
-import { useEditShop } from "@/Hooks/api/auth_api";
 import { getShopDetails } from "@/Hooks/api/cms_api";
 import Container from "@/Components/Common/Container";
 import { useForm, FormProvider } from "react-hook-form";
@@ -10,6 +9,7 @@ import EditFormThree from "@/Components/PageComponents/EditForm/EditFormThree";
 import { PuffLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 import useAuth from "@/Hooks/useAuth";
+import { useEditShop } from "@/Hooks/api/dashboard_api";
 
 type ProfileFormValues = {
   first_name: string;
@@ -114,10 +114,6 @@ const Page = ({ params }: Props) => {
       return null;
     }
   };
-
-  // const onSubmit = async (data: ProfileFormValues) => {
-  //   editShopMutation(data);
-  // };
 
   const onSubmit = async (formData: ProfileFormValues) => {
     const previousAddress = shopDetailsData?.data?.shop_info?.address;

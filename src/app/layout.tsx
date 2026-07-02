@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Lato, Geist } from "next/font/google";
 import AosProvider from "@/Provider/AosProvider/AosProvider";
-import AuthProvider from "@/Provider/AuthProvider/AuthProvider";
 import QueryProvider from "@/Provider/QueryProvider/QueryProvider";
 import ToastProvider from "@/Provider/ToastProvider/ToastProvider";
 import { cn } from "@/lib/utils";
@@ -37,12 +36,10 @@ export default async function RootLayout({
       <body className={`${lato.variable} antialiased`}>
         <ReduxProvider>
           <QueryProvider>
-            <AuthProvider>
-              <AosProvider>
-                <ToastProvider />
-                {children}
-              </AosProvider>
-            </AuthProvider>
+            <AosProvider>
+              <ToastProvider />
+              {children}
+            </AosProvider>
           </QueryProvider>
         </ReduxProvider>
       </body>

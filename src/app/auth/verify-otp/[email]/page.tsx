@@ -1,7 +1,9 @@
 "use client";
 import Container from "@/Components/Common/Container";
-import { useVerifyOTP } from "@/Hooks/api/auth_api";
+import { useVerifyOTPMutation } from "@/redux/api/authApi";
+import { useParams, useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 import OTPInput from "react-otp-input";
 
@@ -9,12 +11,13 @@ type formData = {
   otp: string;
 };
 
-const page = ({ params }: any) => {
+const page = () => {
   // Hook
-  const { email } = params;
+  const router = useRouter();
+  const { email } = useParams();
 
   // Mutations
-  const { mutateAsync: verifyOtpMutation, isPending } = useVerifyOTP();
+  const [verifyOtp, { isLoading }] = useVerifyOTPMutation();
 
   // Form Data
   const {
@@ -24,8 +27,17 @@ const page = ({ params }: any) => {
   } = useForm<formData>();
 
   const onSubmit = async (data: formData) => {
-    const payload = { email: decodeURIComponent(email), ...data };
-    await verifyOtpMutation(payload);
+    const payload = { email: decodeURIComponent(email as string), ...data };
+
+    try {
+      const res: any = await verifyOtp(payload).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        router.push(`/auth/reset-password/${res?.data?.email}`);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (
@@ -40,9 +52,9 @@ const page = ({ params }: any) => {
           </h2>
 
           <p className="text-center text-sm lg:text-base text-gray-600 mb-5 max-w-[500px] mx-auto">
-            Enter the ETP code that we sent your email{" "}
-            {decodeURIComponent(email)}, Be careful not to share code with
-            anyone.
+            Enter the OTP code that we sent to your email{" "}
+            {decodeURIComponent(email as string)}, Be careful not to share code
+            with anyone.
           </p>
 
           {/* OTP Input */}
@@ -73,13 +85,13 @@ const page = ({ params }: any) => {
 
           {/* Verify OTP btn */}
           <button
-            disabled={isPending}
+            disabled={isLoading}
             type="submit"
             className={`px-10 sm:py-3 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green md:text-lg block w-full ${
-              isPending ? "cursor-not-allowed" : "cursor-pointer"
+              isLoading ? "cursor-not-allowed" : "cursor-pointer"
             }`}
           >
-            {isPending ? (
+            {isLoading ? (
               <div className="flex gap-2 items-center justify-center">
                 <CgSpinnerTwo className="animate-spin text-xl" />
                 <span>Verifying...</span>

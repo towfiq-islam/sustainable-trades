@@ -4,8 +4,8 @@ import { FaPlus } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import Image from "next/image";
 import Link from "next/link";
-import { getallListings } from "@/Hooks/api/dashboard_api";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
+import { useGetAllProductsQuery } from "@/redux/api/productApi";
 const allStatus = ["pending", "confirmed", "shipped", "approved", "cancelled"];
 
 interface ProductItem {
@@ -19,7 +19,10 @@ interface ProductItem {
 const Page = () => {
   const [sortBy, setSortBy] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
-  const { data, isLoading } = getallListings(statusFilter, sortBy);
+  const { data: productList, isLoading } = useGetAllProductsQuery({
+    status: statusFilter,
+    short_by: sortBy,
+  });
 
   return (
     <>
@@ -80,11 +83,11 @@ const Page = () => {
             <ProductSkeleton key={index} />
           ))}
         </div>
-      ) : data?.data?.length === 0 ? (
+      ) : productList?.data?.length === 0 ? (
         <p className="mt-10 text-center text-lg">No products found.</p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 xl:gap-6 mt-10">
-          {data?.data?.map((product: ProductItem) => (
+          {productList?.data?.map((product: ProductItem) => (
             <div
               key={product?.id}
               className="relative border border-[#e5e5e5] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 group"

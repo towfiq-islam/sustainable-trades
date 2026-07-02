@@ -13,9 +13,6 @@ import { CgSpinnerTwo } from "react-icons/cg";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useLoginMutation } from "@/redux/api/authApi";
-import { useDispatch } from "react-redux";
-import { setUser } from "@/redux/slices/authSlice";
-import { useSelector } from "react-redux";
 import useAuth from "@/Hooks/useAuth";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -30,8 +27,6 @@ const Page = () => {
   const { setAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [login, { isLoading }] = useLoginMutation();
-  const { user } = useAuth();
-  console.log(user)
 
   const {
     register,
@@ -49,16 +44,16 @@ const Page = () => {
       ) {
         setAuthenticated();
         toast.success(res?.message);
-        // router.push(
-        //   `${
-        //     res?.data?.role === "customer"
-        //       ? "/dashboard/customer/orders"
-        //       : res?.data?.role === "vendor" &&
-        //           res?.data?.membership?.membership_type === "pro"
-        //         ? "/dashboard/pro/home"
-        //         : "/dashboard/basic/home"
-        //   }`,
-        // );
+        router.push(
+          `${
+            res?.data?.role === "customer"
+              ? "/dashboard/customer/orders"
+              : res?.data?.role === "vendor" &&
+                  res?.data?.membership?.membership_type === "pro"
+                ? "/dashboard/pro/home"
+                : "/dashboard/basic/home"
+          }`,
+        );
       } else {
         setAuthenticated();
         toast.error("Please choose a plan");

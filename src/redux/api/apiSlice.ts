@@ -37,7 +37,17 @@ export const apiSlice = createApi({
   refetchOnFocus: true,
   refetchOnReconnect: true,
 
-  tagTypes: ["user", "product", "conversation"],
+  tagTypes: [
+    "user",
+    "product",
+    "conversation",
+    "shop",
+    "order",
+    "notification",
+    "membership",
+    "review",
+    "trade",
+  ],
 
   endpoints: () => ({}),
 });

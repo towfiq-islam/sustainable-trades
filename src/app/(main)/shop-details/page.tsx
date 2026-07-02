@@ -7,13 +7,10 @@ import {
   ShopPoliciesSkeleton,
 } from "@/Components/Loader/Loader";
 import {
-  getFeaturedListings,
   getProductCategoriesClient,
   getProductSubCategoriesClient,
-  getShopDetails,
-  getShopReviews,
 } from "@/Hooks/api/cms_api";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ShopFAQ from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopFAQ";
 import AboutShop from "@/Components/PageComponents/mainPages/shopDetailsComponents/AboutShop";
@@ -24,6 +21,11 @@ import ShopReviews from "@/Components/PageComponents/mainPages/shopDetailsCompon
 import DetailsTab from "@/Components/PageComponents/mainPages/shopDetailsComponents/DetailsTab";
 import EditShopBanner from "@/Components/PageComponents/mainPages/shopDetailsComponents/EditShopBanner";
 import { useGetAllProductsUnderShopQuery } from "@/redux/api/productApi";
+import {
+  useGetFeaturedListingsQuery,
+  useGetShopDetailsQuery,
+  useGetShopReviewsQuery,
+} from "@/redux/api/shopApi";
 
 const page = () => {
   // Hook
@@ -46,13 +48,14 @@ const page = () => {
   const { data: productSubCategories, isLoading: subCategoryLoading } =
     getProductSubCategoriesClient();
   const { data: shopDetailsData, isLoading: shopDetailLoading } =
-    getShopDetails(id);
+    useGetShopDetailsQuery(id);
   const { data: featuredListings, isLoading: featuredLoading } =
-    getFeaturedListings(listing_id);
-  const { data: shopReviews, isLoading: reviewLoading } = getShopReviews(
-    listing_id,
-    reviewPage,
-  );
+    useGetFeaturedListingsQuery(listing_id);
+  const { data: shopReviews, isLoading: reviewLoading } =
+    useGetShopReviewsQuery({
+      id: listing_id,
+      page,
+    });
 
   const { data: products, isFetching: isShopLoading } =
     useGetAllProductsUnderShopQuery(

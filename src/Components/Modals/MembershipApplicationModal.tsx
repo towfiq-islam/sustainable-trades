@@ -1,7 +1,8 @@
 "use client";
-import { useSpotlightApplication } from "@/Hooks/api/cms_api";
+import { useApplySpotlightMutation } from "@/redux/api/shopApi";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 
 type formData = {
@@ -15,8 +16,8 @@ type formData = {
 };
 
 const MembershipApplicationModal = ({ setOpen }: any) => {
-  const { mutateAsync: spotlightMutation, isPending } =
-    useSpotlightApplication();
+  const [applySpotlight, { isLoading: isPending }] =
+    useApplySpotlightMutation();
   const [imageFile, setImageFile] = useState<string>("");
 
   const {
@@ -34,13 +35,17 @@ const MembershipApplicationModal = ({ setOpen }: any) => {
     formData.append("what_impact", data.what_impact);
     formData.append("community_engagement", data.community_engagement);
     formData.append("image", data.image[0]);
-    await spotlightMutation(formData, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          setOpen(false);
-        }
-      },
-    });
+
+    try {
+      const res = await applySpotlight(formData).unwrap();
+
+      if (res?.success) {
+        toast.success(res?.message);
+        setOpen(false);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (

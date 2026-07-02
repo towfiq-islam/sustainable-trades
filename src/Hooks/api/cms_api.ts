@@ -135,16 +135,6 @@ export async function getSingleBlog(id: number) {
 //  CSR (Client Side Rendering)
 // =======================================================
 
-// Get Pricing Data
-export const getPricingData = (interval: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-pricing", interval],
-    endpoint: "/api/subscriptions",
-    params: { interval },
-  });
-};
-
 // NewsLetter
 export const useNewsletter = () => {
   return useClientApi({
@@ -159,16 +149,6 @@ export const useNewsletter = () => {
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },
-  });
-};
-
-// Featured Shops
-export const getFeaturedShops = (lat: number | null, lng: number | null) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-featured-shops", lat, lat],
-    endpoint: "/api/shops/featured",
-    params: { lat, lng },
   });
 };
 
@@ -215,26 +195,6 @@ export const getProductSubCategoriesClient = () => {
     method: "get",
     key: ["get-product-sub-category"],
     endpoint: "/api/sub-categories",
-  });
-};
-
-// Shop Details
-export const getShopDetails = (id: number) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-shop-details", id],
-    enabled: !!id,
-    endpoint: `/api/shop/${id}`,
-  });
-};
-
-// Featured Listings
-export const getFeaturedListings = (id: number) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-featured-listings", id],
-    enabled: !!id,
-    endpoint: `/api/shop/products/featured/${id}`,
   });
 };
 
@@ -464,32 +424,6 @@ export const useTradeSendOffer = () => {
   });
 };
 
-// Spotlight Application
-export const useSpotlightApplication = () => {
-  return useClientApi({
-    method: "post",
-    key: ["spotlight-application"],
-    endpoint: "/api/spotlight-applications",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Membership Spotlight (Client)
-export const getMembershipSpotlightClient = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-membership-spotlight"],
-    endpoint: "/api/spotlight-applications",
-  });
-};
-
 // Category Details
 export const getCategoryDetails = (
   id: number | null,
@@ -503,16 +437,6 @@ export const getCategoryDetails = (
     enabled: !!id,
     endpoint: `/api/category/${id}`,
     params: { lat, lng, page },
-  });
-};
-
-// All Shops (Client)
-export const getAllShopsClient = (address: string, page: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-all-shop", address, page],
-    endpoint: `/api/shops`,
-    params: { address, page },
   });
 };
 
@@ -536,17 +460,6 @@ export const getNearbyProducts = (
     key: ["nearby-products", lat, lng, nearbyPage],
     endpoint: "/api/nearby-product",
     params: { lat, lng, page: nearbyPage },
-  });
-};
-
-// Shop Reviews
-export const getShopReviews = (id: any, page: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["shop-reviews", id, page],
-    enabled: !!id,
-    params: { page },
-    endpoint: `/api/shop-review/${id}`,
   });
 };
 

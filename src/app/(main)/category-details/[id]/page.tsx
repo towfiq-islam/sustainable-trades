@@ -1,11 +1,10 @@
 "use client";
 import {
   getCategoryDetails,
-  getMembershipSpotlightClient,
   getProductCategoriesClient,
 } from "@/Hooks/api/cms_api";
 import "swiper/css";
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
@@ -21,6 +20,7 @@ import MagicMarkers from "@/app/(main)/_Components/MagicMarkers";
 import Subscribe from "@/app/(main)/_Components/Subscribe";
 import useAuth from "@/Hooks/useAuth";
 import MemberSpotlight from "@/app/(main)/_Components/MemberSpotlight";
+import { useGetMembershipSpotlightQuery } from "@/redux/api/shopApi";
 
 type categoryItem = {
   id: number;
@@ -34,7 +34,7 @@ const page = ({ params }: any) => {
   const { latitude, longitude } = useAuth();
   const [page, setPage] = useState<string>("");
   const [categoryId, setCategoryId] = useState<number>(id);
-  const { data: spotlightData } = getMembershipSpotlightClient();
+  const { data: spotlightData } = useGetMembershipSpotlightQuery({});
   const { data: allCategory, isLoading: categoryLoading } =
     getProductCategoriesClient();
   const { data: categoryDetails, isLoading } = getCategoryDetails(

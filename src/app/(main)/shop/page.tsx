@@ -1,7 +1,6 @@
 "use client";
 import {
   getCategoryDetails,
-  getMembershipSpotlightClient,
   getNearbyProducts,
   getProductCategoriesClient,
 } from "@/Hooks/api/cms_api";
@@ -22,6 +21,7 @@ import { SingleShopSkeleton } from "@/Components/Loader/Loader";
 import MagicMarkers from "@/app/(main)/_Components/MagicMarkers";
 import Subscribe from "@/app/(main)/_Components/Subscribe";
 import MemberSpotlight from "../_Components/MemberSpotlight";
+import { useGetMembershipSpotlightQuery } from "@/redux/api/shopApi";
 
 type categoryItem = {
   id: number;
@@ -35,7 +35,7 @@ const page = () => {
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [page, setPage] = useState<string>("");
   const [nearbyPage, setNearbyPage] = useState<string>("");
-  const { data: spotlightData } = getMembershipSpotlightClient();
+  const { data: spotlightData } = useGetMembershipSpotlightQuery({});
   const { data: allCategory, isLoading: categoryLoading } =
     getProductCategoriesClient();
   const { data: categoryDetails, isLoading } = getCategoryDetails(

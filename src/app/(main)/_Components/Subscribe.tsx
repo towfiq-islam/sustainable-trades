@@ -1,13 +1,14 @@
 "use client";
 import toast from "react-hot-toast";
-import React, { useState } from "react";
+import { useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { useNewsletter } from "@/Hooks/api/cms_api";
 import Container from "@/Components/Common/Container";
+import { useSubscribeNewsletterMutation } from "@/redux/api/shopApi";
 
 const Subscribe = () => {
   const [email, setEmail] = useState<string>("");
-  const { mutate: newsletterMutation, isPending } = useNewsletter();
+  const [newsletterMutation, { isLoading: isPending }] =
+    useSubscribeNewsletterMutation();
 
   return (
     <section className="pb-10 md:pb-28">
@@ -35,7 +36,7 @@ const Subscribe = () => {
               if (!email) {
                 return toast.error("Please enter your email");
               } else {
-                newsletterMutation({ email });
+                newsletterMutation({ email }).unwrap();
               }
             }}
             className={`shrink-0 border-2 border-primary-green text-accent-white bg-primary-green font-semibold px-7 py-1.5 md:py-3 rounded-lg hover:scale-105 duration-300 transition-transform ${

@@ -19,7 +19,7 @@ export default function Page() {
   const { data: myFavorites, isLoading: isFavoriteLoading } =
     getAllFollowList();
   const { data: singleOrder, isLoading } = getMyOrderDetails(order_id);
-  const { data: products, isFetching: isShopLoading } =
+  const { data: products, isLoading: isShopLoading } =
     useGetAllProductsUnderShopQuery({
       id: shop_id,
     });

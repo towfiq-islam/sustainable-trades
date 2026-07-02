@@ -52,7 +52,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
   const { data: homeData, isLoading: homeDataLoading } = getDashboardHomeData();
   const { data: notificationsData, isLoading: notificationLoading } =
     useTodaysNotification();
-  const { data: latestProductsData, isFetching: latestProductsLoading } =
+  const { data: latestProductsData, isLoading: latestProductsLoading } =
     useGetLatestProductsQuery({});
 
   return (

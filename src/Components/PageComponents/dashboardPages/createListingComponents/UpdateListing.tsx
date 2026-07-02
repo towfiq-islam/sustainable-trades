@@ -117,7 +117,7 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
     user?.shop_info?.shipping_setting !== null &&
     user?.shop_info?.shipping_setting !== undefined;
 
-  const { data: listing, isFetching } = useGetSingleProductQuery(id, {
+  const { data: listing, isLoading } = useGetSingleProductQuery(id, {
     skip: !id,
   });
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
@@ -444,7 +444,6 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
   };
 
   // ── Delete ─────────────────────────────────────────────────────────────────
-
   const confirmDelete = () => {
     setShowDeleteModal(false);
 
@@ -460,8 +459,7 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
   };
 
   // ── Loading ────────────────────────────────────────────────────────────────
-
-  if (isFetching) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-full">
         <PuffLoader color="#274F45" />

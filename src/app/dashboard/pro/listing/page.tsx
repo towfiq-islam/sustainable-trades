@@ -27,7 +27,7 @@ type productItem = {
 
 export default function Page() {
   const [search, setSearch] = useState("");
-  const { data: allListings, isFetching } = useGetAllProductsQuery({});
+  const { data: allListings, isLoading } = useGetAllProductsQuery({});
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
   const [openMenu, setOpenMenu] = useState<number | null>(null);
@@ -116,7 +116,7 @@ export default function Page() {
           </thead>
 
           <tbody>
-            {isFetching
+            {isLoading
               ? Array.from({ length: 3 }).map((_, idx) => (
                   <ProductRowSkeleton key={idx} />
                 ))

@@ -19,7 +19,7 @@ interface ProductItem {
 const Page = () => {
   const [sortBy, setSortBy] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
-  const { data: productList, isFetching } = useGetAllProductsQuery({
+  const { data: productList, isLoading } = useGetAllProductsQuery({
     status: statusFilter,
     short_by: sortBy,
   });
@@ -77,7 +77,7 @@ const Page = () => {
       </div>
 
       {/* Product Grid */}
-      {isFetching ? (
+      {isLoading ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 xl:gap-6 mt-10">
           {Array.from({ length: 4 }).map((_, index) => (
             <ProductSkeleton key={index} />

@@ -45,7 +45,7 @@ const CreateDiscount = () => {
   // Mutation & Query
   const { mutate: createMutate, isPending: isCreating } = useCreateDiscount();
   const { mutate: updateMutate, isPending: isUpdating } = useDiscountUpdate(id);
-  const { data: discountData, isLoading: isFetching } = useDiscountGetById(id);
+  const { data: discountData, isLoading } = useDiscountGetById(id);
   const { data: productList } = useGetAllProductsQuery({});
 
   // States
@@ -240,7 +240,7 @@ const CreateDiscount = () => {
     }
   };
 
-  if (isFetching && isEditMode) {
+  if (isLoading && isEditMode) {
     return (
       <div className="h-[80vh] flex justify-center items-center">
         <PuffLoader color="#274f45" />

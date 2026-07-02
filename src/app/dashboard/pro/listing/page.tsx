@@ -4,8 +4,8 @@ import { FaSearch } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
 import Image, { StaticImageData } from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { getallListings } from "@/Hooks/api/dashboard_api";
 import { ProductRowSkeleton } from "@/Components/Loader/Loader";
+import { useGetAllProductsQuery } from "@/redux/api/productApi";
 
 type ImageItem = {
   image: string;
@@ -27,7 +27,7 @@ type productItem = {
 
 export default function Page() {
   const [search, setSearch] = useState("");
-  const { data: allListings, isLoading } = getallListings();
+  const { data: allListings, isFetching } = useGetAllProductsQuery({});
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
   const [openMenu, setOpenMenu] = useState<number | null>(null);
@@ -116,7 +116,7 @@ export default function Page() {
           </thead>
 
           <tbody>
-            {isLoading
+            {isFetching
               ? Array.from({ length: 3 }).map((_, idx) => (
                   <ProductRowSkeleton key={idx} />
                 ))

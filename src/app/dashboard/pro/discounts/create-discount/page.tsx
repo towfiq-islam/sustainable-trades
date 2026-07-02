@@ -1,10 +1,10 @@
 "use client";
 import {
-  getallListings,
   useCreateDiscount,
   useDiscountGetById,
   useDiscountUpdate,
 } from "@/Hooks/api/dashboard_api";
+import { useGetAllProductsQuery } from "@/redux/api/productApi";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaAngleLeft } from "react-icons/fa";
@@ -14,10 +14,6 @@ import { PuffLoader } from "react-spinners";
 interface Product {
   id: number;
   product_name: string;
-}
-
-interface ListingsResponse {
-  data: Product[];
 }
 
 interface DiscountData {
@@ -50,8 +46,7 @@ const CreateDiscount = () => {
   const { mutate: createMutate, isPending: isCreating } = useCreateDiscount();
   const { mutate: updateMutate, isPending: isUpdating } = useDiscountUpdate(id);
   const { data: discountData, isLoading: isFetching } = useDiscountGetById(id);
-  const { data: productlist }: { data: ListingsResponse | undefined } =
-    getallListings();
+  const { data: productList } = useGetAllProductsQuery({});
 
   // States
   const [name, setName] = useState("");
@@ -433,7 +428,7 @@ const CreateDiscount = () => {
               }`}
             >
               <option value="">Select a product</option>
-              {productlist?.data?.map(product => (
+              {productList?.data?.map((product: Product) => (
                 <option key={product.id} value={product.id}>
                   {product?.product_name}
                 </option>

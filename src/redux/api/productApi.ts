@@ -4,7 +4,13 @@ export const productApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
     // All Products
     getAllProducts: builder.query({
-      query: ({ status, short_by }: { status: string; short_by?: string }) => ({
+      query: ({
+        status,
+        short_by,
+      }: {
+        status?: string;
+        short_by?: string;
+      }) => ({
         url: "/api/products",
         params: {
           status,
@@ -69,6 +75,7 @@ export const productApi = apiSlice.injectEndpoints({
         body: data,
         formData: true,
       }),
+
       invalidatesTags: (_result, _error, { id }) => [
         { type: "product", id },
         "product",
@@ -84,15 +91,6 @@ export const productApi = apiSlice.injectEndpoints({
       invalidatesTags: ["product"],
     }),
 
-    // Request Approval
-    requestApproval: builder.mutation({
-      query: id => ({
-        url: `/api/product/request-approval/${id}`,
-        method: "GET",
-      }),
-      invalidatesTags: (_result, _error, id) => [{ type: "product", id }],
-    }),
-
     // Latest Products
     getLatestProducts: builder.query({
       query: () => "/api/latest-products",
@@ -102,24 +100,21 @@ export const productApi = apiSlice.injectEndpoints({
     // Product Image Delete
     deleteProductImage: builder.mutation({
       query: id => ({
-        url: `/image-delete/${id}`,
+        url: `/api/image-delete/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["product"],
     }),
   }),
-
-  overrideExisting: false,
 });
 
 export const {
   useGetAllProductsUnderShopQuery,
   useGetSingleProductQuery,
   useGetLatestProductsQuery,
-
+  useGetAllProductsQuery,
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
-  useRequestApprovalMutation,
   useDeleteProductImageMutation,
 } = productApi;

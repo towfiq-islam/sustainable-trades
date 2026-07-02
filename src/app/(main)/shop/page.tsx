@@ -1,11 +1,10 @@
 "use client";
 import {
   getCategoryDetails,
-  getNearbyProducts,
   getProductCategoriesClient,
 } from "@/Hooks/api/cms_api";
 import "swiper/css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import "swiper/css/navigation";
 import useAuth from "@/Hooks/useAuth";
@@ -22,6 +21,7 @@ import MagicMarkers from "@/app/(main)/_Components/MagicMarkers";
 import Subscribe from "@/app/(main)/_Components/Subscribe";
 import MemberSpotlight from "../_Components/MemberSpotlight";
 import { useGetMembershipSpotlightQuery } from "@/redux/api/shopApi";
+import { useGetNearbyProductsQuery } from "@/redux/api/productApi";
 
 type categoryItem = {
   id: number;
@@ -45,7 +45,11 @@ const page = () => {
     page,
   );
   const { data: nearbyProducts, isLoading: nearbyProductsLoading } =
-    getNearbyProducts(latitude, longitude, nearbyPage);
+    useGetNearbyProductsQuery({
+      lat: latitude,
+      lng: longitude,
+      page: nearbyPage,
+    });
 
   useEffect(() => {
     setCategoryId(allCategory?.data[0]?.id);

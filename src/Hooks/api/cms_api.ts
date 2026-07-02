@@ -171,15 +171,6 @@ export const getFAQ = () => {
   });
 };
 
-// Site Settings Client
-export const getSiteSettingsClient = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-site-settings"],
-    endpoint: "/api/site-settings",
-  });
-};
-
 // Product Categories Client
 export const getProductCategoriesClient = () => {
   return useClientApi({
@@ -195,26 +186,6 @@ export const getProductSubCategoriesClient = () => {
     method: "get",
     key: ["get-product-sub-category"],
     endpoint: "/api/sub-categories",
-  });
-};
-
-// Follow Shop
-export const useFollowShop = (shop_id: number) => {
-  const queryClient = useQueryClient();
-
-  return useClientApi({
-    method: "post",
-    key: ["follow-shop", shop_id],
-    endpoint: `/api/follow-shop/${shop_id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-shop-details" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
   });
 };
 
@@ -238,18 +209,39 @@ export const useAddFavorite = () => {
   });
 };
 
-// Product Details
-export const getProductDetails = (
-  id: number,
+// Category Details
+export const getCategoryDetails = (
+  id: number | null,
   lat: number | null,
   lng: number | null,
+  page: string,
 ) => {
   return useClientApi({
     method: "get",
-    key: ["get-product-details", id, lat, lng],
+    key: ["get-category-details", id, lat, lng, page],
     enabled: !!id,
-    params: { lat, lng },
-    endpoint: `/api/product-details/${id}`,
+    endpoint: `/api/category/${id}`,
+    params: { lat, lng, page },
+  });
+};
+
+// Follow Shop
+export const useFollowShop = (shop_id: number) => {
+  const queryClient = useQueryClient();
+
+  return useClientApi({
+    method: "post",
+    key: ["follow-shop", shop_id],
+    endpoint: `/api/follow-shop/${shop_id}`,
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        queryClient.invalidateQueries("get-shop-details" as any);
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
   });
 };
 
@@ -421,72 +413,6 @@ export const useTradeSendOffer = () => {
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },
-  });
-};
-
-// Category Details
-export const getCategoryDetails = (
-  id: number | null,
-  lat: number | null,
-  lng: number | null,
-  page: string,
-) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-category-details", id, lat, lng, page],
-    enabled: !!id,
-    endpoint: `/api/category/${id}`,
-    params: { lat, lng, page },
-  });
-};
-
-// Featured Products
-export const getFeaturedProducts = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-featured-products"],
-    endpoint: `/api/is-featured-product`,
-  });
-};
-
-// Nearby Products
-export const getNearbyProducts = (
-  lat: number | null,
-  lng: number | null,
-  nearbyPage: string,
-) => {
-  return useClientApi({
-    method: "get",
-    key: ["nearby-products", lat, lng, nearbyPage],
-    endpoint: "/api/nearby-product",
-    params: { lat, lng, page: nearbyPage },
-  });
-};
-
-// Product Reviews
-export const getProductReviews = (id: number, page: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["product-reviews", id, page],
-    enabled: !!id,
-    params: { page },
-    endpoint: `/api/product-review/${id}`,
-  });
-};
-
-// All Products
-export const getAllProducts = (
-  search: string,
-  lat: any,
-  lng: any,
-  page: string,
-) => {
-  return useClientApi({
-    method: "get",
-    key: ["all-products", search, lat, lng, page],
-    enabled: !!search,
-    endpoint: "/api/all-products",
-    params: { search, lat, lng, page },
   });
 };
 

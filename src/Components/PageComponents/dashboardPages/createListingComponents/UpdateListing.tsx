@@ -7,16 +7,14 @@ import { MdArrowOutward, MdDelete, MdInfo } from "react-icons/md";
 import Preview from "@/Assets/fallbackimage.png";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  getProductCategoriesClient,
-  getProductSubCategoriesClient,
-} from "@/Hooks/api/cms_api";
 import useAuth from "@/Hooks/useAuth";
 import { PuffLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import {
   useDeleteProductImageMutation,
   useDeleteProductMutation,
+  useGetProductCategoriesQuery,
+  useGetProductSubCategoriesQuery,
   useGetSingleProductQuery,
   useUpdateProductMutation,
 } from "@/redux/api/productApi";
@@ -124,9 +122,8 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
   const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
   const [deleteProductImage, { isLoading: isDeletingImage }] =
     useDeleteProductImageMutation();
-
-  const { data: categoriesData } = getProductCategoriesClient();
-  const { data: subcategoriesData } = getProductSubCategoriesClient();
+  const { data: categoriesData } = useGetProductCategoriesQuery({});
+  const { data: subcategoriesData } = useGetProductSubCategoriesQuery({});
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [imageFiles, setImageFiles] = useState<File[]>([]);

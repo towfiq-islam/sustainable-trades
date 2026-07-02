@@ -62,23 +62,6 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: formData,
       }),
-
-      // async onQueryStarted(_, { dispatch, queryFulfilled }) {
-      //   try {
-      //     const { data } = await queryFulfilled;
-
-      //     if (data?.success) {
-      //       dispatch(setAuthenticated());
-      //       toast.success(data.message);
-      //     }
-      //   } catch (error: any) {
-      //     toast.error(
-      //       error?.error?.data?.message ||
-      //         error?.data?.message ||
-      //         "Something went wrong",
-      //     );
-      //   }
-      // },
     }),
 
     deleteAccount: builder.mutation<ApiResponse<null>, void>({

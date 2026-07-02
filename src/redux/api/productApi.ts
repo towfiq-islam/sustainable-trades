@@ -2,8 +2,8 @@ import { apiSlice } from "@/redux/api/apiSlice";
 
 export const productApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    // All Products
-    getAllProducts: builder.query({
+    // Products
+    getProducts: builder.query({
       query: ({
         status,
         short_by,
@@ -15,6 +15,20 @@ export const productApi = apiSlice.injectEndpoints({
         params: {
           status,
           short_by,
+        },
+      }),
+      providesTags: ["product"],
+    }),
+
+    // All Products
+    getAllProducts: builder.query({
+      query: ({ search, lat, lng, page }) => ({
+        url: "/api/all-products",
+        params: {
+          search,
+          lat,
+          lng,
+          page,
         },
       }),
       providesTags: ["product"],
@@ -53,6 +67,15 @@ export const productApi = apiSlice.injectEndpoints({
     // Single Product
     getSingleProduct: builder.query({
       query: id => `/api/product/${id}`,
+      providesTags: (_result, _error, id) => [{ type: "product", id }],
+    }),
+
+    // Product Details
+    getProductDetails: builder.query({
+      query: ({ id, lat, lng }) => ({
+        url: `/api/product-details/${id}`,
+        params: { lat, lng },
+      }),
       providesTags: (_result, _error, id) => [{ type: "product", id }],
     }),
 
@@ -97,6 +120,30 @@ export const productApi = apiSlice.injectEndpoints({
       providesTags: ["product"],
     }),
 
+    // Nearby Products
+    getNearbyProducts: builder.query({
+      query: ({ lat, lng, page }) => ({
+        url: "/api/nearby-product",
+        params: {
+          lat,
+          lng,
+          page,
+        },
+      }),
+      providesTags: ["product"],
+    }),
+
+    // Product Reviews
+    getProductReviews: builder.query({
+      query: ({ id, page }) => ({
+        url: `/api/product-review/${id}`,
+        params: {
+          page,
+        },
+      }),
+      providesTags: (_result, _error, { id }) => [{ type: "product", id }],
+    }),
+
     // Product Image Delete
     deleteProductImage: builder.mutation({
       query: id => ({
@@ -105,6 +152,40 @@ export const productApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["product"],
     }),
+
+    // Category Details
+    getCategoryDetails: builder.query({
+      query: ({ id, lat, lng, page }) => ({
+        url: `/api/category/${id}`,
+        params: {
+          lat,
+          lng,
+          page,
+        },
+      }),
+      providesTags: (_result, _error, { id }) => [{ type: "category", id }],
+    }),
+
+    // Add Favorite
+    addFavorite: builder.mutation({
+      query: productId => ({
+        url: `/api/add-favorites/${productId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["product", "favorite"],
+    }),
+
+    // Product Categories
+    getProductCategories: builder.query({
+      query: () => "/api/categories",
+      providesTags: ["category"],
+    }),
+
+    // Product Sub Categories
+    getProductSubCategories: builder.query({
+      query: () => "/api/sub-categories",
+      providesTags: ["category"],
+    }),
   }),
 });
 
@@ -112,9 +193,18 @@ export const {
   useGetAllProductsUnderShopQuery,
   useGetSingleProductQuery,
   useGetLatestProductsQuery,
-  useGetAllProductsQuery,
+  useGetProductsQuery,
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
   useDeleteProductImageMutation,
+  useGetProductDetailsQuery,
+  useGetAllProductsQuery,
+  useGetNearbyProductsQuery,
+  useGetProductReviewsQuery,
+  
+  useGetProductCategoriesQuery,
+  useGetProductSubCategoriesQuery,
+  useGetCategoryDetailsQuery,
+  useAddFavoriteMutation,
 } = productApi;

@@ -5,11 +5,11 @@ import { useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { LuFileQuestion } from "react-icons/lu";
-import { getAllShopsClient } from "@/Hooks/api/cms_api";
 import Container from "@/Components/Common/Container";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
 import { ShopListSkeleton } from "@/Components/Loader/Loader";
 import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
+import { useGetAllShopsQuery } from "@/redux/api/shopApi";
 
 type Props = {
   address: string;
@@ -18,14 +18,13 @@ type Props = {
 const LocalMagicMarker = ({ address }: Props) => {
   // States
   const [searchShop, setSearchShop] = useState<string>(address);
-  const [page, setPage] = useState<string>("");
+  const [page, setPage] = useState<number | null>(null);
   const [hoveredShop, setHoveredShop] = useState<any>(null);
 
-  // Query
-  const { data: shopData, isLoading: shopLoading } = getAllShopsClient(
-    searchShop,
+  const { data: shopData, isFetching: shopLoading } = useGetAllShopsQuery({
+    address: searchShop,
     page,
-  );
+  });
 
   return (
     <section className="mt-10 mb-16">

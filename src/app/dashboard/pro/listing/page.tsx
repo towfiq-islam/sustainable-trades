@@ -5,7 +5,7 @@ import { FiMoreVertical } from "react-icons/fi";
 import Image, { StaticImageData } from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ProductRowSkeleton } from "@/Components/Loader/Loader";
-import { useGetAllProductsQuery } from "@/redux/api/productApi";
+import { useGetProductsQuery } from "@/redux/api/productApi";
 
 type ImageItem = {
   image: string;
@@ -27,7 +27,7 @@ type productItem = {
 
 export default function Page() {
   const [search, setSearch] = useState("");
-  const { data: allListings, isLoading } = useGetAllProductsQuery({});
+  const { data: allListings, isLoading } = useGetProductsQuery({});
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
   const [openMenu, setOpenMenu] = useState<number | null>(null);

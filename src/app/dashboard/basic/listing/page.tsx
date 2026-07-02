@@ -5,7 +5,7 @@ import { FiEdit2 } from "react-icons/fi";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
-import { useGetAllProductsQuery } from "@/redux/api/productApi";
+import { useGetProductsQuery } from "@/redux/api/productApi";
 const allStatus = ["pending", "confirmed", "shipped", "approved", "cancelled"];
 
 interface ProductItem {
@@ -19,7 +19,7 @@ interface ProductItem {
 const Page = () => {
   const [sortBy, setSortBy] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
-  const { data: productList, isLoading } = useGetAllProductsQuery({
+  const { data: productList, isLoading } = useGetProductsQuery({
     status: statusFilter,
     short_by: sortBy,
   });

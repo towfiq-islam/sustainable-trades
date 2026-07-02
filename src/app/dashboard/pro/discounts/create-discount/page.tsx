@@ -4,7 +4,7 @@ import {
   useDiscountGetById,
   useDiscountUpdate,
 } from "@/Hooks/api/dashboard_api";
-import { useGetAllProductsQuery } from "@/redux/api/productApi";
+import { useGetProductsQuery } from "@/redux/api/productApi";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaAngleLeft } from "react-icons/fa";
@@ -46,7 +46,7 @@ const CreateDiscount = () => {
   const { mutate: createMutate, isPending: isCreating } = useCreateDiscount();
   const { mutate: updateMutate, isPending: isUpdating } = useDiscountUpdate(id);
   const { data: discountData, isLoading } = useDiscountGetById(id);
-  const { data: productList } = useGetAllProductsQuery({});
+  const { data: productList } = useGetProductsQuery({});
 
   // States
   const [name, setName] = useState("");

@@ -14,11 +14,12 @@ import { CgSpinnerTwo } from "react-icons/cg";
 import Modal from "@/Components/Common/Modal";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { LuLoaderPinwheel } from "react-icons/lu";
-import { useAddFavorite, useAddToCart } from "@/Hooks/api/cms_api";
+import { useAddToCart } from "@/Hooks/api/cms_api";
 import TradeOfferModal from "@/Components/Modals/TradeOfferModal";
 import MessageToSellerModal from "@/Components/Modals/MessageToSellerModal";
 import Link from "next/link";
 import GuestModal from "@/Components/Modals/GuestModal";
+import { useAddFavoriteMutation } from "@/redux/api/productApi";
 
 type descriptionItem = {
   id: number;
@@ -68,7 +69,8 @@ const ProductDescription = ({ data }: descriptionProps) => {
   const [quantity, setQuantity] = useState<number>(1);
 
   // Mutations
-  const { mutate: addFavoriteMutation, isPending } = useAddFavorite();
+  const [addFavoriteMutation, { isLoading: isPending }] =
+    useAddFavoriteMutation();
 
   const { mutate: addToCartMutation, isPending: addCardPending } = useAddToCart(
     data?.id,
@@ -83,7 +85,14 @@ const ProductDescription = ({ data }: descriptionProps) => {
     if (!user) {
       return toast.error("Please login first to proceed");
     }
-    addFavoriteMutation({ endpoint: `/api/add-favorites/${product_id}` });
+    try {
+      const res: any = addFavoriteMutation(product_id).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   // Func for add to cart

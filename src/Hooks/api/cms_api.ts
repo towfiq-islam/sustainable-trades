@@ -135,16 +135,6 @@ export async function getSingleBlog(id: number) {
 //  CSR (Client Side Rendering)
 // =======================================================
 
-// Get Pricing Data
-export const getPricingData = (interval: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-pricing", interval],
-    endpoint: "/api/subscriptions",
-    params: { interval },
-  });
-};
-
 // NewsLetter
 export const useNewsletter = () => {
   return useClientApi({
@@ -159,16 +149,6 @@ export const useNewsletter = () => {
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },
-  });
-};
-
-// Featured Shops
-export const getFeaturedShops = (lat: number | null, lng: number | null) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-featured-shops", lat, lat],
-    endpoint: "/api/shops/featured",
-    params: { lat, lng },
   });
 };
 
@@ -191,52 +171,6 @@ export const getFAQ = () => {
   });
 };
 
-// Site Settings Client
-export const getSiteSettingsClient = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-site-settings"],
-    endpoint: "/api/site-settings",
-  });
-};
-
-// Product Categories Client
-export const getProductCategoriesClient = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-product-category"],
-    endpoint: "/api/categories",
-  });
-};
-
-// Product Sub Categories Client
-export const getProductSubCategoriesClient = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-product-sub-category"],
-    endpoint: "/api/sub-categories",
-  });
-};
-
-// Shop Details
-export const getShopDetails = (id: number) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-shop-details", id],
-    enabled: !!id,
-    endpoint: `/api/shop/${id}`,
-  });
-};
-
-// Featured Listings
-export const getFeaturedListings = (id: number) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-featured-listings", id],
-    enabled: !!id,
-    endpoint: `/api/shop/products/featured/${id}`,
-  });
-};
 
 // Follow Shop
 export const useFollowShop = (shop_id: number) => {
@@ -255,41 +189,6 @@ export const useFollowShop = (shop_id: number) => {
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },
-  });
-};
-
-// Add Favorite
-export const useAddFavorite = () => {
-  const queryClient = useQueryClient();
-
-  return useClientApi({
-    method: "post",
-    key: ["add-favorite"],
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-all-listings" as any);
-        queryClient.invalidateQueries("get-featured-listings" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Product Details
-export const getProductDetails = (
-  id: number,
-  lat: number | null,
-  lng: number | null,
-) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-product-details", id, lat, lng],
-    enabled: !!id,
-    params: { lat, lng },
-    endpoint: `/api/product-details/${id}`,
   });
 };
 
@@ -461,119 +360,6 @@ export const useTradeSendOffer = () => {
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },
-  });
-};
-
-// Spotlight Application
-export const useSpotlightApplication = () => {
-  return useClientApi({
-    method: "post",
-    key: ["spotlight-application"],
-    endpoint: "/api/spotlight-applications",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Membership Spotlight (Client)
-export const getMembershipSpotlightClient = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-membership-spotlight"],
-    endpoint: "/api/spotlight-applications",
-  });
-};
-
-// Category Details
-export const getCategoryDetails = (
-  id: number | null,
-  lat: number | null,
-  lng: number | null,
-  page: string,
-) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-category-details", id, lat, lng, page],
-    enabled: !!id,
-    endpoint: `/api/category/${id}`,
-    params: { lat, lng, page },
-  });
-};
-
-// All Shops (Client)
-export const getAllShopsClient = (address: string, page: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-all-shop", address, page],
-    endpoint: `/api/shops`,
-    params: { address, page },
-  });
-};
-
-// Featured Products
-export const getFeaturedProducts = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-featured-products"],
-    endpoint: `/api/is-featured-product`,
-  });
-};
-
-// Nearby Products
-export const getNearbyProducts = (
-  lat: number | null,
-  lng: number | null,
-  nearbyPage: string,
-) => {
-  return useClientApi({
-    method: "get",
-    key: ["nearby-products", lat, lng, nearbyPage],
-    endpoint: "/api/nearby-product",
-    params: { lat, lng, page: nearbyPage },
-  });
-};
-
-// Shop Reviews
-export const getShopReviews = (id: any, page: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["shop-reviews", id, page],
-    enabled: !!id,
-    params: { page },
-    endpoint: `/api/shop-review/${id}`,
-  });
-};
-
-// Product Reviews
-export const getProductReviews = (id: number, page: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["product-reviews", id, page],
-    enabled: !!id,
-    params: { page },
-    endpoint: `/api/product-review/${id}`,
-  });
-};
-
-// All Products
-export const getAllProducts = (
-  search: string,
-  lat: any,
-  lng: any,
-  page: string,
-) => {
-  return useClientApi({
-    method: "get",
-    key: ["all-products", search, lat, lng, page],
-    enabled: !!search,
-    endpoint: "/api/all-products",
-    params: { search, lat, lng, page },
   });
 };
 

@@ -4,29 +4,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuth from "@/Hooks/useAuth";
 import { api } from "@/lib/api";
 
-// Get All Spotlight
-export const getmemberShipspotlight = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-membership-spotlight"],
-    endpoint: "/api/spotlight-applications",
-  });
-};
-
 // Get All FollowLists
 export const getAllFollowList = () => {
   return useClientApi({
     method: "get",
     key: ["get-all-followlist"],
     endpoint: "/api/my-favorites",
-  });
-};
-// Get All FollowLists
-export const getAllShoplist = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-all-shoplist"],
-    endpoint: "/api/follow-shops",
   });
 };
 
@@ -253,16 +236,6 @@ export const useDiscountGetById = (id?: string) => {
   });
 };
 
-// Hook for get membership
-export const useMembershipget = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-membership"],
-
-    endpoint: "/api/subscriptions",
-  });
-};
-
 // Hook for updating a discount
 export const useDiscountUpdate = (id?: string) => {
   return useClientApi({
@@ -403,26 +376,6 @@ export const getOrderHistory = (order_id: number | null) => {
 
     key: ["get-order-history", order_id],
     endpoint: `/api/my-order/${order_id}/history`,
-  });
-};
-
-// Cancel Membership
-export const useCancelMembership = () => {
-  const queryClient = useQueryClient();
-  return useClientApi({
-    method: "post",
-    key: ["cancel-membership"],
-
-    endpoint: "/api/paypal/cancel-membership",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-pricing" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
   });
 };
 

@@ -4,10 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { MdInfo } from "react-icons/md";
-import {
-  getProductCategoriesClient,
-  getProductSubCategoriesClient,
-} from "@/Hooks/api/cms_api";
 import useAuth from "@/Hooks/useAuth";
 import Header from "@/Components/PageComponents/dashboardPages/createListingComponents/Header";
 import ImageUpload from "@/Components/PageComponents/dashboardPages/createListingComponents/ImageUpload";
@@ -17,7 +13,11 @@ import PriceSection from "@/Components/PageComponents/dashboardPages/createListi
 import CategorySection from "@/Components/PageComponents/dashboardPages/createListingComponents/CategorySection";
 import MetaTags from "@/Components/PageComponents/dashboardPages/createListingComponents/MetaTags";
 import DimensionsSection from "./DimensionsSection";
-import { useAddProductMutation } from "@/redux/api/productApi";
+import {
+  useAddProductMutation,
+  useGetProductCategoriesQuery,
+  useGetProductSubCategoriesQuery,
+} from "@/redux/api/productApi";
 
 export type FormData = {
   shop_info_id: string | number;
@@ -113,8 +113,8 @@ const CreateListing = ({
   const [video, setVideo] = useState<File | null>(null);
   const [metaTags, setMetaTags] = useState<string[]>([]);
   const [addProduct, { isLoading }] = useAddProductMutation();
-  const { data: categoriess } = getProductCategoriesClient();
-  const { data: subcategoriess } = getProductSubCategoriesClient();
+  const { data: categoriess } = useGetProductCategoriesQuery({});
+  const { data: subcategoriess } = useGetProductSubCategoriesQuery({});
 
   const {
     control,

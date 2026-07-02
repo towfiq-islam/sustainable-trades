@@ -1,14 +1,14 @@
 "use client";
+import moment from "moment";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import DetailsImage from "../../../Assets/e1.jpg";
 import { useParams, useRouter } from "next/navigation";
 import TradeDetaillsBottom from "./TradeDetaillsBottom";
 import { FaAngleDown, FaRegStar } from "react-icons/fa6";
 import { LocationSvg1, Reload } from "@/Components/Svg/SvgContainer";
 import { useSingleTradeOffer } from "@/Hooks/api/dashboard_api";
-import moment from "moment";
-import { getShopDetails } from "@/Hooks/api/cms_api";
+import { useGetShopDetailsQuery } from "@/redux/api/shopApi";
 
 const TradeDetailsReusable = () => {
   const params = useParams();
@@ -44,7 +44,7 @@ const TradeDetailsReusable = () => {
   const senderUserId = tradeSingleData?.data?.sender?.shop_info?.user_id;
 
   const { data: tradeSenderShopData, isLoading: shopLoading } =
-    getShopDetails(senderUserId);
+    useGetShopDetailsQuery(senderUserId);
 
   const tradeSenderProduct = tradeSingleData?.data?.items?.find(
     (item: any) => item?.product?.shop?.user_id === +senderUserId,

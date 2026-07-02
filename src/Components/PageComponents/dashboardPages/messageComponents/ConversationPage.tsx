@@ -3,20 +3,22 @@ import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 import echo from "@/lib/echo";
-import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { ImSpinner9 } from "react-icons/im";
 import { useRouter } from "next/navigation";
 import { PuffLoader } from "react-spinners";
-import { useQueryClient } from "@tanstack/react-query";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
 import { useEffect, useRef, useState } from "react";
-import { getSingleConversation, useSendMessage } from "@/Hooks/api/chat_api";
 import { FiPaperclip, FiSmile, FiSend } from "react-icons/fi";
 import EmojiPicker from "emoji-picker-react";
+import {
+  chatApi,
+  useGetSingleConversationQuery,
+  useSendMessageMutation,
+} from "@/redux/api/chatApi";
+import { useAppDispatch } from "@/redux/store";
 
 // ---- Types ----
-
 type Attachment = {
   id: number;
   file_name: string;
@@ -155,7 +157,7 @@ const ConversationPage = ({
 }: ConversationPageProps) => {
   const { user } = useAuth();
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const onEmojiClick = (emojiData: any) => {
     setMessage(prev => prev + emojiData.emoji);
@@ -194,9 +196,19 @@ const ConversationPage = ({
   const [message, setMessage] = useState("");
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const { mutate: sendMessageMutation, isPending } = useSendMessage();
+  const [sendMessageMutation, { isLoading: isPending }] =
+    useSendMessageMutation();
+
   const { data: singleConversation, isLoading: chatLoading } =
-    getSingleConversation(conversationId, type);
+    useGetSingleConversationQuery(
+      {
+        id: conversationId,
+        type,
+      },
+      {
+        skip: !conversationId,
+      },
+    );
 
   useEffect(() => {
     return () => {
@@ -230,14 +242,14 @@ const ConversationPage = ({
     const channel = echo.private(channelName);
     channel
       .listen("MessageSentEvent", (e: any) => {
-        console.log("New message event received:", e);
         if (e?.data?.receiver_id === +user.id) {
           setChats(prev => {
             const exists = prev.some(msg => msg.id === e.data.id);
             return exists ? prev : [...prev, e.data];
           });
         }
-        queryClient.invalidateQueries(["get-all-conversation"] as any);
+        // queryClient.invalidateQueries(["get-all-conversation"] as any);
+        dispatch(chatApi.util.invalidateTags(["conversation"]));
       })
       .error((error: any) => {
         console.error("Channel subscription error:", error);
@@ -291,8 +303,9 @@ const ConversationPage = ({
       formData.append("file[]", file);
     });
 
-    sendMessageMutation(formData, {
-      onSuccess: (res: any) => {
+    sendMessageMutation(formData)
+      .unwrap()
+      .then(res => {
         setSelectedFiles([]);
 
         setChats(prev =>
@@ -302,15 +315,14 @@ const ConversationPage = ({
               : msg,
           ),
         );
-      },
-      onError: () => {
+      })
+      .catch(() => {
         setChats(prev =>
           prev.map(msg =>
             msg.id === tempId ? { ...msg, status: "failed" } : msg,
           ),
         );
-      },
-    });
+      });
   };
 
   const participant =

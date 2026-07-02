@@ -1,10 +1,6 @@
 "use client";
 import "swiper/css";
 import "swiper/css/navigation";
-import {
-  getCategoryDetails,
-  getProductCategoriesClient,
-} from "@/Hooks/api/cms_api";
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
 import { Navigation } from "swiper/modules";
@@ -23,6 +19,10 @@ import {
 import { AiOutlineFileUnknown } from "react-icons/ai";
 import MemberSpotlight from "../../_Components/MemberSpotlight";
 import { useGetMembershipSpotlightQuery } from "@/redux/api/shopApi";
+import {
+  useGetCategoryDetailsQuery,
+  useGetProductCategoriesQuery,
+} from "@/redux/api/productApi";
 
 type categoryItem = {
   id: number;
@@ -47,13 +47,13 @@ const page = ({ params }: Props) => {
   // Queries
   const { data: spotlightData } = useGetMembershipSpotlightQuery({});
   const { data: allCategory, isLoading: categoryLoading } =
-    getProductCategoriesClient();
-  const { data: categoryDetails, isLoading } = getCategoryDetails(
-    categoryId,
-    latitude,
-    longitude,
+    useGetProductCategoriesQuery({});
+  const { data: categoryDetails, isLoading } = useGetCategoryDetailsQuery({
+    id: categoryId,
+    lat: latitude,
+    lng: longitude,
     page,
-  );
+  });
 
   useEffect(() => {
     setCategoryId(allCategory?.data[0]?.id);

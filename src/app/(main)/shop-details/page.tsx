@@ -6,10 +6,6 @@ import {
   ShopFAQSkeleton,
   ShopPoliciesSkeleton,
 } from "@/Components/Loader/Loader";
-import {
-  getProductCategoriesClient,
-  getProductSubCategoriesClient,
-} from "@/Hooks/api/cms_api";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ShopFAQ from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopFAQ";
@@ -20,7 +16,11 @@ import ShopListing from "@/Components/PageComponents/mainPages/shopDetailsCompon
 import ShopReviews from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopReviews";
 import DetailsTab from "@/Components/PageComponents/mainPages/shopDetailsComponents/DetailsTab";
 import EditShopBanner from "@/Components/PageComponents/mainPages/shopDetailsComponents/EditShopBanner";
-import { useGetAllProductsUnderShopQuery } from "@/redux/api/productApi";
+import {
+  useGetAllProductsUnderShopQuery,
+  useGetProductCategoriesQuery,
+  useGetProductSubCategoriesQuery,
+} from "@/redux/api/productApi";
 import {
   useGetFeaturedListingsQuery,
   useGetShopDetailsQuery,
@@ -42,11 +42,11 @@ const page = () => {
   const [page, setPage] = useState<string>("");
   const [reviewPage, setReviewPage] = useState<string>("");
 
-  // Queries
   const { data: productCategories, isLoading: categoryLoading } =
-    getProductCategoriesClient();
+    useGetProductCategoriesQuery({});
   const { data: productSubCategories, isLoading: subCategoryLoading } =
-    getProductSubCategoriesClient();
+    useGetProductSubCategoriesQuery({});
+
   const { data: shopDetailsData, isLoading: shopDetailLoading } =
     useGetShopDetailsQuery(id);
   const { data: featuredListings, isLoading: featuredLoading } =

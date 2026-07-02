@@ -171,59 +171,6 @@ export const getFAQ = () => {
   });
 };
 
-// Product Categories Client
-export const getProductCategoriesClient = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-product-category"],
-    endpoint: "/api/categories",
-  });
-};
-
-// Product Sub Categories Client
-export const getProductSubCategoriesClient = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-product-sub-category"],
-    endpoint: "/api/sub-categories",
-  });
-};
-
-// Add Favorite
-export const useAddFavorite = () => {
-  const queryClient = useQueryClient();
-
-  return useClientApi({
-    method: "post",
-    key: ["add-favorite"],
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-all-listings" as any);
-        queryClient.invalidateQueries("get-featured-listings" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Category Details
-export const getCategoryDetails = (
-  id: number | null,
-  lat: number | null,
-  lng: number | null,
-  page: string,
-) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-category-details", id, lat, lng, page],
-    enabled: !!id,
-    endpoint: `/api/category/${id}`,
-    params: { lat, lng, page },
-  });
-};
 
 // Follow Shop
 export const useFollowShop = (shop_id: number) => {

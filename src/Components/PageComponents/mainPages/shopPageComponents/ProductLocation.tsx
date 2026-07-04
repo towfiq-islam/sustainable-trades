@@ -4,12 +4,12 @@ import Image from "next/image";
 import { useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { LuFileQuestion } from "react-icons/lu";
-import { getAllProducts } from "@/Hooks/api/cms_api";
 import Container from "@/Components/Common/Container";
 import { ShopListSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
 import ProductMap from "./ProductMap";
 import { DollarSvg, SignSvg } from "@/Components/Svg/SvgContainer";
+import { useGetAllProductsQuery } from "@/redux/api/productApi";
 
 const ProductLocation = () => {
   // Hook
@@ -20,12 +20,8 @@ const ProductLocation = () => {
   const [hoveredProduct, setHoveredProduct] = useState<any>(null);
 
   // Query
-  const { data: allProducts, isLoading: productLoading } = getAllProducts(
-    search,
-    latitude,
-    longitude,
-    page,
-  );
+  const { data: allProducts, isLoading: productLoading } =
+    useGetAllProductsQuery({ search, latitude, longitude, page });
 
   return (
     <section className="mt-10 mb-16">

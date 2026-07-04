@@ -5,11 +5,13 @@ import { useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useRouter } from "next/navigation";
 import Modal from "@/Components/Common/Modal";
-import { getPricingData } from "@/Hooks/api/cms_api";
 import Container from "@/Components/Common/Container";
 import { PricingSkeletonCard } from "@/Components/Loader/Loader";
 import SubscriptionPaypalModal from "@/Components/Modals/SubscriptionPaypalModal";
-import { useCancelMembership } from "@/Hooks/api/dashboard_api";
+import {
+  useCancelMembershipMutation,
+  useGetMembershipsQuery,
+} from "@/redux/api/shopApi";
 
 type benefitItem = {
   id: string;
@@ -53,8 +55,11 @@ const Pricing = ({
   const [interval, setInterval] = useState<string>("");
 
   // Queries & Mutations
-  const { mutate: cancelMembership, isPending } = useCancelMembership();
-  const { data: pricingData, isLoading } = getPricingData(activeTab);
+  const [cancelMembership, { isLoading: isPending }] =
+    useCancelMembershipMutation();
+  const { data: pricingData, isLoading } = useGetMembershipsQuery({
+    interval: activeTab,
+  });
 
   return (
     <section id="membership_plan" className="py-8 md:py-20">
@@ -253,7 +258,7 @@ const Pricing = ({
             <div className="flex justify-end gap-4">
               <button
                 disabled={isPending}
-                onClick={() => cancelMembership()}
+                onClick={() => cancelMembership({}).unwrap()}
                 className={`px-6 py-2 bg-primary-red rounded-lg shadow hover:bg-primary-red text-white font-semibold text-[16px] ${
                   isPending ? "cursor-not-allowed" : "cursor-pointer"
                 }`}

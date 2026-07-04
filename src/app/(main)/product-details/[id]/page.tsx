@@ -3,7 +3,6 @@ import Link from "next/link";
 import { use, useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Container from "@/Components/Common/Container";
-import { getProductDetails, getProductReviews } from "@/Hooks/api/cms_api";
 import { ProductDetailsSkeleton } from "@/Components/Loader/Loader";
 import ProductGallery from "@/Components/PageComponents/mainPages/productDetailsComponents/ProductGallery";
 import ProductReviews from "@/Components/PageComponents/mainPages/productDetailsComponents/ProductReviews";
@@ -12,28 +11,28 @@ import Subscribe from "@/app/(main)/_Components/Subscribe";
 import ShopInfo from "@/Components/PageComponents/mainPages/productDetailsComponents/ShopInfo";
 import ProductDescription from "@/Components/PageComponents/mainPages/productDetailsComponents/ProductDescription";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import useAuth from "@/Hooks/useAuth";
+import {
+  useGetProductDetailsQuery,
+  useGetProductReviewsQuery,
+} from "@/redux/api/productApi";
 
-interface Props {
-  params: Promise<{ id: number }>;
-}
-
-const page = ({ params }: Props) => {
+const page = () => {
   const { latitude, longitude } = useAuth();
   const router = useRouter();
   const [page, setPage] = useState<string>("");
-  const { id } = use(params);
-  const { data: productDetailsData, isLoading } = getProductDetails(
-    id,
-    latitude,
-    longitude,
-  );
+  const params = useParams();
+  const id = Number(params.id);
 
-  const { data: productReviews, isLoading: reviewLoading } = getProductReviews(
+  const { data: productDetailsData, isLoading } = useGetProductDetailsQuery({
     id,
-    page,
-  );
+    lat: latitude,
+    lng: longitude,
+  });
+
+  const { data: productReviews, isLoading: reviewLoading } =
+    useGetProductReviewsQuery({ id, page });
 
   if (isLoading) {
     return <ProductDetailsSkeleton />;

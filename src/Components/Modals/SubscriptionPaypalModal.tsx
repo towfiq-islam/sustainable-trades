@@ -1,5 +1,4 @@
 "use client";
-import { getItem } from "@/lib/localStorage";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import toast from "react-hot-toast";
 
@@ -10,7 +9,6 @@ const SubscriptionPaypalModal = ({
   planId: number;
   interval: string;
 }) => {
-  const token = getItem("token");
   const initialOptions = {
     "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
     currency: "USD",
@@ -49,12 +47,12 @@ const SubscriptionPaypalModal = ({
                 `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/create-subscription`,
                 {
                   method: "POST",
+                  credentials: "include",
                   headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
                   },
                   body: JSON.stringify({ plan_id: planId }),
-                }
+                },
               );
 
               const orderData = await response.json();
@@ -72,15 +70,15 @@ const SubscriptionPaypalModal = ({
                 `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture-subscription`,
                 {
                   method: "POST",
+                  credentials: "include",
                   headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
                   },
                   body: JSON.stringify({
                     plan_id: planId,
                     subscriptionID: data?.subscriptionID,
                   }),
-                }
+                },
               );
 
               const orderData = await response.json();

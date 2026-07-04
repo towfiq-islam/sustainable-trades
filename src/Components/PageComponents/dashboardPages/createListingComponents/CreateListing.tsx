@@ -4,11 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { MdInfo } from "react-icons/md";
-import {
-  getProductCategoriesClient,
-  getProductSubCategoriesClient,
-} from "@/Hooks/api/cms_api";
-import { useAddProduct } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import Header from "@/Components/PageComponents/dashboardPages/createListingComponents/Header";
 import ImageUpload from "@/Components/PageComponents/dashboardPages/createListingComponents/ImageUpload";
@@ -18,6 +13,11 @@ import PriceSection from "@/Components/PageComponents/dashboardPages/createListi
 import CategorySection from "@/Components/PageComponents/dashboardPages/createListingComponents/CategorySection";
 import MetaTags from "@/Components/PageComponents/dashboardPages/createListingComponents/MetaTags";
 import DimensionsSection from "./DimensionsSection";
+import {
+  useAddProductMutation,
+  useGetProductCategoriesQuery,
+  useGetProductSubCategoriesQuery,
+} from "@/redux/api/productApi";
 
 export type FormData = {
   shop_info_id: string | number;
@@ -112,9 +112,9 @@ const CreateListing = ({
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [video, setVideo] = useState<File | null>(null);
   const [metaTags, setMetaTags] = useState<string[]>([]);
-  const { mutate: addProduct, isPending } = useAddProduct();
-  const { data: categoriess } = getProductCategoriesClient();
-  const { data: subcategoriess } = getProductSubCategoriesClient();
+  const [addProduct, { isLoading }] = useAddProductMutation();
+  const { data: categoriess } = useGetProductCategoriesQuery({});
+  const { data: subcategoriess } = useGetProductSubCategoriesQuery({});
 
   const {
     control,
@@ -137,7 +137,7 @@ const CreateListing = ({
   });
 
   // ── submit ────────────────────────────────────────────────────────────────
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     const fd = new FormData();
 
     if (user?.shop_info?.id)
@@ -168,18 +168,21 @@ const CreateListing = ({
     fd.append("dimension_unit", data.dimension_unit);
     fd.append("weight_unit", "lb");
 
-    addProduct(fd, {
-      onSuccess: (res: any) => {
+    try {
+      const res = await addProduct(fd).unwrap();
+
+      if (res?.success) {
+        toast.success(res?.message);
         reset(EMPTY_FORM);
         setImageFiles([]);
         setPreviewImages([]);
         setVideo(null);
         setMetaTags([]);
-        if (res?.success) {
-          router.push(config.successRedirect);
-        }
-      },
-    });
+        router.push(config.successRedirect);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   // ── auto-tags from category / subcategory selection ───────────────────────
@@ -455,15 +458,15 @@ const CreateListing = ({
         <div className="flex justify-end mt-5 md:mt-10 items-center">
           <button
             type="submit"
-            disabled={isPending}
+            disabled={isLoading}
             className={`bg-accent-red duration-500 ease-in-out text-white py-2.5 md:py-5 px-6 md:px-12 flex items-center justify-center gap-2 cursor-pointer rounded-lg font-semibold hover:bg-[#a34739] mt-6 ${
-              isPending ? "opacity-50 cursor-not-allowed" : ""
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {isPending && (
+            {isLoading && (
               <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
             )}
-            {isPending ? "Request Approval..." : "Request Approval"}
+            {isLoading ? "Request Approval..." : "Request Approval"}
           </button>
         </div>
       </form>

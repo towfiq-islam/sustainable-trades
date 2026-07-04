@@ -6,16 +6,16 @@ import { PuffLoader } from "react-spinners";
 
 const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const { user, token, loading } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
 
   useEffect(() => {
     if (
-      (!loading && !token && !user) ||
+      (!loading && !isAuthenticated && !user) ||
       (user?.role === "vendor" && !user?.membership)
     ) {
       router.push("/auth/login");
     }
-  }, [loading, token, user, router]);
+  }, [loading, isAuthenticated, user, router]);
 
   if (loading) {
     return (
@@ -25,7 +25,7 @@ const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  if (token || user) {
+  if (isAuthenticated || user) {
     return <>{children}</>;
   }
 

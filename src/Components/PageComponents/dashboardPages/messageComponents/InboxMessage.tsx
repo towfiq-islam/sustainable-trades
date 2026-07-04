@@ -5,10 +5,10 @@ import echo from "@/lib/echo";
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
 import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { getAllConversation } from "@/Hooks/api/chat_api";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { ConversationCardSkeleton } from "@/Components/Loader/Loader";
+import { chatApi, useGetAllConversationQuery } from "@/redux/api/chatApi";
+import { useAppDispatch } from "@/redux/store";
 
 type Props = {
   search: string;
@@ -38,8 +38,8 @@ type conversationItem = {
 
 const InboxMessage = ({ search, activeTab }: Props) => {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
-  const { data: allConversation, isLoading } = getAllConversation({
+  const dispatch = useAppDispatch();
+  const { data: allConversation, isLoading } = useGetAllConversationQuery({
     name: search,
     sent: activeTab === "sent" ? "sent" : "",
     unread: activeTab === "unread" ? "unread" : "",
@@ -54,7 +54,7 @@ const InboxMessage = ({ search, activeTab }: Props) => {
       .listen("ConversationEvent", (e: any) => {
         console.log("🔔 New message event received:", e);
         if (+e?.receiverId === +user?.id) {
-          queryClient.invalidateQueries(["get-all-conversation"] as any);
+          dispatch(chatApi.util.invalidateTags(["conversation"]));
         }
       });
   }, [echo, user?.id]);

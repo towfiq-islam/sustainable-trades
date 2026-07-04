@@ -1,0 +1,40 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to VPS using password
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+           set -e
+           
+           export NVM_DIR="$HOME/.nvm"
+           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+           nvm use 24 || nvm install 24
+
+           cd ${{ secrets.VPS_PATH }}
+           git fetch origin
+           git reset --hard origin/main
+
+           npm install
+           NODE_ENV=production npm run build
+
+           PM2_PATH=/home/sustainabletrades/.nvm/versions/node/v22.22.3/bin/pm2
+                        
+           $PM2_PATH reload sustainable-trades
+           $PM2_PATH save
+           

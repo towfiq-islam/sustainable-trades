@@ -1,26 +1,23 @@
 "use client";
-import React, { useRef, useState, useEffect, use } from "react";
-import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
+import React, { useRef, useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { FaAngleRight, FaPlay, FaPlus } from "react-icons/fa";
 import { MdArrowOutward, MdDelete, MdInfo } from "react-icons/md";
 import Preview from "@/Assets/fallbackimage.png";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  useDeleteProduct,
-  useGetSingleListing,
-  useupdateProduct,
-} from "@/Hooks/api/dashboard_api";
-import {
-  getProductCategoriesClient,
-  getProductSubCategoriesClient,
-} from "@/Hooks/api/cms_api";
 import useAuth from "@/Hooks/useAuth";
 import { PuffLoader } from "react-spinners";
 import toast from "react-hot-toast";
-import useClientApi from "@/Hooks/useClientApi";
+import {
+  useDeleteProductImageMutation,
+  useDeleteProductMutation,
+  useGetProductCategoriesQuery,
+  useGetProductSubCategoriesQuery,
+  useGetSingleProductQuery,
+  useUpdateProductMutation,
+} from "@/redux/api/productApi";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -47,21 +44,6 @@ interface ProductData {
   is_featured: boolean;
   images: Array<{ id: number; product_id: number; image: string }>;
   meta_tags: Array<{ id: number; product_id: number; tag: string }>;
-}
-
-interface UpdateProductResponse {
-  success: boolean;
-  message: string;
-  code: number;
-  data: ProductData;
-}
-
-interface UpdateProductError {
-  response?: { data?: { message: string } };
-}
-
-interface DeleteProductError {
-  response?: { data?: { message: string } };
 }
 
 interface KeptImage {
@@ -119,12 +101,12 @@ interface UpdateListingProps {
 
 // ── Component ──────────────────────────────────────────────────────────────────
 
-const UpdateListing = ({ variant, params }: UpdateListingProps) => {
+const UpdateListing = ({ variant }: UpdateListingProps) => {
   const config = VARIANT_CONFIG[variant];
-  const { id } = use(params);
+  const params = useParams();
+  const id = Number(params?.id);
   const { user } = useAuth();
   const router = useRouter();
-  const queryClient = useQueryClient();
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const proOnly = config.proFeaturesEnabled;
 
@@ -133,11 +115,15 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
     user?.shop_info?.shipping_setting !== null &&
     user?.shop_info?.shipping_setting !== undefined;
 
-  const { data: listing, isLoading } = useGetSingleListing(id);
-  const updateProduct = useupdateProduct(id);
-  const deleteProduct = useDeleteProduct(id);
-  const { data: categoriesData } = getProductCategoriesClient();
-  const { data: subcategoriesData } = getProductSubCategoriesClient();
+  const { data: listing, isLoading } = useGetSingleProductQuery(id, {
+    skip: !id,
+  });
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
+  const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
+  const [deleteProductImage, { isLoading: isDeletingImage }] =
+    useDeleteProductImageMutation();
+  const { data: categoriesData } = useGetProductCategoriesQuery({});
+  const { data: subcategoriesData } = useGetProductSubCategoriesQuery({});
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -192,20 +178,6 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
   const fulfillment = watch("fulfillment");
   const categories = categoriesData?.data ?? [];
   const subcategories = subcategoriesData?.data ?? [];
-
-  // ── Image delete mutation ──────────────────────────────────────────────────
-  const deleteImageMutation = useClientApi({
-    method: "delete",
-    isPrivate: true,
-    key: ["image-delete"],
-    endpoint: "/api/image-delete",
-    onSuccess: (data: any) => {
-      if (data?.success) toast.success(data?.message || "Image deleted");
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to delete image");
-    },
-  });
 
   const hydrate = (productData: ProductData) => {
     reset({
@@ -342,32 +314,32 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
     if (!img) return;
     setDeletingIds(prev => new Set([...prev, img.id]));
 
-    deleteImageMutation.mutate(
-      { endpoint: `/api/image-delete/${img.id}` },
-      {
-        onSuccess: () => {
-          const updatedKept = keptImages.filter(i => i.id !== img.id);
-          setKeptImages(updatedKept);
-          setKeptImagePaths(updatedKept.map(i => i.fullPath));
-          const updated = allImages.filter(u => u !== imageUrl);
-          setAllImages(updated);
-          if (mainImage === imageUrl) setMainImage(updated[0] || null);
-          queryClient.invalidateQueries({ queryKey: ["singleListing", id] });
-          setDeletingIds(prev => {
-            const s = new Set(prev);
-            s.delete(img.id);
-            return s;
-          });
-        },
-        onError: () => {
-          setDeletingIds(prev => {
-            const s = new Set(prev);
-            s.delete(img.id);
-            return s;
-          });
-        },
-      },
-    );
+    try {
+      const res: any = deleteProductImage(img?.id).unwrap();
+
+      if (res?.success) {
+        toast.success(res?.message);
+        const updatedKept = keptImages.filter(i => i.id !== img.id);
+        setKeptImages(updatedKept);
+        setKeptImagePaths(updatedKept.map(i => i.fullPath));
+        const updated = allImages.filter(u => u !== imageUrl);
+        setAllImages(updated);
+        if (mainImage === imageUrl) setMainImage(updated[0] || null);
+
+        setDeletingIds(prev => {
+          const s = new Set(prev);
+          s.delete(img.id);
+          return s;
+        });
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+      setDeletingIds(prev => {
+        const s = new Set(prev);
+        s.delete(img.id);
+        return s;
+      });
+    }
   };
 
   // ── Video handlers ─────────────────────────────────────────────────────────
@@ -420,7 +392,7 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
 
   // ── Submit ─────────────────────────────────────────────────────────────────
 
-  const onSubmit = (data: UpdateFormData) => {
+  const onSubmit = async (data: UpdateFormData) => {
     if (keptImages.length === 0 && imageFiles.length === 0) {
       if (!confirm("This will remove all images. Continue?")) return;
     }
@@ -455,28 +427,35 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
     if (videoFile) fd.append("video", videoFile);
     else if (hasExistingVideo) fd.append("video", "");
 
-    updateProduct.mutate(fd, {
-      onSuccess: (res: UpdateProductResponse) => {
+    try {
+      const res = await updateProduct({ id, data: fd }).unwrap();
+
+      if (res?.success) {
+        toast.success(res?.message);
         hydrate(res.data);
         router.push(config.successRedirect);
-      },
-      onError: (error: UpdateProductError) =>
-        console.error("Update failed:", error),
-    });
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   // ── Delete ─────────────────────────────────────────────────────────────────
-
   const confirmDelete = () => {
     setShowDeleteModal(false);
-    deleteProduct.mutate(null, {
-      onSuccess: () => router.push(config.listingHref),
-      onError: (e: DeleteProductError) => console.error("Delete failed:", e),
-    });
+
+    deleteProduct(id)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+        router.push(config.listingHref);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message || "Failed to delete product");
+      });
   };
 
   // ── Loading ────────────────────────────────────────────────────────────────
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-full">
@@ -583,13 +562,13 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
                       />
                       <button
                         type="button"
+                        disabled={isDeletingImage}
                         onClick={() =>
-                          !isDeleting && handleRemoveImage(src, isNew)
+                          !isDeletingImage && handleRemoveImage(src, isNew)
                         }
-                        disabled={isDeleting}
-                        className={`absolute top-0 right-0 bg-primary-red text-white cursor-pointer rounded-full w-5 h-5 flex items-center justify-center text-xs ${isDeleting ? "cursor-not-allowed opacity-50" : ""}`}
+                        className={`absolute top-0 right-0 bg-primary-red text-white cursor-pointer rounded-full w-5 h-5 flex items-center justify-center text-xs ${isDeletingImage ? "cursor-not-allowed opacity-50" : ""}`}
                       >
-                        {isDeleting ? (
+                        {isDeletingImage ? (
                           <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white" />
                         ) : (
                           "×"
@@ -1177,18 +1156,18 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
           <button
             type="button"
             onClick={() => setShowDeleteModal(true)}
-            disabled={deleteProduct.isPending}
+            disabled={isDeleting}
             className="text-red-600 w-full sm:w-fit flex items-center justify-center gap-1 mt-4 cursor-pointer disabled:opacity-50 hover:text-red-700"
           >
             <MdDelete />
-            {deleteProduct.isPending ? "Deleting..." : "Delete Listing"}
+            {isDeleting ? "Deleting..." : "Delete Listing"}
           </button>
           <button
             type="submit"
-            disabled={updateProduct.isPending}
+            disabled={isUpdating}
             className="bg-accent-red w-full sm:w-fit text-white py-2.5 md:py-5 px-12 cursor-pointer rounded-lg font-semibold hover:bg-[#a34739] mt-3 md:mt-6 disabled:opacity-50"
           >
-            {updateProduct.isPending ? "Updating..." : "Update Listing"}
+            {isUpdating ? "Updating..." : "Update Listing"}
           </button>
         </div>
       </form>
@@ -1213,10 +1192,10 @@ const UpdateListing = ({ variant, params }: UpdateListingProps) => {
               </button>
               <button
                 onClick={confirmDelete}
-                disabled={deleteProduct.isPending}
+                disabled={isDeleting}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg cursor-pointer hover:bg-red-700 disabled:opacity-50"
               >
-                {deleteProduct.isPending ? "Deleting..." : "Delete"}
+                {isDeleting ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>

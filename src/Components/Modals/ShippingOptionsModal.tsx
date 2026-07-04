@@ -3,10 +3,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { useSendMessage } from "@/Hooks/api/chat_api";
 import { useLocalPickupPro } from "@/Hooks/api/dashboard_api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useSendMessageMutation } from "@/redux/api/chatApi";
 
 type formData = {
   name: string;
@@ -71,7 +71,8 @@ const ShippingOptionsModal = ({
   const router = useRouter();
   const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const { mutate: sendMessageMutation, isPending } = useSendMessage();
+  const [sendMessageMutation, { isLoading: isPending }] =
+    useSendMessageMutation();
   const { mutate: localPickupForPro, isPending: isPicking } =
     useLocalPickupPro(cart_id);
 
@@ -156,14 +157,16 @@ const ShippingOptionsModal = ({
       });
     }
 
-    sendMessageMutation(payload, {
-      onSuccess: (res: any) => {
+    sendMessageMutation(payload)
+      .unwrap()
+      .then(res => {
         toast.success(res.message);
-        queryClient.invalidateQueries("get-product-cart" as any);
         onClose();
         setSuccessOpen(true);
-      },
-    });
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   const showForm = shippingMethod === "local" || shippingMethod === "delivery";

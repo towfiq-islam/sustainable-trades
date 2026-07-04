@@ -120,6 +120,18 @@ export const productApi = apiSlice.injectEndpoints({
       providesTags: ["product"],
     }),
 
+    // My Favorite
+    getMyFavorite: builder.query({
+      query: () => "/api/my-favorites",
+      providesTags: ["favorite"],
+    }),
+
+    // Vendor Listings
+    getVendorListings: builder.query({
+      query: () => "/api/vendor/dashboard/listings",
+      providesTags: ["product"],
+    }),
+
     // Nearby Products
     getNearbyProducts: builder.query({
       query: ({ lat, lng, page }) => ({
@@ -202,9 +214,10 @@ export const {
   useGetAllProductsQuery,
   useGetNearbyProductsQuery,
   useGetProductReviewsQuery,
-  
+  useGetMyFavoriteQuery,
   useGetProductCategoriesQuery,
   useGetProductSubCategoriesQuery,
   useGetCategoryDetailsQuery,
   useAddFavoriteMutation,
+  useGetVendorListingsQuery,
 } = productApi;

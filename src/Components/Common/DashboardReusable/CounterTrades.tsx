@@ -1,5 +1,4 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -11,13 +10,13 @@ import { toast } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { Reload, LocationSvg1 } from "@/Components/Svg/SvgContainer";
-import {
-  useCancel,
-  useSingleTradeOffer,
-  useTradeSendProduct,
-  useTradeShopProduct,
-} from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
+import {
+  useGetTradeOfferQuery,
+  useGetTradeShopProductQuery,
+  useSendCounterOfferMutation,
+} from "@/redux/api/tradeApi";
+import { useCancel } from "@/Hooks/api/cms_api";
 
 type Addon = { productId: number; quantity: number };
 type AddonProducts = Record<number, Addon[]>;
@@ -37,10 +36,11 @@ const CounterTrades = ({ id }: { id: string }) => {
   const [message, setMessage] = useState("");
 
   // Fetch trade data
-  const { data } = useSingleTradeOffer(id);
+  const { data } = useGetTradeOfferQuery(id);
 
   // API mutations
-  const { mutate, isPending } = useTradeSendProduct(id);
+  const [sendTradeOffer, { isLoading: isPending }] =
+    useSendCounterOfferMutation();
   const cancelTradeMutation = useCancel();
 
   // Determine shop roles
@@ -55,9 +55,9 @@ const CounterTrades = ({ id }: { id: string }) => {
 
   // Fetch shop products
   const { data: offerShopProduct, isLoading: offerLoading } =
-    useTradeShopProduct(myShopId);
+    useGetTradeShopProductQuery(myShopId);
   const { data: requestedShopProduct, isLoading: requestLoading } =
-    useTradeShopProduct(otherShopId);
+    useGetTradeShopProductQuery(otherShopId);
 
   // Initialize selections & quantities
   useEffect(() => {
@@ -201,7 +201,7 @@ const CounterTrades = ({ id }: { id: string }) => {
       formData.append(`requested_items[${i}][quantity]`, String(item.quantity));
     });
 
-    mutate(formData);
+    sendTradeOffer({ id, data: formData }).unwrap();
   };
 
   // Cancel counter

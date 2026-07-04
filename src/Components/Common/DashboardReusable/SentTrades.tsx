@@ -1,9 +1,9 @@
 "use client";
-import { useTradesdata } from "@/Hooks/api/dashboard_api";
+import { useGetTradesQuery } from "@/redux/api/tradeApi";
 import TradesTabs from "./TradesTabs";
 
 const SentTrades = () => {
-  const { data: tradeData, isLoading } = useTradesdata("sent");
+  const { data: tradeData, isLoading } = useGetTradesQuery({});
 
   return (
     <>

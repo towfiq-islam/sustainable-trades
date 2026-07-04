@@ -1,21 +1,18 @@
 "use client";
-import TradeLayout from "@/app/dashboard/pro/trades/TradeLayout";
 import SentTrades from "@/Components/Common/DashboardReusable/SentTrades";
 import PendingTrades from "@/Components/Common/DashboardReusable/PendingTrades";
 import PreviousTrades from "@/Components/Common/DashboardReusable/PreviousTrades";
 import CanceledTrades from "@/Components/Common/DashboardReusable/CanceledTrades";
-import { useTradeCounts, useTradesdata } from "@/Hooks/api/dashboard_api";
-import { FaAngleDown, FaSearch } from "react-icons/fa";
-import { tips } from "@/Components/Data/data";
+import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
-type TradeLayoutProps = {
-  children: React.ReactNode[];
-  initialTab: "Pending" | "Sent" | "Approved" | "Canceled";
-};
+import {
+  useGetTradeCountsQuery,
+  useGetTradesQuery,
+} from "@/redux/api/tradeApi";
 
 const Page = () => {
-  const { data } = useTradeCounts();
-  const { data: tradeData, isLoading } = useTradesdata("");
+  const { data } = useGetTradeCountsQuery({});
+  const { data: tradeData, isLoading } = useGetTradesQuery("");
 
   const [activeTab, setActiveTab] = useState("Pending");
 

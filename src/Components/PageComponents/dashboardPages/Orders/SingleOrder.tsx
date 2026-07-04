@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Again, GoBackSvg } from "@/Components/Svg/SvgContainer";
 import {
   getMyOrderDetails,
-  useDownloadInvoice,
 } from "@/Hooks/api/dashboard_api";
 import moment from "moment";
 import { PuffLoader } from "react-spinners";
@@ -13,6 +12,7 @@ import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import { useState } from "react";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
+import { useDownloadInvoice } from "@/Hooks/api/cms_api";
 
 const SingleOrder = ({ orderId }: { orderId: number }) => {
   const router = useRouter();

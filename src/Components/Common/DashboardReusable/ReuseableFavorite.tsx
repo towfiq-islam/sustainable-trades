@@ -3,9 +3,9 @@ import { useState } from "react";
 import Shop from "@/Components/Common/Shop";
 import Product from "@/Components/Common/Product";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
-import { getAllFollowList } from "@/Hooks/api/dashboard_api";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { useGetFollowedShopsQuery } from "@/redux/api/shopApi";
+import { useGetMyFavoriteQuery } from "@/redux/api/productApi";
 
 type ShopItem = {
   id: number;
@@ -27,7 +27,7 @@ const ReuseableFavorite = () => {
   const tabs: string[] = ["Followed Shop", "WishLists"];
   const [isActive, setIsActive] = useState("Followed Shop");
   const { data: myFavorites, isLoading: isFavoriteLoading } =
-    getAllFollowList();
+    useGetMyFavoriteQuery({});
   const { data: followedShop, isLoading: isFollowedLoading } =
     useGetFollowedShopsQuery({});
 

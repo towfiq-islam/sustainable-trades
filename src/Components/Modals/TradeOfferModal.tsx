@@ -7,9 +7,9 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { TradeOfferSkeleton } from "@/Components/Loader/Loader";
 import { LocationTwoSvg, SendSvg, Reload } from "@/Components/Svg/SvgContainer";
 import {
-  useTradeSendOffer,
-  useTradeShopProduct,
-} from "@/Hooks/api/dashboard_api";
+  useGetTradeShopProductQuery,
+  useTradeSendOfferMutation,
+} from "@/redux/api/tradeApi";
 
 type TradeOfferModalProps = {
   id: number | null;
@@ -51,15 +51,16 @@ const TradeOfferModal = ({
   ]);
 
   // Mutation
-  const { mutate: sendTradeOfferMutation, isPending } = useTradeSendOffer();
+  const [sendTradeOfferMutation, { isLoading: isPending }] =
+    useTradeSendOfferMutation();
 
   // Receiver trades
   const { data: tradeProducts, isLoading: tradeLoading } =
-    useTradeShopProduct(id);
+    useGetTradeShopProductQuery(id);
 
   // Sender trades
   const { data: myTradeProducts, isLoading: myTradeLoading } =
-    useTradeShopProduct(user?.shop_info?.id);
+    useGetTradeShopProductQuery(user?.shop_info?.id);
 
   // Loader
   if (tradeLoading || myTradeLoading) {
@@ -95,13 +96,15 @@ const TradeOfferModal = ({
       requested_items: requestedItems,
     };
 
-    sendTradeOfferMutation(payload, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          setTradeOpen(false);
-        }
-      },
-    });
+    try {
+      const res: any = sendTradeOfferMutation(payload).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        setTradeOpen(false);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (

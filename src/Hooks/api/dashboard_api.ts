@@ -1,117 +1,9 @@
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import useAuth from "@/Hooks/useAuth";
-import { api } from "@/lib/api";
 import { useAppDispatch } from "@/redux/store";
 import { authApi } from "@/redux/api/authApi";
-
-// Get All FollowLists
-export const getAllFollowList = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-all-followlist"],
-    endpoint: "/api/my-favorites",
-  });
-};
-
-// Get All trades
-export const useTradesdata = (sent?: string) => {
-  const endpoint = sent
-    ? `/api/trade-offers?sent=${sent}`
-    : `/api/trade-offers`;
-
-  return useClientApi({
-    method: "get",
-    key: ["get-trades", sent],
-    endpoint,
-  });
-};
-
-// Get All Count
-export const useTradeCounts = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-count"],
-    endpoint: "/api/trade-count",
-  });
-};
-
-// Cancel trades hooks
-export const useCancelTrade = () => {
-  return useClientApi({
-    method: "get",
-    key: ["cancel-trade"],
-  });
-};
-
-// Approve trades hooks
-export const useApproveTrade = () => {
-  return useMutation({
-    mutationFn: (id: any) =>
-      api.get(`/api/trade-offer-approve/${id}`).then(res => res.data),
-  });
-};
-
-//  Cancel Hooks
-export const useCancel = () => {
-  return useMutation({
-    mutationFn: (id: any) =>
-      api.get(`/api/trade-offer-cancel/${id}`).then(res => res.data),
-  });
-};
-
-//  single trade
-export const useSingleTradeOffer = (id: any) => {
-  return useClientApi({
-    method: "get",
-    key: ["single-trade-offer", id],
-    endpoint: `/api/trade-offer/${id}`,
-  });
-};
-
-// trade shop product
-export const useTradeShopProduct = (id: any) => {
-  return useClientApi({
-    method: "get",
-    key: ["trade-shop-product", id],
-    endpoint: `/api/trade-shop-product/${id}`,
-  });
-};
-
-// Trade Send Offer
-export const useTradeSendOffer = () => {
-  return useClientApi({
-    method: "post",
-    key: ["trade-send-offer"],
-    endpoint: "/api/trade-offer/create",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// trade send counter product
-export const useTradeSendProduct = (id: any) => {
-  return useClientApi({
-    method: "post",
-    key: ["send-trade-counter-offer", id],
-    endpoint: `/api/send-trade-counter-offer/${id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
 
 // Create Discount
 export const useCreateDiscount = () => {
@@ -215,15 +107,6 @@ export const useWeightRateget = () => {
     method: "get",
     key: ["get-weight"],
     endpoint: "/api/weight_ranges",
-  });
-};
-
-export const useTradeCounterProduct = (id: any) => {
-  return useClientApi({
-    method: "get",
-    key: ["trade-counter-product", id],
-
-    endpoint: `/api/trade-shop-product/${id}`,
   });
 };
 
@@ -355,18 +238,6 @@ export const getMyOrderDetails = (order_id: number) => {
 
     key: ["get-order-details", order_id],
     endpoint: `/api/my-order/${order_id}`,
-  });
-};
-
-// Download Invoice
-export const useDownloadInvoice = () => {
-  return useClientApi({
-    method: "post",
-    key: ["download-invoice"],
-
-    axiosOptions: {
-      responseType: "blob",
-    },
   });
 };
 
@@ -566,26 +437,6 @@ export const getOrderData = () => {
   });
 };
 
-// Listing Data
-export const getListingData = () => {
-  return useClientApi({
-    method: "get",
-    key: ["listing-data"],
-
-    endpoint: "/api/vendor/dashboard/listings",
-  });
-};
-
-// Trade Data
-export const getTradesData = () => {
-  return useClientApi({
-    method: "get",
-    key: ["trades-data"],
-
-    endpoint: "/api/vendor/dashboard/trades",
-  });
-};
-
 // Delete all notifications
 export const useDeleteAllNotifications = () => {
   const queryClient = useQueryClient();
@@ -613,17 +464,6 @@ export const getAccountingData = (params: any) => {
     key: ["get-accounting", params],
 
     endpoint: "/api/accounting/summary",
-    params,
-  });
-};
-
-// Get trade and barters
-export const getTradeAndBarterData = (params: any) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-trade-and-barter", params],
-
-    endpoint: "/api/barters-and-trades/summary",
     params,
   });
 };
@@ -911,27 +751,6 @@ export const useGetShippingTax = () => {
     key: ["shipping-data"],
 
     endpoint: "/api/cart/shipping/calculate",
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Edit Shop
-export const useEditShop = () => {
-  return useClientApi({
-    method: "post",
-    key: ["edit-shop"],
-    endpoint: "/api/shop/owner-data-update",
-
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },

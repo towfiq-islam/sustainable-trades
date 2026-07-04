@@ -2,12 +2,10 @@
 import type React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaAnglesRight } from "react-icons/fa6";
 import Image, { type StaticImageData } from "next/image";
 import { Reload } from "@/Components/Svg/SvgContainer";
 import moment from "moment";
 import { totalAmount } from "@/helper/useTotalAmount";
-import { useApproveTrade, useCancel } from "@/Hooks/api/dashboard_api";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -16,6 +14,7 @@ import MessageShopOwner from "@/Components/Modals/MessageShopOwner";
 import { useState } from "react";
 import { ImSpinner9 } from "react-icons/im";
 import { TradeRequestSkeleton } from "@/Components/Loader/Loader";
+import { useApproveTrade, useCancel } from "@/Hooks/api/cms_api";
 
 export type TradeItem = {
   image: StaticImageData | string;

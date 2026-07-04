@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 // Get Product Cart
 export const getProductCart = () => {
@@ -98,6 +99,55 @@ export const useUpdateCart = (cart_id: number | null) => {
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Approve trades hooks
+export const useApproveTrade = () => {
+  return useMutation({
+    mutationFn: (id: any) =>
+      api.get(`/api/trade-offer-approve/${id}`).then(res => res.data),
+  });
+};
+
+//  Cancel Hooks
+export const useCancel = () => {
+  return useMutation({
+    mutationFn: (id: any) =>
+      api.get(`/api/trade-offer-cancel/${id}`).then(res => res.data),
+  });
+};
+
+// Edit Shop
+export const useEditShop = () => {
+  return useClientApi({
+    method: "post",
+    key: ["edit-shop"],
+    endpoint: "/api/shop/owner-data-update",
+
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
+// Download Invoice
+export const useDownloadInvoice = () => {
+  return useClientApi({
+    method: "post",
+    key: ["download-invoice"],
+
+    axiosOptions: {
+      responseType: "blob",
     },
   });
 };

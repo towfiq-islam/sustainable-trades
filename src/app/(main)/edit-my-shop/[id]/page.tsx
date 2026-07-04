@@ -8,8 +8,8 @@ import EditFormThree from "@/Components/PageComponents/EditForm/EditFormThree";
 import { PuffLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 import useAuth from "@/Hooks/useAuth";
-import { useEditShop } from "@/Hooks/api/dashboard_api";
 import { useGetShopDetailsQuery } from "@/redux/api/shopApi";
+import { useEditShop } from "@/Hooks/api/cms_api";
 
 type ProfileFormValues = {
   first_name: string;

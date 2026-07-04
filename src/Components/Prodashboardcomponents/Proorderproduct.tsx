@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import moment from "moment";
-import { useDownloadInvoice } from "@/Hooks/api/dashboard_api";
+import { useDownloadInvoice } from "@/Hooks/api/cms_api";
 
 type OrderImage = {
   image: string;

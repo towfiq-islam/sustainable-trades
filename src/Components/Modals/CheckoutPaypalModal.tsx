@@ -98,7 +98,7 @@ const CheckoutPaypalModal = ({
                   return orderData?.paypal_order_id;
                 }
               } catch (error) {
-                console.error(error);
+                console.log(error);
               }
             }}
             onApprove={async data => {
@@ -154,12 +154,13 @@ const CheckoutPaypalModal = ({
                 );
 
                 const orderData = await response.json();
+                console.log(orderData);
 
                 if (orderData?.paypal_order_id) {
                   return orderData?.paypal_order_id;
                 }
               } catch (error) {
-                console.error(error);
+                console.log(error);
               }
             }}
             onApprove={async data => {

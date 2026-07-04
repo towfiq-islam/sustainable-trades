@@ -3,6 +3,8 @@ import useClientApi from "@/Hooks/useClientApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuth from "@/Hooks/useAuth";
 import { api } from "@/lib/api";
+import { useAppDispatch } from "@/redux/store";
+import { authApi } from "@/redux/api/authApi";
 
 // Get All FollowLists
 export const getAllFollowList = () => {
@@ -668,7 +670,6 @@ export const useConnectShippo = () => {
   return useClientApi({
     method: "post",
     key: ["connect-shippo"],
-
     endpoint: "/api/shippo/connect",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -684,7 +685,7 @@ export const useConnectShippo = () => {
 
 // Disconnect Shippo
 export const useDisconnectShippo = () => {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   return useClientApi({
     method: "post",
@@ -694,7 +695,7 @@ export const useDisconnectShippo = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        queryClient.invalidateQueries("user" as any);
+        dispatch(authApi.util.invalidateTags(["user"]));
       }
     },
     onError: (err: any) => {
@@ -737,7 +738,7 @@ export const getSalesTaxData = () => {
 // Sync Shippo
 export const useSyncShippo = () => {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   return useClientApi({
     method: "post",
@@ -747,7 +748,7 @@ export const useSyncShippo = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        queryClient.invalidateQueries("user" as any);
+        dispatch(authApi.util.invalidateTags(["user"]));
       }
     },
     onError: (err: any) => {
@@ -758,7 +759,7 @@ export const useSyncShippo = () => {
 
 // Pick Carrier
 export const usePickCarrier = () => {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   return useClientApi({
     method: "post",
@@ -767,7 +768,7 @@ export const usePickCarrier = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        queryClient.invalidateQueries("user" as any);
+        dispatch(authApi.util.invalidateTags(["user"]));
       }
     },
     onError: (err: any) => {
@@ -778,7 +779,7 @@ export const usePickCarrier = () => {
 
 // Change Label Type
 export const useChangeLabelType = () => {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   return useClientApi({
     method: "post",
@@ -787,7 +788,7 @@ export const useChangeLabelType = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        queryClient.invalidateQueries("user" as any);
+        dispatch(authApi.util.invalidateTags(["user"]));
       }
     },
     onError: (err: any) => {
@@ -798,7 +799,7 @@ export const useChangeLabelType = () => {
 
 // Set shipping
 export const useSetShipping = () => {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   return useClientApi({
     method: "post",
@@ -807,7 +808,7 @@ export const useSetShipping = () => {
     endpoint: "/api/shipping-settings",
     onSuccess: (data: any) => {
       if (data?.success) {
-        queryClient.invalidateQueries("user" as any);
+        dispatch(authApi.util.invalidateTags(["user"]));
       }
     },
     onError: (err: any) => {

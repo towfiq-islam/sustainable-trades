@@ -1,12 +1,13 @@
 "use client";
 import {
-  useCreateDiscount,
-  useDiscountGetById,
-  useDiscountUpdate,
-} from "@/Hooks/api/dashboard_api";
+  useCreateDiscountMutation,
+  useGetDiscountByIdQuery,
+  useUpdateDiscountMutation,
+} from "@/redux/api/discountApi";
 import { useGetProductsQuery } from "@/redux/api/productApi";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { FaAngleLeft } from "react-icons/fa";
 import { FiCalendar, FiClock } from "react-icons/fi";
 import { PuffLoader } from "react-spinners";
@@ -43,9 +44,9 @@ const CreateDiscount = () => {
   const isEditMode = !!id;
 
   // Mutation & Query
-  const { mutate: createMutate, isPending: isCreating } = useCreateDiscount();
-  const { mutate: updateMutate, isPending: isUpdating } = useDiscountUpdate(id);
-  const { data: discountData, isLoading } = useDiscountGetById(id);
+  const [createMutate, { isLoading: isCreating }] = useCreateDiscountMutation();
+  const [updateMutate, { isLoading: isUpdating }] = useUpdateDiscountMutation();
+  const { data: discountData, isLoading } = useGetDiscountByIdQuery(id);
   const { data: productList } = useGetProductsQuery({});
 
   // States
@@ -203,21 +204,25 @@ const CreateDiscount = () => {
     };
 
     if (isEditMode) {
-      updateMutate(payload, {
-        onSuccess: (data: any) => {
-          if (data?.success) {
-            router.push("/dashboard/pro/discounts");
-          }
-        },
-      });
+      try {
+        const res: any = updateMutate(payload).unwrap();
+        if (res?.success) {
+          toast.success(res?.message);
+          router.push("/dashboard/pro/discounts");
+        }
+      } catch (err: any) {
+        toast.error(err?.data?.message);
+      }
     } else {
-      createMutate(payload, {
-        onSuccess: (data: any) => {
-          if (data?.success) {
-            router.push("/dashboard/pro/discounts");
-          }
-        },
-      });
+      try {
+        const res: any = createMutate(payload).unwrap();
+        if (res?.success) {
+          toast.success(res?.message);
+          router.push("/dashboard/pro/discounts");
+        }
+      } catch (err: any) {
+        toast.error(err?.data?.message);
+      }
     }
   };
 

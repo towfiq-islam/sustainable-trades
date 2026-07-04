@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Container from "@/Components/Common/Container";
 import { RightSvg } from "@/Components/Svg/SvgContainer";
-import { getSpotlightData } from "@/Hooks/api/cms_api";
+import { getSpotlightData } from "@/Hooks/cms.api";
 
 type SpotlightItem = {
   id: number;

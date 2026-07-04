@@ -1,4 +1,4 @@
-import { getSpotlightData } from "@/Hooks/api/cms_api";
+import { getSpotlightData } from "@/Hooks/cms.api";
 import MemberSpotlight from "./MemberSpotlight";
 
 const CommunityMember = async () => {

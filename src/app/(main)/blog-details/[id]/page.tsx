@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { getSingleBlog } from "@/Hooks/api/cms_api";
 import moment from "moment";
 import Container from "@/Components/Common/Container";
+import { getSingleBlog } from "@/Hooks/cms.api";
 
 const page = async ({ params }: any) => {
   const { id } = await params;

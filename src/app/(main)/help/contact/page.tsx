@@ -1,8 +1,7 @@
-import React from "react";
 import Banner from "@/Components/Common/Banner";
 import HelpUsTab from "@/Components/Common/HelpUsTab";
 import Container from "@/Components/Common/Container";
-import { getContactData } from "@/Hooks/api/cms_api";
+import { getContactData } from "@/Hooks/cms.api";
 
 const Page = async () => {
   const contactData = await getContactData();

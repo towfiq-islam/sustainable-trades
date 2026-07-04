@@ -59,9 +59,20 @@ const ShippingAddress = ({
         shippingMethod === "proceed"
           ? "proceed_to_shipping"
           : "arrange_local_pickup",
-      country: countryName,
-      state,
-      address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
+      first_name: data.first_name,
+      phone: data.phone,
+      email: data.email,
+      // country: countryName,
+      // state,
+      // city: data.city,
+      // postal_code: data.postal_code,
+      // address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
+
+      country: "United States",
+      state: "Alabama (AL)",
+      city: "Montgomery",
+      postal_code: "36104",
+      address: `201 Monroe Street Montgomery 36104`,
     };
 
     shippingTaxMutation(taxData, {
@@ -73,8 +84,8 @@ const ShippingAddress = ({
             ...data,
             country: countryName,
             state,
-            latitude,
-            longitude,
+            latitude: latitude?.toString(),
+            longitude: latitude?.toString(),
             shipping_option:
               shippingMethod === "proceed"
                 ? "proceed_to_shipping"

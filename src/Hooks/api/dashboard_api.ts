@@ -22,6 +22,7 @@ export const useCreateDiscount = () => {
   });
 };
 
+
 // Create Taxes Hooks
 export const useTaxes = () => {
   const queryClient = useQueryClient();

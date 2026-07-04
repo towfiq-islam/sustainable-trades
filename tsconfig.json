@@ -34,7 +34,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-, "src/Components/PageComponents/dashboardPages/messageComponents/MessagePage.tsx"  ],
+  ],
   "exclude": [
     "node_modules"
   ]

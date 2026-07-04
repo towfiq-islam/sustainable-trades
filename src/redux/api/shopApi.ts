@@ -60,7 +60,7 @@ export const shopApi = apiSlice.injectEndpoints({
     // Get Membership Spotlight
     getMembershipSpotlight: builder.query({
       query: () => "/api/spotlight-applications",
-      providesTags: ["shop"],
+      providesTags: ["spotlight"],
     }),
 
     // Membership Plans
@@ -94,6 +94,102 @@ export const shopApi = apiSlice.injectEndpoints({
         }
       },
     }),
+
+    // Update shop photo
+    updateShopPhoto: builder.mutation({
+      query: data => ({
+        url: "/api/shop/image-update",
+        method: "POST",
+        body: data,
+      }),
+
+      invalidatesTags: ["shop"],
+
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.success) {
+            toast.success(data.message);
+          }
+        } catch (err: any) {
+          toast.error(err?.data?.message);
+        }
+      },
+    }),
+
+    // Update shop banner
+    updateShopBanner: builder.mutation({
+      query: data => ({
+        url: "/api/shop/banner-update",
+        method: "POST",
+        body: data,
+      }),
+
+      invalidatesTags: ["shop"],
+
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.success) {
+            toast.success(data.message);
+          }
+        } catch (err: any) {
+          toast.error(err?.data?.message);
+        }
+      },
+    }),
+
+    // Follow Shop
+    followShop: builder.mutation({
+      query: shopId => ({
+        url: `/api/follow-shop/${shopId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["shop"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.success) {
+            toast.success(data.message);
+          }
+        } catch (err: any) {
+          toast.error(err?.data?.message);
+        }
+      },
+    }),
+
+    // Newsletter
+    subscribeNewsletter: builder.mutation({
+      query: data => ({
+        url: "/api/newsletter/subscribe",
+        method: "POST",
+        body: data,
+      }),
+
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          if (data?.success) {
+            toast.success(data.message);
+          }
+        } catch (err: any) {
+          toast.error(err?.data?.message);
+        }
+      },
+    }),
+
+    // Get Tutorials
+    getTutorials: builder.query({
+      query: ({ search, type }) => ({
+        url: "/api/tutorials",
+        params: {
+          search,
+          type,
+        },
+      }),
+      providesTags: ["tutorials"],
+    }),
   }),
 });
 
@@ -108,4 +204,9 @@ export const {
   useGetShopDetailsQuery,
   useGetFeaturedListingsQuery,
   useGetShopReviewsQuery,
+  useUpdateShopBannerMutation,
+  useUpdateShopPhotoMutation,
+  useFollowShopMutation,
+  useGetTutorialsQuery,
+  useSubscribeNewsletterMutation,
 } = shopApi;

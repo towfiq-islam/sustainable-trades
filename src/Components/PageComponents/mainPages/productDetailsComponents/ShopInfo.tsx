@@ -1,10 +1,9 @@
 "use client";
-import React from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { useFollowShop } from "@/Hooks/api/cms_api";
+import { useFollowShopMutation } from "@/redux/api/shopApi";
 
 type shopItem = {
   shop: {
@@ -35,16 +34,15 @@ const ShopInfo = ({ data }: shopProps) => {
   const { user } = useAuth();
 
   // Mutation
-  const { mutate: followShopMutation, isPending } = useFollowShop(
-    data?.shop?.id,
-  );
+  const [followShopMutation, { isLoading: isPending }] =
+    useFollowShopMutation();
 
   // Func for follow shop
   const handleFollowShop = () => {
     if (!user) {
       return toast.error("Please login first");
     }
-    followShopMutation();
+    followShopMutation(data?.shop?.id).unwrap();
   };
 
   return (

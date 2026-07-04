@@ -6,11 +6,11 @@ import useAuth from "@/Hooks/useAuth";
 import award from "@/Assets/award.png";
 import badge from "@/Assets/badge.png";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { useFollowShop } from "@/Hooks/api/cms_api";
 import Container from "@/Components/Common/Container";
 import { LocationSvg, StarSvg } from "@/Components/Svg/SvgContainer";
 import Modal from "@/Components/Common/Modal";
 import MessageShopOwner from "@/Components/Modals/MessageShopOwner";
+import { useFollowShopMutation } from "@/redux/api/shopApi";
 
 type BannerItem = {
   rating_avg: string;
@@ -47,9 +47,8 @@ const ShopBanner = ({ id, data }: BannerProps) => {
   const [msgOpen, setMsgOpen] = useState<boolean>(false);
   const { user } = useAuth();
   const bannerUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/${data?.shop_info?.shop_banner}`;
-  const { mutate: followShopMutation, isPending } = useFollowShop(
-    data?.shop_info?.id,
-  );
+  const [followShopMutation, { isLoading: isPending }] =
+    useFollowShopMutation();
 
   // Func for follow shop
   const handleFollowShop = () => {
@@ -59,7 +58,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
     if (user?.shop_info?.user_id === id) {
       return toast.error("You can't follow your own shop");
     }
-    followShopMutation();
+    followShopMutation(data?.shop_info?.id).unwrap();
   };
 
   // Func for send message

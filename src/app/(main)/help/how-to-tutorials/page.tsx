@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import Banner from "@/Components/Common/Banner";
-import { getTutorials } from "@/Hooks/api/cms_api";
 import Container from "@/Components/Common/Container";
 import HelpUsTab from "@/Components/Common/HelpUsTab";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
+import { useGetTutorialsQuery } from "@/redux/api/shopApi";
 
 type videoItem = {
   id: number;
@@ -19,7 +19,10 @@ const page = () => {
   const [activeTab, setActiveTab] = useState<string>("owner");
 
   // Queries
-  const { data: tutorialsData, isLoading } = getTutorials(search, activeTab);
+  const { data: tutorialsData, isLoading } = useGetTutorialsQuery({
+    search,
+    type: activeTab,
+  });
 
   return (
     <>

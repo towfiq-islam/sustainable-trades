@@ -5,8 +5,11 @@ import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TradeOfferSkeleton } from "@/Components/Loader/Loader";
-import { getTradeShopProducts, useTradeSendOffer } from "@/Hooks/api/cms_api";
 import { LocationTwoSvg, SendSvg, Reload } from "@/Components/Svg/SvgContainer";
+import {
+  useTradeSendOffer,
+  useTradeShopProduct,
+} from "@/Hooks/api/dashboard_api";
 
 type TradeOfferModalProps = {
   id: number | null;
@@ -52,11 +55,11 @@ const TradeOfferModal = ({
 
   // Receiver trades
   const { data: tradeProducts, isLoading: tradeLoading } =
-    getTradeShopProducts(id);
+    useTradeShopProduct(id);
 
   // Sender trades
   const { data: myTradeProducts, isLoading: myTradeLoading } =
-    getTradeShopProducts(user?.shop_info?.id);
+    useTradeShopProduct(user?.shop_info?.id);
 
   // Loader
   if (tradeLoading || myTradeLoading) {
@@ -66,22 +69,22 @@ const TradeOfferModal = ({
   // Func for send offer
   const handleSendOffer = () => {
     const invalidOffered = offeredItems.some(
-      item => !item.product_id || item.quantity < 1
+      item => !item.product_id || item.quantity < 1,
     );
 
     const invalidRequested = requestedItems.some(
-      item => !item.product_id || item.quantity < 1
+      item => !item.product_id || item.quantity < 1,
     );
 
     if (invalidOffered) {
       return toast.error(
-        "Please select a valid product and quantity in offered items"
+        "Please select a valid product and quantity in offered items",
       );
     }
 
     if (invalidRequested) {
       return toast.error(
-        "Please select a valid product and quantity in requested items"
+        "Please select a valid product and quantity in requested items",
       );
     }
 
@@ -168,7 +171,7 @@ const TradeOfferModal = ({
               className="border border-gray-300 rounded-md p-2 w-full md:w-24 text-center shrink-0"
               value={
                 (tradeProducts?.data?.find(
-                  (p: any) => p?.id === item.product_id
+                  (p: any) => p?.id === item.product_id,
                 )?.product_price || 0) * item.quantity
               }
               readOnly
@@ -250,7 +253,7 @@ const TradeOfferModal = ({
               className="border border-gray-300 rounded-md p-2 w-full md:w-24 text-center shrink-0"
               value={
                 (myTradeProducts?.data?.find(
-                  (p: any) => p?.id === item.product_id
+                  (p: any) => p?.id === item.product_id,
                 )?.product_price || 0) * item.quantity
               }
               readOnly

@@ -1,6 +1,7 @@
-import { useGuestOrder } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
+import { useGuestOrderMutation } from "@/redux/api/OrderApi";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 
 type FormData = {
@@ -13,7 +14,7 @@ type FormData = {
 const GuestModal = ({ id, onClose }: any) => {
   const { user } = useAuth();
   const product_link = `${window.location.origin}/product-details/${id}`;
-  const { mutate: buyNowMutation, isPending: isBuying } = useGuestOrder(id);
+  const [buyNowMutation, { isLoading: isBuying }] = useGuestOrderMutation();
 
   const {
     register,
@@ -25,14 +26,15 @@ const GuestModal = ({ id, onClose }: any) => {
     const payload = { quantity: 1, product_link, ...data };
 
     if (!user) {
-      buyNowMutation(payload, {
-        onSuccess: () => {
+      try {
+        const res = await buyNowMutation({ id, payload }).unwrap();
+        if (res?.success) {
+          toast.success(res?.message);
           onClose();
-        },
-      });
-    }
-    else {
-      
+        }
+      } catch (err: any) {
+        toast.error(err?.data?.message);
+      }
     }
   };
 

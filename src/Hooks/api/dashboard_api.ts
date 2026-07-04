@@ -191,42 +191,6 @@ export const useBulkDeleteDiscount = () => {
   });
 };
 
-// Add Review
-export const useAddReview = (order_id: number) => {
-  return useClientApi({
-    method: "post",
-    key: ["add-review", order_id],
-
-    endpoint: `/api/add-review/${order_id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Add Order Note
-export const useOrderNote = (order_id: number) => {
-  return useClientApi({
-    method: "post",
-    key: ["add-order-note", order_id],
-
-    endpoint: `/api/order-note/${order_id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
 // Account connect Onboarding
 export const useOnboarding = () => {
   const queryClient = useQueryClient();
@@ -316,18 +280,7 @@ export const getVisitorData = () => {
   return useClientApi({
     method: "get",
     key: ["visitor-data"],
-
     endpoint: "/api/vendor/dashboard/visits",
-  });
-};
-
-// Order Data
-export const getOrderData = () => {
-  return useClientApi({
-    method: "get",
-    key: ["order-data"],
-
-    endpoint: "/api/vendor/dashboard/order",
   });
 };
 
@@ -359,23 +312,6 @@ export const getAccountingData = (params: any) => {
 
     endpoint: "/api/accounting/summary",
     params,
-  });
-};
-
-// Guest order
-export const useGuestOrder = (id: number) => {
-  return useClientApi({
-    method: "post",
-    key: ["guest-order", id],
-    endpoint: `/api/guest-local-pickup/${id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
   });
 };
 

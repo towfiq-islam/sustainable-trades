@@ -5,7 +5,8 @@ import { Camera } from "@/Components/Svg/SvgContainer";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useAddReview } from "@/Hooks/api/dashboard_api";
+import { useAddReviewMutation } from "@/redux/api/OrderApi";
+import toast from "react-hot-toast";
 
 type ReviewFormValues = {
   title: string;
@@ -17,8 +18,7 @@ const ReviewDetails = () => {
   const router = useRouter();
   const params = useParams();
   const orderId = Number(params?.id);
-
-  const { mutateAsync: addReviewMutation, isPending } = useAddReview(orderId);
+  const [addReviewMutation, { isLoading: isPending }] = useAddReviewMutation();
 
   const {
     register,
@@ -39,7 +39,7 @@ const ReviewDetails = () => {
     setValue("images", files);
 
     const previewUrls = Array.from(files).map(file =>
-      URL.createObjectURL(file)
+      URL.createObjectURL(file),
     );
     setPreviews(previewUrls);
   };
@@ -62,13 +62,18 @@ const ReviewDetails = () => {
       });
     }
 
-    await addReviewMutation(formData, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          router.push("/dashboard/customer/reviews");
-        }
-      },
-    });
+    try {
+      const res = await addReviewMutation({
+        id: orderId,
+        data: formData,
+      }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        router.push("/dashboard/customer/reviews");
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (

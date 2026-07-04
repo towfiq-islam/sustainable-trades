@@ -39,11 +39,10 @@ const ShippingAddress = ({
   shippingMethod: any;
   setTaxData: any;
 }) => {
-  const { user, longitude, latitude } = useAuth();
+  const { user, latitude } = useAuth();
   const { mutateAsync: shippingTaxMutation, isPending } = useGetShippingTax();
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
-  console.log(state);
 
   const {
     register,
@@ -53,7 +52,6 @@ const ShippingAddress = ({
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    const countryName = Country.getCountryByCode(country)?.name || "";
     const taxData = {
       cart_id,
       shipping_option:
@@ -63,7 +61,7 @@ const ShippingAddress = ({
       first_name: data.first_name,
       phone: data.phone,
       email: data.email,
-      country: countryName,
+      country,
       state,
       city: data.city,
       postal_code: data.postal_code,
@@ -83,7 +81,7 @@ const ShippingAddress = ({
 
           const payload = {
             ...data,
-            country: countryName,
+            country,
             state,
             latitude: latitude?.toString(),
             longitude: latitude?.toString(),

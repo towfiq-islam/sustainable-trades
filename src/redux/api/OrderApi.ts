@@ -23,6 +23,11 @@ export const orderApi = apiSlice.injectEndpoints({
       providesTags: (_r, _e, id) => [{ type: "order", id }],
     }),
 
+    getOrderStatistics: builder.query({
+      query: () => "/api/vendor/dashboard/order",
+      providesTags: ["order"],
+    }),
+
     getOrderHistory: builder.query({
       query: id => `/api/my-order/${id}/history`,
       providesTags: (_r, _e, id) => [{ type: "order", id }],
@@ -58,6 +63,14 @@ export const orderApi = apiSlice.injectEndpoints({
       invalidatesTags: (_r, _e, { id }) => [{ type: "order", id }, "order"],
     }),
 
+    guestOrder: builder.mutation({
+      query: ({ id, payload }) => ({
+        url: `/api/guest-local-pickup/${id}`,
+        method: "POST",
+        body: payload,
+      }),
+    }),
+
     addOrderNote: builder.mutation({
       query: ({ id, data }) => ({
         url: `/api/order-note/${id}`,
@@ -73,14 +86,7 @@ export const orderApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["order", "review"],
-    }),
-
-    checkout: builder.mutation({
-      query: cartId => ({
-        url: `/api/checkout/${cartId}`,
-        method: "POST",
-      }),
+      invalidatesTags: ["review"],
     }),
   }),
 });
@@ -96,5 +102,6 @@ export const {
   useAddOrderNoteMutation,
   useAddReviewMutation,
   useGetCustomerReviewsQuery,
-  useCheckoutMutation,
+  useGetOrderStatisticsQuery,
+  useGuestOrderMutation,
 } = orderApi;

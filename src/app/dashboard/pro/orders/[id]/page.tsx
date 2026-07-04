@@ -7,16 +7,17 @@ import OrderNote from "@/Components/Modals/OrderNote";
 import { useEffect, useRef, useState } from "react";
 import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
 import Proorderproduct from "@/Components/Prodashboardcomponents/Proorderproduct";
-import {
-  getSingleOrder,
-  useCancelOrder,
-  useUpdateOrderStatus,
-} from "@/Hooks/api/dashboard_api";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import Link from "next/link";
 import ArrangeLocalPickupModal from "../_Components/ArrangeLocalPickupModal";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
+import {
+  useCancelOrderMutation,
+  useGetSingleOrderQuery,
+  useUpdateOrderStatusMutation,
+} from "@/redux/api/OrderApi";
+import toast from "react-hot-toast";
 
 const Page = () => {
   const router = useRouter();
@@ -31,11 +32,11 @@ const Page = () => {
   const [addressOpen, setAddressModalOpen] = useState(false);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
-  const { mutate: updateStatusMutation } = useUpdateOrderStatus();
-  const { data: singleOrder, isLoading } = getSingleOrder(order_id);
+  const [updateStatusMutation] = useUpdateOrderStatusMutation();
+  const { data: singleOrder, isLoading } = useGetSingleOrderQuery(order_id);
   const orderHistory = singleOrder?.data?.order_status_history ?? [];
-  const { mutate: cancelOrder, isPending: isCancellingOrder } =
-    useCancelOrder();
+  const [cancelOrder, { isLoading: isCancellingOrder }] =
+    useCancelOrderMutation();
 
   const steps = [
     { label: "Order Confirmed", key: "confirmed" },
@@ -221,10 +222,17 @@ const Page = () => {
                     <button
                       key={step.key}
                       onClick={() => {
-                        updateStatusMutation({
-                          endpoint: `/api/order-status-update/${order_id}`,
-                          status: step?.key,
-                        });
+                        try {
+                          const res: any = updateStatusMutation({
+                            status: step?.key,
+                          }).unwrap();
+                          if (res?.success) {
+                            toast.success(res?.message);
+                            router.push("/auth/login");
+                          }
+                        } catch (err: any) {
+                          toast.error(err?.data?.message);
+                        }
 
                         setOpenStatusPopover(false);
                       }}
@@ -395,11 +403,16 @@ const Page = () => {
 
           <button
             disabled={isCancellingOrder}
-            onClick={() =>
-              cancelOrder({
-                endpoint: `/api/cancel-order/${order_id}`,
-              })
-            }
+            onClick={() => {
+              try {
+                const res: any = cancelOrder(order_id).unwrap();
+                if (res?.success) {
+                  toast.success(res?.message);
+                }
+              } catch (err: any) {
+                toast.error(err?.data?.message);
+              }
+            }}
             className="py-4 px-6 rounded-[8px] border border-primary-red bg-[#FFE8E8] font-semibold text-primary-red cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
           >
             {isCancellingOrder ? "Cancelling...." : "Cancel Order"}

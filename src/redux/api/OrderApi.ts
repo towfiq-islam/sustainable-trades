@@ -2,7 +2,7 @@ import { apiSlice } from "@/redux/api/apiSlice";
 
 export const orderApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    getOrders: builder.query({
+    getVendorOrders: builder.query({
       query: params => ({
         url: "/api/orders",
         params,
@@ -33,9 +33,17 @@ export const orderApi = apiSlice.injectEndpoints({
       providesTags: (_r, _e, id) => [{ type: "order", id }],
     }),
 
+    getCustomerReviews: builder.query({
+      query: page => ({
+        url: "/api/my-reviews",
+        params: { page },
+      }),
+      providesTags: ["review"],
+    }),
+
     updateOrderStatus: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/api/order/${id}/status`,
+        url: `/api/order-status-update/${id}`,
         method: "POST",
         body: data,
       }),
@@ -43,10 +51,9 @@ export const orderApi = apiSlice.injectEndpoints({
     }),
 
     cancelOrder: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/api/order/${id}/cancel`,
+      query: id => ({
+        url: `/api/cancel-order/${id}`,
         method: "POST",
-        body: data,
       }),
       invalidatesTags: (_r, _e, { id }) => [{ type: "order", id }, "order"],
     }),
@@ -69,15 +76,6 @@ export const orderApi = apiSlice.injectEndpoints({
       invalidatesTags: ["order", "review"],
     }),
 
-    getCustomerReviews: builder.query({
-      query: page => ({
-        url: "/api/my-reviews",
-        params: { page },
-      }),
-      providesTags: ["review"],
-    }),
-
-    // Checkout
     checkout: builder.mutation({
       query: cartId => ({
         url: `/api/checkout/${cartId}`,
@@ -88,7 +86,7 @@ export const orderApi = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetOrdersQuery,
+  useGetVendorOrdersQuery,
   useGetMyOrdersQuery,
   useGetSingleOrderQuery,
   useGetOrderHistoryQuery,

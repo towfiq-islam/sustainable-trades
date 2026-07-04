@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 import Review from "@/Components/Common/DashboardReusable/Review";
-import { getCustomerReviews } from "@/Hooks/api/dashboard_api";
+import { useGetCustomerReviewsQuery } from "@/redux/api/OrderApi";
 
 const page = () => {
   const [page, setPage] = useState<string>("");
-  const { data: reviews, isLoading } = getCustomerReviews(page);
+  const { data: reviews, isLoading } = useGetCustomerReviewsQuery(page);
 
   return <Review reviews={reviews} isLoading={isLoading} setPage={setPage} />;
 };

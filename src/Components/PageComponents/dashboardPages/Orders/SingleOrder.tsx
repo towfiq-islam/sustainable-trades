@@ -2,9 +2,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Again, GoBackSvg } from "@/Components/Svg/SvgContainer";
-import {
-  getMyOrderDetails,
-} from "@/Hooks/api/dashboard_api";
 import moment from "moment";
 import { PuffLoader } from "react-spinners";
 import Modal from "@/Components/Common/Modal";
@@ -13,12 +10,13 @@ import { useState } from "react";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 import { useDownloadInvoice } from "@/Hooks/api/cms_api";
+import { useGetOrderDetailsQuery } from "@/redux/api/OrderApi";
 
 const SingleOrder = ({ orderId }: { orderId: number }) => {
   const router = useRouter();
   const [open, isOpen] = useState<boolean>(false);
   const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
-  const { data: getSingleOrder, isLoading } = getMyOrderDetails(orderId);
+  const { data: getSingleOrder, isLoading } = useGetOrderDetailsQuery(orderId);
   const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
 
   // Func for download Invoice pdf

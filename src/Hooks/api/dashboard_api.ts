@@ -191,17 +191,6 @@ export const useBulkDeleteDiscount = () => {
   });
 };
 
-// Get My Orders
-export const getMyOrders = (status?: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-my-orders", status],
-
-    endpoint: "/api/my-orders",
-    params: { status },
-  });
-};
-
 // Add Review
 export const useAddReview = (order_id: number) => {
   return useClientApi({
@@ -217,101 +206,6 @@ export const useAddReview = (order_id: number) => {
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },
-  });
-};
-
-// Get Customer Reviews
-export const getCustomerReviews = (page?: string) => {
-  return useClientApi({
-    method: "get",
-
-    key: ["get-customer-reviews", page],
-    endpoint: "/api/my-reviews",
-    params: { page },
-  });
-};
-
-// Get Order Details
-export const getMyOrderDetails = (order_id: number) => {
-  return useClientApi({
-    method: "get",
-
-    key: ["get-order-details", order_id],
-    endpoint: `/api/my-order/${order_id}`,
-  });
-};
-
-// Get Order History
-export const getOrderHistory = (order_id: number | null) => {
-  return useClientApi({
-    method: "get",
-
-    key: ["get-order-history", order_id],
-    endpoint: `/api/my-order/${order_id}/history`,
-  });
-};
-
-// Get Orders
-export const getOrders = ({
-  status,
-  search,
-  page,
-  filter,
-  date_from,
-  date_to,
-  year,
-}: {
-  status?: string;
-  search?: string;
-  page?: string;
-  filter?: string;
-  date_from?: string;
-  date_to?: string;
-  year?: number;
-}) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-orders", status, search, page, filter, date_from, date_to, year],
-
-    endpoint: "/api/orders",
-    params: {
-      status,
-      search,
-      page,
-      filter,
-      date_from,
-      date_to,
-      year,
-    },
-  });
-};
-
-// Update Order Status
-export const useUpdateOrderStatus = () => {
-  const queryClient = useQueryClient();
-  return useClientApi({
-    method: "post",
-    key: ["update-order-status"],
-
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-orders" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Get Single Order
-export const getSingleOrder = (order_id: number | null) => {
-  return useClientApi({
-    method: "get",
-
-    key: ["get-single-order", order_id],
-    endpoint: `/api/order/${order_id}`,
   });
 };
 
@@ -465,26 +359,6 @@ export const getAccountingData = (params: any) => {
 
     endpoint: "/api/accounting/summary",
     params,
-  });
-};
-
-// Cancel Order
-export const useCancelOrder = () => {
-  const queryClient = useQueryClient();
-
-  return useClientApi({
-    method: "post",
-    key: ["cancel-order"],
-
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-orders" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
   });
 };
 

@@ -6,10 +6,10 @@ import Container from "@/Components/Common/Container";
 import Product from "@/Components/Common/Product";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { useSearchParams } from "next/navigation";
-import {  getMyOrderDetails } from "@/Hooks/api/dashboard_api";
 import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
 import useAuth from "@/Hooks/useAuth";
 import { useGetAllProductsUnderShopQuery, useGetMyFavoriteQuery } from "@/redux/api/productApi";
+import { useGetOrderDetailsQuery } from "@/redux/api/OrderApi";
 
 export default function Page() {
   const { user } = useAuth();
@@ -18,7 +18,7 @@ export default function Page() {
   const shop_id = Number(searchParams.get("shop_id"));
   const { data: myFavorites, isLoading: isFavoriteLoading } =
     useGetMyFavoriteQuery({});
-  const { data: singleOrder, isLoading } = getMyOrderDetails(order_id);
+  const { data: singleOrder, isLoading } = useGetOrderDetailsQuery(order_id);
   const { data: products, isLoading: isShopLoading } =
     useGetAllProductsUnderShopQuery({
       id: shop_id,

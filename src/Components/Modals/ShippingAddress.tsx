@@ -43,6 +43,7 @@ const ShippingAddress = ({
   const { mutateAsync: shippingTaxMutation, isPending } = useGetShippingTax();
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
+  console.log(state);
 
   const {
     register,
@@ -62,17 +63,17 @@ const ShippingAddress = ({
       first_name: data.first_name,
       phone: data.phone,
       email: data.email,
-      // country: countryName,
-      // state,
-      // city: data.city,
-      // postal_code: data.postal_code,
-      // address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
+      country: countryName,
+      state,
+      city: data.city,
+      postal_code: data.postal_code,
+      address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
 
-      country: "United States",
-      state: "Alabama (AL)",
-      city: "Montgomery",
-      postal_code: "36104",
-      address: `201 Monroe Street Montgomery 36104`,
+      // country: "United States",
+      // state: "Alabama (AL)",
+      // city: "Montgomery",
+      // postal_code: "36104",
+      // address: `201 Monroe Street Montgomery 36104`,
     };
 
     shippingTaxMutation(taxData, {
@@ -317,8 +318,8 @@ const ShippingAddress = ({
             >
               <option value="">Select State / Province</option>
               {State.getStatesOfCountry(country).map(item => (
-                <option key={item.isoCode} value={item.name}>
-                  {item.name}
+                <option key={item.isoCode} value={item.isoCode}>
+                  {item.name} ({item.isoCode})
                 </option>
               ))}
             </select>

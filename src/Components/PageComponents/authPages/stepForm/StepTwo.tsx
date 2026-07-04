@@ -74,7 +74,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
           </h5>
 
           {/* City State */}
-          <div>
+          {/* <div>
             <p className="form-label">City State *</p>
             <input
               type="text"
@@ -89,12 +89,12 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
                 {errors.shop_city.message as string}
               </p>
             )}
-          </div>
+          </div> */}
 
-          <h5 className="text-[16px] text-secondary-gray">
+          {/* <h5 className="text-[16px] text-secondary-gray">
             This is so you show up in your local area on our Geo-locator map.
             More info about this
-          </h5>
+          </h5> */}
         </div>
       </div>
 

@@ -4,10 +4,11 @@ import Link from "next/link";
 import moment from "moment";
 import { useState } from "react";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
-import { getMyOrders, useDownloadInvoice } from "@/Hooks/api/dashboard_api";
 import OrderCardSkeleton from "@/Components/Loader/Loader";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
+import { useDownloadInvoice } from "@/Hooks/api/cms_api";
+import { useGetMyOrdersQuery } from "@/redux/api/OrderApi";
 
 type OrdersListProps = {
   role: "customer" | "pro";
@@ -67,7 +68,7 @@ const OrdersList = ({
   const [open, isOpen] = useState<boolean>(false);
   const tabs = ["orders", "pending", "confirmed", "delivered", "cancelled"];
   const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
-  const { data: myOrders, isLoading } = getMyOrders(status);
+  const { data: myOrders, isLoading } = useGetMyOrdersQuery(status);
   const [showNote, setShowNote] = useState<boolean>(false);
   const [note, setNote] = useState<string>("");
 

@@ -98,7 +98,7 @@ const CheckoutPaypalModal = ({
                   return orderData?.paypal_order_id;
                 }
               } catch (error) {
-                console.error(error);
+                console.log(error);
               }
             }}
             onApprove={async data => {
@@ -153,13 +153,26 @@ const CheckoutPaypalModal = ({
                   },
                 );
 
+                console.log(response);
+
+                if (!response.ok) {
+                  const errorBody = await response.json().catch(() => null);
+                  console.error("Checkout failed:", response.status, errorBody);
+                  toast.error(
+                    errorBody?.message ??
+                      "Could not start checkout. Please try again.",
+                  );
+                  throw new Error("checkout_failed"); // tells PayPal SDK the order creation failed
+                }
+
                 const orderData = await response.json();
+                console.log(orderData);
 
                 if (orderData?.paypal_order_id) {
                   return orderData?.paypal_order_id;
                 }
               } catch (error) {
-                console.error(error);
+                console.log(error);
               }
             }}
             onApprove={async data => {

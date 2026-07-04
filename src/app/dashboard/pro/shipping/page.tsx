@@ -115,7 +115,9 @@ const Page = () => {
                     className="h-4 w-4 accent-primary-green cursor-pointer"
                   />
 
-                  <h3 className="font-semibold text-primary-green">Flat Rate</h3>
+                  <h3 className="font-semibold text-primary-green">
+                    Flat Rate
+                  </h3>
                 </div>
 
                 {user?.shop_info?.shipping_setting === "flat_rate" && (

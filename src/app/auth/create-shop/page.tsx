@@ -43,7 +43,7 @@ const page = () => {
 
       // StepTwo
       shop_name: "",
-      shop_city: "",
+      // shop_city: "",
       shop_image: null,
       shop_banner: null,
 
@@ -68,6 +68,7 @@ const page = () => {
       address_line_2: "",
       city: "",
       state: "",
+      country: "",
       zip_code: "",
       latitude: null,
       longitude: null,

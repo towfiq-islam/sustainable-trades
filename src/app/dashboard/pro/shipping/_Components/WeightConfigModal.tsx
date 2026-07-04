@@ -33,7 +33,6 @@ const WeightConfigModal = ({
         if (data?.success) {
           toast.success(data?.message);
           resetWeight();
-          setOpenWightModal(false);
           refetch();
         }
       },

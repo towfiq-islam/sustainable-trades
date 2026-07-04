@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Container from "@/Components/Common/Container";
-import { getProductCategories } from "@/Hooks/api/cms_api";
+import { getProductCategories } from "@/Hooks/cms.api";
 
 type categoryItem = {
   id: number;

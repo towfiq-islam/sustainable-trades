@@ -1,5 +1,5 @@
-import { getOrderHistory } from "@/Hooks/api/dashboard_api";
 import { OrderTrackSkeleton } from "@/Components/Loader/Loader";
+import { useGetOrderHistoryQuery } from "@/redux/api/OrderApi";
 
 type OrderItem = {
   id: number;
@@ -8,7 +8,7 @@ type OrderItem = {
 };
 
 const TrackPackageModal = ({ order_id }: { order_id: number | null }) => {
-  const { data: orderHistory, isLoading } = getOrderHistory(order_id);
+  const { data: orderHistory, isLoading } = useGetOrderHistoryQuery(order_id);
 
   return (
     <div className="p-4">

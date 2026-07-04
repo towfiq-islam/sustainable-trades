@@ -1,115 +1,9 @@
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import useAuth from "@/Hooks/useAuth";
-import { api } from "@/lib/api";
-
-// Get All FollowLists
-export const getAllFollowList = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-all-followlist"],
-    endpoint: "/api/my-favorites",
-  });
-};
-
-// Get All trades
-export const useTradesdata = (sent?: string) => {
-  const endpoint = sent
-    ? `/api/trade-offers?sent=${sent}`
-    : `/api/trade-offers`;
-
-  return useClientApi({
-    method: "get",
-    key: ["get-trades", sent],
-    endpoint,
-  });
-};
-
-// Get All Count
-export const useTradeCounts = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-count"],
-    endpoint: "/api/trade-count",
-  });
-};
-
-// Cancel trades hooks
-export const useCancelTrade = () => {
-  return useClientApi({
-    method: "get",
-    key: ["cancel-trade"],
-  });
-};
-
-// Approve trades hooks
-export const useApproveTrade = () => {
-  return useMutation({
-    mutationFn: (id: any) =>
-      api.get(`/api/trade-offer-approve/${id}`).then(res => res.data),
-  });
-};
-
-//  Cancel Hooks
-export const useCancel = () => {
-  return useMutation({
-    mutationFn: (id: any) =>
-      api.get(`/api/trade-offer-cancel/${id}`).then(res => res.data),
-  });
-};
-
-//  single trade
-export const useSingleTradeOffer = (id: any) => {
-  return useClientApi({
-    method: "get",
-    key: ["single-trade-offer", id],
-    endpoint: `/api/trade-offer/${id}`,
-  });
-};
-
-// trade shop product
-export const useTradeShopProduct = (id: any) => {
-  return useClientApi({
-    method: "get",
-    key: ["trade-shop-product", id],
-    endpoint: `/api/trade-shop-product/${id}`,
-  });
-};
-
-// Trade Send Offer
-export const useTradeSendOffer = () => {
-  return useClientApi({
-    method: "post",
-    key: ["trade-send-offer"],
-    endpoint: "/api/trade-offer/create",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// trade send counter product
-export const useTradeSendProduct = (id: any) => {
-  return useClientApi({
-    method: "post",
-    key: ["send-trade-counter-offer", id],
-    endpoint: `/api/send-trade-counter-offer/${id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
+import { useAppDispatch } from "@/redux/store";
+import { authApi } from "@/redux/api/authApi";
 
 // Create Discount
 export const useCreateDiscount = () => {
@@ -216,15 +110,6 @@ export const useWeightRateget = () => {
   });
 };
 
-export const useTradeCounterProduct = (id: any) => {
-  return useClientApi({
-    method: "get",
-    key: ["trade-counter-product", id],
-
-    endpoint: `/api/trade-shop-product/${id}`,
-  });
-};
-
 // Get Notifications  Hooks
 export const useNotification = (page?: string) => {
   return useClientApi({
@@ -302,160 +187,6 @@ export const useBulkDeleteDiscount = () => {
       toast.error(
         err?.response?.data?.message || "Failed to delete discount(s)",
       );
-    },
-  });
-};
-
-// Get My Orders
-export const getMyOrders = (status?: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-my-orders", status],
-
-    endpoint: "/api/my-orders",
-    params: { status },
-  });
-};
-
-// Add Review
-export const useAddReview = (order_id: number) => {
-  return useClientApi({
-    method: "post",
-    key: ["add-review", order_id],
-
-    endpoint: `/api/add-review/${order_id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Get Customer Reviews
-export const getCustomerReviews = (page?: string) => {
-  return useClientApi({
-    method: "get",
-
-    key: ["get-customer-reviews", page],
-    endpoint: "/api/my-reviews",
-    params: { page },
-  });
-};
-
-// Get Order Details
-export const getMyOrderDetails = (order_id: number) => {
-  return useClientApi({
-    method: "get",
-
-    key: ["get-order-details", order_id],
-    endpoint: `/api/my-order/${order_id}`,
-  });
-};
-
-// Download Invoice
-export const useDownloadInvoice = () => {
-  return useClientApi({
-    method: "post",
-    key: ["download-invoice"],
-
-    axiosOptions: {
-      responseType: "blob",
-    },
-  });
-};
-
-// Get Order History
-export const getOrderHistory = (order_id: number | null) => {
-  return useClientApi({
-    method: "get",
-
-    key: ["get-order-history", order_id],
-    endpoint: `/api/my-order/${order_id}/history`,
-  });
-};
-
-// Get Orders
-export const getOrders = ({
-  status,
-  search,
-  page,
-  filter,
-  date_from,
-  date_to,
-  year,
-}: {
-  status?: string;
-  search?: string;
-  page?: string;
-  filter?: string;
-  date_from?: string;
-  date_to?: string;
-  year?: number;
-}) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-orders", status, search, page, filter, date_from, date_to, year],
-
-    endpoint: "/api/orders",
-    params: {
-      status,
-      search,
-      page,
-      filter,
-      date_from,
-      date_to,
-      year,
-    },
-  });
-};
-
-// Update Order Status
-export const useUpdateOrderStatus = () => {
-  const queryClient = useQueryClient();
-  return useClientApi({
-    method: "post",
-    key: ["update-order-status"],
-
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-orders" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Get Single Order
-export const getSingleOrder = (order_id: number | null) => {
-  return useClientApi({
-    method: "get",
-
-    key: ["get-single-order", order_id],
-    endpoint: `/api/order/${order_id}`,
-  });
-};
-
-// Add Order Note
-export const useOrderNote = (order_id: number) => {
-  return useClientApi({
-    method: "post",
-    key: ["add-order-note", order_id],
-
-    endpoint: `/api/order-note/${order_id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
     },
   });
 };
@@ -549,38 +280,7 @@ export const getVisitorData = () => {
   return useClientApi({
     method: "get",
     key: ["visitor-data"],
-
     endpoint: "/api/vendor/dashboard/visits",
-  });
-};
-
-// Order Data
-export const getOrderData = () => {
-  return useClientApi({
-    method: "get",
-    key: ["order-data"],
-
-    endpoint: "/api/vendor/dashboard/order",
-  });
-};
-
-// Listing Data
-export const getListingData = () => {
-  return useClientApi({
-    method: "get",
-    key: ["listing-data"],
-
-    endpoint: "/api/vendor/dashboard/listings",
-  });
-};
-
-// Trade Data
-export const getTradesData = () => {
-  return useClientApi({
-    method: "get",
-    key: ["trades-data"],
-
-    endpoint: "/api/vendor/dashboard/trades",
   });
 };
 
@@ -615,60 +315,11 @@ export const getAccountingData = (params: any) => {
   });
 };
 
-// Get trade and barters
-export const getTradeAndBarterData = (params: any) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-trade-and-barter", params],
-
-    endpoint: "/api/barters-and-trades/summary",
-    params,
-  });
-};
-
-// Cancel Order
-export const useCancelOrder = () => {
-  const queryClient = useQueryClient();
-
-  return useClientApi({
-    method: "post",
-    key: ["cancel-order"],
-
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-orders" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Guest order
-export const useGuestOrder = (id: number) => {
-  return useClientApi({
-    method: "post",
-    key: ["guest-order", id],
-    endpoint: `/api/guest-local-pickup/${id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
 // Connect Shippo
 export const useConnectShippo = () => {
   return useClientApi({
     method: "post",
     key: ["connect-shippo"],
-
     endpoint: "/api/shippo/connect",
     onSuccess: (data: any) => {
       if (data?.success) {
@@ -684,7 +335,7 @@ export const useConnectShippo = () => {
 
 // Disconnect Shippo
 export const useDisconnectShippo = () => {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   return useClientApi({
     method: "post",
@@ -694,7 +345,7 @@ export const useDisconnectShippo = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        queryClient.invalidateQueries("user" as any);
+        dispatch(authApi.util.invalidateTags(["user"]));
       }
     },
     onError: (err: any) => {
@@ -737,7 +388,7 @@ export const getSalesTaxData = () => {
 // Sync Shippo
 export const useSyncShippo = () => {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   return useClientApi({
     method: "post",
@@ -747,7 +398,7 @@ export const useSyncShippo = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        queryClient.invalidateQueries("user" as any);
+        dispatch(authApi.util.invalidateTags(["user"]));
       }
     },
     onError: (err: any) => {
@@ -758,7 +409,7 @@ export const useSyncShippo = () => {
 
 // Pick Carrier
 export const usePickCarrier = () => {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   return useClientApi({
     method: "post",
@@ -767,7 +418,7 @@ export const usePickCarrier = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        queryClient.invalidateQueries("user" as any);
+        dispatch(authApi.util.invalidateTags(["user"]));
       }
     },
     onError: (err: any) => {
@@ -778,7 +429,7 @@ export const usePickCarrier = () => {
 
 // Change Label Type
 export const useChangeLabelType = () => {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   return useClientApi({
     method: "post",
@@ -787,7 +438,7 @@ export const useChangeLabelType = () => {
     onSuccess: (data: any) => {
       if (data?.success) {
         toast.success(data?.message);
-        queryClient.invalidateQueries("user" as any);
+        dispatch(authApi.util.invalidateTags(["user"]));
       }
     },
     onError: (err: any) => {
@@ -798,7 +449,7 @@ export const useChangeLabelType = () => {
 
 // Set shipping
 export const useSetShipping = () => {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   return useClientApi({
     method: "post",
@@ -807,7 +458,7 @@ export const useSetShipping = () => {
     endpoint: "/api/shipping-settings",
     onSuccess: (data: any) => {
       if (data?.success) {
-        queryClient.invalidateQueries("user" as any);
+        dispatch(authApi.util.invalidateTags(["user"]));
       }
     },
     onError: (err: any) => {
@@ -910,27 +561,6 @@ export const useGetShippingTax = () => {
     key: ["shipping-data"],
 
     endpoint: "/api/cart/shipping/calculate",
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Edit Shop
-export const useEditShop = () => {
-  return useClientApi({
-    method: "post",
-    key: ["edit-shop"],
-    endpoint: "/api/shop/owner-data-update",
-
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },

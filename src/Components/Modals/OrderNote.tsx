@@ -1,7 +1,8 @@
 "use client";
+import { useAddOrderNoteMutation } from "@/redux/api/OrderApi";
 import React from "react";
-import { useOrderNote } from "@/Hooks/api/dashboard_api";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 
 interface OrderNoteProps {
@@ -14,7 +15,7 @@ interface FormValues {
 }
 
 const OrderNote: React.FC<OrderNoteProps> = ({ order_id, onClose }) => {
-  const { mutateAsync: addNoteMutation, isPending } = useOrderNote(order_id);
+  const [addNoteMutation, { isLoading: isPending }] = useAddOrderNoteMutation();
 
   const {
     register,
@@ -23,13 +24,15 @@ const OrderNote: React.FC<OrderNoteProps> = ({ order_id, onClose }) => {
   } = useForm<FormValues>();
 
   const onSubmit = async (data: FormValues) => {
-    await addNoteMutation(data, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          onClose();
-        }
-      },
-    });
+    try {
+      const res = await addNoteMutation(data).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        onClose();
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Container from "@/Components/Common/Container";
-import { getMissionData } from "@/Hooks/api/cms_api";
+import { getMissionData } from "@/Hooks/cms.api";
 
 type missionItem = {
   id: number;

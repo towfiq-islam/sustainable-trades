@@ -39,7 +39,7 @@ const ShippingAddress = ({
   shippingMethod: any;
   setTaxData: any;
 }) => {
-  const { user, longitude, latitude } = useAuth();
+  const { user, latitude } = useAuth();
   const { mutateAsync: shippingTaxMutation, isPending } = useGetShippingTax();
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
@@ -52,16 +52,26 @@ const ShippingAddress = ({
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    const countryName = Country.getCountryByCode(country)?.name || "";
     const taxData = {
       cart_id,
       shipping_option:
         shippingMethod === "proceed"
           ? "proceed_to_shipping"
           : "arrange_local_pickup",
-      country: countryName,
+      first_name: data.first_name,
+      phone: data.phone,
+      email: data.email,
+      country,
       state,
+      city: data.city,
+      postal_code: data.postal_code,
       address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
+
+      // country: "United States",
+      // state: "Alabama (AL)",
+      // city: "Montgomery",
+      // postal_code: "36104",
+      // address: `201 Monroe Street Montgomery 36104`,
     };
 
     shippingTaxMutation(taxData, {
@@ -71,10 +81,10 @@ const ShippingAddress = ({
 
           const payload = {
             ...data,
-            country: countryName,
+            country,
             state,
-            latitude,
-            longitude,
+            latitude: latitude?.toString(),
+            longitude: latitude?.toString(),
             shipping_option:
               shippingMethod === "proceed"
                 ? "proceed_to_shipping"
@@ -306,8 +316,8 @@ const ShippingAddress = ({
             >
               <option value="">Select State / Province</option>
               {State.getStatesOfCountry(country).map(item => (
-                <option key={item.isoCode} value={item.name}>
-                  {item.name}
+                <option key={item.isoCode} value={item.isoCode}>
+                  {item.name} ({item.isoCode})
                 </option>
               ))}
             </select>

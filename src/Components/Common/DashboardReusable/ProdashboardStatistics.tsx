@@ -1,15 +1,17 @@
-import {
-  getListingData,
-  getOrderData,
-  getTradesData,
-  getVisitorData,
-} from "@/Hooks/api/dashboard_api";
+import { getVisitorData } from "@/Hooks/api/dashboard_api";
+import { useGetOrderStatisticsQuery } from "@/redux/api/OrderApi";
+import { useGetVendorListingsQuery } from "@/redux/api/productApi";
+import { useGetTradesDataQuery } from "@/redux/api/tradeApi";
 import { FaAngleRight } from "react-icons/fa";
 
 const ProdashboardStatistics = () => {
-  const { data: listingData, isLoading: listingLoading } = getListingData();
-  const { data: tradeData, isLoading: tradeLoading } = getTradesData();
-  const { data: orderData, isLoading: orderLoading } = getOrderData();
+  const { data: listingData, isLoading: listingLoading } =
+    useGetVendorListingsQuery({});
+  const { data: tradeData, isLoading: tradeLoading } = useGetTradesDataQuery(
+    {},
+  );
+  const { data: orderData, isLoading: orderLoading } =
+    useGetOrderStatisticsQuery({});
   const { data: visitorData, isLoading: visitorLoading } = getVisitorData();
 
   return (

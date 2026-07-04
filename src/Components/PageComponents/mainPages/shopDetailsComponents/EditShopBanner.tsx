@@ -13,8 +13,11 @@ import {
   StarSvg,
 } from "@/Components/Svg/SvgContainer";
 import Container from "@/Components/Common/Container";
-import { useUpdateShopBanner, useUpdateShopPhoto } from "@/Hooks/api/cms_api";
 import { ImSpinner9 } from "react-icons/im";
+import {
+  useUpdateShopBannerMutation,
+  useUpdateShopPhotoMutation,
+} from "@/redux/api/shopApi";
 
 type BannerItem = {
   rating_avg: string;
@@ -52,16 +55,18 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
   const profileUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/${data?.shop_info?.shop_image}`;
   const [previewCover, setPreviewCover] = useState<string | null>(null);
   const [previewProfile, setPreviewProfile] = useState<string | null>(null);
-  const { mutate: updateShopPhoto, isPending: profilePending } =
-    useUpdateShopPhoto();
-  const { mutate: updateShopBanner, isPending: bannerPending } =
-    useUpdateShopBanner();
+  const [updateShopPhoto, { isLoading: profilePending }] =
+    useUpdateShopPhotoMutation();
+  const [updateShopBanner, { isLoading: bannerPending }] =
+    useUpdateShopBannerMutation();
 
   const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setPreviewCover(URL.createObjectURL(file));
-      updateShopBanner({ shop_banner: file });
+      const formData = new FormData();
+      formData.append("shop_banner", file);
+      updateShopBanner(formData).unwrap();
     }
   };
 
@@ -69,7 +74,9 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
     const file = e.target.files?.[0];
     if (file) {
       setPreviewProfile(URL.createObjectURL(file));
-      updateShopPhoto({ shop_image: file });
+      const formData = new FormData();
+      formData.append("shop_image", file);
+      updateShopPhoto(formData).unwrap();
     }
   };
 

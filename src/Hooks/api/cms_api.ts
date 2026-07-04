@@ -131,66 +131,17 @@ export async function getSingleBlog(id: number) {
   });
 }
 
+// Get FAQ
+export const getFAQ = () => {
+  return useServerApi({
+    endpoint: "/api/faq/all",
+    revalidate: 3600,
+  });
+};
+
 // =======================================================
 //  CSR (Client Side Rendering)
 // =======================================================
-
-// NewsLetter
-export const useNewsletter = () => {
-  return useClientApi({
-    method: "post",
-    key: ["newsletter"],
-    endpoint: "/api/newsletter/subscribe",
-    onSuccess: (data: any) => {
-      if (data?.message) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Get Tutorials
-export const getTutorials = (search: string, type: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-tutorials", search, type],
-    endpoint: "/api/tutorials",
-    params: { type, search },
-  });
-};
-
-// Get FAQ
-export const getFAQ = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-faq"],
-    endpoint: "/api/faq/all",
-  });
-};
-
-
-// Follow Shop
-export const useFollowShop = (shop_id: number) => {
-  const queryClient = useQueryClient();
-
-  return useClientApi({
-    method: "post",
-    key: ["follow-shop", shop_id],
-    endpoint: `/api/follow-shop/${shop_id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-shop-details" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
 
 // Get Product Cart
 export const getProductCart = () => {
@@ -282,96 +233,6 @@ export const useUpdateCart = (cart_id: number | null) => {
     endpoint: `/api/cart/update/${cart_id}`,
     onSuccess: (data: any) => {
       if (data?.success) {
-        queryClient.invalidateQueries("get-product-cart" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Update Shop Photo
-export const useUpdateShopPhoto = () => {
-  const queryClient = useQueryClient();
-  return useClientApi({
-    method: "post",
-    key: ["update-shop-photo"],
-    endpoint: "/api/shop/image-update",
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-shop-details" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Update Shop Banner
-export const useUpdateShopBanner = () => {
-  const queryClient = useQueryClient();
-  return useClientApi({
-    method: "post",
-    key: ["update-shop-banner"],
-    endpoint: "/api/shop/banner-update",
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        queryClient.invalidateQueries("get-shop-details" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Trade Shop Product
-export const getTradeShopProducts = (id: any | null) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-trade-products", id],
-    enabled: !!id,
-    endpoint: `/api/trade-shop-product/${id}`,
-  });
-};
-
-// Trade Send Offer
-export const useTradeSendOffer = () => {
-  return useClientApi({
-    method: "post",
-    key: ["trade-send-offer"],
-    endpoint: "/api/trade-offer/create",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Checkout
-export const useCheckout = (cart_id: number | null) => {
-  const queryClient = useQueryClient();
-  return useClientApi({
-    method: "post",
-    key: ["checkout", cart_id],
-    endpoint: `/api/checkout/${cart_id}`,
-    onSuccess: (data: any) => {
-      if (data?.status || data?.success) {
         queryClient.invalidateQueries("get-product-cart" as any);
         toast.success(data?.message);
       }

@@ -76,6 +76,14 @@ export const orderApi = apiSlice.injectEndpoints({
       }),
       providesTags: ["review"],
     }),
+
+    // Checkout
+    checkout: builder.mutation({
+      query: cartId => ({
+        url: `/api/checkout/${cartId}`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -90,4 +98,5 @@ export const {
   useAddOrderNoteMutation,
   useAddReviewMutation,
   useGetCustomerReviewsQuery,
+  useCheckoutMutation,
 } = orderApi;

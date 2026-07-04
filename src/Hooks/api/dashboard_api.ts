@@ -77,6 +77,23 @@ export const useTradeShopProduct = (id: any) => {
   });
 };
 
+// Trade Send Offer
+export const useTradeSendOffer = () => {
+  return useClientApi({
+    method: "post",
+    key: ["trade-send-offer"],
+    endpoint: "/api/trade-offer/create",
+    onSuccess: (data: any) => {
+      if (data?.success) {
+        toast.success(data?.message);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+};
+
 // trade send counter product
 export const useTradeSendProduct = (id: any) => {
   return useClientApi({
@@ -285,24 +302,6 @@ export const useBulkDeleteDiscount = () => {
       toast.error(
         err?.response?.data?.message || "Failed to delete discount(s)",
       );
-    },
-  });
-};
-
-// Image Delete Discounts
-export const useImageDelete = (id: any) => {
-  return useClientApi({
-    method: "delete",
-    key: ["image-delete"],
-
-    endpoint: `/image-delete/${id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message || "image deleted successfully");
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to delete image");
     },
   });
 };

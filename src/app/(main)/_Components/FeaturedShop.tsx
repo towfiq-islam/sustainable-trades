@@ -5,8 +5,8 @@ import useAuth from "@/Hooks/useAuth";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { IoLink } from "react-icons/io5";
 import Container from "@/Components/Common/Container";
-import { getFeaturedShops } from "@/Hooks/api/cms_api";
 import { ShopCardSkeleton } from "@/Components/Loader/Loader";
+import { useGetFeaturedShopsQuery } from "@/redux/api/shopApi";
 
 type FeaturedItem = {
   id: number;
@@ -28,10 +28,10 @@ type FeaturedItem = {
 
 const FeaturedShops = () => {
   const { latitude, longitude } = useAuth();
-  const { data: featuredData, isLoading } = getFeaturedShops(
-    latitude,
-    longitude
-  );
+  const { data: featuredData, isLoading } = useGetFeaturedShopsQuery({
+    lat: latitude,
+    lng: longitude,
+  });
 
   return (
     <section className="mt-50 md:mt-0 py-20">
@@ -83,7 +83,7 @@ const FeaturedShops = () => {
                           key={idx}
                           className="text-primary-green text-xs md:text-base"
                         />
-                      )
+                      ),
                     )}
                     {Array.from({ length: 5 - +shop_info?.avg_rating }).map(
                       (_, index) => (
@@ -91,7 +91,7 @@ const FeaturedShops = () => {
                           key={index}
                           className="text-primary-green text-sm"
                         />
-                      )
+                      ),
                     )}
                   </div>
                   <p className="text-sm font-semibold text-secondary-black">

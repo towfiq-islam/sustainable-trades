@@ -4,7 +4,7 @@ import { BackSvg, MessageSvg } from "@/Components/Svg/SvgContainer";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { useSendMessage } from "@/Hooks/api/chat_api";
+import { useSendMessageMutation } from "@/redux/api/chatApi";
 
 type messageProps = {
   id: number | null;
@@ -26,7 +26,8 @@ interface MessageFormData {
 }
 
 const MessageToSellerModal = ({ id, shopInfo, setMsgOpen }: messageProps) => {
-  const { mutate: sendMessageMutation, isPending } = useSendMessage();
+  const [sendMessageMutation, { isLoading: isPending }] =
+    useSendMessageMutation();
 
   const {
     register,
@@ -41,15 +42,17 @@ const MessageToSellerModal = ({ id, shopInfo, setMsgOpen }: messageProps) => {
       ...data,
     };
 
-    await sendMessageMutation(payload, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          toast.success(data?.message);
-          reset();
-          setMsgOpen(false);
-        }
-      },
-    });
+    try {
+      const res = await sendMessageMutation(payload).unwrap();
+
+      if (res?.success) {
+        toast.success(data?.message);
+        reset();
+        setMsgOpen(false);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (

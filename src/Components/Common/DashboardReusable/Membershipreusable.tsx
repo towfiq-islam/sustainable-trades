@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import PauseMembershipModal from "@/Components/Modals/PauseMembershipModal";
 import useAuth from "@/Hooks/useAuth";
-import { useMembershipget } from "@/Hooks/api/dashboard_api";
+import { useGetMembershipsQuery } from "@/redux/api/shopApi";
 
 interface MembershipReusableProps {
   membershipType: "Basic" | "Pro" | "Shopper";
@@ -15,7 +15,7 @@ const Membershipreusable: React.FC<MembershipReusableProps> = ({
   const [isactive, setIsactive] = useState<string>("Yearly (Save 38%)");
   const [pauseOpen, setPauseOpen] = useState<boolean>(false);
   const { user } = useAuth();
-  const { data: membership } = useMembershipget();
+  const { data: membership } = useGetMembershipsQuery({});
 
   const [currentMembershipType, setCurrentMembershipType] = useState<
     string | null

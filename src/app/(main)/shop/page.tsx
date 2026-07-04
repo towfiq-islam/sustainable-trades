@@ -1,12 +1,6 @@
 "use client";
-import {
-  getCategoryDetails,
-  getMembershipSpotlightClient,
-  getNearbyProducts,
-  getProductCategoriesClient,
-} from "@/Hooks/api/cms_api";
 import "swiper/css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import "swiper/css/navigation";
 import useAuth from "@/Hooks/useAuth";
@@ -22,6 +16,12 @@ import { SingleShopSkeleton } from "@/Components/Loader/Loader";
 import MagicMarkers from "@/app/(main)/_Components/MagicMarkers";
 import Subscribe from "@/app/(main)/_Components/Subscribe";
 import MemberSpotlight from "../_Components/MemberSpotlight";
+import { useGetMembershipSpotlightQuery } from "@/redux/api/shopApi";
+import {
+  useGetCategoryDetailsQuery,
+  useGetNearbyProductsQuery,
+  useGetProductCategoriesQuery,
+} from "@/redux/api/productApi";
 
 type categoryItem = {
   id: number;
@@ -35,17 +35,24 @@ const page = () => {
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [page, setPage] = useState<string>("");
   const [nearbyPage, setNearbyPage] = useState<string>("");
-  const { data: spotlightData } = getMembershipSpotlightClient();
+  const { data: spotlightData } = useGetMembershipSpotlightQuery({});
+
   const { data: allCategory, isLoading: categoryLoading } =
-    getProductCategoriesClient();
-  const { data: categoryDetails, isLoading } = getCategoryDetails(
-    categoryId,
-    latitude,
-    longitude,
+    useGetProductCategoriesQuery({});
+
+  const { data: categoryDetails, isLoading } = useGetCategoryDetailsQuery({
+    id: categoryId,
+    lat: latitude,
+    lng: longitude,
     page,
-  );
+  });
+
   const { data: nearbyProducts, isLoading: nearbyProductsLoading } =
-    getNearbyProducts(latitude, longitude, nearbyPage);
+    useGetNearbyProductsQuery({
+      lat: latitude,
+      lng: longitude,
+      page: nearbyPage,
+    });
 
   useEffect(() => {
     setCategoryId(allCategory?.data[0]?.id);

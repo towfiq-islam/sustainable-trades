@@ -5,9 +5,6 @@ if (typeof window !== "undefined") {
   (window as any).Pusher = Pusher;
 }
 
-const authToken =
-  typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
 const echo =
   typeof window !== "undefined"
     ? new Echo({
@@ -16,11 +13,32 @@ const echo =
         cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER!,
         forceTLS: true,
         enabledTransports: ["ws", "wss"],
-        authEndpoint: `${process.env.NEXT_PUBLIC_SITE_URL}/api/broadcasting/auth`,
-        auth: {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
+        authorizer: (channel: any) => {
+          return {
+            authorize: (
+              socketId: string,
+              callback: (error: Error | null, data: any) => void,
+            ) => {
+              fetch(
+                `${process.env.NEXT_PUBLIC_SITE_URL}/api/broadcasting/auth`,
+                {
+                  method: "POST",
+                  credentials: "include",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                  },
+                  body: JSON.stringify({
+                    socket_id: socketId,
+                    channel_name: channel.name,
+                  }),
+                },
+              )
+                .then(res => res.json())
+                .then(data => callback(null, data))
+                .catch(err => callback(err, null));
+            },
+          };
         },
       })
     : null;

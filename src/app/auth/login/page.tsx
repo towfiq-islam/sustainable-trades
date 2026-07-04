@@ -4,15 +4,18 @@ import {
   FacebookLogoSvg,
   GoogleLogoSvg,
 } from "@/Components/Svg/SvgContainer";
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import loginBg from "@/Assets/login.png";
 import { useForm } from "react-hook-form";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { useLogin } from "@/Hooks/api/auth_api";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useLoginMutation } from "@/redux/api/authApi";
+import useAuth from "@/Hooks/useAuth";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type formData = {
   email: string;
@@ -20,8 +23,10 @@ type formData = {
 };
 
 const Page = () => {
+  const router = useRouter();
+  const { setAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { mutateAsync: loginMutation, isPending } = useLogin();
+  const [login, { isLoading }] = useLoginMutation();
 
   const {
     register,
@@ -30,7 +35,33 @@ const Page = () => {
   } = useForm<formData>();
 
   const onSubmit = async (data: formData) => {
-    await loginMutation(data);
+    try {
+      const res = await login(data).unwrap();
+
+      if (
+        res?.success &&
+        (res?.data?.role === "customer" || res?.data?.membership)
+      ) {
+        setAuthenticated();
+        toast.success(res?.message);
+        router.push(
+          `${
+            res?.data?.role === "customer"
+              ? "/dashboard/customer/orders"
+              : res?.data?.role === "vendor" &&
+                  res?.data?.membership?.membership_type === "pro"
+                ? "/dashboard/pro/home"
+                : "/dashboard/basic/home"
+          }`,
+        );
+      } else {
+        setAuthenticated();
+        toast.error("Please choose a plan");
+        router.push(`/auth/create-shop?step=${5}`);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message ?? "Login failed. Please try again.");
+    }
   };
 
   return (
@@ -133,12 +164,12 @@ const Page = () => {
             {/* Submit btn */}
             <button
               type="submit"
-              disabled={isPending}
+              disabled={isLoading}
               className={`px-10 py-1.5 sm:py-3 md:py-4 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green md:text-lg block w-full ${
-                isPending ? "cursor-not-allowed" : "cursor-pointer"
+                isLoading ? "cursor-not-allowed" : "cursor-pointer"
               }`}
             >
-              {isPending ? (
+              {isLoading ? (
                 <p className="flex gap-2 items-center justify-center">
                   <CgSpinnerTwo className="animate-spin text-xl" />
                   <span>Signing in....</span>

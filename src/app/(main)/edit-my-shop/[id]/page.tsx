@@ -1,7 +1,5 @@
 "use client";
-import React, { use, useEffect } from "react";
-import { useEditShop } from "@/Hooks/api/auth_api";
-import { getShopDetails } from "@/Hooks/api/cms_api";
+import { use, useEffect } from "react";
 import Container from "@/Components/Common/Container";
 import { useForm, FormProvider } from "react-hook-form";
 import EditFormTwo from "@/Components/PageComponents/EditForm/EditFormTwo";
@@ -10,6 +8,8 @@ import EditFormThree from "@/Components/PageComponents/EditForm/EditFormThree";
 import { PuffLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 import useAuth from "@/Hooks/useAuth";
+import { useEditShop } from "@/Hooks/api/dashboard_api";
+import { useGetShopDetailsQuery } from "@/redux/api/shopApi";
 
 type ProfileFormValues = {
   first_name: string;
@@ -52,7 +52,7 @@ const Page = ({ params }: Props) => {
   const { user } = useAuth();
   const { id } = use(params);
   const router = useRouter();
-  const { data: shopDetailsData, isLoading } = getShopDetails(id);
+  const { data: shopDetailsData, isLoading } = useGetShopDetailsQuery(id);
   const methods = useForm<ProfileFormValues>();
   const { mutate: editShopMutation, isPending } = useEditShop();
   const {
@@ -114,10 +114,6 @@ const Page = ({ params }: Props) => {
       return null;
     }
   };
-
-  // const onSubmit = async (data: ProfileFormValues) => {
-  //   editShopMutation(data);
-  // };
 
   const onSubmit = async (formData: ProfileFormValues) => {
     const previousAddress = shopDetailsData?.data?.shop_info?.address;

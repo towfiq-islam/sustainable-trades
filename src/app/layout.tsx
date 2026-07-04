@@ -1,12 +1,10 @@
 import "./globals.css";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Lato, Geist } from "next/font/google";
-import AosProvider from "@/Provider/AosProvider/AosProvider";
-import AuthProvider from "@/Provider/AuthProvider/AuthProvider";
 import QueryProvider from "@/Provider/QueryProvider/QueryProvider";
 import ToastProvider from "@/Provider/ToastProvider/ToastProvider";
-import { cn } from "@/lib/utils";
-
+import ReduxProvider from "@/Provider/ReduxProvider/ReduxProvider";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 // Fonts
@@ -34,14 +32,12 @@ export default async function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className={`${lato.variable} antialiased`}>
-        <QueryProvider>
-          <AuthProvider>
-            <AosProvider>
+        <ReduxProvider>
+          <QueryProvider>
               <ToastProvider />
               {children}
-            </AosProvider>
-          </AuthProvider>
-        </QueryProvider>
+          </QueryProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

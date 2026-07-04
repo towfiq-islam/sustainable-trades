@@ -5,10 +5,13 @@ import moment from "moment";
 import echo from "@/lib/echo";
 import useAuth from "@/Hooks/useAuth";
 import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
-import { getLocalPickupConversation } from "@/Hooks/api/chat_api";
 import { ConversationCardSkeleton } from "@/Components/Loader/Loader";
+import {
+  chatApi,
+  useGetLocalPickupConversationQuery,
+} from "@/redux/api/chatApi";
+import { useAppDispatch } from "@/redux/store";
 
 type Participant = {
   id: number;
@@ -33,9 +36,9 @@ type conversationItem = {
 
 const LocalPickupMessage = () => {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
   const { data: localPickupConversation, isLoading } =
-    getLocalPickupConversation();
+    useGetLocalPickupConversationQuery({});
 
   // Pusher Config
   useEffect(() => {
@@ -46,9 +49,7 @@ const LocalPickupMessage = () => {
       .listen("LocalPickupConversationEvent", (e: any) => {
         console.log("New message event received:", e);
         if (+e?.receiverId === +user?.id) {
-          queryClient.invalidateQueries([
-            "get-local-pickup-conversation",
-          ] as any);
+          dispatch(chatApi.util.invalidateTags(["conversation"]));
         }
       });
   }, [echo, user?.id]);

@@ -6,7 +6,6 @@ import ProdashboardStatistics from "./ProdashboardStatistics";
 import { FaAngleRight } from "react-icons/fa";
 import {
   getDashboardHomeData,
-  getLatestProducts,
   useTodaysNotification,
 } from "@/Hooks/api/dashboard_api";
 import moment from "moment";
@@ -14,6 +13,7 @@ import {
   InventoryItemSkeleton,
   NotificationSkeleton,
 } from "@/Components/Loader/Loader";
+import { useGetLatestProductsQuery } from "@/redux/api/productApi";
 
 type ImageItem = {
   image: string;
@@ -50,10 +50,10 @@ type HomeProps = {
 const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
   const { user } = useAuth();
   const { data: homeData, isLoading: homeDataLoading } = getDashboardHomeData();
-  const { data: latestProductsData, isLoading: latestProductsLoading } =
-    getLatestProducts();
   const { data: notificationsData, isLoading: notificationLoading } =
     useTodaysNotification();
+  const { data: latestProductsData, isLoading: latestProductsLoading } =
+    useGetLatestProductsQuery({});
 
   return (
     <>

@@ -1,7 +1,6 @@
 import toast from "react-hot-toast";
 import useClientApi from "@/Hooks/useClientApi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Get Product Cart
 export const getProductCart = () => {
@@ -94,39 +93,6 @@ export const useUpdateCart = (cart_id: number | null) => {
     onSuccess: (data: any) => {
       if (data?.success) {
         queryClient.invalidateQueries("get-product-cart" as any);
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Download Invoice
-export const useDownloadInvoice = () => {
-  return useClientApi({
-    method: "post",
-    key: ["download-invoice"],
-
-    axiosOptions: {
-      responseType: "blob",
-    },
-  });
-};
-
-// Edit Shop
-export const useEditShop = () => {
-  return useClientApi({
-    method: "post",
-    key: ["edit-shop"],
-    endpoint: "/api/shop/owner-data-update",
-
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-    onSuccess: (data: any) => {
-      if (data?.success) {
         toast.success(data?.message);
       }
     },

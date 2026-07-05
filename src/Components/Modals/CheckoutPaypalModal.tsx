@@ -147,12 +147,13 @@ const CheckoutPaypalModal = ({
                   `${process.env.NEXT_PUBLIC_SITE_URL}/api/direct-checkout/${cart_id}`,
                   {
                     method: "POST",
-                    credentials: "include",
                     headers: {
                       "Content-Type": "application/json",
+                      Accept: "application/json", // <-- add this
+                      "X-Requested-With": "XMLHttpRequest", // <-- and this
                     },
                     body: JSON.stringify({
-                      payment_method: "paypal",
+                      ...formData,
                     }),
                   },
                 );

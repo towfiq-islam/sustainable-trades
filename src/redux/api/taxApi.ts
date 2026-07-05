@@ -29,6 +29,13 @@ export const taxApi = apiSlice.injectEndpoints({
         body,
       }),
     }),
+    getGuestShippingTax: builder.mutation<any, any>({
+      query: body => ({
+        url: "/api/guest/shipping/calculate",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -38,4 +45,5 @@ export const {
   useGetSalesTaxDataQuery,
   useAddSalesTaxMutation,
   useGetShippingTaxMutation,
+  useGetGuestShippingTaxMutation
 } = taxApi;

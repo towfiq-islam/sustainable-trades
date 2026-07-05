@@ -1,7 +1,7 @@
 import { MdOutlineLocationOn } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useCreateFlatRateMutation } from "@/redux/api/dashboardApi";
+import { useCreateFlatRateMutation } from "@/redux/api/vendorApi";
 
 interface FlatRateForm {
   option_name: string;

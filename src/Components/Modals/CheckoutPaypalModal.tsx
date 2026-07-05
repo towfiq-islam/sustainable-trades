@@ -1,5 +1,5 @@
 "use client";
-import { useLocalPickupPayment } from "@/Hooks/api/dashboard_api";
+import { useLocalPickupPaymentMutation } from "@/redux/api/vendorApi";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -16,8 +16,8 @@ const CheckoutPaypalModal = ({
   onClose?: any;
   isLocalPayment?: boolean;
 }) => {
-  const { mutate: localPickupPayment, isPending: isConnecting } =
-    useLocalPickupPayment(cart_id);
+  const [localPickupPayment, { isLoading: isConnecting }] =
+    useLocalPickupPaymentMutation();
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -34,16 +34,20 @@ const CheckoutPaypalModal = ({
 
   // For COD
   const handleCashOnDelivery = () => {
-    localPickupPayment(
-      { payment_method: "cash_on_delivery" },
-      {
-        onSuccess: (data: any) => {
-          if (data?.success) {
-            router.push("/dashboard/customer/orders");
-          }
+    try {
+      const res: any = localPickupPayment({
+        id: cart_id,
+        data: {
+          payment_method: "cash_on_delivery",
         },
-      },
-    );
+      }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        router.push("/dashboard/customer/orders");
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (

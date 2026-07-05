@@ -5,7 +5,6 @@ import Modal from "@/Components/Common/Modal";
 import { BsCartPlus } from "react-icons/bs";
 import { FaTruck } from "react-icons/fa";
 import { GiOpenBook } from "react-icons/gi";
-import { useSetShipping } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
 import ShippoConfigModal from "./_Components/ShippoConfigModal";
@@ -14,7 +13,8 @@ import FlatConfigModal from "./_Components/FlatConfigModal";
 import {
   useGetFlatRateQuery,
   useGetWeightRatesQuery,
-} from "@/redux/api/dashboardApi";
+  useSetShippingMutation,
+} from "@/redux/api/vendorApi";
 
 const Page = () => {
   const { user } = useAuth();
@@ -25,7 +25,7 @@ const Page = () => {
   /* ---------- API ---------- */
   const { data: weightRanges } = useGetWeightRatesQuery();
   const { data: flatRateRanges } = useGetFlatRateQuery();
-  const { mutate: setShippo, isPending: isSetting } = useSetShipping();
+  const [setShippo, { isLoading: isSetting }] = useSetShippingMutation();
 
   const handleShippingMethodChange = (method: string) => {
     if (method === "shippo" && !user?.shop_info?.shippo_connected) {
@@ -43,16 +43,14 @@ const Page = () => {
       return;
     }
 
-    setShippo(
-      { shipping_setting: method },
-      {
-        onSuccess: (res: any) => {
-          if (res?.success) {
-            toast.success(res?.message);
-          }
-        },
-      },
-    );
+    try {
+      const res: any = setShippo({ shipping_setting: method }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (

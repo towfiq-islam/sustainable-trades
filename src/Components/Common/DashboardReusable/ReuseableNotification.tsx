@@ -7,7 +7,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import {
   useDeleteAllNotificationsMutation,
   useGetNotificationsQuery,
-} from "@/redux/api/dashboardApi";
+} from "@/redux/api/vendorApi";
 
 type notificationItem = {
   id: number;

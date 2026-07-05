@@ -1,7 +1,7 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 import toast from "react-hot-toast";
 
-export const dashboardApi = apiSlice.injectEndpoints({
+export const vendorApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
     // Flat rate / weight rate
     createFlatRate: builder.mutation<any, any>({
@@ -58,9 +58,7 @@ export const dashboardApi = apiSlice.injectEndpoints({
       },
     }),
 
-    // ---------------------------------------------------------------------
-    // Payments / dashboard / accounting
-    // ---------------------------------------------------------------------
+    // Payments / accounting
     getPayments: builder.query<any, string>({
       query: status => ({ url: "/api/payment-report", params: { status } }),
     }),
@@ -77,17 +75,29 @@ export const dashboardApi = apiSlice.injectEndpoints({
       query: params => ({ url: "/api/accounting/summary", params }),
     }),
 
-    // ---------------------------------------------------------------------
     // PayPal onboarding
-    // ---------------------------------------------------------------------
-    onboardPaypal: builder.mutation<any, void>({
-      query: () => ({ url: "/api/paypal/onboard", method: "POST" }),
+    onboardPaypal: builder.mutation<any, any>({
+      query: data => ({
+        url: "/api/paypal/onboard",
+        method: "POST",
+        body: data,
+      }),
       invalidatesTags: ["user"],
     }),
 
     disconnectPaypal: builder.mutation<any, void>({
       query: () => ({ url: "/api/paypal/disconnect", method: "POST" }),
       invalidatesTags: ["user"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.success) {
+            toast.success(data.message);
+          }
+        } catch (err: any) {
+          toast.error(err?.data?.message);
+        }
+      },
     }),
 
     reconnectPaypal: builder.mutation<any, void>({
@@ -95,17 +105,23 @@ export const dashboardApi = apiSlice.injectEndpoints({
       invalidatesTags: ["user"],
     }),
 
-    // ---------------------------------------------------------------------
     // Shippo / shipping
-    // ---------------------------------------------------------------------
     connectShippo: builder.mutation<any, void>({
       query: () => ({ url: "/api/shippo/connect", method: "POST" }),
-      // Redirect side-effect lives in the component via onQueryStarted,
-      // see usage note below — RTK Query endpoints shouldn't reach into
-      // `window` directly inside `query`.
+      invalidatesTags: ["user"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.success) {
+            window.location.href = data?.data?.url;
+          }
+        } catch (err: any) {
+          toast.error(err?.data?.message);
+        }
+      },
     }),
 
-    disconnectShippo: builder.mutation({
+    disconnectShippo: builder.mutation<any, void>({
       query: () => ({ url: "/api/shippo/disconnect", method: "POST" }),
       invalidatesTags: ["user"],
     }),
@@ -116,22 +132,32 @@ export const dashboardApi = apiSlice.injectEndpoints({
         method: "POST",
       }),
       invalidatesTags: ["user"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.success) {
+            toast.success(data?.message);
+          }
+        } catch (err: any) {
+          toast.error(err?.data?.message);
+        }
+      },
     }),
 
     pickCarrier: builder.mutation({
-      query: body => ({
-        url: "/api/shippo/pick-carrier", // TODO: confirm real endpoint
+      query: ({ id, data }) => ({
+        url: `/api/shippo/carrier/${id}`,
         method: "POST",
-        body,
+        body: data,
       }),
       invalidatesTags: ["user"],
     }),
 
     changeLabelType: builder.mutation({
-      query: body => ({
-        url: "/api/shippo/label-type", // TODO: confirm real endpoint
+      query: ({ id, data }) => ({
+        url: `/api/shippo/rate-preference/${id}`,
         method: "POST",
-        body,
+        body: data,
       }),
       invalidatesTags: ["user"],
     }),
@@ -146,23 +172,26 @@ export const dashboardApi = apiSlice.injectEndpoints({
     }),
 
     localPickupPro: builder.mutation({
-      query: id => ({
+      query: ({ id, data }) => ({
         url: `/api/local-pickup/orders/cart/${id}`,
         method: "POST",
+        body: data,
       }),
     }),
 
     arrangeLocalPickupAddress: builder.mutation({
-      query: id => ({
+      query: ({ id, data }) => ({
         url: `/api/order/${id}/local-pickup/arrange`,
         method: "POST",
+        body: data,
       }),
     }),
 
     localPickupPayment: builder.mutation({
-      query: id => ({
+      query: ({ id, data }) => ({
         url: `/api/local-pickup/checkout/${id}`,
         method: "POST",
+        body: data,
       }),
     }),
   }),
@@ -197,4 +226,4 @@ export const {
   useLocalPickupProMutation,
   useArrangeLocalPickupAddressMutation,
   useLocalPickupPaymentMutation,
-} = dashboardApi;
+} = vendorApi;

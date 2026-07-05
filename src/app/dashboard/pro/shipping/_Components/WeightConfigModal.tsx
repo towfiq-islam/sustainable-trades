@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import {
   useCreateWeightRateMutation,
   useDeleteWeightRateMutation,
-} from "@/redux/api/dashboardApi";
+} from "@/redux/api/vendorApi";
 
 interface WeightForm {
   cost: string;

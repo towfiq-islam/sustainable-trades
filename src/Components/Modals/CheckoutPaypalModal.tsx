@@ -1,7 +1,6 @@
 "use client";
 import { useLocalPickupPaymentMutation } from "@/redux/api/vendorApi";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
@@ -20,7 +19,6 @@ const CheckoutPaypalModal = ({
 }) => {
   const [localPickupPayment, { isLoading: isConnecting }] =
     useLocalPickupPaymentMutation();
-  const queryClient = useQueryClient();
   const router = useRouter();
 
   const initialOptions = {
@@ -261,7 +259,6 @@ const CheckoutPaypalModal = ({
                 const orderData = await response.json();
                 if (orderData?.success) {
                   toast.success(orderData?.message);
-                  queryClient.invalidateQueries("get-product-cart" as any);
                   router.push(
                     `/order-success?order_id=${orderData?.data?.id}&shop_id=${orderData?.data?.shop_id}`,
                   );

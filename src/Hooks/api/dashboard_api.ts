@@ -5,53 +5,6 @@ import useAuth from "@/Hooks/useAuth";
 import { useAppDispatch } from "@/redux/store";
 import { authApi } from "@/redux/api/authApi";
 
-// Create Discount
-export const useCreateDiscount = () => {
-  return useClientApi({
-    method: "post",
-    key: ["create-discount"],
-    endpoint: "/api/discounts",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message || "Discount created successfully!");
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to create discount.");
-    },
-  });
-};
-
-// Create Taxes Hooks
-export const useTaxes = () => {
-  const queryClient = useQueryClient();
-
-  return useClientApi({
-    method: "post",
-    key: ["save-taxes"],
-    endpoint: "/api/shop-taxes",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success("Tax rate saved successfully");
-        queryClient.invalidateQueries("get-all-taxes" as any);
-        queryClient.invalidateQueries("user" as any);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to Saving tax rate");
-    },
-  });
-};
-
-// Get Discount
-export const getDiscount = (status: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-discount", status],
-    params: { status },
-    endpoint: "/api/discounts",
-  });
-};
 
 // Create Flat Rate Hooks
 export const useFlatRate = () => {
@@ -126,68 +79,6 @@ export const useTodaysNotification = () => {
     method: "get",
     key: ["get-todays-notifications"],
     endpoint: "/api/notifications/today",
-  });
-};
-
-// Hook for getting single discount by ID
-export const useDiscountGetById = (id?: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["discount-get-by-id", id],
-    endpoint: `/api/discount/${id}`,
-  });
-};
-
-// Hook for updating a discount
-export const useDiscountUpdate = (id?: string) => {
-  return useClientApi({
-    method: "post",
-    key: ["discount-update", id],
-    endpoint: `/api/discount-update/${id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message || "Discount updated successfully");
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to update discount");
-    },
-  });
-};
-
-export const useDiscountStatusChange = (id: any) => {
-  return useClientApi({
-    method: "post",
-    key: ["discount-status-change"],
-    endpoint: `/api/status-discount-codes/${id}`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message || "Discount status updated successfully");
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to update status");
-    },
-  });
-};
-
-// Bulk Delete Discounts
-export const useBulkDeleteDiscount = () => {
-  return useClientApi({
-    method: "delete",
-    key: ["bulk-delete-discount"],
-
-    endpoint: "/api/delete-discount-codes",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message || "Discount(s) deleted successfully");
-      }
-    },
-    onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message || "Failed to delete discount(s)",
-      );
-    },
   });
 };
 
@@ -354,37 +245,6 @@ export const useDisconnectShippo = () => {
   });
 };
 
-// Add Sales Tax
-export const useAddSalesTax = () => {
-  const queryClient = useQueryClient();
-
-  return useClientApi({
-    method: "post",
-    key: ["add-sales-tax"],
-
-    endpoint: "/api/sales-tax",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-        queryClient.invalidateQueries("user" as any);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Get Sales Tax
-export const getSalesTaxData = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-sales-tax"],
-
-    endpoint: "/api/sales-tax",
-  });
-};
-
 // Sync Shippo
 export const useSyncShippo = () => {
   const { user } = useAuth();
@@ -520,47 +380,6 @@ export const useLocalPickupPayment = (id: any) => {
         toast.success(data?.message);
       }
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Get All Taxes
-export const getAllTaxes = () => {
-  return useClientApi({
-    method: "get",
-
-    key: ["get-all-taxes"],
-    endpoint: "/api/shop-taxes-list",
-  });
-};
-
-// Apply Coupon
-export const useApplyCoupon = () => {
-  return useClientApi({
-    method: "post",
-    key: ["apply-coupon"],
-
-    endpoint: `/api/apply-coupon`,
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Calculate Tax
-export const useGetShippingTax = () => {
-  return useClientApi({
-    method: "post",
-    key: ["shipping-data"],
-
-    endpoint: "/api/cart/shipping/calculate",
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },

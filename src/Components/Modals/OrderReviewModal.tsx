@@ -1,6 +1,7 @@
 "use client";
-import { useApplyCoupon } from "@/Hooks/api/dashboard_api";
+import { useApplyCouponMutation } from "@/redux/api/discountApi";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 type Item = {
   id: number;
@@ -55,7 +56,7 @@ export default function OrderReviewModal({
   shop_name,
 }: Props) {
   const [promo, setPromo] = useState<string>("");
-  const { mutate: couponMutation, isPending } = useApplyCoupon();
+  const [couponMutation, { isLoading: isPending }] = useApplyCouponMutation();
   const [couponCode, setCouponCode] = useState<number | null>(null);
   const [couponType, setCouponType] = useState<string>("");
 
@@ -65,18 +66,20 @@ export default function OrderReviewModal({
       coupon_code: promo,
     };
 
-    couponMutation(payload, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          setCouponCode(+res?.data?.discount_amount);
-          setCouponType(res?.data?.discount_type);
-          setFormData((prev: any) => ({
-            ...prev,
-            coupon_code: promo,
-          }));
-        }
-      },
-    });
+    try {
+      const res: any = couponMutation(payload).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        setCouponCode(+res?.data?.discount_amount);
+        setCouponType(res?.data?.discount_type);
+        setFormData((prev: any) => ({
+          ...prev,
+          coupon_code: promo,
+        }));
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   const discountAmount =

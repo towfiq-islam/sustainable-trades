@@ -4,14 +4,14 @@ import moment from "moment";
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import { Delete, Pen } from "@/Components/Svg/SvgContainer";
-import {
-  useBulkDeleteDiscount,
-  useDiscountStatusChange,
-  getDiscount,
-} from "@/Hooks/api/dashboard_api";
 import { DiscountSkeleton } from "@/Components/Loader/Loader";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
+import {
+  useBulkDeleteDiscountMutation,
+  useChangeDiscountStatusMutation,
+  useGetDiscountsQuery,
+} from "@/redux/api/discountApi";
 
 const DiscountsPage = () => {
   const [status, setStatus] = useState<string>("active");
@@ -23,10 +23,11 @@ const DiscountsPage = () => {
   );
 
   // Mutation & Query
-  const { mutate, isPending } = useBulkDeleteDiscount();
-  const { mutate: discountStatusChange, isPending: isChanging } =
-    useDiscountStatusChange(singleDiscountId);
-  const { data: discountData, refetch, isLoading } = getDiscount(status);
+  const [bulkDeleteDiscount, { isLoading: isDeleting }] =
+    useBulkDeleteDiscountMutation();
+  const [discountStatusChange, { isLoading: isChanging }] =
+    useChangeDiscountStatusMutation();
+  const { data: discountData, isLoading } = useGetDiscountsQuery(status);
 
   const toggleSelect = (id: string) => {
     setSelected(prev =>
@@ -40,32 +41,34 @@ const DiscountsPage = () => {
       return toast.error("Please select any discount");
     }
 
-    mutate(
-      { ids: selected },
-      {
-        onSuccess: () => {
-          setSelected([]);
-          refetch();
-        },
-      },
-    );
+    try {
+      const res: any = bulkDeleteDiscount({ ids: selected }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        setSelected([]);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   const toggleOpen = (id: string) => {
     setOpenDropdowns(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // For status change
   const handleChangeStatus = (id: string, newStatus: string) => {
-    discountStatusChange(
-      { id, status: newStatus.toLowerCase() },
-      {
-        onSuccess: () => {
-          toggleOpen(id);
-          refetch();
-        },
-      },
-    );
+    try {
+      const res: any = discountStatusChange({
+        id: singleDiscountId,
+        data: { id, status: newStatus.toLowerCase() },
+      }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        toggleOpen(id);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (
@@ -118,12 +121,12 @@ const DiscountsPage = () => {
         {/* For Delete */}
         <button
           onClick={handleDelete}
-          disabled={isPending}
+          disabled={isDeleting}
           className={`flex items-center justify-center gap-2 border-2 border-primary-green text-primary-green hover:bg-off-green rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 font-semibold capitalize ${
-            isPending ? "cursor-not-allowed" : "cursor-pointer"
+            isDeleting ? "cursor-not-allowed" : "cursor-pointer"
           }`}
         >
-          {isPending ? (
+          {isDeleting ? (
             <CgSpinnerTwo className="text-lg animate-spin" />
           ) : (
             <Delete className="size-5" />

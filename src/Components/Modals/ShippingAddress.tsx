@@ -1,10 +1,11 @@
 "use client";
 import { Lock } from "lucide-react";
-import { useGetShippingTax } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
+import { useGetShippingTaxMutation } from "@/redux/api/taxApi";
+import toast from "react-hot-toast";
 
 type FormData = {
   first_name: string;
@@ -40,7 +41,8 @@ const ShippingAddress = ({
   setTaxData: any;
 }) => {
   const { user, latitude } = useAuth();
-  const { mutateAsync: shippingTaxMutation, isPending } = useGetShippingTax();
+  const [shippingTaxMutation, { isLoading: isPending }] =
+    useGetShippingTaxMutation();
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
 
@@ -66,36 +68,31 @@ const ShippingAddress = ({
       city: data.city,
       postal_code: data.postal_code,
       address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
-
-      // country: "United States",
-      // state: "Alabama (AL)",
-      // city: "Montgomery",
-      // postal_code: "36104",
-      // address: `201 Monroe Street Montgomery 36104`,
     };
 
-    shippingTaxMutation(taxData, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          setTaxData(res?.data);
-
-          const payload = {
-            ...data,
-            country,
-            state,
-            latitude: latitude?.toString(),
-            longitude: latitude?.toString(),
-            shipping_option:
-              shippingMethod === "proceed"
-                ? "proceed_to_shipping"
-                : "arrange_local_pickup",
-            payment_method: "paypal",
-          };
-          setFormData(payload);
-          onNext();
-        }
-      },
-    });
+    try {
+      const res: any = shippingTaxMutation(taxData).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        setTaxData(res?.data);
+        const payload = {
+          ...data,
+          country,
+          state,
+          latitude: latitude?.toString(),
+          longitude: latitude?.toString(),
+          shipping_option:
+            shippingMethod === "proceed"
+              ? "proceed_to_shipping"
+              : "arrange_local_pickup",
+          payment_method: "paypal",
+        };
+        setFormData(payload);
+        onNext();
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   useEffect(() => {

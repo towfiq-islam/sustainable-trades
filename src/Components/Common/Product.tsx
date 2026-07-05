@@ -10,7 +10,6 @@ import { Pagination } from "swiper/modules";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { LuLoaderPinwheel } from "react-icons/lu";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useAddToCart } from "@/Hooks/api/cms_api";
 import {
   AddToCartSvg,
   DollarSvg,
@@ -18,6 +17,7 @@ import {
   SignSvg,
 } from "../Svg/SvgContainer";
 import { useAddFavoriteMutation } from "@/redux/api/productApi";
+import { useAddToCartMutation } from "@/redux/api/cartApi";
 
 type imageItem = {
   id: number;
@@ -56,9 +56,8 @@ const Product = ({
   const { user } = useAuth();
   const [addFavoriteMutation, { isLoading: isPending }] =
     useAddFavoriteMutation();
-  const { mutate: addToCartMutation, isPending: addCardPending } = useAddToCart(
-    product?.id,
-  );
+  const [addToCartMutation, { isLoading: addCardPending }] =
+    useAddToCartMutation();
 
   // Func for add to favorite
   const handleAddFavorite = (product_id: any) => {
@@ -79,7 +78,15 @@ const Product = ({
     if (!user) {
       return toast.error("Please login first to proceed");
     }
-    addToCartMutation({ quantity: 1 });
+
+    addToCartMutation({ id: product?.id, data: { quantity: 1 } })
+      .unwrap()
+      .then(res => {
+        toast.success(res?.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (

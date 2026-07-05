@@ -14,12 +14,16 @@ import { CgSpinnerTwo } from "react-icons/cg";
 import Modal from "@/Components/Common/Modal";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { LuLoaderPinwheel } from "react-icons/lu";
-import { useAddToCart } from "@/Hooks/api/cms_api";
 import TradeOfferModal from "@/Components/Modals/TradeOfferModal";
 import MessageToSellerModal from "@/Components/Modals/MessageToSellerModal";
 import Link from "next/link";
 import GuestModal from "@/Components/Modals/GuestModal";
 import { useAddFavoriteMutation } from "@/redux/api/productApi";
+import ShippingAddress from "@/Components/Modals/ShippingAddress";
+import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
+import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
+import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
+import { useAddToCartMutation } from "@/redux/api/cartApi";
 
 type descriptionItem = {
   id: number;
@@ -39,6 +43,13 @@ type descriptionItem = {
     id: number;
     user_id: number;
     shop_name: string;
+    user: {
+      id: number;
+      onboarded: boolean;
+      membership: {
+        membership_type: string;
+      };
+    };
     address: {
       address_line_1: string;
       address_10_mile: string;
@@ -59,6 +70,17 @@ interface descriptionProps {
 const ProductDescription = ({ data }: descriptionProps) => {
   // Hook
   const { user } = useAuth();
+  const [orderReviewModal, setOrderReviewModal] = useState<boolean>(false);
+  const [shippingAddressOpen, setShippingAddressOpen] =
+    useState<boolean>(false);
+  const [shippingOptionsOpen, setShippingOptionsOpen] =
+    useState<boolean>(false);
+  const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
+  const [formData, setFormData] = useState<any>({});
+  const [shippingMethod, setShippingMethod] = useState("");
+  const [taxData, setTaxData] = useState({});
+  const [successOpen, setSuccessOpen] = useState<boolean>(false);
+  const [fulfillmentType, setFulfillmentType] = useState<string>("");
 
   // States
   const [id, setId] = useState<number | null>(null);
@@ -72,9 +94,8 @@ const ProductDescription = ({ data }: descriptionProps) => {
   const [addFavoriteMutation, { isLoading: isPending }] =
     useAddFavoriteMutation();
 
-  const { mutate: addToCartMutation, isPending: addCardPending } = useAddToCart(
-    data?.id,
-  );
+  const [addToCartMutation, { isLoading: addCardPending }] =
+    useAddToCartMutation();
 
   // Func for Increase & Decrease
   const handleIncrease = () => setQuantity(prev => prev + 1);
@@ -96,11 +117,20 @@ const ProductDescription = ({ data }: descriptionProps) => {
   };
 
   // Func for add to cart
-  const handleAddToCart = () => {
+  const handleAddToCart = (id: number) => {
+    console.log(id);
     if (!user) {
       return toast.error("Please login first to proceed");
     }
-    addToCartMutation({ quantity: quantity });
+
+    addToCartMutation({ productId: id, data: { quantity } })
+      .unwrap()
+      .then(res => {
+        toast.success(res?.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (
@@ -141,7 +171,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
             (!data?.unlimited_stock && data?.product_quantity === 0) ||
             data?.selling_option === "trade/barter"
           }
-          onClick={handleAddToCart}
+          onClick={() => handleAddToCart(data?.id)}
           className={`border border-primary-green rounded-lg px-4 py-2 enabled:hover:bg-primary-green enabled:hover:text-accent-white duration-500 transition-all shrink-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:border-gray-300 disabled:bg-gray-100 ${
             addCardPending ? "cursor-not-allowed" : "cursor-pointer"
           }`}
@@ -254,7 +284,18 @@ const ProductDescription = ({ data }: descriptionProps) => {
       {/* Buy btn */}
       <button
         disabled={!!user || data?.selling_option === "trade/barter"}
-        onClick={() => setGuestOpen(true)}
+        onClick={() => {
+          setFulfillmentType(data?.fulfillment);
+          setShippingMethod(
+            data?.shop?.user?.onboarded &&
+              (data?.fulfillment === "shipping" ||
+                data?.fulfillment === "both_local_pickup_and_shipping" ||
+                data?.fulfillment === "both_shipping")
+              ? "proceed"
+              : "local",
+          );
+          setShippingOptionsOpen(true);
+        }}
         className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-semibold border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
       >
         Buy it now
@@ -310,9 +351,84 @@ const ProductDescription = ({ data }: descriptionProps) => {
         <MessageToSellerModal id={id} shopInfo={data} setMsgOpen={setMsgOpen} />
       </Modal>
 
-      <Modal open={guestOpen} onClose={() => setGuestOpen(false)}>
-        <GuestModal id={data?.id} onClose={() => setGuestOpen(false)} />
+      <Modal
+        open={shippingOptionsOpen}
+        onClose={() => setShippingOptionsOpen(false)}
+      >
+        <ShippingOptionsModal
+          cart_id={data?.id}
+          userId={data?.shop?.user?.id}
+          membershipType={data?.shop?.user?.membership?.membership_type}
+          fulfillmentType={fulfillmentType}
+          isConnected={data?.shop?.user?.onboarded}
+          shippingMethod={shippingMethod}
+          setShippingMethod={setShippingMethod}
+          setSuccessOpen={setSuccessOpen}
+          onProceed={() => {
+            setShippingOptionsOpen(false);
+            setShippingAddressOpen(true);
+          }}
+          onSuccess={() => {
+            setShippingOptionsOpen(false);
+          }}
+          onClose={() => setShippingOptionsOpen(false)}
+        />
       </Modal>
+
+      <Modal
+        open={shippingAddressOpen}
+        onClose={() => setShippingAddressOpen(false)}
+      >
+        <ShippingAddress
+          shippingMethod={shippingMethod}
+          setFormData={setFormData}
+          formData={formData}
+          setTaxData={setTaxData}
+          cart_id={data?.id}
+          onNext={() => {
+            setShippingAddressOpen(false);
+            setOrderReviewModal(true);
+          }}
+        />
+      </Modal>
+
+      <Modal open={orderReviewModal} onClose={() => setOrderReviewModal(false)}>
+        <OrderReviewModal
+          setFormData={setFormData}
+          formData={formData}
+          cartItems={[
+            {
+              title: data?.product_name,
+              vendor: data?.shop?.shop_name,
+              price: data?.product_price,
+            },
+          ]}
+          subTotal={+data?.product_price}
+          cart_id={data?.id}
+          taxData={taxData}
+          shop_name={data?.shop?.shop_name}
+          onClose={() => {
+            setOrderReviewModal(false);
+            setShippingAddressOpen(true);
+          }}
+          onProceed={() => {
+            setOrderReviewModal(false);
+            setPaypalOpen(true);
+          }}
+        />
+      </Modal>
+
+      <Modal open={paypalOpen} onClose={() => setPaypalOpen(false)}>
+        <CheckoutPaypalModal
+          cart_id={data?.id}
+          formData={formData}
+          isGuest={true}
+        />
+      </Modal>
+
+      {/* <Modal open={guestOpen} onClose={() => setGuestOpen(false)}>
+        <GuestModal id={data?.id} onClose={() => setGuestOpen(false)} />
+      </Modal> */}
     </>
   );
 };

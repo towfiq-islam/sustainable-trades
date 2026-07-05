@@ -1,4 +1,4 @@
-import { getFAQ } from "@/Hooks/cms.api";
+import { getFAQ } from "@/lib/cms.api";
 import Faq from "./_Components/Faq";
 
 const page = async () => {

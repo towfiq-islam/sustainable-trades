@@ -1,4 +1,4 @@
-import { getBannerData } from "@/Hooks/cms.api";
+import { getBannerData } from "@/lib/cms.api";
 import BannerSlider from "./BannerSlider";
 
 const HomeBanner = async () => {

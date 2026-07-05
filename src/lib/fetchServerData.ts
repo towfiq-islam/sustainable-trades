@@ -4,7 +4,7 @@ type serverProps = {
   ssr?: boolean;
 };
 
-export async function useServerApi({
+export async function fetchServerData({
   endpoint,
   revalidate,
   ssr = false,

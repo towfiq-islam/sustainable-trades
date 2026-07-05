@@ -8,7 +8,7 @@ import {
   LinkedinSvg,
   PinterestSvg,
 } from "@/Components/Svg/SvgContainer";
-import { getSiteSettings, getSocialLinks } from "@/Hooks/cms.api";
+import { getSiteSettings, getSocialLinks } from "@/lib/cms.api";
 
 const helpUsLinks = [
   { id: 1, label: "How-To Tutorials", path: "/help/how-to-tutorials" },

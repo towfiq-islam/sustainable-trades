@@ -8,8 +8,11 @@ import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { useSearchParams } from "next/navigation";
 import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
 import useAuth from "@/Hooks/useAuth";
-import { useGetAllProductsUnderShopQuery, useGetMyFavoriteQuery } from "@/redux/api/productApi";
-import { useGetOrderDetailsQuery } from "@/redux/api/OrderApi";
+import {
+  useGetAllProductsUnderShopQuery,
+  useGetMyFavoriteQuery,
+} from "@/redux/api/productApi";
+import { useGetOrderDetailsQuery } from "@/redux/api/orderApi";
 
 export default function Page() {
   const { user } = useAuth();

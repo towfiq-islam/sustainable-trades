@@ -10,7 +10,7 @@ import { useState } from "react";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 import { useDownloadInvoice } from "@/Hooks/api/cms_api";
-import { useGetOrderDetailsQuery } from "@/redux/api/OrderApi";
+import { useGetOrderDetailsQuery } from "@/redux/api/orderApi";
 
 const SingleOrder = ({ orderId }: { orderId: number }) => {
   const router = useRouter();

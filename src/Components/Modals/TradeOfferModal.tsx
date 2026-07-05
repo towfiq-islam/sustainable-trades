@@ -96,15 +96,15 @@ const TradeOfferModal = ({
       requested_items: requestedItems,
     };
 
-    try {
-      const res: any = sendTradeOfferMutation(payload).unwrap();
-      if (res?.success) {
+    sendTradeOfferMutation(payload)
+      .unwrap()
+      .then(res => {
         toast.success(res?.message);
         setTradeOpen(false);
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (

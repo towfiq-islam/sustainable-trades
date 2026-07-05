@@ -88,6 +88,15 @@ export const orderApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["review"],
     }),
+
+    downloadInvoice: builder.mutation<Blob, { endpoint: string; data?: any }>({
+      query: ({ endpoint, data }) => ({
+        url: endpoint,
+        method: "POST",
+        body: data,
+        responseHandler: response => response.blob(),
+      }),
+    }),
   }),
 });
 

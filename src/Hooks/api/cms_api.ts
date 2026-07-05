@@ -103,19 +103,15 @@ export const useUpdateCart = (cart_id: number | null) => {
   });
 };
 
-// Approve trades hooks
-export const useApproveTrade = () => {
-  return useMutation({
-    mutationFn: (id: any) =>
-      api.get(`/api/trade-offer-approve/${id}`).then(res => res.data),
-  });
-};
+// Download Invoice
+export const useDownloadInvoice = () => {
+  return useClientApi({
+    method: "post",
+    key: ["download-invoice"],
 
-//  Cancel Hooks
-export const useCancel = () => {
-  return useMutation({
-    mutationFn: (id: any) =>
-      api.get(`/api/trade-offer-cancel/${id}`).then(res => res.data),
+    axiosOptions: {
+      responseType: "blob",
+    },
   });
 };
 
@@ -136,18 +132,6 @@ export const useEditShop = () => {
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
-    },
-  });
-};
-
-// Download Invoice
-export const useDownloadInvoice = () => {
-  return useClientApi({
-    method: "post",
-    key: ["download-invoice"],
-
-    axiosOptions: {
-      responseType: "blob",
     },
   });
 };

@@ -16,7 +16,7 @@ import {
   useCancelOrderMutation,
   useGetSingleOrderQuery,
   useUpdateOrderStatusMutation,
-} from "@/redux/api/OrderApi";
+} from "@/redux/api/orderApi";
 import toast from "react-hot-toast";
 
 const Page = () => {

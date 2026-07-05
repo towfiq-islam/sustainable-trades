@@ -8,7 +8,7 @@ import OrderCardSkeleton from "@/Components/Loader/Loader";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import { useDownloadInvoice } from "@/Hooks/api/cms_api";
-import { useGetMyOrdersQuery } from "@/redux/api/OrderApi";
+import { useGetMyOrdersQuery } from "@/redux/api/orderApi";
 
 type OrdersListProps = {
   role: "customer" | "pro";

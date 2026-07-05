@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Review from "@/Components/Common/DashboardReusable/Review";
-import { useGetCustomerReviewsQuery } from "@/redux/api/OrderApi";
+import { useGetCustomerReviewsQuery } from "@/redux/api/orderApi";
 
 const page = () => {
   const [page, setPage] = useState<string>("");

@@ -5,16 +5,16 @@ import Modal from "@/Components/Common/Modal";
 import { BsCartPlus } from "react-icons/bs";
 import { FaTruck } from "react-icons/fa";
 import { GiOpenBook } from "react-icons/gi";
-import {
-  useWeightRateget,
-  useSetShipping,
-  useGetFlatRate,
-} from "@/Hooks/api/dashboard_api";
+import { useSetShipping } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
 import ShippoConfigModal from "./_Components/ShippoConfigModal";
 import WeightConfigModal from "./_Components/WeightConfigModal";
 import FlatConfigModal from "./_Components/FlatConfigModal";
+import {
+  useGetFlatRateQuery,
+  useGetWeightRatesQuery,
+} from "@/redux/api/dashboardApi";
 
 const Page = () => {
   const { user } = useAuth();
@@ -23,8 +23,8 @@ const Page = () => {
   const [openConnectModal, setOpenConnectFlatModal] = useState(false);
 
   /* ---------- API ---------- */
-  const { data: weightRanges, refetch } = useWeightRateget();
-  const { data: flatRateRanges } = useGetFlatRate();
+  const { data: weightRanges } = useGetWeightRatesQuery();
+  const { data: flatRateRanges } = useGetFlatRateQuery();
   const { mutate: setShippo, isPending: isSetting } = useSetShipping();
 
   const handleShippingMethodChange = (method: string) => {
@@ -360,7 +360,6 @@ const Page = () => {
       <Modal open={openWightModal} onClose={() => setOpenWightModal(false)}>
         <WeightConfigModal
           weightRanges={weightRanges}
-          refetch={refetch}
           setOpenWightModal={setOpenWightModal}
         />
       </Modal>

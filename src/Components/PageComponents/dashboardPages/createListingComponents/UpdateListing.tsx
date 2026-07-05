@@ -32,6 +32,7 @@ interface ProductData {
   height: string;
   dimension_unit: "mm" | "cm" | "in";
   cost: string;
+  weight: string;
   unlimited_stock: boolean;
   out_of_stock: boolean;
   video: string | null;
@@ -189,6 +190,7 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
       height: productData.height || "",
       dimension_unit: productData.dimension_unit || "in",
       cost: productData.cost || "",
+      weight: productData.weight || "",
       description: productData.description || "",
       category_id: productData.category_id?.toString() || "",
       sub_category_id: productData.sub_category_id?.toString() || "",
@@ -401,6 +403,7 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
     fd.append("product_name", data.product_name);
     fd.append("product_price", data.product_price);
     fd.append("cost", data.cost);
+    fd.append("weight", data.weight);
     fd.append("length", data.length);
     fd.append("width", data.width);
     fd.append("height", data.height);
@@ -829,10 +832,7 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
                 name="weight"
                 control={control}
                 rules={{
-                  pattern: {
-                    value: /^\d+$/,
-                    message: "Weight must be a number",
-                  },
+                  required: "Weight is required",
                 }}
                 render={({ field }) => (
                   <input

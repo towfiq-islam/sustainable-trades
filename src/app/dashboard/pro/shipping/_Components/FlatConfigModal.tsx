@@ -1,7 +1,7 @@
 import { MdOutlineLocationOn } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useFlatRate } from "@/Hooks/api/dashboard_api";
+import { useCreateFlatRateMutation } from "@/redux/api/dashboardApi";
 
 interface FlatRateForm {
   option_name: string;
@@ -10,7 +10,8 @@ interface FlatRateForm {
 }
 
 const FlatConfigModal = ({ flatRateRanges, setOpenFlatModal }: any) => {
-  const { mutate: FlatRateMutation, isPending } = useFlatRate();
+  const [FlatRateMutation, { isLoading: isPending }] =
+    useCreateFlatRateMutation();
 
   const {
     register: registerFlat,
@@ -20,16 +21,17 @@ const FlatConfigModal = ({ flatRateRanges, setOpenFlatModal }: any) => {
   } = useForm<FlatRateForm>();
 
   /* ---------- SUBMIT HANDLERS ---------- */
-  const onFlatSubmit = (data: FlatRateForm) => {
-    FlatRateMutation(data, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          toast.success(data?.message);
-          resetFlat();
-          setOpenFlatModal(false);
-        }
-      },
-    });
+  const onFlatSubmit = async (data: FlatRateForm) => {
+    try {
+      const res: any = await FlatRateMutation(data).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        resetFlat();
+        setOpenFlatModal(false);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (

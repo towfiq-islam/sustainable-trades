@@ -1,18 +1,17 @@
 import { apiSlice } from "@/redux/api/apiSlice";
+import toast from "react-hot-toast";
 
 export const dashboardApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    // ---------------------------------------------------------------------
     // Flat rate / weight rate
-    // ---------------------------------------------------------------------
     createFlatRate: builder.mutation<any, any>({
       query: body => ({ url: "/api/flat-rates", method: "POST", body }),
-      invalidatesTags: ["user"],
+      invalidatesTags: ["rate"],
     }),
 
     getFlatRate: builder.query<any, void>({
       query: () => "/api/flat-rate",
-      providesTags: ["user"],
+      providesTags: ["rate"],
     }),
 
     createWeightRate: builder.mutation<any, any>({
@@ -27,15 +26,13 @@ export const dashboardApi = apiSlice.injectEndpoints({
 
     deleteWeightRate: builder.mutation<any, string | number>({
       query: id => ({
-        url: `/api/weight_ranges/${id}`, // TODO: confirm real endpoint
+        url: `/api/weight_range/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["rate"],
     }),
 
-    // ---------------------------------------------------------------------
     // Notifications
-    // ---------------------------------------------------------------------
     getNotifications: builder.query<any, string | undefined>({
       query: page => ({ url: "/api/notifications", params: { page } }),
       providesTags: ["notification"],
@@ -49,6 +46,16 @@ export const dashboardApi = apiSlice.injectEndpoints({
     deleteAllNotifications: builder.mutation<any, void>({
       query: () => ({ url: "/api/notifications/clear-all", method: "DELETE" }),
       invalidatesTags: ["notification"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.success) {
+            toast.success(data.message);
+          }
+        } catch (err: any) {
+          toast.error(err?.data?.message);
+        }
+      },
     }),
 
     // ---------------------------------------------------------------------

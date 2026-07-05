@@ -71,7 +71,7 @@ const ShippingAddress = ({
     };
 
     try {
-      const res: any = shippingTaxMutation(taxData).unwrap();
+      const res: any = await shippingTaxMutation(taxData).unwrap();
       if (res?.success) {
         toast.success(res?.message);
         setTaxData(res?.data);

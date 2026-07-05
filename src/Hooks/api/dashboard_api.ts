@@ -5,83 +5,6 @@ import useAuth from "@/Hooks/useAuth";
 import { useAppDispatch } from "@/redux/store";
 import { authApi } from "@/redux/api/authApi";
 
-
-// Create Flat Rate Hooks
-export const useFlatRate = () => {
-  const queryClient = useQueryClient();
-
-  return useClientApi({
-    method: "post",
-    key: ["flat-rate"],
-    endpoint: "/api/flat-rates",
-    onSuccess: () => {
-      queryClient.invalidateQueries("flat-rate" as any);
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to create flat rate");
-    },
-  });
-};
-// Create Weight Rate Hooks
-export const useWeightRate = () => {
-  return useClientApi({
-    method: "post",
-    key: ["weight-rate"],
-    endpoint: "/api/weight_ranges",
-    onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message || "Failed to create Weight rate",
-      );
-    },
-  });
-};
-
-// Create Weight Rate delete Hooks
-export const useWeightRateDelete = () => {
-  return useClientApi({
-    method: "delete",
-    key: ["weight-rate-delete"],
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message || "Weight rate deleted successfully");
-      }
-    },
-    onError: (err: any) => {
-      toast.error(
-        err?.response?.data?.message || "Failed to delete weight rate",
-      );
-    },
-  });
-};
-
-// Get Weight rate Hooks
-export const useWeightRateget = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-weight"],
-    endpoint: "/api/weight_ranges",
-  });
-};
-
-// Get Notifications  Hooks
-export const useNotification = (page?: string) => {
-  return useClientApi({
-    method: "get",
-    key: ["get-notifications", page],
-    endpoint: "/api/notifications",
-    params: { page },
-  });
-};
-
-// Get Todays Notifications
-export const useTodaysNotification = () => {
-  return useClientApi({
-    method: "get",
-    key: ["get-todays-notifications"],
-    endpoint: "/api/notifications/today",
-  });
-};
-
 // Account connect Onboarding
 export const useOnboarding = () => {
   const queryClient = useQueryClient();
@@ -172,26 +95,6 @@ export const getVisitorData = () => {
     method: "get",
     key: ["visitor-data"],
     endpoint: "/api/vendor/dashboard/visits",
-  });
-};
-
-// Delete all notifications
-export const useDeleteAllNotifications = () => {
-  const queryClient = useQueryClient();
-  return useClientApi({
-    method: "delete",
-    key: ["delete-all-notifications"],
-
-    endpoint: "/api/notifications/clear-all",
-    onSuccess: (data: any) => {
-      if (data?.success) {
-        toast.success(data?.message);
-        queryClient.invalidateQueries("get-notifications" as any);
-      }
-    },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message);
-    },
   });
 };
 
@@ -324,16 +227,6 @@ export const useSetShipping = () => {
     onError: (err: any) => {
       toast.error(err?.response?.data?.message);
     },
-  });
-};
-
-// Get flat rate
-export const useGetFlatRate = () => {
-  return useClientApi({
-    method: "get",
-    key: ["flat-rate"],
-
-    endpoint: "/api/flat-rate",
   });
 };
 

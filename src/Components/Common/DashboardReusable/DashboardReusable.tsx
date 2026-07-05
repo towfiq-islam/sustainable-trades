@@ -4,16 +4,14 @@ import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
 import ProdashboardStatistics from "./ProdashboardStatistics";
 import { FaAngleRight } from "react-icons/fa";
-import {
-  getDashboardHomeData,
-  useTodaysNotification,
-} from "@/Hooks/api/dashboard_api";
+import { getDashboardHomeData } from "@/Hooks/api/dashboard_api";
 import moment from "moment";
 import {
   InventoryItemSkeleton,
   NotificationSkeleton,
 } from "@/Components/Loader/Loader";
 import { useGetLatestProductsQuery } from "@/redux/api/productApi";
+import { useGetTodaysNotificationsQuery } from "@/redux/api/dashboardApi";
 
 type ImageItem = {
   image: string;
@@ -51,7 +49,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
   const { user } = useAuth();
   const { data: homeData, isLoading: homeDataLoading } = getDashboardHomeData();
   const { data: notificationsData, isLoading: notificationLoading } =
-    useTodaysNotification();
+    useGetTodaysNotificationsQuery();
   const { data: latestProductsData, isLoading: latestProductsLoading } =
     useGetLatestProductsQuery({});
 

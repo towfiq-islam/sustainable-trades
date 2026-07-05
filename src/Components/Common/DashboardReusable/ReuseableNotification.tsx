@@ -2,12 +2,12 @@
 import moment from "moment";
 import Image from "next/image";
 import { useState } from "react";
-import {
-  useDeleteAllNotifications,
-  useNotification,
-} from "@/Hooks/api/dashboard_api";
 import { NotificationSkeleton } from "@/Components/Loader/Loader";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import {
+  useDeleteAllNotificationsMutation,
+  useGetNotificationsQuery,
+} from "@/redux/api/dashboardApi";
 
 type notificationItem = {
   id: number;
@@ -24,9 +24,9 @@ type notificationItem = {
 
 const ReuseableNotification = () => {
   const [page, setPage] = useState<string>("");
-  const { data: notificationsData, isLoading } = useNotification(page);
-  const { mutate: deleteAllNotifications, isPending } =
-    useDeleteAllNotifications();
+  const { data: notificationsData, isLoading } = useGetNotificationsQuery(page);
+  const [deleteAllNotifications, { isLoading: isPending }] =
+    useDeleteAllNotificationsMutation();
 
   return (
     <>
@@ -38,7 +38,7 @@ const ReuseableNotification = () => {
 
           <button
             disabled={isPending}
-            onClick={() => deleteAllNotifications()}
+            onClick={() => deleteAllNotifications().unwrap()}
             className="size-10 grid place-items-center rounded-lg cursor-pointer bg-primary-red disabled:cursor-not-allowed disabled:opacity-85"
           >
             {isPending ? (

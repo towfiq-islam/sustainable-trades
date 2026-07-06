@@ -10,7 +10,7 @@ import {
   useGetTradeShopProductQuery,
   useTradeSendOfferMutation,
 } from "@/redux/api/tradeApi";
-import { FaLeaf, FaTimes } from "react-icons/fa";
+import { FaLeaf } from "react-icons/fa";
 import { HiOutlineArrowPath } from "react-icons/hi2";
 import Link from "next/link";
 type TradeOfferModalProps = {

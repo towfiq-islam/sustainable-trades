@@ -93,6 +93,7 @@ const PriceSection = ({
           name="weight"
           control={control}
           rules={{
+            required: "Weight is required",
             pattern: {
               value: /^\d+$/,
               message: "Weight must be a number",

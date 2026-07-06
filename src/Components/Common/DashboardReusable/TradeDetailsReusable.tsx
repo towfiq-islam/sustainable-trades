@@ -7,8 +7,8 @@ import { useParams, useRouter } from "next/navigation";
 import TradeDetaillsBottom from "./TradeDetaillsBottom";
 import { FaAngleDown, FaRegStar } from "react-icons/fa6";
 import { LocationSvg1, Reload } from "@/Components/Svg/SvgContainer";
-import { useSingleTradeOffer } from "@/Hooks/api/dashboard_api";
 import { useGetShopDetailsQuery } from "@/redux/api/shopApi";
+import { useGetTradeOfferQuery } from "@/redux/api/tradeApi";
 
 const TradeDetailsReusable = () => {
   const params = useParams();
@@ -39,7 +39,7 @@ const TradeDetailsReusable = () => {
   };
 
   const { data: tradeSingleData, isLoading: tradeLoading } =
-    useSingleTradeOffer(tradeId);
+    useGetTradeOfferQuery(tradeId);
 
   const senderUserId = tradeSingleData?.data?.sender?.shop_info?.user_id;
 

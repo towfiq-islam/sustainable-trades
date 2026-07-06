@@ -1,7 +1,6 @@
 "use client";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { getOrders, useCancelOrder } from "@/Hooks/api/dashboard_api";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
@@ -19,6 +18,11 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 import OrdersList from "@/Components/PageComponents/dashboardPages/Orders/OrdersList";
+import {
+  useCancelOrderMutation,
+  useGetVendorOrdersQuery,
+} from "@/redux/api/orderApi";
+import toast from "react-hot-toast";
 const filters = [
   {
     label: "Last 30 Days",
@@ -80,8 +84,8 @@ const page = () => {
     "purchased from another member",
   ];
 
-  const { mutate: cancelOrder, isPending: isCancelling } = useCancelOrder();
-  const { data: allOrders, isLoading } = getOrders({
+  const [cancelOrder, { isLoading: isCancelling }] = useCancelOrderMutation();
+  const { data: allOrders, isLoading } = useGetVendorOrdersQuery({
     status,
     search,
     page,
@@ -424,18 +428,20 @@ const page = () => {
 
                             <button
                               disabled={isCancelling}
-                              onClick={() =>
-                                cancelOrder(
-                                  {
-                                    endpoint: `/api/cancel-order/${order?.id}`,
-                                  },
-                                  {
-                                    onSuccess: () => {
-                                      setOpenPopup(false);
-                                    },
-                                  },
-                                )
-                              }
+                              onClick={() => {
+                                cancelOrder(order?.id)
+                                  .unwrap()
+                                  .then(res => {
+                                    if (res?.success) {
+                                      toast.success(res?.message);
+                                    }
+                                  })
+                                  .catch(err => {
+                                    toast.error(err?.data?.message);
+                                  });
+
+                                setOpenPopup(false);
+                              }}
                               className="w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block disabled:cursor-not-allowed disabled:opacity-85 cursor-pointer"
                             >
                               {isCancelling ? "Cancelling..." : " Cancel Order"}

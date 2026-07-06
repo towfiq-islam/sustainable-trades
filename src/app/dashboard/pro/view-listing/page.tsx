@@ -90,7 +90,7 @@ const Page = () => {
           {productList?.data?.map((product: ProductType) => (
             <div
               key={product.id}
-              className="relative border border-[#e5e5e5] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 group cursor-pointer"
+              className="relative border border-[#e5e5e5] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 group"
             >
               {/* Image */}
               <div className="relative w-full h-[250px]">

@@ -1,10 +1,14 @@
 "use client";
 import { Lock } from "lucide-react";
-import { useGetShippingTax } from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
+import {
+  useGetGuestShippingTaxMutation,
+  useGetShippingTaxMutation,
+} from "@/redux/api/taxApi";
+import toast from "react-hot-toast";
 
 type FormData = {
   first_name: string;
@@ -39,8 +43,11 @@ const ShippingAddress = ({
   shippingMethod: any;
   setTaxData: any;
 }) => {
-  const { user, longitude, latitude } = useAuth();
-  const { mutateAsync: shippingTaxMutation, isPending } = useGetShippingTax();
+  const { user, latitude } = useAuth();
+  const [shippingTaxMutation, { isLoading: isPending }] =
+    useGetShippingTaxMutation();
+  const [guestTaxMutation, { isLoading: isWorking }] =
+    useGetGuestShippingTaxMutation();
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
 
@@ -52,29 +59,51 @@ const ShippingAddress = ({
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    const countryName = Country.getCountryByCode(country)?.name || "";
+    const guestTaxData = {
+      product_id: cart_id,
+      quantity: 1,
+      shipping_option:
+        shippingMethod === "proceed"
+          ? "proceed_to_shipping"
+          : "arrange_local_pickup",
+      first_name: data.first_name,
+      phone: data.phone,
+      email: data.email,
+      country,
+      state,
+      city: data.city,
+      postal_code: data.postal_code,
+      address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
+    };
+
     const taxData = {
       cart_id,
       shipping_option:
         shippingMethod === "proceed"
           ? "proceed_to_shipping"
           : "arrange_local_pickup",
-      country: countryName,
+      first_name: data.first_name,
+      phone: data.phone,
+      email: data.email,
+      country,
       state,
+      city: data.city,
+      postal_code: data.postal_code,
       address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
     };
 
-    shippingTaxMutation(taxData, {
-      onSuccess: (res: any) => {
+    if (user) {
+      try {
+        const res: any = await shippingTaxMutation(taxData).unwrap();
         if (res?.success) {
+          toast.success(res?.message);
           setTaxData(res?.data);
-
           const payload = {
             ...data,
-            country: countryName,
+            country,
             state,
-            latitude,
-            longitude,
+            latitude: latitude?.toString(),
+            longitude: latitude?.toString(),
             shipping_option:
               shippingMethod === "proceed"
                 ? "proceed_to_shipping"
@@ -84,8 +113,35 @@ const ShippingAddress = ({
           setFormData(payload);
           onNext();
         }
-      },
-    });
+      } catch (err: any) {
+        toast.error(err?.data?.message);
+      }
+    } else {
+      // For guest
+      try {
+        const res: any = await guestTaxMutation(guestTaxData).unwrap();
+        if (res?.success) {
+          toast.success(res?.message);
+          setTaxData(res?.data);
+          const payload = {
+            ...data,
+            country,
+            state,
+            latitude: latitude?.toString(),
+            longitude: latitude?.toString(),
+            shipping_option:
+              shippingMethod === "proceed"
+                ? "proceed_to_shipping"
+                : "arrange_local_pickup",
+            payment_method: "paypal",
+          };
+          setFormData(payload);
+          onNext();
+        }
+      } catch (err: any) {
+        toast.error(err?.data?.message);
+      }
+    }
   };
 
   useEffect(() => {
@@ -306,8 +362,8 @@ const ShippingAddress = ({
             >
               <option value="">Select State / Province</option>
               {State.getStatesOfCountry(country).map(item => (
-                <option key={item.isoCode} value={item.name}>
-                  {item.name}
+                <option key={item.isoCode} value={item.isoCode}>
+                  {item.name} ({item.isoCode})
                 </option>
               ))}
             </select>
@@ -323,7 +379,7 @@ const ShippingAddress = ({
         {/* Button */}
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isPending || isWorking}
           className="primary_btn cursor-pointer disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-70"
         >
           Review Order

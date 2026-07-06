@@ -6,10 +6,13 @@ import Container from "@/Components/Common/Container";
 import Product from "@/Components/Common/Product";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { useSearchParams } from "next/navigation";
-import { getAllFollowList, getMyOrderDetails } from "@/Hooks/api/dashboard_api";
 import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
 import useAuth from "@/Hooks/useAuth";
-import { useGetAllProductsUnderShopQuery } from "@/redux/api/productApi";
+import {
+  useGetAllProductsUnderShopQuery,
+  useGetMyFavoriteQuery,
+} from "@/redux/api/productApi";
+import { useGetOrderDetailsQuery } from "@/redux/api/orderApi";
 
 export default function Page() {
   const { user } = useAuth();
@@ -17,8 +20,8 @@ export default function Page() {
   const order_id = Number(searchParams.get("order_id"));
   const shop_id = Number(searchParams.get("shop_id"));
   const { data: myFavorites, isLoading: isFavoriteLoading } =
-    getAllFollowList();
-  const { data: singleOrder, isLoading } = getMyOrderDetails(order_id);
+    useGetMyFavoriteQuery(undefined, { skip: !user });
+  const { data: singleOrder, isLoading } = useGetOrderDetailsQuery(order_id);
   const { data: products, isLoading: isShopLoading } =
     useGetAllProductsUnderShopQuery({
       id: shop_id,
@@ -219,46 +222,48 @@ export default function Page() {
         </div>
 
         {/* Saved Items */}
-        <div className="mt-10">
-          <h2 className="text-xl font-semibold">Your Saved Items</h2>
+        {user && (
+          <div className="mt-10">
+            <h2 className="text-xl font-semibold">Your Saved Items</h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-5">
-            {isFavoriteLoading ? (
-              [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
-            ) : myFavorites?.data?.length > 0 ? (
-              myFavorites?.data?.slice(0, 4)?.map((item: any) => (
-                <Product
-                  key={item?.id}
-                  is_feathered={false}
-                  product={
-                    {
-                      id: item?.product?.id,
-                      product_name: item?.product?.product_name,
-                      product_quantity: item?.product?.product_quantity,
-                      product_price: item?.product?.product_price,
-                      out_of_stock: item?.product?.out_of_stock,
-                      unlimited_stock: item?.product?.unlimited_stock,
-                      is_favorite: item?.product?.is_favorite,
-                      selling_option: item?.product?.selling_option,
-                      images: item?.product?.images || [],
-                    } as any
-                  }
-                />
-              ))
-            ) : (
-              <p className="text-gray-500 text-center col-span-full">
-                No products found in your wishlist.
-              </p>
-            )}
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-5">
+              {isFavoriteLoading ? (
+                [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
+              ) : myFavorites?.data?.length > 0 ? (
+                myFavorites?.data?.slice(0, 4)?.map((item: any) => (
+                  <Product
+                    key={item?.id}
+                    is_feathered={false}
+                    product={
+                      {
+                        id: item?.product?.id,
+                        product_name: item?.product?.product_name,
+                        product_quantity: item?.product?.product_quantity,
+                        product_price: item?.product?.product_price,
+                        out_of_stock: item?.product?.out_of_stock,
+                        unlimited_stock: item?.product?.unlimited_stock,
+                        is_favorite: item?.product?.is_favorite,
+                        selling_option: item?.product?.selling_option,
+                        images: item?.product?.images || [],
+                      } as any
+                    }
+                  />
+                ))
+              ) : (
+                <p className="text-gray-500 text-center col-span-full">
+                  No products found in your wishlist.
+                </p>
+              )}
+            </div>
 
-          {/* <div className="mt-6 flex justify-end">
+            {/* <div className="mt-6 flex justify-end">
             <button className="flex items-center gap-1 text-sm font-medium">
               View all
               <ChevronDown size={16} />
             </button>
           </div> */}
-        </div>
+          </div>
+        )}
 
         {/* More From Shop */}
         <div className="mt-14">

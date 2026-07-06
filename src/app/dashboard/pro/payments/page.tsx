@@ -2,8 +2,8 @@
 import moment from "moment";
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { getPayments } from "@/Hooks/api/dashboard_api";
 import { PaymentRowSkeleton } from "@/Components/Loader/Loader";
+import { useGetPaymentsQuery } from "@/redux/api/vendorApi";
 
 type orderItem = {
   payment_method: string;
@@ -23,7 +23,7 @@ const page = () => {
   const [isActive, setIsActive] = useState("All Payments");
   const [status, setStatus] = useState<string>("");
   const tabs = ["All Payments", "pending", "failed", "completed"];
-  const { data: allPayments, isLoading } = getPayments(status);
+  const { data: allPayments, isLoading } = useGetPaymentsQuery(status);
 
   return (
     <>

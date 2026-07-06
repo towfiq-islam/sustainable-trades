@@ -1,10 +1,12 @@
 "use client";
 import { Paypal } from "@/Components/Svg/SvgContainer";
-import {
-  useDisconnectOnboarding,
-  useOnboarding,
-} from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
+import {
+  useDisconnectPaypalMutation,
+  useOnboardPaypalMutation,
+  useReconnectPaypalMutation,
+} from "@/redux/api/vendorApi";
+import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
 
 const page = () => {
@@ -12,37 +14,38 @@ const page = () => {
   const isOnboarded = user?.onboarded;
 
   // Connect
-  const { mutate: onboardingConnectMutation, isPending: isConnecting } =
-    useOnboarding();
+  const [onboardingConnectMutation, { isLoading: isConnecting }] =
+    useOnboardPaypalMutation();
 
   // Disconnect
-  const { mutate: onboardingDisconnectMutation, isPending: isDisconnecting } =
-    useDisconnectOnboarding();
+  const [onboardingDisconnectMutation, { isLoading: isDisconnecting }] =
+    useDisconnectPaypalMutation();
 
   // Reconnect
-  // const { mutate: onboardingReconnectMutation, isPending: isReconnecting } =
-  //   useReconnectOnboarding();
+  //  const [onboardingReconnectMutation, { isLoading: isReconnecting }] =
+  //    useReconnectPaypalMutation();
 
   // CONNECT
   const handleConnect = () => {
-    onboardingConnectMutation(
-      {
-        success_url: `${window.location.origin}/dashboard/pro/payment-method`,
-        cancel_url: `${window.location.origin}/dashboard/pro/payment-method`,
-      },
-      {
-        onSuccess: (data: any) => {
-          if (data?.success) {
-            window.location.href = data?.data?.url;
-          }
-        },
-      },
-    );
+    const payload = {
+      success_url: `${window.location.origin}/dashboard/pro/payment-method`,
+      cancel_url: `${window.location.origin}/dashboard/pro/payment-method`,
+    };
+
+    onboardingConnectMutation(payload)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+        window.location.href = res?.data?.url;
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   // DISCONNECT
   const handleDisconnect = () => {
-    onboardingDisconnectMutation();
+    onboardingDisconnectMutation().unwrap();
   };
 
   // RECONNECT

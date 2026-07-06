@@ -2,7 +2,6 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Lato, Geist } from "next/font/google";
-import QueryProvider from "@/Provider/QueryProvider/QueryProvider";
 import ToastProvider from "@/Provider/ToastProvider/ToastProvider";
 import ReduxProvider from "@/Provider/ReduxProvider/ReduxProvider";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
@@ -33,10 +32,8 @@ export default async function RootLayout({
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className={`${lato.variable} antialiased`}>
         <ReduxProvider>
-          <QueryProvider>
-              <ToastProvider />
-              {children}
-          </QueryProvider>
+          <ToastProvider />
+          {children}
         </ReduxProvider>
       </body>
     </html>

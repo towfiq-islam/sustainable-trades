@@ -1,7 +1,7 @@
 import Banner from "@/Components/Common/Banner";
 import Container from "@/Components/Common/Container";
-import { getDynamicPages, getSingleDynamicPage } from "@/Hooks/api/cms_api";
 import AboutUsTab from "@/Components/Common/AboutUsTab";
+import { getDynamicPages, getSingleDynamicPage } from "@/lib/cms.api";
 
 const page = async ({ params }: any) => {
   const { slug } = await params;

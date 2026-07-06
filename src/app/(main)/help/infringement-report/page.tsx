@@ -1,7 +1,6 @@
-import React from "react";
 import Container from "@/Components/Common/Container";
 import HelpUsTab from "@/Components/Common/HelpUsTab";
-import { getInfringementData } from "@/Hooks/api/cms_api";
+import { getInfringementData } from "@/lib/cms.api";
 
 const Page = async () => {
   const infringementData = await getInfringementData();

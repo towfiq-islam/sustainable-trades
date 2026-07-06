@@ -21,7 +21,7 @@ const ProductLocation = () => {
 
   // Query
   const { data: allProducts, isLoading: productLoading } =
-    useGetAllProductsQuery({ search, latitude, longitude, page });
+    useGetAllProductsQuery({ search, lat: latitude, lng: longitude, page });
 
   return (
     <section className="mt-10 mb-16">

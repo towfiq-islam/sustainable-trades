@@ -5,16 +5,16 @@ import Modal from "@/Components/Common/Modal";
 import { BsCartPlus } from "react-icons/bs";
 import { FaTruck } from "react-icons/fa";
 import { GiOpenBook } from "react-icons/gi";
-import {
-  useWeightRateget,
-  useSetShipping,
-  useGetFlatRate,
-} from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
 import ShippoConfigModal from "./_Components/ShippoConfigModal";
 import WeightConfigModal from "./_Components/WeightConfigModal";
 import FlatConfigModal from "./_Components/FlatConfigModal";
+import {
+  useGetFlatRateQuery,
+  useGetWeightRatesQuery,
+  useSetShippingMutation,
+} from "@/redux/api/vendorApi";
 
 const Page = () => {
   const { user } = useAuth();
@@ -23,9 +23,9 @@ const Page = () => {
   const [openConnectModal, setOpenConnectFlatModal] = useState(false);
 
   /* ---------- API ---------- */
-  const { data: weightRanges, refetch } = useWeightRateget();
-  const { data: flatRateRanges } = useGetFlatRate();
-  const { mutate: setShippo, isPending: isSetting } = useSetShipping();
+  const { data: weightRanges } = useGetWeightRatesQuery();
+  const { data: flatRateRanges } = useGetFlatRateQuery();
+  const [setShippo, { isLoading: isSetting }] = useSetShippingMutation();
 
   const handleShippingMethodChange = (method: string) => {
     if (method === "shippo" && !user?.shop_info?.shippo_connected) {
@@ -43,16 +43,14 @@ const Page = () => {
       return;
     }
 
-    setShippo(
-      { shipping_setting: method },
-      {
-        onSuccess: (res: any) => {
-          if (res?.success) {
-            toast.success(res?.message);
-          }
-        },
-      },
-    );
+    setShippo({ shipping_setting: method })
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (
@@ -115,7 +113,9 @@ const Page = () => {
                     className="h-4 w-4 accent-primary-green cursor-pointer"
                   />
 
-                  <h3 className="font-semibold text-primary-green">Flat Rate</h3>
+                  <h3 className="font-semibold text-primary-green">
+                    Flat Rate
+                  </h3>
                 </div>
 
                 {user?.shop_info?.shipping_setting === "flat_rate" && (
@@ -358,7 +358,6 @@ const Page = () => {
       <Modal open={openWightModal} onClose={() => setOpenWightModal(false)}>
         <WeightConfigModal
           weightRanges={weightRanges}
-          refetch={refetch}
           setOpenWightModal={setOpenWightModal}
         />
       </Modal>

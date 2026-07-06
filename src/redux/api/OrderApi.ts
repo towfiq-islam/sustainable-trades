@@ -2,7 +2,7 @@ import { apiSlice } from "@/redux/api/apiSlice";
 
 export const orderApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    getOrders: builder.query({
+    getVendorOrders: builder.query({
       query: params => ({
         url: "/api/orders",
         params,
@@ -23,6 +23,11 @@ export const orderApi = apiSlice.injectEndpoints({
       providesTags: (_r, _e, id) => [{ type: "order", id }],
     }),
 
+    getOrderStatistics: builder.query({
+      query: () => "/api/vendor/dashboard/order",
+      providesTags: ["order"],
+    }),
+
     getOrderHistory: builder.query({
       query: id => `/api/my-order/${id}/history`,
       providesTags: (_r, _e, id) => [{ type: "order", id }],
@@ -33,9 +38,17 @@ export const orderApi = apiSlice.injectEndpoints({
       providesTags: (_r, _e, id) => [{ type: "order", id }],
     }),
 
+    getCustomerReviews: builder.query({
+      query: page => ({
+        url: "/api/my-reviews",
+        params: { page },
+      }),
+      providesTags: ["review"],
+    }),
+
     updateOrderStatus: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/api/order/${id}/status`,
+        url: `/api/order-status-update/${id}`,
         method: "POST",
         body: data,
       }),
@@ -43,12 +56,19 @@ export const orderApi = apiSlice.injectEndpoints({
     }),
 
     cancelOrder: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/api/order/${id}/cancel`,
+      query: id => ({
+        url: `/api/cancel-order/${id}`,
         method: "POST",
-        body: data,
       }),
       invalidatesTags: (_r, _e, { id }) => [{ type: "order", id }, "order"],
+    }),
+
+    guestOrder: builder.mutation({
+      query: ({ id, payload }) => ({
+        url: `/api/guest-local-pickup/${id}`,
+        method: "POST",
+        body: payload,
+      }),
     }),
 
     addOrderNote: builder.mutation({
@@ -66,29 +86,21 @@ export const orderApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["order", "review"],
+      invalidatesTags: ["review"],
     }),
 
-    getCustomerReviews: builder.query({
-      query: page => ({
-        url: "/api/my-reviews",
-        params: { page },
-      }),
-      providesTags: ["review"],
-    }),
-
-    // Checkout
-    checkout: builder.mutation({
-      query: cartId => ({
-        url: `/api/checkout/${cartId}`,
+    downloadInvoice: builder.mutation<Blob, any>({
+      query: orderId => ({
+        url: `/api/invoice-generate/${orderId}`,
         method: "POST",
+        responseHandler: response => response.blob(),
       }),
     }),
   }),
 });
 
 export const {
-  useGetOrdersQuery,
+  useGetVendorOrdersQuery,
   useGetMyOrdersQuery,
   useGetSingleOrderQuery,
   useGetOrderHistoryQuery,
@@ -98,5 +110,7 @@ export const {
   useAddOrderNoteMutation,
   useAddReviewMutation,
   useGetCustomerReviewsQuery,
-  useCheckoutMutation,
+  useGetOrderStatisticsQuery,
+  useGuestOrderMutation,
+  useDownloadInvoiceMutation,
 } = orderApi;

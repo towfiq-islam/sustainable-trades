@@ -2,18 +2,19 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
-import {
-  getAllTaxes,
-  getSalesTaxData,
-  useAddSalesTax,
-  useTaxes,
-} from "@/Hooks/api/dashboard_api";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
 import { FaLightbulb } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { FiEye } from "react-icons/fi";
 import { IoEyeOffOutline } from "react-icons/io5";
+import {
+  useAddSalesTaxMutation,
+  useGetAllTaxesQuery,
+  useGetSalesTaxDataQuery,
+  useSaveTaxesMutation,
+} from "@/redux/api/taxApi";
+import toast from "react-hot-toast";
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
@@ -39,13 +40,14 @@ export default function TaxRatePage() {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [show, setShow] = useState(false);
   const [activeTab, setActiveTab] = useState<"manual" | "automatic">("manual");
-  const { mutate, isPending } = useTaxes();
-  const { mutate: addSalesTaxMutate, isPending: isAddingSalesTax } =
-    useAddSalesTax();
+  const [saveTax, { isLoading: isPending }] = useSaveTaxesMutation();
+  const [addSalesTaxMutate, { isLoading: isAddingSalesTax }] =
+    useAddSalesTaxMutation();
+
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
-  const { data: taxData } = getSalesTaxData();
-  const { data: allTaxes } = getAllTaxes();
+  const { data: taxData } = useGetSalesTaxDataQuery();
+  const { data: allTaxes } = useGetAllTaxesQuery();
   const [apiKey, setApiKey] = useState("");
   const [chargeOnServices, setChargeOnServices] = useState(true);
   const [chargeOnShipping, setChargeOnShipping] = useState(false);
@@ -69,7 +71,14 @@ export default function TaxRatePage() {
       })),
     };
 
-    addSalesTaxMutate(payload);
+    addSalesTaxMutate(payload)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   const {
@@ -91,15 +100,17 @@ export default function TaxRatePage() {
       is_shipping: chargeOnShipping ? 1 : 0,
     };
 
-    mutate(payload, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          reset();
-          setChargeOnServices(true);
-          setChargeOnShipping(false);
-        }
-      },
-    });
+    saveTax(payload)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+        reset();
+        setChargeOnServices(true);
+        setChargeOnShipping(false);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   useEffect(() => {

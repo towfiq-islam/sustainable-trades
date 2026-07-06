@@ -1,7 +1,7 @@
 import UpdateListing from "@/Components/PageComponents/dashboardPages/createListingComponents/UpdateListing";
 
-const page = ({ params }: { params: Promise<{ id: string }> }) => {
-  return <UpdateListing variant="basic" params={params} />;
+const page = () => {
+  return <UpdateListing variant="basic" />;
 };
 
 export default page;

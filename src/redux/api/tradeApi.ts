@@ -1,4 +1,5 @@
 import { apiSlice } from "@/redux/api/apiSlice";
+import toast from "react-hot-toast";
 
 export const tradeApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
@@ -30,6 +31,17 @@ export const tradeApi = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ["trade"],
+
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.success) {
+            toast.success(data.message);
+          }
+        } catch (err: any) {
+          toast.error(err?.data?.message);
+        }
+      },
     }),
 
     approveTrade: builder.mutation({
@@ -47,6 +59,48 @@ export const tradeApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["trade"],
     }),
+
+    getTradeAndBarterData: builder.query({
+      query: params => ({
+        url: "/api/barters-and-trades/summary",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["trade"],
+    }),
+
+    getTradesData: builder.query({
+      query: () => ({
+        url: "/api/vendor/dashboard/trades",
+        method: "GET",
+      }),
+      providesTags: ["trade"],
+    }),
+
+    tradeSendOffer: builder.mutation({
+      query: payload => ({
+        url: "/api/trade-offer/create",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["trade"],
+    }),
+
+    approveTradeOffer: builder.mutation<any, string | number>({
+      query: id => ({
+        url: `/api/trade-offer-approve/${id}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["trade"],
+    }),
+
+    cancelTradeOffer: builder.mutation<any, string | number>({
+      query: id => ({
+        url: `/api/trade-offer-cancel/${id}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["trade"],
+    }),
   }),
 });
 
@@ -58,4 +112,9 @@ export const {
   useSendCounterOfferMutation,
   useApproveTradeMutation,
   useCancelTradeMutation,
+  useGetTradeAndBarterDataQuery,
+  useGetTradesDataQuery,
+  useTradeSendOfferMutation,
+  useCancelTradeOfferMutation,
+  useApproveTradeOfferMutation,
 } = tradeApi;

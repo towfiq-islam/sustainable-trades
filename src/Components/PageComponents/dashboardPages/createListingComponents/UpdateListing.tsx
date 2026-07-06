@@ -95,14 +95,9 @@ const VARIANT_CONFIG = {
   },
 } as const;
 
-interface UpdateListingProps {
-  variant: "basic" | "pro";
-  params: Promise<{ id: string }>;
-}
-
 // ── Component ──────────────────────────────────────────────────────────────────
 
-const UpdateListing = ({ variant }: UpdateListingProps) => {
+const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
   const config = VARIANT_CONFIG[variant];
   const params = useParams();
   const id = Number(params?.id);

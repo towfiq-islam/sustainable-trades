@@ -40,6 +40,7 @@ export const apiSlice = createApi({
   tagTypes: [
     "user",
     "product",
+    "latest-product",
     "conversation",
     "shop",
     "order",

@@ -2,7 +2,7 @@ import { apiSlice } from "@/redux/api/apiSlice";
 
 export const productApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    // Products
+    // Vendor Products
     getProducts: builder.query({
       query: ({
         status,
@@ -64,7 +64,7 @@ export const productApi = apiSlice.injectEndpoints({
       providesTags: ["product"],
     }),
 
-    // Single Product
+    // Vendor Single Product
     getSingleProduct: builder.query({
       query: id => `/api/product/${id}`,
       providesTags: (_result, _error, id) => [{ type: "product", id }],
@@ -126,7 +126,7 @@ export const productApi = apiSlice.injectEndpoints({
       providesTags: ["favorite"],
     }),
 
-    // Vendor Listings
+    // Vendor Listings Count
     getVendorListings: builder.query({
       query: () => "/api/vendor/dashboard/listings",
       providesTags: ["product"],

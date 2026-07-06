@@ -149,8 +149,8 @@ const CheckoutPaypalModal = ({
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
-                      Accept: "application/json", // <-- add this
-                      "X-Requested-With": "XMLHttpRequest", // <-- and this
+                      Accept: "application/json",
+                      "X-Requested-With": "XMLHttpRequest",
                     },
                     body: JSON.stringify({
                       ...formData,

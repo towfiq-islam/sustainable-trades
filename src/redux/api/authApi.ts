@@ -56,7 +56,7 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    editShop: builder.mutation<ApiResponse<User>, FormData>({
+    editShop: builder.mutation<ApiResponse<User>, any>({
       query: formData => ({
         url: "/api/shop/owner-data-update",
         method: "POST",

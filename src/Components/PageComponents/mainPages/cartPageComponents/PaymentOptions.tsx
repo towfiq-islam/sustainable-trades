@@ -1,13 +1,16 @@
 "use client";
 import CartItem from "./CartItem";
 import { TiDelete } from "react-icons/ti";
-import { getProductCart, useClearCart } from "@/Hooks/api/cms_api";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { CartItemSkeleton } from "@/Components/Loader/Loader";
+import {
+  useClearCartMutation,
+  useGetProductCartQuery,
+} from "@/redux/api/cartApi";
 
 const PaymentOptions = () => {
-  const { data: cartData, isLoading } = getProductCart();
-  const { mutate: clearCartMutation, isPending } = useClearCart();
+  const { data: cartData, isLoading } = useGetProductCartQuery();
+  const [clearCartMutation, { isLoading: isPending }] = useClearCartMutation();
 
   return (
     <section className="mb-20">
@@ -30,7 +33,7 @@ const PaymentOptions = () => {
       {cartData?.data?.length > 0 && (
         <button
           disabled={isPending}
-          onClick={() => clearCartMutation()}
+          onClick={() => clearCartMutation().unwrap()}
           className={`px-3 py-1.5 text-sm rounded-full font-semibold bg-primary-red text-white flex gap-1 items-center ${
             isPending ? "cursor-not-allowed" : "cursor-pointer"
           }`}
@@ -56,7 +59,6 @@ const PaymentOptions = () => {
             ? "No Cart Found"
             : cartData?.data?.cart?.map((item: any) => (
                 <CartItem
-                  subTotal={cartData?.data?.total_price}
                   key={item?.id}
                   item={item}
                 />

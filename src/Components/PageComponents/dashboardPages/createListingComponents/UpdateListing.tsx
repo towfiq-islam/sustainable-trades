@@ -32,6 +32,7 @@ interface ProductData {
   height: string;
   dimension_unit: "mm" | "cm" | "in";
   cost: string;
+  weight: string;
   unlimited_stock: boolean;
   out_of_stock: boolean;
   video: string | null;
@@ -94,14 +95,9 @@ const VARIANT_CONFIG = {
   },
 } as const;
 
-interface UpdateListingProps {
-  variant: "basic" | "pro";
-  params: Promise<{ id: string }>;
-}
-
 // ── Component ──────────────────────────────────────────────────────────────────
 
-const UpdateListing = ({ variant }: UpdateListingProps) => {
+const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
   const config = VARIANT_CONFIG[variant];
   const params = useParams();
   const id = Number(params?.id);
@@ -189,6 +185,7 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
       height: productData.height || "",
       dimension_unit: productData.dimension_unit || "in",
       cost: productData.cost || "",
+      weight: productData.weight || "",
       description: productData.description || "",
       category_id: productData.category_id?.toString() || "",
       sub_category_id: productData.sub_category_id?.toString() || "",
@@ -314,32 +311,33 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
     if (!img) return;
     setDeletingIds(prev => new Set([...prev, img.id]));
 
-    try {
-      const res: any = deleteProductImage(img?.id).unwrap();
+    deleteProductImage(img?.id)
+      .unwrap()
+      .then(res => {
+        if (res?.success) {
+          toast.success(res?.message);
+          const updatedKept = keptImages.filter(i => i.id !== img.id);
+          setKeptImages(updatedKept);
+          setKeptImagePaths(updatedKept.map(i => i.fullPath));
+          const updated = allImages.filter(u => u !== imageUrl);
+          setAllImages(updated);
+          if (mainImage === imageUrl) setMainImage(updated[0] || null);
 
-      if (res?.success) {
-        toast.success(res?.message);
-        const updatedKept = keptImages.filter(i => i.id !== img.id);
-        setKeptImages(updatedKept);
-        setKeptImagePaths(updatedKept.map(i => i.fullPath));
-        const updated = allImages.filter(u => u !== imageUrl);
-        setAllImages(updated);
-        if (mainImage === imageUrl) setMainImage(updated[0] || null);
-
+          setDeletingIds(prev => {
+            const s = new Set(prev);
+            s.delete(img.id);
+            return s;
+          });
+        }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
         setDeletingIds(prev => {
           const s = new Set(prev);
           s.delete(img.id);
           return s;
         });
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-      setDeletingIds(prev => {
-        const s = new Set(prev);
-        s.delete(img.id);
-        return s;
       });
-    }
   };
 
   // ── Video handlers ─────────────────────────────────────────────────────────
@@ -401,6 +399,7 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
     fd.append("product_name", data.product_name);
     fd.append("product_price", data.product_price);
     fd.append("cost", data.cost);
+    fd.append("weight", data.weight);
     fd.append("length", data.length);
     fd.append("width", data.width);
     fd.append("height", data.height);
@@ -829,10 +828,7 @@ const UpdateListing = ({ variant }: UpdateListingProps) => {
                 name="weight"
                 control={control}
                 rules={{
-                  pattern: {
-                    value: /^\d+$/,
-                    message: "Weight must be a number",
-                  },
+                  required: "Weight is required",
                 }}
                 render={({ field }) => (
                   <input

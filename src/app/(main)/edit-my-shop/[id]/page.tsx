@@ -8,8 +8,9 @@ import EditFormThree from "@/Components/PageComponents/EditForm/EditFormThree";
 import { PuffLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 import useAuth from "@/Hooks/useAuth";
-import { useEditShop } from "@/Hooks/api/dashboard_api";
 import { useGetShopDetailsQuery } from "@/redux/api/shopApi";
+import { useEditShopMutation } from "@/redux/api/authApi";
+import toast from "react-hot-toast";
 
 type ProfileFormValues = {
   first_name: string;
@@ -54,7 +55,7 @@ const Page = ({ params }: Props) => {
   const router = useRouter();
   const { data: shopDetailsData, isLoading } = useGetShopDetailsQuery(id);
   const methods = useForm<ProfileFormValues>();
-  const { mutate: editShopMutation, isPending } = useEditShop();
+  const [editShopMutation, { isLoading: isPending }] = useEditShopMutation();
   const {
     register,
     reset,
@@ -136,21 +137,88 @@ const Page = ({ params }: Props) => {
       }
     }
 
-    const payload = {
-      ...formData,
-      latitude: finalLat,
-      longitude: finalLng,
-    };
+    const fd = new FormData();
 
-    editShopMutation(payload, {
-      onSuccess: (res: any) => {
-        if (res.success) {
-          router.push(
-            `/shop-details?view=owner&id=${user?.shop_info?.user_id}&listing_id=${user?.shop_info?.id}`,
-          );
-        }
-      },
+    // Profile info
+    fd.append("first_name", formData.first_name || "");
+    fd.append("last_name", formData.last_name || "");
+    fd.append("company_name", formData.company_name || "");
+    fd.append("phone", formData.phone || "");
+    fd.append("email", formData.email || "");
+
+    // Shop
+    fd.append("shop_name", formData.shop_name || "");
+    if (formData.shop_image instanceof File) {
+      fd.append("shop_image", formData.shop_image);
+    }
+    if (formData.shop_banner instanceof File) {
+      fd.append("shop_banner", formData.shop_banner);
+    }
+
+    // About
+    fd.append("tagline", formData.tagline || "");
+    fd.append("statement", formData.statement || "");
+    fd.append("our_story", formData.our_story || "");
+    if ((formData as any).about_image instanceof File) {
+      fd.append("about_image", (formData as any).about_image);
+    }
+
+    // Policies
+    fd.append("shipping_information", formData.shipping_information || "");
+    fd.append("return_policy", formData.return_policy || "");
+
+    if (
+      Array.isArray(formData.payment_methods) &&
+      formData.payment_methods.length > 0
+    ) {
+      formData.payment_methods.forEach((method: string, index: number) => {
+        fd.append(`payment_methods[${index}]`, method);
+      });
+    } else {
+      fd.append("payment_methods", "");
+    }
+
+    // FAQs
+    const faqs = (formData as any).faqs || [];
+    faqs.forEach((faq: { question: string; answer: string }, index: number) => {
+      fd.append(`faqs[${index}][question]`, faq.question || "");
+      fd.append(`faqs[${index}][answer]`, faq.answer || "");
     });
+
+    // Social links
+    fd.append("website_url", formData.website_url || "");
+    fd.append("facebook_url", formData.facebook_url || "");
+    fd.append("instagram_url", formData.instagram_url || "");
+    fd.append("pinterest_url", formData.pinterest_url || "");
+
+    // Address / Geo-locator
+    fd.append("address_line_1", formData.address_line_1 || "");
+    fd.append("city", formData.city || "");
+    fd.append("state", formData.state || "");
+    fd.append("postal_code", formData.postal_code || "");
+    fd.append("latitude", finalLat ? String(finalLat) : "");
+    fd.append("longitude", finalLng ? String(finalLng) : "");
+    fd.append(
+      "display_my_address",
+      String((formData as any).display_my_address ?? 0),
+    );
+    fd.append(
+      "address_10_mile",
+      String((formData as any).address_10_mile ?? 0),
+    );
+    fd.append("do_not_display", String((formData as any).do_not_display ?? 0));
+
+    try {
+      const res: any = await editShopMutation(fd).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        router.push(
+          `/shop-details?view=owner&id=${user?.shop_info?.user_id}&listing_id=${user?.shop_info?.id}`,
+        );
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   if (isLoading) {

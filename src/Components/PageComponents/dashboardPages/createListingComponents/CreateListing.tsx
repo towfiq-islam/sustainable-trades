@@ -163,6 +163,8 @@ const CreateListing = ({
     if (video) fd.append("video", video);
 
     fd.append("length", data.length);
+    fd.append("weight", data.weight);
+    fd.append("cost", data.cost);
     fd.append("width", data.width);
     fd.append("height", data.height);
     fd.append("dimension_unit", data.dimension_unit);

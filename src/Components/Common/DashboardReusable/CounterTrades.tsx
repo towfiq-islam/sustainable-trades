@@ -1,5 +1,4 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -8,16 +7,13 @@ import { FaRegStar, FaStar, FaRegTrashAlt } from "react-icons/fa";
 import { ImSpinner9 } from "react-icons/im";
 import { PuffLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
-
 import { Reload, LocationSvg1 } from "@/Components/Svg/SvgContainer";
-import {
-  useCancel,
-  useSingleTradeOffer,
-  useTradeSendProduct,
-  useTradeShopProduct,
-} from "@/Hooks/api/dashboard_api";
 import useAuth from "@/Hooks/useAuth";
+import {
+  useGetTradeOfferQuery,
+  useGetTradeShopProductQuery,
+  useSendCounterOfferMutation,
+} from "@/redux/api/tradeApi";
 
 type Addon = { productId: number; quantity: number };
 type AddonProducts = Record<number, Addon[]>;
@@ -27,7 +23,6 @@ type Quantities = Record<number, number>;
 const CounterTrades = ({ id }: { id: string }) => {
   const router = useRouter();
   const { user } = useAuth();
-  const queryClient = useQueryClient();
 
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>(
     {},
@@ -37,11 +32,11 @@ const CounterTrades = ({ id }: { id: string }) => {
   const [message, setMessage] = useState("");
 
   // Fetch trade data
-  const { data } = useSingleTradeOffer(id);
+  const { data } = useGetTradeOfferQuery(id);
 
   // API mutations
-  const { mutate, isPending } = useTradeSendProduct(id);
-  const cancelTradeMutation = useCancel();
+  const [sendTradeOffer, { isLoading: isPending }] =
+    useSendCounterOfferMutation();
 
   // Determine shop roles
   const isUserSender =
@@ -55,9 +50,9 @@ const CounterTrades = ({ id }: { id: string }) => {
 
   // Fetch shop products
   const { data: offerShopProduct, isLoading: offerLoading } =
-    useTradeShopProduct(myShopId);
+    useGetTradeShopProductQuery(myShopId);
   const { data: requestedShopProduct, isLoading: requestLoading } =
-    useTradeShopProduct(otherShopId);
+    useGetTradeShopProductQuery(otherShopId);
 
   // Initialize selections & quantities
   useEffect(() => {
@@ -201,19 +196,7 @@ const CounterTrades = ({ id }: { id: string }) => {
       formData.append(`requested_items[${i}][quantity]`, String(item.quantity));
     });
 
-    mutate(formData);
-  };
-
-  // Cancel counter
-  const handleCancelCounter = () => {
-    cancelTradeMutation.mutate(id, {
-      onSuccess: (data: any) => {
-        toast.success(data?.message);
-        queryClient.invalidateQueries({ queryKey: ["get-trades"] });
-        queryClient.invalidateQueries({ queryKey: ["get-count"] });
-      },
-      onError: (error: any) => toast.error(error?.message),
-    });
+    sendTradeOffer({ id, data: formData }).unwrap();
   };
 
   if (offerLoading || requestLoading) {

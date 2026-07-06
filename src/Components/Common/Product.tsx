@@ -10,7 +10,6 @@ import { Pagination } from "swiper/modules";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { LuLoaderPinwheel } from "react-icons/lu";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useAddToCart } from "@/Hooks/api/cms_api";
 import {
   AddToCartSvg,
   DollarSvg,
@@ -18,6 +17,7 @@ import {
   SignSvg,
 } from "../Svg/SvgContainer";
 import { useAddFavoriteMutation } from "@/redux/api/productApi";
+import { useAddToCartMutation } from "@/redux/api/cartApi";
 
 type imageItem = {
   id: number;
@@ -25,7 +25,7 @@ type imageItem = {
 };
 
 type ProductData = {
-  id?: number;
+  id: number;
   distance: number;
   images?: imageItem[];
   product_name?: string;
@@ -56,30 +56,38 @@ const Product = ({
   const { user } = useAuth();
   const [addFavoriteMutation, { isLoading: isPending }] =
     useAddFavoriteMutation();
-  const { mutate: addToCartMutation, isPending: addCardPending } = useAddToCart(
-    product?.id,
-  );
+  const [addToCartMutation, { isLoading: addCardPending }] =
+    useAddToCartMutation();
 
   // Func for add to favorite
   const handleAddFavorite = (product_id: any) => {
     if (!user) {
       return toast.error("Please login first to proceed");
     }
-    try {
-      const res: any = addFavoriteMutation(product_id).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+    addFavoriteMutation(product_id)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
+
   // Func for add to cart
-  const handleAddToCart = () => {
+  const handleAddToCart = (id: number) => {
     if (!user) {
       return toast.error("Please login first to proceed");
     }
-    addToCartMutation({ quantity: 1 });
+
+    addToCartMutation({ productId: id, data: { quantity: 1 } })
+      .unwrap()
+      .then(res => {
+        toast.success(res?.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (
@@ -195,7 +203,7 @@ const Product = ({
         {/* Cart btn */}
         {has_cart && (
           <button
-            onClick={handleAddToCart}
+            onClick={() => handleAddToCart(+product?.id)}
             disabled={
               addCardPending ||
               product?.selling_option === "trade/barter" ||

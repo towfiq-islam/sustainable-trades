@@ -1,6 +1,7 @@
 "use client";
-import { useApplyCoupon } from "@/Hooks/api/dashboard_api";
+import { useApplyCouponMutation } from "@/redux/api/discountApi";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 type Item = {
   id: number;
@@ -55,7 +56,7 @@ export default function OrderReviewModal({
   shop_name,
 }: Props) {
   const [promo, setPromo] = useState<string>("");
-  const { mutate: couponMutation, isPending } = useApplyCoupon();
+  const [couponMutation, { isLoading: isPending }] = useApplyCouponMutation();
   const [couponCode, setCouponCode] = useState<number | null>(null);
   const [couponType, setCouponType] = useState<string>("");
 
@@ -65,18 +66,20 @@ export default function OrderReviewModal({
       coupon_code: promo,
     };
 
-    couponMutation(payload, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          setCouponCode(+res?.data?.discount_amount);
-          setCouponType(res?.data?.discount_type);
-          setFormData((prev: any) => ({
-            ...prev,
-            coupon_code: promo,
-          }));
-        }
-      },
-    });
+    couponMutation(payload)
+      .unwrap()
+      .then(res => {
+        toast.success(res?.message);
+        setCouponCode(+res?.data?.discount_amount);
+        setCouponType(res?.data?.discount_type);
+        setFormData((prev: any) => ({
+          ...prev,
+          coupon_code: promo,
+        }));
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   const discountAmount =
@@ -219,7 +222,7 @@ export default function OrderReviewModal({
 
       {/* Order Summary */}
       <div className="mt-5">
-        <h3 className="text-lg font-semibold text-secondary-gray">Subtotal</h3>
+        <h3 className="text-lg font-semibold text-secondary-gray">Items</h3>
 
         <div className="mt-2 space-y-4">
           {cartItems?.cart_items?.map((item: Item) => (
@@ -231,6 +234,11 @@ export default function OrderReviewModal({
           ))}
 
           <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span>Subtotal</span>
+              <span>${subTotal?.toFixed(2)}</span>
+            </div>
+
             {discountAmount > 0 && (
               <div className="flex justify-between text-sm">
                 <span>
@@ -238,7 +246,7 @@ export default function OrderReviewModal({
                   {couponType === "percentage" ? `(${couponCode}% off)` : ""}
                 </span>
 
-                <span>-${discountAmount.toFixed(2)}</span>
+                <span className="text-primary-red">-${discountAmount.toFixed(2)}</span>
               </div>
             )}
 

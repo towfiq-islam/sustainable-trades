@@ -3,10 +3,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { useLocalPickupPro } from "@/Hooks/api/dashboard_api";
-import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useSendMessageMutation } from "@/redux/api/chatApi";
+import { useLocalPickupProMutation } from "@/redux/api/vendorApi";
 
 type formData = {
   name: string;
@@ -69,12 +68,11 @@ const ShippingOptionsModal = ({
   setSuccessOpen,
 }: ShippingOptionsProps) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [sendMessageMutation, { isLoading: isPending }] =
     useSendMessageMutation();
-  const { mutate: localPickupForPro, isPending: isPicking } =
-    useLocalPickupPro(cart_id);
+  const [localPickupForPro, { isLoading: isPicking }] =
+    useLocalPickupProMutation();
 
   const {
     register,
@@ -145,16 +143,20 @@ const ShippingOptionsModal = ({
     };
 
     if (membershipType === "pro") {
-      return localPickupForPro(data, {
-        onSuccess: (res: any) => {
-          toast.success(res.message);
-          queryClient.invalidateQueries("get-product-cart" as any);
+      localPickupForPro({
+        id: cart_id,
+        data,
+      })
+        .unwrap()
+        .then(res => {
           onClose();
           router.push(
             `/order-success?order_id=${res?.data?.id}&shop_id=${res?.data?.shop_id}`,
           );
-        },
-      });
+        })
+        .catch(err => {
+          toast.error(err?.data?.message);
+        });
     }
 
     sendMessageMutation(payload)

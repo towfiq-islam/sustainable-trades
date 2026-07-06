@@ -2,7 +2,7 @@ import { apiSlice } from "@/redux/api/apiSlice";
 
 export const productApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    // Products
+    // Vendor Products
     getProducts: builder.query({
       query: ({
         status,
@@ -64,7 +64,7 @@ export const productApi = apiSlice.injectEndpoints({
       providesTags: ["product"],
     }),
 
-    // Single Product
+    // Vendor Single Product
     getSingleProduct: builder.query({
       query: id => `/api/product/${id}`,
       providesTags: (_result, _error, id) => [{ type: "product", id }],
@@ -76,7 +76,7 @@ export const productApi = apiSlice.injectEndpoints({
         url: `/api/product-details/${id}`,
         params: { lat, lng },
       }),
-      providesTags: (_result, _error, id) => [{ type: "product", id }],
+      providesTags: (_result, _error, { id }) => [{ type: "product", id }],
     }),
 
     // Add Product
@@ -120,6 +120,18 @@ export const productApi = apiSlice.injectEndpoints({
       providesTags: ["product"],
     }),
 
+    // My Favorite
+    getMyFavorite: builder.query({
+      query: () => "/api/my-favorites",
+      providesTags: ["favorite"],
+    }),
+
+    // Vendor Listings Count
+    getVendorListings: builder.query({
+      query: () => "/api/vendor/dashboard/listings",
+      providesTags: ["product"],
+    }),
+
     // Nearby Products
     getNearbyProducts: builder.query({
       query: ({ lat, lng, page }) => ({
@@ -153,7 +165,7 @@ export const productApi = apiSlice.injectEndpoints({
       invalidatesTags: ["product"],
     }),
 
-    // Category Details
+    // Product By Category
     getCategoryDetails: builder.query({
       query: ({ id, lat, lng, page }) => ({
         url: `/api/category/${id}`,
@@ -163,16 +175,41 @@ export const productApi = apiSlice.injectEndpoints({
           page,
         },
       }),
-      providesTags: (_result, _error, { id }) => [{ type: "category", id }],
+      providesTags: (_result, _error, { id }) => [{ type: "product", id }],
     }),
 
-    // Add Favorite
+    // Toggle Favorite
     addFavorite: builder.mutation({
       query: productId => ({
         url: `/api/add-favorites/${productId}`,
         method: "POST",
       }),
+
       invalidatesTags: ["product", "favorite"],
+
+      // OPTIMISTIC UPDATE
+      // async onQueryStarted({ id, payload }, { dispatch, queryFulfilled }) {
+      //   const patchResult = dispatch(
+      //     apiSlice.util.updateQueryData(
+      //       "getNearbyProducts",
+      //       undefined,
+      //       draft => {
+      //         const product = draft.products.find(item => item.id === id);
+
+      //         if (product) {
+      //           product.title = payload.title;
+      //           product.price = payload.price;
+      //         }
+      //       },
+      //     ),
+      //   );
+
+      //   try {
+      //     await queryFulfilled;
+      //   } catch {
+      //     patchResult.undo();
+      //   }
+      // },
     }),
 
     // Product Categories
@@ -202,9 +239,10 @@ export const {
   useGetAllProductsQuery,
   useGetNearbyProductsQuery,
   useGetProductReviewsQuery,
-  
+  useGetMyFavoriteQuery,
   useGetProductCategoriesQuery,
   useGetProductSubCategoriesQuery,
   useGetCategoryDetailsQuery,
   useAddFavoriteMutation,
+  useGetVendorListingsQuery,
 } = productApi;

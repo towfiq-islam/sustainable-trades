@@ -6,6 +6,7 @@ import ToastProvider from "@/Provider/ToastProvider/ToastProvider";
 import ReduxProvider from "@/Provider/ReduxProvider/ReduxProvider";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
+
 // Fonts
 const lato = Lato({
   variable: "--font-lato",

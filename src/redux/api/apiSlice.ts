@@ -25,6 +25,7 @@ const baseQueryWithInterceptor: BaseQueryFn<
     console.log("Unauthenticated. Logging out...");
     api.dispatch(removeUser());
     api.dispatch(apiSlice.util.resetApiState()); // Wipe all cached queries
+    // window.location.href = "/auth/login";
   }
 
   return result;
@@ -33,9 +34,6 @@ const baseQueryWithInterceptor: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithInterceptor,
-
-  refetchOnFocus: true,
-  refetchOnReconnect: true,
 
   tagTypes: [
     "user",

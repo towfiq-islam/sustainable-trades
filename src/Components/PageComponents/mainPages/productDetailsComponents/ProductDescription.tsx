@@ -24,6 +24,7 @@ import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
 import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import { useAddToCartMutation } from "@/redux/api/cartApi";
+import { useRouter } from "next/navigation";
 
 type descriptionItem = {
   id: number;
@@ -69,6 +70,7 @@ interface descriptionProps {
 
 const ProductDescription = ({ data }: descriptionProps) => {
   // Hook
+  const router = useRouter();
   const { user } = useAuth();
   const [orderReviewModal, setOrderReviewModal] = useState<boolean>(false);
   const [shippingAddressOpen, setShippingAddressOpen] =
@@ -81,6 +83,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
   const [taxData, setTaxData] = useState({});
   const [successOpen, setSuccessOpen] = useState<boolean>(false);
   const [fulfillmentType, setFulfillmentType] = useState<string>("");
+  const [sellingOption, setSellingOption] = useState<boolean>(Boolean);
 
   // States
   const [id, setId] = useState<number | null>(null);
@@ -118,7 +121,6 @@ const ProductDescription = ({ data }: descriptionProps) => {
 
   // Func for add to cart
   const handleAddToCart = (id: number) => {
-    console.log(id);
     if (!user) {
       return toast.error("Please login first to proceed");
     }
@@ -302,23 +304,30 @@ const ProductDescription = ({ data }: descriptionProps) => {
       </button>
 
       {/* Trade btn */}
-      {user?.role !== "customer" &&
-        data?.selling_option !== "for_sale" &&
-        user?.shop_info?.user_id !== data?.shop?.user_id && (
-          <button
-            onClick={() => {
-              if (!user) {
-                return toast.error("Please login first to proceed");
-              }
-              setId(data?.shop_info_id);
-              setProductId(data?.id);
-              setTradeOpen(true);
-            }}
-            className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 border-off-green md:text-lg cursor-pointer py-2 md:py-3 bg-off-green text-primary-green rounded-lg shadow hover:text-primary-green enabled:hover:bg-transparent font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            Trade
-          </button>
-        )}
+      <button
+        disabled={
+          user?.role === "customer" ||
+          user?.shop_info?.user_id === data?.shop?.user_id
+        }
+        onClick={() => {
+          if (!user) {
+            toast.error("Please login first to proceed");
+            router.push("/auth/login");
+            return;
+          }
+
+          if (data?.selling_option === "for_sale") {
+            setSellingOption(true);
+          }
+
+          setId(data?.shop_info_id);
+          setProductId(data?.id);
+          setTradeOpen(true);
+        }}
+        className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 border-off-green md:text-lg cursor-pointer py-2 md:py-3 bg-off-green text-primary-green rounded-lg shadow hover:text-primary-green enabled:hover:bg-transparent font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        Trade
+      </button>
 
       {/* Message btn */}
       {user?.shop_info?.user_id !== data?.shop?.user_id && (
@@ -338,12 +347,18 @@ const ProductDescription = ({ data }: descriptionProps) => {
         </button>
       )}
       {/* Modals */}
-      <Modal open={tradeOpen} onClose={() => setTradeOpen(false)}>
+      <Modal
+        open={tradeOpen}
+        onClose={() => setTradeOpen(false)}
+        className={`${sellingOption && "max-w-lg"}`}
+      >
         <TradeOfferModal
           id={id}
           productId={productId}
           shopInfo={data}
           setTradeOpen={setTradeOpen}
+          sellingOption={sellingOption}
+          onClose={() => setTradeOpen(false)}
         />
       </Modal>
 

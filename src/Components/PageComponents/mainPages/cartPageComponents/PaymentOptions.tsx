@@ -59,7 +59,6 @@ const PaymentOptions = () => {
             ? "No Cart Found"
             : cartData?.data?.cart?.map((item: any) => (
                 <CartItem
-                  subTotal={cartData?.data?.total_price}
                   key={item?.id}
                   item={item}
                 />

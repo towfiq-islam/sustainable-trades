@@ -53,10 +53,9 @@ interface CartItem {
 
 interface CartProps {
   item: CartItem;
-  subTotal: number;
 }
 
-const CartItem = ({ item, subTotal }: CartProps) => {
+const CartItem = ({ item }: CartProps) => {
   // States
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
@@ -93,6 +92,11 @@ const CartItem = ({ item, subTotal }: CartProps) => {
         toast.error(err?.data?.message);
       });
   };
+
+  const vendorSubtotal = item.cart_items.reduce(
+    (total, cart) => total + Number(cart.price),
+    0,
+  );
 
   return (
     <div className="border border-gray-300 p-5 rounded-lg bg-white relative">
@@ -305,7 +309,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           setFormData={setFormData}
           formData={formData}
           cartItems={item}
-          subTotal={subTotal}
+          subTotal={vendorSubtotal}
           cart_id={cartId}
           taxData={taxData}
           shop_name={item?.shop?.shop_name}

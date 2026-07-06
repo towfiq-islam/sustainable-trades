@@ -25,7 +25,7 @@ type imageItem = {
 };
 
 type ProductData = {
-  id?: number;
+  id: number;
   distance: number;
   images?: imageItem[];
   product_name?: string;
@@ -73,13 +73,14 @@ const Product = ({
       toast.error(err?.data?.message);
     }
   };
+
   // Func for add to cart
-  const handleAddToCart = () => {
+  const handleAddToCart = (id: number) => {
     if (!user) {
       return toast.error("Please login first to proceed");
     }
 
-    addToCartMutation({ id: product?.id, data: { quantity: 1 } })
+    addToCartMutation({ productId: id, data: { quantity: 1 } })
       .unwrap()
       .then(res => {
         toast.success(res?.message);
@@ -202,7 +203,7 @@ const Product = ({
         {/* Cart btn */}
         {has_cart && (
           <button
-            onClick={handleAddToCart}
+            onClick={() => handleAddToCart(+product?.id)}
             disabled={
               addCardPending ||
               product?.selling_option === "trade/barter" ||

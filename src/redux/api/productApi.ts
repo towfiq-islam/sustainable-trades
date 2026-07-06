@@ -76,7 +76,7 @@ export const productApi = apiSlice.injectEndpoints({
         url: `/api/product-details/${id}`,
         params: { lat, lng },
       }),
-      providesTags: (_result, _error, id) => [{ type: "product", id }],
+      providesTags: (_result, _error, { id }) => [{ type: "product", id }],
     }),
 
     // Add Product
@@ -165,7 +165,7 @@ export const productApi = apiSlice.injectEndpoints({
       invalidatesTags: ["product"],
     }),
 
-    // Category Details
+    // Product By Category
     getCategoryDetails: builder.query({
       query: ({ id, lat, lng, page }) => ({
         url: `/api/category/${id}`,
@@ -175,16 +175,41 @@ export const productApi = apiSlice.injectEndpoints({
           page,
         },
       }),
-      providesTags: (_result, _error, { id }) => [{ type: "category", id }],
+      providesTags: (_result, _error, { id }) => [{ type: "product", id }],
     }),
 
-    // Add Favorite
+    // Toggle Favorite
     addFavorite: builder.mutation({
       query: productId => ({
         url: `/api/add-favorites/${productId}`,
         method: "POST",
       }),
+
       invalidatesTags: ["product", "favorite"],
+
+      // OPTIMISTIC UPDATE
+      // async onQueryStarted({ id, payload }, { dispatch, queryFulfilled }) {
+      //   const patchResult = dispatch(
+      //     apiSlice.util.updateQueryData(
+      //       "getNearbyProducts",
+      //       undefined,
+      //       draft => {
+      //         const product = draft.products.find(item => item.id === id);
+
+      //         if (product) {
+      //           product.title = payload.title;
+      //           product.price = payload.price;
+      //         }
+      //       },
+      //     ),
+      //   );
+
+      //   try {
+      //     await queryFulfilled;
+      //   } catch {
+      //     patchResult.undo();
+      //   }
+      // },
     }),
 
     // Product Categories

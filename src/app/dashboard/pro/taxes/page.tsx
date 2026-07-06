@@ -71,14 +71,14 @@ export default function TaxRatePage() {
       })),
     };
 
-    try {
-      const res: any = addSalesTaxMutate(payload).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+    addSalesTaxMutate(payload)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   const {
@@ -100,17 +100,17 @@ export default function TaxRatePage() {
       is_shipping: chargeOnShipping ? 1 : 0,
     };
 
-    try {
-      const res: any = saveTax(payload).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
+    saveTax(payload)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
         reset();
         setChargeOnServices(true);
         setChargeOnShipping(false);
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   useEffect(() => {

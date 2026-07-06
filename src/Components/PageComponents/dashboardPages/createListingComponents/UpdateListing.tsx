@@ -311,32 +311,33 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
     if (!img) return;
     setDeletingIds(prev => new Set([...prev, img.id]));
 
-    try {
-      const res: any = deleteProductImage(img?.id).unwrap();
+    deleteProductImage(img?.id)
+      .unwrap()
+      .then(res => {
+        if (res?.success) {
+          toast.success(res?.message);
+          const updatedKept = keptImages.filter(i => i.id !== img.id);
+          setKeptImages(updatedKept);
+          setKeptImagePaths(updatedKept.map(i => i.fullPath));
+          const updated = allImages.filter(u => u !== imageUrl);
+          setAllImages(updated);
+          if (mainImage === imageUrl) setMainImage(updated[0] || null);
 
-      if (res?.success) {
-        toast.success(res?.message);
-        const updatedKept = keptImages.filter(i => i.id !== img.id);
-        setKeptImages(updatedKept);
-        setKeptImagePaths(updatedKept.map(i => i.fullPath));
-        const updated = allImages.filter(u => u !== imageUrl);
-        setAllImages(updated);
-        if (mainImage === imageUrl) setMainImage(updated[0] || null);
-
+          setDeletingIds(prev => {
+            const s = new Set(prev);
+            s.delete(img.id);
+            return s;
+          });
+        }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
         setDeletingIds(prev => {
           const s = new Set(prev);
           s.delete(img.id);
           return s;
         });
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-      setDeletingIds(prev => {
-        const s = new Set(prev);
-        s.delete(img.id);
-        return s;
       });
-    }
   };
 
   // ── Video handlers ─────────────────────────────────────────────────────────

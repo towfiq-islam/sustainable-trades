@@ -64,14 +64,14 @@ const Product = ({
     if (!user) {
       return toast.error("Please login first to proceed");
     }
-    try {
-      const res: any = addFavoriteMutation(product_id).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+    addFavoriteMutation(product_id)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   // Func for add to cart

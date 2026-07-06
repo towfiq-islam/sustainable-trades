@@ -69,31 +69,34 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
 
   const handleCarrierToggle = (carrierAccount: any) => {
     if (!carrierAccount?.shippo_object_id) return;
-    try {
-      const res: any = pickupCarrier({
-        id: carrierAccount.id,
-        data: { active: !carrierAccount.active },
-      }).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+
+    pickupCarrier({
+      id: carrierAccount.id,
+      data: { active: !carrierAccount.active },
+    })
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+        setOpenConnectFlatModal(false);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   const handleLabelTypeChange = (rate: any) => {
-    try {
-      const res: any = changeLabelType({
-        id: rate.id,
-        data: { active: !rate.active },
-      }).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+    changeLabelType({
+      id: rate.id,
+      data: { active: !rate.active },
+    })
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+        setOpenConnectFlatModal(false);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (
@@ -292,15 +295,15 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
             <button
               disabled={isDisconnecting}
               onClick={() => {
-                try {
-                  const res: any = disconnectShippo().unwrap();
-                  if (res?.success) {
-                    toast.success(res?.message);
+                disconnectShippo()
+                  .unwrap()
+                  .then(res => {
+                    toast.success(res.message);
                     setOpenConnectFlatModal(false);
-                  }
-                } catch (err: any) {
-                  toast.error(err?.data?.message);
-                }
+                  })
+                  .catch(err => {
+                    toast.error(err?.data?.message);
+                  });
               }}
               className="flex items-center gap-1.5 bg-primary-red border border-primary-red text-white px-3 py-2 rounded-lg text-[14px] font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
             >

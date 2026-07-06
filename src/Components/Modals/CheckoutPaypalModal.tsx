@@ -34,20 +34,20 @@ const CheckoutPaypalModal = ({
 
   // For COD
   const handleCashOnDelivery = () => {
-    try {
-      const res: any = localPickupPayment({
-        id: cart_id,
-        data: {
-          payment_method: "cash_on_delivery",
-        },
-      }).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
+    localPickupPayment({
+      id: cart_id,
+      data: {
+        payment_method: "cash_on_delivery",
+      },
+    })
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
         router.push("/dashboard/customer/orders");
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (

@@ -222,17 +222,16 @@ const Page = () => {
                     <button
                       key={step.key}
                       onClick={() => {
-                        try {
-                          const res: any = updateStatusMutation({
-                            status: step?.key,
-                          }).unwrap();
-                          if (res?.success) {
-                            toast.success(res?.message);
-                            router.push("/auth/login");
-                          }
-                        } catch (err: any) {
-                          toast.error(err?.data?.message);
-                        }
+                        updateStatusMutation({
+                          status: step?.key,
+                        })
+                          .unwrap()
+                          .then(res => {
+                            toast.success(res.message);
+                          })
+                          .catch(err => {
+                            toast.error(err?.data?.message);
+                          });
 
                         setOpenStatusPopover(false);
                       }}
@@ -404,14 +403,14 @@ const Page = () => {
           <button
             disabled={isCancellingOrder}
             onClick={() => {
-              try {
-                const res: any = cancelOrder(order_id).unwrap();
-                if (res?.success) {
-                  toast.success(res?.message);
-                }
-              } catch (err: any) {
-                toast.error(err?.data?.message);
-              }
+              cancelOrder(order_id)
+                .unwrap()
+                .then(res => {
+                  toast.success(res.message);
+                })
+                .catch(err => {
+                  toast.error(err?.data?.message);
+                });
             }}
             className="py-4 px-6 rounded-[8px] border border-primary-red bg-[#FFE8E8] font-semibold text-primary-red cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
           >

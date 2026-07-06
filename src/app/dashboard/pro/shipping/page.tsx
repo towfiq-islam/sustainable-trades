@@ -43,14 +43,14 @@ const Page = () => {
       return;
     }
 
-    try {
-      const res: any = setShippo({ shipping_setting: method }).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+    setShippo({ shipping_setting: method })
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (

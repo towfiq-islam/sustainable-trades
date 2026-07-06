@@ -32,15 +32,15 @@ const page = () => {
       cancel_url: `${window.location.origin}/dashboard/pro/payment-method`,
     };
 
-    try {
-      const res: any = onboardingConnectMutation(payload).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
+    onboardingConnectMutation(payload)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
         window.location.href = res?.data?.url;
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   // DISCONNECT

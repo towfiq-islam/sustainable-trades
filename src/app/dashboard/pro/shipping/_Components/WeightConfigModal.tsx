@@ -40,16 +40,15 @@ const WeightConfigModal = ({ weightRanges }: any) => {
   };
 
   const handleDeleteRange = (id: number) => {
-    try {
-      const res: any = deleteWeightRange(id).unwrap();
-
-      if (res?.success) {
-        toast.success(res?.message);
+    deleteWeightRange(id)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
         resetWeight();
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (

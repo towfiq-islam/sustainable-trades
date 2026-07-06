@@ -143,21 +143,20 @@ const ShippingOptionsModal = ({
     };
 
     if (membershipType === "pro") {
-      try {
-        const res: any = localPickupForPro({
-          id: cart_id,
-          data,
-        }).unwrap();
-        if (res?.success) {
-          toast.success(res.message);
+      localPickupForPro({
+        id: cart_id,
+        data,
+      })
+        .unwrap()
+        .then(res => {
           onClose();
           router.push(
             `/order-success?order_id=${res?.data?.id}&shop_id=${res?.data?.shop_id}`,
           );
-        }
-      } catch (err: any) {
-        toast.error(err?.data?.message);
-      }
+        })
+        .catch(err => {
+          toast.error(err?.data?.message);
+        });
     }
 
     sendMessageMutation(payload)

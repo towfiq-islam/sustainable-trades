@@ -88,6 +88,14 @@ export const orderApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["review"],
     }),
+
+    downloadInvoice: builder.mutation<Blob, any>({
+      query: orderId => ({
+        url: `/api/invoice-generate/${orderId}`,
+        method: "POST",
+        responseHandler: response => response.blob(),
+      }),
+    }),
   }),
 });
 
@@ -104,4 +112,5 @@ export const {
   useGetCustomerReviewsQuery,
   useGetOrderStatisticsQuery,
   useGuestOrderMutation,
+  useDownloadInvoiceMutation,
 } = orderApi;

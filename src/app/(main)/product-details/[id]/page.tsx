@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { use, useState } from "react";
+import { useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Container from "@/Components/Common/Container";
 import { ProductDetailsSkeleton } from "@/Components/Loader/Loader";

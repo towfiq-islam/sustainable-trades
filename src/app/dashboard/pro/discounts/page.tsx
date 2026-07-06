@@ -41,15 +41,17 @@ const DiscountsPage = () => {
       return toast.error("Please select any discount");
     }
 
-    try {
-      const res: any = bulkDeleteDiscount({ ids: selected }).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
-        setSelected([]);
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+    bulkDeleteDiscount({ ids: selected })
+      .unwrap()
+      .then(res => {
+        if (res?.success) {
+          toast.success(res?.message);
+          setSelected([]);
+        }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   const toggleOpen = (id: string) => {
@@ -57,18 +59,20 @@ const DiscountsPage = () => {
   };
 
   const handleChangeStatus = (id: string, newStatus: string) => {
-    try {
-      const res: any = discountStatusChange({
-        id: singleDiscountId,
-        data: { id, status: newStatus.toLowerCase() },
-      }).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
-        toggleOpen(id);
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+    discountStatusChange({
+      id: singleDiscountId,
+      data: { id, status: newStatus.toLowerCase() },
+    })
+      .unwrap()
+      .then(res => {
+        if (res?.success) {
+          toast.success(res?.message);
+          toggleOpen(id);
+        }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (

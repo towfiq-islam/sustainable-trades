@@ -5,7 +5,7 @@ import { Camera } from "@/Components/Svg/SvgContainer";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useAddReviewMutation } from "@/redux/api/OrderApi";
+import { useAddReviewMutation } from "@/redux/api/orderApi";
 import toast from "react-hot-toast";
 
 type ReviewFormValues = {

@@ -21,7 +21,7 @@ import OrdersList from "@/Components/PageComponents/dashboardPages/Orders/Orders
 import {
   useCancelOrderMutation,
   useGetVendorOrdersQuery,
-} from "@/redux/api/OrderApi";
+} from "@/redux/api/orderApi";
 import toast from "react-hot-toast";
 const filters = [
   {
@@ -429,16 +429,17 @@ const page = () => {
                             <button
                               disabled={isCancelling}
                               onClick={() => {
-                                try {
-                                  const res: any = cancelOrder(
-                                    order?.id,
-                                  ).unwrap();
-                                  if (res?.success) {
-                                    toast.success(res?.message);
-                                  }
-                                } catch (err: any) {
-                                  toast.error(err?.data?.message);
-                                }
+                                cancelOrder(order?.id)
+                                  .unwrap()
+                                  .then(res => {
+                                    if (res?.success) {
+                                      toast.success(res?.message);
+                                    }
+                                  })
+                                  .catch(err => {
+                                    toast.error(err?.data?.message);
+                                  });
+
                                 setOpenPopup(false);
                               }}
                               className="w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block disabled:cursor-not-allowed disabled:opacity-85 cursor-pointer"

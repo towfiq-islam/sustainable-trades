@@ -8,13 +8,15 @@ import moment from "moment";
 import { totalAmount } from "@/helper/useTotalAmount";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
-import { useQueryClient } from "@tanstack/react-query";
 import Modal from "../Modal";
 import MessageShopOwner from "@/Components/Modals/MessageShopOwner";
 import { useState } from "react";
 import { ImSpinner9 } from "react-icons/im";
 import { TradeRequestSkeleton } from "@/Components/Loader/Loader";
-import { useApproveTrade, useCancel } from "@/Hooks/api/cms_api";
+import {
+  useApproveTradeOfferMutation,
+  useCancelTradeOfferMutation,
+} from "@/redux/api/tradeApi";
 
 export type TradeItem = {
   image: StaticImageData | string;
@@ -95,47 +97,35 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
   isLoading,
 }) => {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
   const [userId, setUserId] = useState<number | null>(null);
   const [msgOpen, setMsgOpen] = useState<boolean>(false);
   const router = useRouter();
-  const { mutate: approveTradeMutation, isPending: isApproving } =
-    useApproveTrade();
-  const { mutate: cancleTradeMutation, isPending: isCancelling } = useCancel();
+  const [approveTradeMutation, { isLoading: isApproving }] =
+    useApproveTradeOfferMutation();
+  const [cancleTradeMutation, { isLoading: isCancelling }] =
+    useCancelTradeOfferMutation();
 
   const handleTrade = (btn: any, id: any) => {
     if (btn === "Approve") {
-      approveTradeMutation(id, {
-        onSuccess: (data: any) => {
-          toast.success(data?.message);
-          queryClient.invalidateQueries({
-            queryKey: ["get-trades"],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ["get-count"],
-          });
-        },
-        onError: error => {
-          toast.error("This is not your offer");
-        },
-      });
+      approveTradeMutation(id)
+        .unwrap()
+        .then(res => {
+          toast.success(res?.message);
+        })
+        .catch(err => {
+          toast.error(err?.data?.message);
+        });
     }
 
     if (btn === "Deny") {
-      cancleTradeMutation(id, {
-        onSuccess: (data: any) => {
-          toast.success(data?.message);
-          queryClient.invalidateQueries({
-            queryKey: ["get-trades"],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ["get-count"],
-          });
-        },
-        onError: (error: any) => {
-          toast.error("This is not your offer");
-        },
-      });
+      cancleTradeMutation(id)
+        .unwrap()
+        .then(res => {
+          toast.success(res?.message);
+        })
+        .catch(err => {
+          toast.error(err?.data?.message);
+        });
     }
 
     if (btn === "Message") {

@@ -7,8 +7,6 @@ import { FaRegStar, FaStar, FaRegTrashAlt } from "react-icons/fa";
 import { ImSpinner9 } from "react-icons/im";
 import { PuffLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
-
 import { Reload, LocationSvg1 } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 import {
@@ -16,7 +14,6 @@ import {
   useGetTradeShopProductQuery,
   useSendCounterOfferMutation,
 } from "@/redux/api/tradeApi";
-import { useCancel } from "@/Hooks/api/cms_api";
 
 type Addon = { productId: number; quantity: number };
 type AddonProducts = Record<number, Addon[]>;
@@ -26,7 +23,6 @@ type Quantities = Record<number, number>;
 const CounterTrades = ({ id }: { id: string }) => {
   const router = useRouter();
   const { user } = useAuth();
-  const queryClient = useQueryClient();
 
   const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>(
     {},
@@ -41,7 +37,6 @@ const CounterTrades = ({ id }: { id: string }) => {
   // API mutations
   const [sendTradeOffer, { isLoading: isPending }] =
     useSendCounterOfferMutation();
-  const cancelTradeMutation = useCancel();
 
   // Determine shop roles
   const isUserSender =
@@ -202,18 +197,6 @@ const CounterTrades = ({ id }: { id: string }) => {
     });
 
     sendTradeOffer({ id, data: formData }).unwrap();
-  };
-
-  // Cancel counter
-  const handleCancelCounter = () => {
-    cancelTradeMutation.mutate(id, {
-      onSuccess: (data: any) => {
-        toast.success(data?.message);
-        queryClient.invalidateQueries({ queryKey: ["get-trades"] });
-        queryClient.invalidateQueries({ queryKey: ["get-count"] });
-      },
-      onError: (error: any) => toast.error(error?.message),
-    });
   };
 
   if (offerLoading || requestLoading) {

@@ -1,5 +1,5 @@
 import Container from "@/Components/Common/Container";
-import { getBlogs } from "@/Hooks/cms.api";
+import { getBlogs } from "@/lib/cms.api";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";

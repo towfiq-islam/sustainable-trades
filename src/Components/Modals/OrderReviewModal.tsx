@@ -66,9 +66,9 @@ export default function OrderReviewModal({
       coupon_code: promo,
     };
 
-    try {
-      const res: any = couponMutation(payload).unwrap();
-      if (res?.success) {
+    couponMutation(payload)
+      .unwrap()
+      .then(res => {
         toast.success(res?.message);
         setCouponCode(+res?.data?.discount_amount);
         setCouponType(res?.data?.discount_type);
@@ -76,10 +76,10 @@ export default function OrderReviewModal({
           ...prev,
           coupon_code: promo,
         }));
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   const discountAmount =
@@ -222,7 +222,7 @@ export default function OrderReviewModal({
 
       {/* Order Summary */}
       <div className="mt-5">
-        <h3 className="text-lg font-semibold text-secondary-gray">Subtotal</h3>
+        <h3 className="text-lg font-semibold text-secondary-gray">Items</h3>
 
         <div className="mt-2 space-y-4">
           {cartItems?.cart_items?.map((item: Item) => (
@@ -234,6 +234,11 @@ export default function OrderReviewModal({
           ))}
 
           <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span>Subtotal</span>
+              <span>${subTotal?.toFixed(2)}</span>
+            </div>
+
             {discountAmount > 0 && (
               <div className="flex justify-between text-sm">
                 <span>
@@ -241,7 +246,7 @@ export default function OrderReviewModal({
                   {couponType === "percentage" ? `(${couponCode}% off)` : ""}
                 </span>
 
-                <span>-${discountAmount.toFixed(2)}</span>
+                <span className="text-primary-red">-${discountAmount.toFixed(2)}</span>
               </div>
             )}
 

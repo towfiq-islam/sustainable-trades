@@ -2,8 +2,11 @@ import { useForm } from "react-hook-form";
 import { MdDelete } from "react-icons/md";
 import { RiLightbulbFlashLine } from "react-icons/ri";
 import { IoLocationSharp } from "react-icons/io5";
-import { useWeightRate, useWeightRateDelete } from "@/Hooks/api/dashboard_api";
 import toast from "react-hot-toast";
+import {
+  useCreateWeightRateMutation,
+  useDeleteWeightRateMutation,
+} from "@/redux/api/vendorApi";
 
 interface WeightForm {
   cost: string;
@@ -11,11 +14,7 @@ interface WeightForm {
   max_weight: string;
 }
 
-const WeightConfigModal = ({
-  weightRanges,
-  refetch,
-  setOpenWightModal,
-}: any) => {
+const WeightConfigModal = ({ weightRanges }: any) => {
   const {
     register: registerWeight,
     handleSubmit: handleWeightSubmit,
@@ -23,27 +22,33 @@ const WeightConfigModal = ({
     formState: { errors: weightErrors },
   } = useForm<WeightForm>();
 
-  const { mutate: deleteWeightRange } = useWeightRateDelete();
-  const { mutate: useWeightMutation, isPending: isWightLoading } =
-    useWeightRate();
+  const [useWeightMutation, { isLoading: isWightLoading }] =
+    useCreateWeightRateMutation();
+  const [deleteWeightRange] = useDeleteWeightRateMutation();
 
-  const onWeightSubmit = (data: WeightForm) => {
-    useWeightMutation(data, {
-      onSuccess: (data: any) => {
-        if (data?.success) {
-          toast.success(data?.message);
-          resetWeight();
-          refetch();
-        }
-      },
-    });
+  const onWeightSubmit = async (data: WeightForm) => {
+    try {
+      const res: any = await useWeightMutation(data).unwrap();
+
+      if (res?.success) {
+        toast.success(res?.message);
+        resetWeight();
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   const handleDeleteRange = (id: number) => {
-    deleteWeightRange(
-      { endpoint: `/api/weight_range/${id}` },
-      { onSuccess: refetch },
-    );
+    deleteWeightRange(id)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+        resetWeight();
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (

@@ -35,7 +35,6 @@ export const tradeApi = apiSlice.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           if (data?.success) {
             toast.success(data.message);
           }
@@ -86,6 +85,22 @@ export const tradeApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["trade"],
     }),
+
+    approveTradeOffer: builder.mutation<any, string | number>({
+      query: id => ({
+        url: `/api/trade-offer-approve/${id}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["trade"],
+    }),
+
+    cancelTradeOffer: builder.mutation<any, string | number>({
+      query: id => ({
+        url: `/api/trade-offer-cancel/${id}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["trade"],
+    }),
   }),
 });
 
@@ -100,4 +115,6 @@ export const {
   useGetTradeAndBarterDataQuery,
   useGetTradesDataQuery,
   useTradeSendOfferMutation,
+  useCancelTradeOfferMutation,
+  useApproveTradeOfferMutation,
 } = tradeApi;

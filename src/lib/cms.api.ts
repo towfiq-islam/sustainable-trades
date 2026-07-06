@@ -1,8 +1,8 @@
-import { useServerApi } from "@/Hooks/useServerApi";
+import { fetchServerData } from "@/lib/fetchServerData";
 
 // Membership Spotlight
 export async function getSpotlightData() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/spotlight-applications",
     ssr: true,
   });
@@ -10,7 +10,7 @@ export async function getSpotlightData() {
 
 // Site Settings
 export async function getSiteSettings() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/site-settings",
     revalidate: 86400,
   });
@@ -18,7 +18,7 @@ export async function getSiteSettings() {
 
 // Get Social Links
 export async function getSocialLinks() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/social-links",
     revalidate: 86400,
   });
@@ -26,7 +26,7 @@ export async function getSocialLinks() {
 
 // Get Banner
 export async function getBannerData() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/banners",
     revalidate: 3600,
   });
@@ -34,7 +34,7 @@ export async function getBannerData() {
 
 // Get Contact
 export async function getContactData() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/contact",
     revalidate: 3600,
   });
@@ -42,7 +42,7 @@ export async function getContactData() {
 
 // Get Terms
 export async function getTermsData() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/terms-and-conditions",
     revalidate: 3600,
   });
@@ -50,7 +50,7 @@ export async function getTermsData() {
 
 // Get Infringement
 export async function getInfringementData() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/infringement-report",
     revalidate: 3600,
   });
@@ -58,7 +58,7 @@ export async function getInfringementData() {
 
 // How It Works
 export async function getHowItWorksData() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/how-it-works",
     revalidate: 3600,
   });
@@ -66,7 +66,7 @@ export async function getHowItWorksData() {
 
 // Product Categories
 export async function getProductCategories() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/categories",
     ssr: true,
   });
@@ -74,7 +74,7 @@ export async function getProductCategories() {
 
 // All Shops
 export async function getAllShops() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/shops",
     ssr: true,
   });
@@ -82,7 +82,7 @@ export async function getAllShops() {
 
 // Get Mission Data
 export async function getMissionData() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/our-mission",
     revalidate: 3600,
   });
@@ -90,7 +90,7 @@ export async function getMissionData() {
 
 // Dynamic Pages
 export async function getDynamicPages() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/dynamic-pages",
     revalidate: 3600,
   });
@@ -98,7 +98,7 @@ export async function getDynamicPages() {
 
 // Single Dynamic page
 export async function getSingleDynamicPage(slug: string) {
-  return useServerApi({
+  return fetchServerData({
     endpoint: `/api/dynamic-pages/single/${slug}`,
     revalidate: 3600,
   });
@@ -106,7 +106,7 @@ export async function getSingleDynamicPage(slug: string) {
 
 // Blogs
 export async function getBlogs() {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/blogs",
     revalidate: 3600,
   });
@@ -114,7 +114,7 @@ export async function getBlogs() {
 
 // Single Blog
 export async function getSingleBlog(id: number) {
-  return useServerApi({
+  return fetchServerData({
     endpoint: `/api/blog/${id}`,
     revalidate: 3600,
   });
@@ -122,7 +122,7 @@ export async function getSingleBlog(id: number) {
 
 // Get FAQ
 export const getFAQ = () => {
-  return useServerApi({
+  return fetchServerData({
     endpoint: "/api/faq/all",
     revalidate: 3600,
   });

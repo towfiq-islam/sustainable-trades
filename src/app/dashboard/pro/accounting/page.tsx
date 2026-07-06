@@ -3,8 +3,8 @@ import { useState } from "react";
 import AccountTable from "@/Components/Common/DashboardReusable/AccountTable";
 import { Download } from "@/Components/Svg/SvgContainer";
 import { CSVLink } from "react-csv";
-import { getAccountingData } from "@/Hooks/api/dashboard_api";
 import { useGetTradeAndBarterDataQuery } from "@/redux/api/tradeApi";
+import { useGetAccountingDataQuery } from "@/redux/api/vendorApi";
 
 const headers = [
   { label: "Order#", key: "order_number" },
@@ -24,7 +24,7 @@ const page = () => {
   const [filter, setFilter] = useState("last_30_days");
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
   const [year, setYear] = useState(2024);
-  const { data: accountingData, isLoading } = getAccountingData({
+  const { data: accountingData, isLoading } = useGetAccountingDataQuery({
     filter,
     date_from: filter === "custom_date_range" ? dateRange.from : undefined,
     date_to: filter === "custom_date_range" ? dateRange.to : undefined,

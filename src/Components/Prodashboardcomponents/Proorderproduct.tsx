@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import moment from "moment";
-import { useDownloadInvoice } from "@/Hooks/api/cms_api";
+import { useDownloadInvoiceMutation } from "@/redux/api/orderApi";
 
 type OrderImage = {
   image: string;
@@ -28,25 +28,23 @@ type OrderProps = {
 };
 
 const Proorderproduct = ({ data, order_id }: OrderProps) => {
-  const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
+  const [downloadInvoicePdf, { isLoading: isPending }] =
+    useDownloadInvoiceMutation();
 
   // Func for download Invoice pdf
-  const handleDownloadInvoice = (order_id: number) => {
-    downloadInvoicePdf(
-      { endpoint: `/api/invoice-generate/${order_id}` },
-      {
-        onSuccess: async (res: any) => {
-          const url = window.URL.createObjectURL(res);
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", "invoice.pdf");
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-        },
-      },
-    );
+  const handleDownloadInvoice = (orderId: number) => {
+    downloadInvoicePdf(orderId)
+      .unwrap()
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "invoice.pdf");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      });
   };
 
   return (

@@ -1,7 +1,8 @@
-import { useArrangeLocalPickupAddress } from "@/Hooks/api/dashboard_api";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
 import { useState } from "react";
+import { useArrangeLocalPickupAddressMutation } from "@/redux/api/vendorApi";
+import toast from "react-hot-toast";
 type FormData = {
   first_name: string;
   last_name: string;
@@ -29,8 +30,8 @@ const ArrangeLocalPickupModal = ({
 }) => {
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
-  const { mutateAsync: localPickupMutation, isPending } =
-    useArrangeLocalPickupAddress(order_id);
+  const [localPickupMutation, { isLoading: isPending }] =
+    useArrangeLocalPickupAddressMutation();
   const {
     register,
     handleSubmit,
@@ -39,13 +40,18 @@ const ArrangeLocalPickupModal = ({
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    localPickupMutation(data, {
-      onSuccess: (res: any) => {
-        if (res?.success) {
-          onClose();
-        }
-      },
-    });
+    try {
+      const res: any = await localPickupMutation({
+        id: order_id,
+        data,
+      }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        onClose();
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (

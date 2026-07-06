@@ -2,13 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import shippoImg from "@/Assets/shippo.png";
 import {
-  useChangeLabelType,
-  useConnectShippo,
-  useDisconnectShippo,
-  usePickCarrier,
-  useSyncShippo,
-} from "@/Hooks/api/dashboard_api";
-import {
   MdCheckCircle,
   MdCreditCard,
   MdLabel,
@@ -16,6 +9,14 @@ import {
   MdSync,
 } from "react-icons/md";
 import { BsInfoLg } from "react-icons/bs";
+import {
+  useChangeLabelTypeMutation,
+  useConnectShippoMutation,
+  useDisconnectShippoMutation,
+  usePickCarrierMutation,
+  useSyncShippoMutation,
+} from "@/redux/api/vendorApi";
+import toast from "react-hot-toast";
 
 const THINGS_TO_KNOW = [
   "When you update your settings here, they automatically update in Shippo to match.",
@@ -56,29 +57,46 @@ const HOW_IT_WORKS_STEPS = [
 ];
 
 const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
-  const { mutate: syncShippo, isPending: isSyncing } = useSyncShippo();
-  const { mutate: connectShippo, isPending: isConnecting } = useConnectShippo();
-  const { mutate: disconnectShippo, isPending: isDisconnecting } =
-    useDisconnectShippo();
-  const { mutate: pickupCarrier, isPending: isPickingCarrier } =
-    usePickCarrier();
-  const { mutate: changeLabelType, isPending: isChangingLabelType } =
-    useChangeLabelType();
+  const [syncShippo, { isLoading: isSyncing }] = useSyncShippoMutation();
+  const [connectShippo, { isLoading: isConnecting }] =
+    useConnectShippoMutation();
+  const [disconnectShippo, { isLoading: isDisconnecting }] =
+    useDisconnectShippoMutation();
+  const [pickupCarrier, { isLoading: isPickingCarrier }] =
+    usePickCarrierMutation();
+  const [changeLabelType, { isLoading: isChangingLabelType }] =
+    useChangeLabelTypeMutation();
 
   const handleCarrierToggle = (carrierAccount: any) => {
     if (!carrierAccount?.shippo_object_id) return;
 
     pickupCarrier({
-      endpoint: `/api/shippo/carrier/${carrierAccount.id}`,
-      active: !carrierAccount.active,
-    });
+      id: carrierAccount.id,
+      data: { active: !carrierAccount.active },
+    })
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+        setOpenConnectFlatModal(false);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   const handleLabelTypeChange = (rate: any) => {
     changeLabelType({
-      endpoint: `/api/shippo/rate-preference/${rate.id}`,
-      active: !rate.active,
-    });
+      id: rate.id,
+      data: { active: !rate.active },
+    })
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+        setOpenConnectFlatModal(false);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (
@@ -276,15 +294,17 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
           <div className="border-t border-gray-200 pt-4 flex gap-3 items-start justify-end">
             <button
               disabled={isDisconnecting}
-              onClick={() =>
-                disconnectShippo(undefined, {
-                  onSuccess: (res: any) => {
-                    if (res?.success) {
-                      setOpenConnectFlatModal(false);
-                    }
-                  },
-                })
-              }
+              onClick={() => {
+                disconnectShippo()
+                  .unwrap()
+                  .then(res => {
+                    toast.success(res.message);
+                    setOpenConnectFlatModal(false);
+                  })
+                  .catch(err => {
+                    toast.error(err?.data?.message);
+                  });
+              }}
               className="flex items-center gap-1.5 bg-primary-red border border-primary-red text-white px-3 py-2 rounded-lg text-[14px] font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
             >
               <MdSync className="text-base" />
@@ -294,7 +314,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
             <div className="flex flex-col items-end gap-1">
               <button
                 disabled={isSyncing}
-                onClick={() => syncShippo()}
+                onClick={() => syncShippo(user?.id).unwrap()}
                 className="flex items-center gap-2 bg-[#0B3C32] text-white px-5 py-2.5 rounded-lg text-[14px] font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed hover:bg-[#0a3329] transition"
               >
                 <MdSync className="text-base" />
@@ -370,7 +390,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
           <div className="flex justify-end px-6 py-4">
             <button
               disabled={isConnecting}
-              onClick={() => connectShippo()}
+              onClick={() => connectShippo().unwrap()}
               className="bg-[#0B3C32] text-white px-6 py-2 rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
             >
               Connect to Shippo

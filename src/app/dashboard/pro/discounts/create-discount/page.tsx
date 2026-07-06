@@ -204,25 +204,29 @@ const CreateDiscount = () => {
     };
 
     if (isEditMode) {
-      try {
-        const res: any = updateMutate(payload).unwrap();
-        if (res?.success) {
-          toast.success(res?.message);
-          router.push("/dashboard/pro/discounts");
-        }
-      } catch (err: any) {
-        toast.error(err?.data?.message);
-      }
+      updateMutate({ id, data: payload })
+        .unwrap()
+        .then(res => {
+          if (res?.success) {
+            toast.success(res?.message);
+            router.push("/dashboard/pro/discounts");
+          }
+        })
+        .catch(err => {
+          toast.error(err?.data?.message);
+        });
     } else {
-      try {
-        const res: any = createMutate(payload).unwrap();
-        if (res?.success) {
-          toast.success(res?.message);
-          router.push("/dashboard/pro/discounts");
-        }
-      } catch (err: any) {
-        toast.error(err?.data?.message);
-      }
+      createMutate(payload)
+        .unwrap()
+        .then(res => {
+          if (res?.success) {
+            toast.success(res?.message);
+            router.push("/dashboard/pro/discounts");
+          }
+        })
+        .catch(err => {
+          toast.error(err?.data?.message);
+        });
     }
   };
 

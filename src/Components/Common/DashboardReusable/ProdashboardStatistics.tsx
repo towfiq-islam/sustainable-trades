@@ -1,7 +1,7 @@
-import { getVisitorData } from "@/Hooks/api/dashboard_api";
-import { useGetOrderStatisticsQuery } from "@/redux/api/OrderApi";
+import { useGetOrderStatisticsQuery } from "@/redux/api/orderApi";
 import { useGetVendorListingsQuery } from "@/redux/api/productApi";
 import { useGetTradesDataQuery } from "@/redux/api/tradeApi";
+import { useGetVisitorDataQuery } from "@/redux/api/vendorApi";
 import { FaAngleRight } from "react-icons/fa";
 
 const ProdashboardStatistics = () => {
@@ -12,7 +12,8 @@ const ProdashboardStatistics = () => {
   );
   const { data: orderData, isLoading: orderLoading } =
     useGetOrderStatisticsQuery({});
-  const { data: visitorData, isLoading: visitorLoading } = getVisitorData();
+  const { data: visitorData, isLoading: visitorLoading } =
+    useGetVisitorDataQuery();
 
   return (
     <div className="border border-accent-gray rounded-[8px] pt-5 px-6 mt-10">

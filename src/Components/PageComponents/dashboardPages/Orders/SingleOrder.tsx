@@ -9,33 +9,33 @@ import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import { useState } from "react";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
-import { useDownloadInvoice } from "@/Hooks/api/cms_api";
-import { useGetOrderDetailsQuery } from "@/redux/api/OrderApi";
+import {
+  useDownloadInvoiceMutation,
+  useGetOrderDetailsQuery,
+} from "@/redux/api/orderApi";
 
 const SingleOrder = ({ orderId }: { orderId: number }) => {
   const router = useRouter();
   const [open, isOpen] = useState<boolean>(false);
   const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
   const { data: getSingleOrder, isLoading } = useGetOrderDetailsQuery(orderId);
-  const { mutate: downloadInvoicePdf, isPending } = useDownloadInvoice();
+  const [downloadInvoicePdf, { isLoading: isPending }] =
+    useDownloadInvoiceMutation();
 
   // Func for download Invoice pdf
   const handleDownloadInvoice = () => {
-    downloadInvoicePdf(
-      { endpoint: `/api/invoice-generate/${orderId}` },
-      {
-        onSuccess: async (res: any) => {
-          const url = window.URL.createObjectURL(res);
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", "invoice.pdf");
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-        },
-      },
-    );
+    downloadInvoicePdf(orderId)
+      .unwrap()
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "invoice.pdf");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      });
   };
 
   if (isLoading) {

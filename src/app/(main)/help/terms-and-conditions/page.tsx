@@ -1,6 +1,6 @@
 import Container from "@/Components/Common/Container";
 import HelpUsTab from "@/Components/Common/HelpUsTab";
-import { getTermsData } from "@/Hooks/cms.api";
+import { getTermsData } from "@/lib/cms.api";
 
 const Page = async () => {
   const termsData = await getTermsData();

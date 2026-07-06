@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Container from "@/Components/Common/Container";
-import { getHowItWorksData } from "@/Hooks/cms.api";
+import { getHowItWorksData } from "@/lib/cms.api";
 
 type workItem = {
   id: number;

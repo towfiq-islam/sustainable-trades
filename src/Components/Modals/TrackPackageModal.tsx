@@ -1,5 +1,5 @@
 import { OrderTrackSkeleton } from "@/Components/Loader/Loader";
-import { useGetOrderHistoryQuery } from "@/redux/api/OrderApi";
+import { useGetOrderHistoryQuery } from "@/redux/api/orderApi";
 
 type OrderItem = {
   id: number;

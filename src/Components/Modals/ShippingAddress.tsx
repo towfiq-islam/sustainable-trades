@@ -4,7 +4,10 @@ import useAuth from "@/Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
 import { useEffect, useState } from "react";
-import { useGetShippingTaxMutation } from "@/redux/api/taxApi";
+import {
+  useGetGuestShippingTaxMutation,
+  useGetShippingTaxMutation,
+} from "@/redux/api/taxApi";
 import toast from "react-hot-toast";
 
 type FormData = {
@@ -43,6 +46,8 @@ const ShippingAddress = ({
   const { user, latitude } = useAuth();
   const [shippingTaxMutation, { isLoading: isPending }] =
     useGetShippingTaxMutation();
+  const [guestTaxMutation, { isLoading: isWorking }] =
+    useGetGuestShippingTaxMutation();
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
 
@@ -54,6 +59,23 @@ const ShippingAddress = ({
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
+    const guestTaxData = {
+      product_id: cart_id,
+      quantity: 1,
+      shipping_option:
+        shippingMethod === "proceed"
+          ? "proceed_to_shipping"
+          : "arrange_local_pickup",
+      first_name: data.first_name,
+      phone: data.phone,
+      email: data.email,
+      country,
+      state,
+      city: data.city,
+      postal_code: data.postal_code,
+      address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
+    };
+
     const taxData = {
       cart_id,
       shipping_option:
@@ -70,28 +92,55 @@ const ShippingAddress = ({
       address: `${data?.address} ${data?.city} ${state} ${data?.postal_code}`,
     };
 
-    try {
-      const res: any = shippingTaxMutation(taxData).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
-        setTaxData(res?.data);
-        const payload = {
-          ...data,
-          country,
-          state,
-          latitude: latitude?.toString(),
-          longitude: latitude?.toString(),
-          shipping_option:
-            shippingMethod === "proceed"
-              ? "proceed_to_shipping"
-              : "arrange_local_pickup",
-          payment_method: "paypal",
-        };
-        setFormData(payload);
-        onNext();
+    if (user) {
+      try {
+        const res: any = await shippingTaxMutation(taxData).unwrap();
+        if (res?.success) {
+          toast.success(res?.message);
+          setTaxData(res?.data);
+          const payload = {
+            ...data,
+            country,
+            state,
+            latitude: latitude?.toString(),
+            longitude: latitude?.toString(),
+            shipping_option:
+              shippingMethod === "proceed"
+                ? "proceed_to_shipping"
+                : "arrange_local_pickup",
+            payment_method: "paypal",
+          };
+          setFormData(payload);
+          onNext();
+        }
+      } catch (err: any) {
+        toast.error(err?.data?.message);
       }
-    } catch (err: any) {
-      toast.error(err?.data?.message);
+    } else {
+      // For guest
+      try {
+        const res: any = await guestTaxMutation(guestTaxData).unwrap();
+        if (res?.success) {
+          toast.success(res?.message);
+          setTaxData(res?.data);
+          const payload = {
+            ...data,
+            country,
+            state,
+            latitude: latitude?.toString(),
+            longitude: latitude?.toString(),
+            shipping_option:
+              shippingMethod === "proceed"
+                ? "proceed_to_shipping"
+                : "arrange_local_pickup",
+            payment_method: "paypal",
+          };
+          setFormData(payload);
+          onNext();
+        }
+      } catch (err: any) {
+        toast.error(err?.data?.message);
+      }
     }
   };
 
@@ -330,7 +379,7 @@ const ShippingAddress = ({
         {/* Button */}
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isPending || isWorking}
           className="primary_btn cursor-pointer disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-70"
         >
           Review Order

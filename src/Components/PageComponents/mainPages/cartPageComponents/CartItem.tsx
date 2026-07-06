@@ -1,8 +1,3 @@
-import {
-  useRemoveCart,
-  useRemoveFromCart,
-  useUpdateCart,
-} from "@/Hooks/api/cms_api";
 import Image from "next/image";
 import { useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
@@ -15,6 +10,12 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
 import Link from "next/link";
+import {
+  useRemoveCartMutation,
+  useRemoveFromCartMutation,
+  useUpdateCartMutation,
+} from "@/redux/api/cartApi";
+import toast from "react-hot-toast";
 
 interface CartItem {
   id: number;
@@ -52,10 +53,9 @@ interface CartItem {
 
 interface CartProps {
   item: CartItem;
-  subTotal: number;
 }
 
-const CartItem = ({ item, subTotal }: CartProps) => {
+const CartItem = ({ item }: CartProps) => {
   // States
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
@@ -72,20 +72,31 @@ const CartItem = ({ item, subTotal }: CartProps) => {
   const [taxData, setTaxData] = useState({});
 
   // Query + Mutation
-  const { mutate: removeCartItemMutation, isPending: cartItemPending } =
-    useRemoveFromCart(cartItemId);
-  const { mutate: updateCartItemMutation, isPending: updateItemPending } =
-    useUpdateCart(cartItemId);
-  const { mutate: removeCartMutation, isPending: cartPending } = useRemoveCart(
-    item?.id,
-  );
+  const [removeCartItemMutation, { isLoading: cartItemPending }] =
+    useRemoveFromCartMutation();
+  const [updateCartItem, { isLoading: updateItemPending }] =
+    useUpdateCartMutation();
+  const [removeCartMutation, { isLoading: cartPending }] =
+    useRemoveCartMutation();
 
   // Func for update cart quantity
-  const handleUpdateCart = (quantity: number, type: string) => {
+  const handleUpdateCart = (quantity: number, type: string, id: number) => {
     if (type === "decrease" && quantity <= 1) return;
     const newQuantity = type === "increase" ? quantity + 1 : quantity - 1;
-    updateCartItemMutation({ quantity: newQuantity });
+    updateCartItem({ cartId: id, data: { quantity: newQuantity } })
+      .unwrap()
+      .then(res => {
+        toast.success(res?.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
+
+  const vendorSubtotal = item.cart_items.reduce(
+    (total, cart) => total + Number(cart.price),
+    0,
+  );
 
   return (
     <div className="border border-gray-300 p-5 rounded-lg bg-white relative">
@@ -127,7 +138,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           disabled={cartPending}
           onClick={() => {
             setCartId(item?.id);
-            removeCartMutation();
+            removeCartMutation(item?.id).unwrap();
           }}
           className={`absolute right-2 top-2 size-8 text-sm grid place-items-center rounded-full font-semibold bg-accent-red text-white ${
             cartPending ? "cursor-not-allowed" : "cursor-pointer"
@@ -182,7 +193,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
                   disabled={updateItemPending}
                   onClick={() => {
                     setCartItemId(cart?.id);
-                    handleUpdateCart(cart?.quantity, "decrease");
+                    handleUpdateCart(cart?.quantity, "decrease", cart?.id);
                   }}
                   className="cursor-pointer disabled:cursor-not-allowed"
                 >
@@ -196,7 +207,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
                   disabled={updateItemPending}
                   onClick={() => {
                     setCartItemId(cart?.id);
-                    handleUpdateCart(cart?.quantity, "increase");
+                    handleUpdateCart(cart?.quantity, "increase", cart?.id);
                   }}
                   className="cursor-pointer disabled:cursor-not-allowed"
                 >
@@ -209,7 +220,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
                 disabled={cartItemPending}
                 onClick={() => {
                   setCartItemId(cart?.id);
-                  removeCartItemMutation();
+                  removeCartItemMutation(cart?.id).unwrap();
                 }}
                 className={`font-semibold text-primary-green cursor-pointer text-[15px] ${
                   cartItemPending ? "cursor-not-allowed" : "cursor-pointer"
@@ -298,7 +309,7 @@ const CartItem = ({ item, subTotal }: CartProps) => {
           setFormData={setFormData}
           formData={formData}
           cartItems={item}
-          subTotal={subTotal}
+          subTotal={vendorSubtotal}
           cart_id={cartId}
           taxData={taxData}
           shop_name={item?.shop?.shop_name}

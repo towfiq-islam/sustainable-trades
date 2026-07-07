@@ -223,7 +223,8 @@ const Page = () => {
                       key={step.key}
                       onClick={() => {
                         updateStatusMutation({
-                          status: step?.key,
+                          id: order_id,
+                          data: { status: step?.key },
                         })
                           .unwrap()
                           .then(res => {

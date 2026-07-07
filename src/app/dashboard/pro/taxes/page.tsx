@@ -90,11 +90,9 @@ export default function TaxRatePage() {
   } = useForm<TaxForm>();
 
   const onSubmit = (data: TaxForm) => {
-    const countryName = Country.getCountryByCode(country)?.name || "";
-
     const payload = {
-      country: countryName,
-      state: state,
+      country,
+      state,
       rate: data.rate,
       is_digital_products: chargeOnServices ? 1 : 0,
       is_shipping: chargeOnShipping ? 1 : 0,
@@ -123,13 +121,14 @@ export default function TaxRatePage() {
     if (allTaxes?.data) {
       let countryCode = "";
 
-      if (allTaxes.data.country === "United States") {
+      if (allTaxes.data.country === "US") {
         countryCode = "US";
-      } else if (allTaxes.data.country === "Canada") {
+      } else if (allTaxes.data.country === "CA") {
         countryCode = "CA";
       }
 
       setCountry(countryCode);
+      setValue("country", countryCode);
       setState(allTaxes.data.state);
 
       reset({
@@ -244,7 +243,7 @@ export default function TaxRatePage() {
                 {/* State */}
                 <div>
                   <label className="block font-semibold text-secondary-black mb-2">
-                    State / Province *
+                    State *
                   </label>
 
                   <select
@@ -263,11 +262,11 @@ export default function TaxRatePage() {
                       });
                     }}
                   >
-                    <option value="">Select State / Province</option>
+                    <option value="">Select State</option>
 
                     {State.getStatesOfCountry(country).map(item => (
-                      <option key={item.isoCode} value={item.name}>
-                        {item.name}
+                      <option key={item.isoCode} value={item.isoCode}>
+                        {item.name} ({item.isoCode})
                       </option>
                     ))}
                   </select>

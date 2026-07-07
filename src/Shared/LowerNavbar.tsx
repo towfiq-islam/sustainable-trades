@@ -13,7 +13,7 @@ import { SearchSvg } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 
 const LowerNavbar = ({ user, dynamicPage }: any) => {
-  const { setSearch } = useAuth();
+  const { search, setSearch } = useAuth();
   const navLins = [
     { id: 1, label: "Home", path: "/" },
     { id: 2, label: "Shop", path: "/shop" },
@@ -201,6 +201,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
             <SearchSvg />
             <input
               type="text"
+              value={search}
               onChange={e => {
                 setSearch(e.target.value);
                 router.push("/product-location");

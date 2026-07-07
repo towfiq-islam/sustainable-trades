@@ -4,7 +4,7 @@ export const taxApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
     saveTaxes: builder.mutation<any, any>({
       query: body => ({ url: "/api/shop-taxes", method: "POST", body }),
-      invalidatesTags: ["tax"],
+      invalidatesTags: ["tax", "user"],
     }),
 
     getAllTaxes: builder.query<any, void>({
@@ -45,5 +45,5 @@ export const {
   useGetSalesTaxDataQuery,
   useAddSalesTaxMutation,
   useGetShippingTaxMutation,
-  useGetGuestShippingTaxMutation
+  useGetGuestShippingTaxMutation,
 } = taxApi;

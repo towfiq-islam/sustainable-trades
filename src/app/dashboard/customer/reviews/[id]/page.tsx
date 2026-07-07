@@ -6,7 +6,7 @@ import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useAddProductReviewMutation } from "@/redux/api/orderApi";
+import { useAddProductReviewMutation } from "@/redux/api/ordersApi";
 
 type ReviewFormValues = {
   title: string;

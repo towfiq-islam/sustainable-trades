@@ -12,7 +12,7 @@ import {
   useGetAllProductsUnderShopQuery,
   useGetMyFavoriteQuery,
 } from "@/redux/api/productApi";
-import { useGetOrderDetailsQuery } from "@/redux/api/orderApi";
+import { useGetOrderDetailsQuery } from "@/redux/api/ordersApi";
 
 export default function Page() {
   const { user } = useAuth();

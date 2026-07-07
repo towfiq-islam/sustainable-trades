@@ -12,7 +12,7 @@ import ConversationPage from "@/Components/PageComponents/dashboardPages/message
 import {
   useDownloadInvoiceMutation,
   useGetOrderDetailsQuery,
-} from "@/redux/api/orderApi";
+} from "@/redux/api/ordersApi";
 
 const SingleOrder = ({ orderId }: { orderId: number }) => {
   const router = useRouter();

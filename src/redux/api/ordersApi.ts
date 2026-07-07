@@ -1,6 +1,6 @@
 import { apiSlice } from "@/redux/api/apiSlice";
 
-export const orderApi = apiSlice.injectEndpoints({
+export const ordersApi = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getVendorOrders: builder.query({
       query: params => ({
@@ -113,4 +113,4 @@ export const {
   useGuestOrderMutation,
   useDownloadInvoiceMutation,
   useAddProductReviewMutation,
-} = orderApi;
+} = ordersApi;

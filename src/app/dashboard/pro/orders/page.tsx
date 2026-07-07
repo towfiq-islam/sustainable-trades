@@ -21,7 +21,7 @@ import OrdersList from "@/Components/PageComponents/dashboardPages/Orders/Orders
 import {
   useCancelOrderMutation,
   useGetVendorOrdersQuery,
-} from "@/redux/api/orderApi";
+} from "@/redux/api/ordersApi";
 import toast from "react-hot-toast";
 const filters = [
   {

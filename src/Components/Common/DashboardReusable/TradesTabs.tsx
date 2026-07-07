@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Image, { type StaticImageData } from "next/image";
 import { Reload } from "@/Components/Svg/SvgContainer";
 import moment from "moment";
-import { totalAmount } from "@/helper/useTotalAmount";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import Modal from "../Modal";
@@ -23,7 +22,6 @@ export type TradeItem = {
   product: productInfo;
   store: string;
   quantity: string;
-  totalAmount: number;
   type: string;
 };
 
@@ -230,11 +228,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                           <h2 className="text-[16px] sm:text-[20px] font-normal text-secondary-gray">
                             Total amount:{" "}
                             <span className="font-semibold text-secondary-black">
-                              $
-                              {totalAmount(
-                                +item?.quantity,
-                                +item?.product?.product_price,
-                              )}
+                              ${+item?.quantity * +item?.product?.product_price}
                             </span>
                           </h2>
                         </div>
@@ -296,11 +290,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                           <h2 className="text-[16px] sm:text-[20px] font-normal text-secondary-gray">
                             Total amount:{" "}
                             <span className="font-semibold text-secondary-black">
-                              $
-                              {totalAmount(
-                                +item?.quantity,
-                                +item?.product?.product_price,
-                              )}
+                              ${+item?.quantity * +item?.product?.product_price}
                             </span>
                           </h2>
                         </div>

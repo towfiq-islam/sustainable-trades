@@ -203,8 +203,11 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
               type="text"
               value={search}
               onChange={e => {
-                setSearch(e.target.value);
-                router.push("/product-location");
+                const value = e.target.value;
+                setSearch(value);
+                if (value.trim()) {
+                  router.push("/product-location");
+                }
               }}
               placeholder="Search by product....."
               className="w-full border-none outline-none"

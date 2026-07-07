@@ -224,7 +224,7 @@ const DiscountsPage = () => {
                 <div className="text-[16px] text-secondary-black font-bold">
                   {d?.discount_limits === 0
                     ? "Unlimited Uses"
-                    : `0 of ${d?.discount_limits} Uses`}
+                    : `${d?.usage_count} of ${d?.discount_limits} Uses`}
                 </div>
 
                 {/* Status Dropdown */}

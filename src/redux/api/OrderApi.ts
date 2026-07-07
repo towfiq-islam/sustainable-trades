@@ -80,7 +80,7 @@ export const orderApi = apiSlice.injectEndpoints({
       invalidatesTags: (_r, _e, { id }) => [{ type: "order", id }, "order"],
     }),
 
-    addReview: builder.mutation({
+    addProductReview: builder.mutation({
       query: ({ id, data }) => ({
         url: `/api/add-review/${id}`,
         method: "POST",
@@ -108,9 +108,9 @@ export const {
   useUpdateOrderStatusMutation,
   useCancelOrderMutation,
   useAddOrderNoteMutation,
-  useAddReviewMutation,
   useGetCustomerReviewsQuery,
   useGetOrderStatisticsQuery,
   useGuestOrderMutation,
   useDownloadInvoiceMutation,
+  useAddProductReviewMutation,
 } = orderApi;

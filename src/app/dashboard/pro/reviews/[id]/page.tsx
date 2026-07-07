@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { Camera } from "@/Components/Svg/SvgContainer";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useAddReviewMutation } from "@/redux/api/orderApi";
+import { useAddProductReviewMutation } from "@/redux/api/orderApi";
 
 type ReviewFormValues = {
   title: string;
@@ -15,10 +15,10 @@ type ReviewFormValues = {
 };
 
 const page = () => {
-  const router = useRouter();
   const params = useParams();
   const orderId = Number(params?.id);
-  const [addReviewMutation, { isLoading: isPending }] = useAddReviewMutation();
+  const [addReviewMutation, { isLoading: isPending }] =
+    useAddProductReviewMutation();
 
   const {
     register,

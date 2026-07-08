@@ -187,18 +187,16 @@ const DiscountsPage = () => {
                       STARTS:
                     </span>
                     <span className="text-gray-600">{`${moment(
-                      d?.start_date,
-                    ).format("ll")} at ${d?.start_time}`}</span>
+                      d?.start_datetime,
+                    ).format("MMMM Do YYYY, h:mm:ss a")}`}</span>
 
                     <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-secondary-black">
                       ENDS:
                     </span>
                     <span className="text-gray-600">
-                      {d?.never_expires || !d?.end_date
+                      {d?.never_expires || !d?.end_datetime
                         ? "Never Expires"
-                        : `${moment(d?.end_date).format("ll")} at ${
-                            d?.end_time
-                          }`}
+                        : `${moment(d?.end_datetime).format("MMMM Do YYYY, h:mm:ss a")}`}
                     </span>
                   </div>
                 </div>
@@ -222,7 +220,7 @@ const DiscountsPage = () => {
                 </div>
 
                 <div className="text-[16px] text-secondary-black font-bold">
-                  {d?.discount_limits === 0
+                  {d?.discount_limits === null
                     ? "Unlimited Uses"
                     : `${d?.usage_count} of ${d?.discount_limits} Uses`}
                 </div>

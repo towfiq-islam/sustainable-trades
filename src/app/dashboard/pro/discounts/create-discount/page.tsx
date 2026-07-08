@@ -9,7 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FaAngleLeft } from "react-icons/fa";
-import { FiCalendar, FiClock } from "react-icons/fi";
+import { FiCalendar } from "react-icons/fi";
 import { PuffLoader } from "react-spinners";
 
 interface Product {
@@ -28,13 +28,17 @@ interface DiscountData {
   product_id?: number;
   limit_one_per_shopper: boolean;
   discount_limits?: number;
-  start_date: string;
-  start_time?: string;
-  end_date?: string;
-  end_time?: string;
+  start_datetime?: string;
+  end_datetime?: string;
   never_expires: boolean;
   status?: "active" | "inactive";
 }
+
+const toUtcIso = (dateStr: string, timeStr: string) => {
+  if (!dateStr || !timeStr) return null;
+  const localDateTime = new Date(`${dateStr}T${timeStr}:00`);
+  return localDateTime.toISOString(); // e.g. "2026-07-08T09:16:00.000Z"
+};
 
 const CreateDiscount = () => {
   // Hook
@@ -61,9 +65,7 @@ const CreateDiscount = () => {
   const [totalUsesLimit, setTotalUsesLimit] = useState(false);
   const [totalUses, setTotalUses] = useState("");
   const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [endTime, setEndTime] = useState("");
   const [neverExpires, setNeverExpires] = useState(false);
 
   // Error State
@@ -109,13 +111,8 @@ const CreateDiscount = () => {
         setTotalUses("");
       }
 
-      setStartDate(item.start_date || "");
-      setStartTime(item.start_time ? item.start_time.substring(0, 5) : "");
-
-      setEndDate(item.end_date || "");
-
-      setEndTime(item.end_time ? item.end_time.substring(0, 5) : "");
-
+      setStartDate(item.start_datetime || "");
+      setEndDate(item.end_datetime || "");
       setNeverExpires(item.never_expires || false);
     }
   }, [isEditMode, discountData]);
@@ -139,11 +136,9 @@ const CreateDiscount = () => {
     if (!startDate) newErrors.startDate = "Start date is required.";
 
     if (!startDate) newErrors.startDate = "Start date is required.";
-    if (!startTime) newErrors.startTime = "Start time is required.";
 
     if (!neverExpires) {
       if (!endDate) newErrors.endDate = "End date is required.";
-      if (!endTime) newErrors.endTime = "End time is required.";
     }
 
     if (discountType === "code" && !code.trim()) {
@@ -182,29 +177,31 @@ const CreateDiscount = () => {
         product_id: parseInt(selectedProduct),
       }),
 
-      // NEW LOGIC
-      // ...(limitPerCustomer
-      //   ? { discount_limits: 1 }
-      //   : totalUsesLimit && totalUses.trim()
-      //     ? { discount_limits: parseInt(totalUses.trim()) }
-      //     : {}),
-
-      discount_limits: limitPerCustomer
-        ? 1
+      ...(limitPerCustomer
+        ? { discount_limits: 1 }
         : totalUsesLimit && totalUses.trim()
-          ? parseInt(totalUses.trim())
-          : null,
+          ? { discount_limits: parseInt(totalUses.trim()) }
+          : {}),
 
-      start_date: startDate,
-      start_time: startTime || null,
+      // discount_limits: limitPerCustomer
+      //   ? 1
+      //   : totalUsesLimit && totalUses.trim()
+      //     ? parseInt(totalUses.trim())
+      //     : null,
+
+      // start_date: startDate,
+      // start_time: startTime || null,
+
+      start_datetime: startDate,
       never_expires: neverExpires,
+      ...(neverExpires ? { end_datetime: null } : { end_datetime: endDate }),
 
-      ...(neverExpires
-        ? { end_date: null, end_time: null }
-        : {
-            end_date: endDate || null,
-            end_time: endTime || null,
-          }),
+      // ...(neverExpires
+      //   ? { end_date: null, end_time: null }
+      //   : {
+      //       end_date: endDate || null,
+      //       end_time: endTime || null,
+      //     }),
 
       ...(isEditMode && { id: parseInt(id!) }),
     };
@@ -251,7 +248,6 @@ const CreateDiscount = () => {
     setNeverExpires(checked);
     if (checked) {
       setEndDate("");
-      setEndTime("");
     }
   };
 
@@ -543,7 +539,7 @@ const CreateDiscount = () => {
           Active Dates
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 mt-3 w-full lg:w-[750px]">
-          {/* Start Date */}
+          {/* Start Date Time */}
           <div>
             <label className="block text-[14px] md:text-[16px] font-normal text-secondary-black mb-1 md:mb-2">
               Start Date
@@ -555,7 +551,7 @@ const CreateDiscount = () => {
             >
               <FiCalendar />
               <input
-                type="date"
+                type="datetime-local"
                 value={startDate}
                 onChange={e => {
                   setStartDate(e.target.value);
@@ -570,34 +566,7 @@ const CreateDiscount = () => {
             )}
           </div>
 
-          {/* Start Time */}
-          <div>
-            <label className="block text-[14px] md:text-[16px] font-normal text-secondary-black mb-2">
-              Start Time (PDT)
-            </label>
-            <div
-              className={`flex items-center border rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4] ${
-                errors.startTime ? "border-red-500" : "border-[#67645F]"
-              }`}
-            >
-              <FiClock />
-              <input
-                type="time"
-                value={startTime}
-                onChange={e => {
-                  setStartTime(e.target.value);
-                  if (errors.startTime)
-                    setErrors(prev => ({ ...prev, startTime: "" }));
-                }}
-                className="flex-1 bg-transparent outline-none"
-              />
-            </div>
-            {errors.startTime && (
-              <p className="text-red-500 text-sm mt-1">{errors.startTime}</p>
-            )}
-          </div>
-
-          {/* End Date */}
+          {/* End Date Time */}
           <div>
             <label className="block text-[14px] md:text-[16px] font-normal text-secondary-black mb-2">
               End Date
@@ -611,7 +580,7 @@ const CreateDiscount = () => {
             >
               <FiCalendar />
               <input
-                type="date"
+                type="datetime-local"
                 value={endDate}
                 onChange={e => {
                   setEndDate(e.target.value);
@@ -624,36 +593,6 @@ const CreateDiscount = () => {
             </div>
             {!neverExpires && errors.endDate && (
               <p className="text-red-500 text-sm mt-1">{errors.endDate}</p>
-            )}
-          </div>
-
-          {/* End Time */}
-          <div>
-            <label className="block text-[14px] md:text-[16px] font-normal text-secondary-black mb-2">
-              End Time (PDT)
-            </label>
-            <div
-              className={`flex items-center border rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4] ${
-                !neverExpires && errors.endTime
-                  ? "border-red-500"
-                  : "border-[#67645F]"
-              } ${neverExpires ? "opacity-50" : ""}`}
-            >
-              <FiClock />
-              <input
-                type="time"
-                value={endTime}
-                onChange={e => {
-                  setEndTime(e.target.value);
-                  if (errors.endTime)
-                    setErrors(prev => ({ ...prev, endTime: "" }));
-                }}
-                disabled={neverExpires}
-                className="flex-1 bg-transparent outline-none"
-              />
-            </div>
-            {!neverExpires && errors.endTime && (
-              <p className="text-red-500 text-sm mt-1">{errors.endTime}</p>
             )}
           </div>
         </div>

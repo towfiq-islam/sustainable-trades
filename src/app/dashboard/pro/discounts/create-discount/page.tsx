@@ -183,11 +183,17 @@ const CreateDiscount = () => {
       }),
 
       // NEW LOGIC
-      ...(limitPerCustomer
-        ? { discount_limits: 1 }
+      // ...(limitPerCustomer
+      //   ? { discount_limits: 1 }
+      //   : totalUsesLimit && totalUses.trim()
+      //     ? { discount_limits: parseInt(totalUses.trim()) }
+      //     : {}),
+
+      discount_limits: limitPerCustomer
+        ? 1
         : totalUsesLimit && totalUses.trim()
-          ? { discount_limits: parseInt(totalUses.trim()) }
-          : {}),
+          ? parseInt(totalUses.trim())
+          : null,
 
       start_date: startDate,
       start_time: startTime || null,
@@ -387,7 +393,6 @@ const CreateDiscount = () => {
           <input
             type="number"
             min="0"
-            step="0.01"
             placeholder={promoType === "Percent Off" ? "0%" : "0"}
             value={amount}
             onChange={e => {
@@ -458,7 +463,7 @@ const CreateDiscount = () => {
           Discount Limits
         </h4>
         <div className="mt-3 flex flex-col gap-2">
-          <label className="flex items-center gap-2 text-[13px] md:text-[16px] font-semibold text-secondary-black">
+          {/* <label className="flex items-center gap-2 text-[13px] md:text-[16px] font-semibold text-secondary-black">
             <input
               type="checkbox"
               className="w-3 h-3 md:w-4 md:h-4 "
@@ -475,6 +480,39 @@ const CreateDiscount = () => {
               onChange={e => {
                 setTotalUsesLimit(e.target.checked);
                 if (!e.target.checked) setErrors({ ...errors, totalUses: "" });
+              }}
+            />
+            Limit number of times this discount can be used in total
+          </label> */}
+
+          <label className="flex items-center gap-2 text-[13px] md:text-[16px] font-semibold text-secondary-black">
+            <input
+              type="checkbox"
+              className="w-3 h-3 md:w-4 md:h-4"
+              checked={limitPerCustomer}
+              onChange={e => {
+                setLimitPerCustomer(e.target.checked);
+                if (e.target.checked) {
+                  setTotalUsesLimit(false);
+                  setTotalUses("");
+                  setErrors(prev => ({ ...prev, totalUses: "" }));
+                }
+              }}
+            />
+            Limit One Per Shopper
+          </label>
+          <label className="flex items-center gap-2 text-[13px] md:text-[16px] font-semibold text-secondary-black">
+            <input
+              type="checkbox"
+              className="w-3 h-3 md:w-4 md:h-4"
+              checked={totalUsesLimit}
+              onChange={e => {
+                setTotalUsesLimit(e.target.checked);
+                if (e.target.checked) {
+                  setLimitPerCustomer(false);
+                } else {
+                  setErrors(prev => ({ ...prev, totalUses: "" }));
+                }
               }}
             />
             Limit number of times this discount can be used in total

@@ -59,6 +59,7 @@ export default function OrderReviewModal({
   const [couponMutation, { isLoading: isPending }] = useApplyCouponMutation();
   const [couponCode, setCouponCode] = useState<number | null>(null);
   const [couponType, setCouponType] = useState<string>("");
+  console.log(couponCode, couponType);
 
   const handleApplyCoupon = () => {
     const payload = {
@@ -70,7 +71,7 @@ export default function OrderReviewModal({
       .unwrap()
       .then(res => {
         toast.success(res?.message);
-        setCouponCode(+res?.data?.discount_amount);
+        setCouponCode(+res?.data?.discount_value);
         setCouponType(res?.data?.discount_type);
         setFormData((prev: any) => ({
           ...prev,
@@ -246,7 +247,9 @@ export default function OrderReviewModal({
                   {couponType === "percentage" ? `(${couponCode}% off)` : ""}
                 </span>
 
-                <span className="text-primary-red">-${discountAmount.toFixed(2)}</span>
+                <span className="text-primary-red">
+                  -${discountAmount.toFixed(2)}
+                </span>
               </div>
             )}
 

@@ -170,12 +170,25 @@ const Page = () => {
               Order Details
             </h3>
 
-            <button
-              className="py-3 px-4 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out"
-              onClick={() => isOpen(true)}
-            >
-              Track Package
-            </button>
+            <div className="flex gap-3 items-center">
+              {singleOrder?.data?.label_url && (
+                <Link
+                  href={singleOrder?.data?.label_url}
+                  target="_blank"
+                  className="py-3 px-4 rounded-[8px] border border-accent-red font-semibold text-accent-red cursor-pointer hover:border-accent-red duration-300 ease-in-out"
+                  onClick={() => isOpen(true)}
+                >
+                  Shippo Invoice
+                </Link>
+              )}
+
+              <button
+                className="py-3 px-4 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out"
+                onClick={() => isOpen(true)}
+              >
+                Track Package
+              </button>
+            </div>
           </div>
 
           {/* Order Status Dropdown */}

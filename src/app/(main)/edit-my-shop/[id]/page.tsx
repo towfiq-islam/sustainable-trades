@@ -42,6 +42,7 @@ type ProfileFormValues = {
   lat?: number;
   lng?: number;
   address_line_1: string;
+  address_line_2: string;
 };
 
 interface Props {
@@ -94,6 +95,10 @@ const Page = ({ params }: Props) => {
         state: shopDetailsData?.data?.shop_info?.address?.state || "",
         postal_code:
           shopDetailsData?.data?.shop_info?.address?.postal_code || "",
+        address_line_1:
+          shopDetailsData?.data?.shop_info?.address?.address_line_1 || "",
+        address_line_2:
+          shopDetailsData?.data?.shop_info?.address?.address_line_2 || "",
       });
     }
   }, [shopDetailsData, reset]);
@@ -120,11 +125,15 @@ const Page = ({ params }: Props) => {
     const previousAddress = shopDetailsData?.data?.shop_info?.address;
 
     const newAddressString = `${formData.address_line_1 || ""}, ${
-      formData.city || ""
-    }, ${formData.state || ""}, ${formData.postal_code || ""}`;
+      formData.address_line_2 || ""
+    }, ${formData.city || ""}, ${formData.state || ""}, ${
+      formData.postal_code || ""
+    }`;
     const oldAddressString = `${previousAddress?.address_line_1 || ""}, ${
-      previousAddress?.city || ""
-    }, ${previousAddress?.state || ""}, ${previousAddress?.postal_code || ""}`;
+      previousAddress?.address_line_2 || ""
+    }, ${previousAddress?.city || ""}, ${previousAddress?.state || ""}, ${
+      previousAddress?.postal_code || ""
+    }`;
 
     let finalLat = previousAddress?.latitude;
     let finalLng = previousAddress?.longitude;
@@ -193,6 +202,7 @@ const Page = ({ params }: Props) => {
 
     // Address / Geo-locator
     fd.append("address_line_1", formData.address_line_1 || "");
+    fd.append("address_line_2", formData.address_line_2 || "");
     fd.append("city", formData.city || "");
     fd.append("state", formData.state || "");
     fd.append("postal_code", formData.postal_code || "");

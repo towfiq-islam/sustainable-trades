@@ -17,6 +17,7 @@ import {
   useSyncShippoMutation,
 } from "@/redux/api/vendorApi";
 import toast from "react-hot-toast";
+import { FaCheck } from "react-icons/fa";
 
 const THINGS_TO_KNOW = [
   "When you update your settings here, they automatically update in Shippo to match.",
@@ -25,11 +26,11 @@ const THINGS_TO_KNOW = [
 
 const HOW_IT_WORKS_STEPS = [
   {
-    icon: <MdLocalShipping />,
+    icon: <FaCheck />,
     text: (
       <>
-        <strong>Enable</strong> or disable the carriers you want to offer for
-        creating labels.
+        <strong>Enable</strong> or disable the shipping carriers you want
+        to offer for creating labels.
       </>
     ),
   },
@@ -37,8 +38,8 @@ const HOW_IT_WORKS_STEPS = [
     icon: <MdLabel />,
     text: (
       <>
-        <strong>Choose</strong> whether you prefer the quickest shipping time or
-        the cheapest label.
+        <strong>Choose</strong> whether you prefer the quickest shipping
+        time or the lowest shipping rate.
       </>
     ),
   },
@@ -46,11 +47,22 @@ const HOW_IT_WORKS_STEPS = [
     icon: <MdCreditCard />,
     text: (
       <>
-        <strong>Based</strong> on your settings, Sustainable Trades will select
-        that rate and add it to your customer's cart. This does not mean the
-        label has been purchased—it simply means your customer is paying for
-        this label. You will purchase the label in Shippo when managing your
-        orders.
+        <strong>Based</strong> on your settings, Sustainable Trades will
+        automatically select the shipping carrier and shipping rate, then add
+        the shipping cost to your customer's checkout.
+      </>
+    ),
+  },
+  {
+    icon: <MdLocalShipping />,
+    text: (
+      <>
+        <strong>Ship</strong> After you confirm the order, Sustainable Trades
+        will purchase the shipping label using the payment method connected to
+        your Shippo account. A Shipping Label button will appear on the Order
+        Details page, where you can download and print the label. Order tracking
+        updates can be found under the Track Package button for both you and
+        your customer.
       </>
     ),
   },
@@ -131,7 +143,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
               chooses the shipping rate applied to your customer's checkout.
             </p>
 
-            <div className="grid grid-cols-5 gap-10">
+            <div className="grid grid-cols-5 gap-10 items-start">
               {/* Left: steps */}
               <div className="col-span-3 flex flex-col gap-4">
                 {HOW_IT_WORKS_STEPS.map((step, i) => (

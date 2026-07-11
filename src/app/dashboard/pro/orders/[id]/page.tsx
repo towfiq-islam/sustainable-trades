@@ -178,7 +178,7 @@ const Page = () => {
                   className="py-3 px-4 rounded-[8px] border border-accent-red font-semibold text-accent-red cursor-pointer hover:border-accent-red duration-300 ease-in-out"
                   onClick={() => isOpen(true)}
                 >
-                  Shippo Invoice
+                  Shipping Label
                 </Link>
               )}
 

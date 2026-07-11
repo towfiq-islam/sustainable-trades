@@ -127,7 +127,7 @@ const CheckoutPaypalModal = ({
                 const orderData = await response.json();
                 if (orderData?.success) {
                   toast.success(orderData?.message);
-                  dispatch(apiSlice.util.invalidateTags(["user"]));
+                  dispatch(apiSlice.util.invalidateTags(["user", "cart"]));
                   router.push("/dashboard/customer/orders");
                 }
               } catch (error) {
@@ -190,7 +190,7 @@ const CheckoutPaypalModal = ({
                 const orderData = await response.json();
                 if (orderData?.success) {
                   toast.success(orderData?.message);
-                  dispatch(apiSlice.util.invalidateTags(["user"]));
+                  dispatch(apiSlice.util.invalidateTags(["user", "cart"]));
                   router.push(
                     `/order-success?order_id=${orderData?.data?.id}&shop_id=${orderData?.data?.shop_id}`,
                   );
@@ -253,7 +253,7 @@ const CheckoutPaypalModal = ({
                 const orderData = await response.json();
                 if (orderData?.success) {
                   toast.success(orderData?.message);
-                  dispatch(apiSlice.util.invalidateTags(["user"]));
+                  dispatch(apiSlice.util.invalidateTags(["user", "cart"]));
                   router.push(
                     `/order-success?order_id=${orderData?.data?.id}&shop_id=${orderData?.data?.shop_id}`,
                   );

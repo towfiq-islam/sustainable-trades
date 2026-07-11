@@ -73,12 +73,18 @@ export default function Page() {
                 Order No.
               </h3>
 
-              <Link
-                href={`/dashboard/${user?.membership?.membership_type}/orders/${order_id}`}
-                className="mb-5 text-sm font-medium text-secondary-black/60 block hover:underline"
-              >
-                {singleOrder?.data?.order_number}
-              </Link>
+              {user ? (
+                <Link
+                  href={`${user?.role === "vendor" ? `/dashboard/${user?.membership?.membership_type}/orders/details/${order_id}` : `/dashboard/customer/orders/${order_id}`}`}
+                  className="mb-5 text-sm font-medium text-secondary-black/60 block hover:underline"
+                >
+                  {singleOrder?.data?.order_number}
+                </Link>
+              ) : (
+                <button className="mb-5 text-sm font-medium text-secondary-black/60 block">
+                  {singleOrder?.data?.order_number}
+                </button>
+              )}
 
               <div className="flex items-center gap-3 mb-5 pb-5 border-b border-gray-300">
                 <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-green text-white">

@@ -268,7 +268,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
           <div className="border border-gray-300 rounded-lg overflow-hidden">
             <div className="px-4 pt-4 pb-2 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-secondary-black">
-                Chat with Buyer
+                Chat with Seller
               </h2>
             </div>
 

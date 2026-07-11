@@ -1,5 +1,7 @@
 "use client";
+import { apiSlice } from "@/redux/api/apiSlice";
 import { useLocalPickupPaymentMutation } from "@/redux/api/vendorApi";
+import { useAppDispatch } from "@/redux/store";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -20,6 +22,7 @@ const CheckoutPaypalModal = ({
   const [localPickupPayment, { isLoading: isConnecting }] =
     useLocalPickupPaymentMutation();
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const initialOptions = {
     "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
@@ -124,6 +127,7 @@ const CheckoutPaypalModal = ({
                 const orderData = await response.json();
                 if (orderData?.success) {
                   toast.success(orderData?.message);
+                  dispatch(apiSlice.util.invalidateTags(["user"]));
                   router.push("/dashboard/customer/orders");
                 }
               } catch (error) {
@@ -186,6 +190,7 @@ const CheckoutPaypalModal = ({
                 const orderData = await response.json();
                 if (orderData?.success) {
                   toast.success(orderData?.message);
+                  dispatch(apiSlice.util.invalidateTags(["user"]));
                   router.push(
                     `/order-success?order_id=${orderData?.data?.id}&shop_id=${orderData?.data?.shop_id}`,
                   );
@@ -248,6 +253,7 @@ const CheckoutPaypalModal = ({
                 const orderData = await response.json();
                 if (orderData?.success) {
                   toast.success(orderData?.message);
+                  dispatch(apiSlice.util.invalidateTags(["user"]));
                   router.push(
                     `/order-success?order_id=${orderData?.data?.id}&shop_id=${orderData?.data?.shop_id}`,
                   );

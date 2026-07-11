@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 type FormValues = {
   address_line_1: string;
+  address_line_2: string;
   city: string;
   state: string;
   postal_code: string;
@@ -27,6 +28,7 @@ const EditFormFour = ({ data }: any) => {
     if (!data) return;
 
     const addressLine1 = data?.shop_info?.address?.address_line_1 || "";
+    const addressLine2 = data?.shop_info?.address?.address_line_2 || "";
     const postalCode = data?.shop_info?.address?.postal_code || "";
     const city = data?.shop_info?.address?.city || "";
     const state = data?.shop_info?.address?.state || "";
@@ -40,6 +42,7 @@ const EditFormFour = ({ data }: any) => {
     const doNotDisplay = data?.shop_info?.address?.do_not_display ? 1 : 0;
 
     setValue("address_line_1", addressLine1);
+    setValue("address_line_2", addressLine2);
     setValue("postal_code", postalCode);
     setValue("city", city);
     setValue("state", state);
@@ -97,7 +100,7 @@ const EditFormFour = ({ data }: any) => {
 
         {/* Address */}
         <div>
-          <p className="form-label">Address *</p>
+          <p className="form-label">Address Line One *</p>
           <input
             type="text"
             {...register("address_line_1", { required: "Address is required" })}
@@ -107,6 +110,16 @@ const EditFormFour = ({ data }: any) => {
           {errors.address_line_1 && (
             <p className="text-red-600">{errors.address_line_1.message}</p>
           )}
+        </div>
+
+        <div>
+          <p className="form-label">Address Line 2 (optional)</p>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Apartment, suite, unit, etc."
+            {...register("address_line_2")}
+          />
         </div>
 
         <div className="flex flex-wrap gap-4">

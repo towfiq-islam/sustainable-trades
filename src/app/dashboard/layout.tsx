@@ -22,6 +22,7 @@ import {
 } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 import DashboardHeader from "@/Shared/DashboardHeader";
+import PrivateLayout from "@/Private/PrivateLayout";
 
 const proNavLinks = [
   { id: 1, label: "Dashboard", path: "/dashboard/pro/home", icon: <POneSvg /> },
@@ -226,40 +227,42 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <section className=" flex flex-col">
-      {/* Dashboard Header */}
-      <DashboardHeader setOpen={setOpen} user={user} />
+    <PrivateLayout>
+      <section className=" flex flex-col">
+        {/* Dashboard Header */}
+        <DashboardHeader setOpen={setOpen} user={user} />
 
-      {/* Dashboard Content */}
-      <main className="flex overflow-x-hidden grow">
-        {/* Left - Sidebar */}
-        <DashboardSidebar
-          open={open}
-          setOpen={setOpen}
-          dashboardNavLinks={
-            user?.role === "vendor" &&
-            user?.membership?.membership_type === "pro"
-              ? proNavLinks
-              : user?.role === "vendor" &&
-                  user?.membership?.membership_type === "basic"
-                ? basicNavLinks
-                : customerNavLinks
-          }
-        />
+        {/* Dashboard Content */}
+        <main className="flex overflow-x-hidden grow">
+          {/* Left - Sidebar */}
+          <DashboardSidebar
+            open={open}
+            setOpen={setOpen}
+            dashboardNavLinks={
+              user?.role === "vendor" &&
+              user?.membership?.membership_type === "pro"
+                ? proNavLinks
+                : user?.role === "vendor" &&
+                    user?.membership?.membership_type === "basic"
+                  ? basicNavLinks
+                  : customerNavLinks
+            }
+          />
 
-        {/* Right - Outlet */}
-        <section className="flex-1 h-[calc(100vh-80px)] p-4 md:p-8 lg:p-10 bg-[#FFFCF9]  overflow-y-auto">
-          {children}
-        </section>
+          {/* Right - Outlet */}
+          <section className="flex-1 h-[calc(100vh-80px)] p-4 md:p-8 lg:p-10 bg-[#FFFCF9]  overflow-y-auto">
+            {children}
+          </section>
 
-        {/* Blur Overlay */}
-        <div
-          onClick={() => setOpen(false)}
-          className={`fixed inset-0 bg-black/30 backdrop-blur-[3px] transition-opacity duration-300 2xl:hidden z-50 ${
-            open ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
-        />
-      </main>
-    </section>
+          {/* Blur Overlay */}
+          <div
+            onClick={() => setOpen(false)}
+            className={`fixed inset-0 bg-black/30 backdrop-blur-[3px] transition-opacity duration-300 2xl:hidden z-50 ${
+              open ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          />
+        </main>
+      </section>
+    </PrivateLayout>
   );
 }

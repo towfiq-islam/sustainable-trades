@@ -6,9 +6,9 @@ export function proxy(request: NextRequest) {
   const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard");
 
   // Not logged in → redirect to login
-  if (!token && isProtectedRoute) {
-    return NextResponse.redirect(new URL("/auth/login", request.url));
-  }
+  // if (!token && isProtectedRoute) {
+  //   return NextResponse.redirect(new URL("/auth/login", request.url));
+  // }
 
   return NextResponse.next();
 }

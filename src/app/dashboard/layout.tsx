@@ -22,7 +22,6 @@ import {
 } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 import DashboardHeader from "@/Shared/DashboardHeader";
-import PrivateLayout from "@/Private/PrivateLayout";
 
 const proNavLinks = [
   { id: 1, label: "Dashboard", path: "/dashboard/pro/home", icon: <POneSvg /> },
@@ -227,7 +226,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    // <PrivateLayout>
       <section className=" flex flex-col">
         {/* Dashboard Header */}
         <DashboardHeader setOpen={setOpen} user={user} />
@@ -263,6 +261,5 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           />
         </main>
       </section>
-    // </PrivateLayout>
   );
 }

@@ -11,6 +11,8 @@ import useAuth from "@/Hooks/useAuth";
 import { useGetShopDetailsQuery } from "@/redux/api/shopApi";
 import { useEditShopMutation } from "@/redux/api/authApi";
 import toast from "react-hot-toast";
+import { apiSlice } from "@/redux/api/apiSlice";
+import { useAppDispatch } from "@/redux/store";
 
 type ProfileFormValues = {
   first_name: string;
@@ -38,10 +40,12 @@ type ProfileFormValues = {
 
   city?: string;
   state?: string;
+  country?: string;
   postal_code?: string;
   lat?: number;
   lng?: number;
   address_line_1: string;
+  address_line_2: string;
 };
 
 interface Props {
@@ -52,6 +56,7 @@ const Page = ({ params }: Props) => {
   // Hook
   const { user } = useAuth();
   const { id } = use(params);
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const { data: shopDetailsData, isLoading } = useGetShopDetailsQuery(id);
   const methods = useForm<ProfileFormValues>();
@@ -92,8 +97,13 @@ const Page = ({ params }: Props) => {
           shopDetailsData?.data?.shop_info?.policies?.payment_methods || [],
         city: shopDetailsData?.data?.shop_info?.address?.city || "",
         state: shopDetailsData?.data?.shop_info?.address?.state || "",
+        country: shopDetailsData?.data?.shop_info?.address?.country || "",
         postal_code:
           shopDetailsData?.data?.shop_info?.address?.postal_code || "",
+        address_line_1:
+          shopDetailsData?.data?.shop_info?.address?.address_line_1 || "",
+        address_line_2:
+          shopDetailsData?.data?.shop_info?.address?.address_line_2 || "",
       });
     }
   }, [shopDetailsData, reset]);
@@ -120,11 +130,15 @@ const Page = ({ params }: Props) => {
     const previousAddress = shopDetailsData?.data?.shop_info?.address;
 
     const newAddressString = `${formData.address_line_1 || ""}, ${
-      formData.city || ""
-    }, ${formData.state || ""}, ${formData.postal_code || ""}`;
+      formData.address_line_2 || ""
+    }, ${formData.city || ""}, ${formData.state || ""}, ${formData.country || ""}, ${
+      formData.postal_code || ""
+    }`;
     const oldAddressString = `${previousAddress?.address_line_1 || ""}, ${
-      previousAddress?.city || ""
-    }, ${previousAddress?.state || ""}, ${previousAddress?.postal_code || ""}`;
+      previousAddress?.address_line_2 || ""
+    }, ${previousAddress?.city || ""}, ${previousAddress?.state || ""}, ${formData.country || ""}, ${
+      previousAddress?.postal_code || ""
+    }`;
 
     let finalLat = previousAddress?.latitude;
     let finalLng = previousAddress?.longitude;
@@ -193,8 +207,10 @@ const Page = ({ params }: Props) => {
 
     // Address / Geo-locator
     fd.append("address_line_1", formData.address_line_1 || "");
+    fd.append("address_line_2", formData.address_line_2 || "");
     fd.append("city", formData.city || "");
     fd.append("state", formData.state || "");
+    fd.append("country", formData.country || "");
     fd.append("postal_code", formData.postal_code || "");
     fd.append("latitude", finalLat ? String(finalLat) : "");
     fd.append("longitude", finalLng ? String(finalLng) : "");
@@ -212,6 +228,7 @@ const Page = ({ params }: Props) => {
       const res: any = await editShopMutation(fd).unwrap();
       if (res?.success) {
         toast.success(res?.message);
+        dispatch(apiSlice.util.invalidateTags([{ type: "shop", id }]));
         router.push(
           `/shop-details?view=owner&id=${user?.shop_info?.user_id}&listing_id=${user?.shop_info?.id}`,
         );

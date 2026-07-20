@@ -1170,7 +1170,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
 
       {/* Delete modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-[1px] flex items-center justify-center z-999">
           <div className="bg-white p-6 rounded-lg max-w-sm w-full mx-4">
             <h3 className="text-lg font-semibold text-secondary-black mb-4">
               Delete Listing
@@ -1182,14 +1182,15 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 border border-accent-gray rounded-lg text-secondary-black hover:bg-gray-100"
+                className="px-4 py-2 border border-accent-gray cursor-pointer rounded-lg text-secondary-black hover:bg-gray-100"
               >
                 Cancel
               </button>
+
               <button
                 onClick={confirmDelete}
                 disabled={isDeleting}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg cursor-pointer hover:bg-red-700 disabled:opacity-50"
+                className="px-4 py-2 bg-primary-red transition duration-300 text-white rounded-lg cursor-pointer hover:bg-red-700 disabled:opacity-50"
               >
                 {isDeleting ? "Deleting..." : "Delete"}
               </button>

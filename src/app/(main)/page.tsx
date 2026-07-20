@@ -8,7 +8,6 @@ import OurMission from "./_Components/OurMission";
 import CommunityMember from "./_Components/CommunityMember";
 import Pricing from "./_Components/Pricing";
 import Subscribe from "./_Components/Subscribe";
-import GetUserLocation from "@/lib/GetUserLocation";
 
 const Page = () => {
   return (
@@ -43,7 +42,6 @@ const Page = () => {
         button2="Monthly Billing"
       />
       <Subscribe />
-      <GetUserLocation />
     </>
   );
 };

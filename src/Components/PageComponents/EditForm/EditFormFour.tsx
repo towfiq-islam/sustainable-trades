@@ -1,10 +1,15 @@
 "use client";
 import { useFormContext } from "react-hook-form";
 import React, { useEffect, useState } from "react";
-
+import { Country, State } from "country-state-city";
+const allowedCountries = Country.getAllCountries().filter(
+  country => country.isoCode === "US" || country.isoCode === "CA",
+);
 type FormValues = {
   address_line_1: string;
+  address_line_2: string;
   city: string;
+  country: string;
   state: string;
   postal_code: string;
   display_my_address: number;
@@ -15,21 +20,25 @@ type FormValues = {
 };
 
 const EditFormFour = ({ data }: any) => {
+  const [country, setCountry] = useState<string>("US");
+  const [state, setState] = useState<string>("");
+  const [selectedOption, setSelectedOption] = useState<string>("");
+
   const {
     register,
     formState: { errors },
     setValue,
   } = useFormContext<FormValues>();
 
-  const [selectedOption, setSelectedOption] = useState<string>("");
-
   useEffect(() => {
     if (!data) return;
 
     const addressLine1 = data?.shop_info?.address?.address_line_1 || "";
+    const addressLine2 = data?.shop_info?.address?.address_line_2 || "";
     const postalCode = data?.shop_info?.address?.postal_code || "";
     const city = data?.shop_info?.address?.city || "";
-    const state = data?.shop_info?.address?.state || "";
+    const savedState = data?.shop_info?.address?.state || "";
+    const savedCountry = data?.shop_info?.address?.country || "US";
     const lat = data?.shop_info?.address?.latitude || "";
     const lng = data?.shop_info?.address?.longitude || "";
 
@@ -40,14 +49,19 @@ const EditFormFour = ({ data }: any) => {
     const doNotDisplay = data?.shop_info?.address?.do_not_display ? 1 : 0;
 
     setValue("address_line_1", addressLine1);
+    setValue("address_line_2", addressLine2);
     setValue("postal_code", postalCode);
     setValue("city", city);
-    setValue("state", state);
+    setValue("country", savedCountry);
+    setValue("state", savedState);
     setValue("latitude", lat);
     setValue("longitude", lng);
     setValue("display_my_address", displayMyAddress);
     setValue("address_10_mile", addressRadius);
     setValue("do_not_display", doNotDisplay);
+
+    setCountry(savedCountry);
+    setState(savedState);
 
     if (displayMyAddress === 1) setSelectedOption("display_my_address");
     else if (addressRadius === 1) setSelectedOption("address_10_mile");
@@ -65,6 +79,14 @@ const EditFormFour = ({ data }: any) => {
     if (value === "display_my_address") setValue("display_my_address", 1);
     if (value === "address_10_mile") setValue("address_10_mile", 1);
     if (value === "do_not_display") setValue("do_not_display", 1);
+  };
+
+  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCountry = e.target.value;
+    setCountry(newCountry);
+    setValue("country", newCountry, { shouldValidate: true });
+    setState("");
+    setValue("state", "", { shouldValidate: true });
   };
 
   return (
@@ -97,7 +119,7 @@ const EditFormFour = ({ data }: any) => {
 
         {/* Address */}
         <div>
-          <p className="form-label">Address *</p>
+          <p className="form-label">Address Line 1 *</p>
           <input
             type="text"
             {...register("address_line_1", { required: "Address is required" })}
@@ -107,6 +129,16 @@ const EditFormFour = ({ data }: any) => {
           {errors.address_line_1 && (
             <p className="text-red-600">{errors.address_line_1.message}</p>
           )}
+        </div>
+
+        <div>
+          <p className="form-label">Address Line 2 (optional)</p>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Apartment, suite, unit, etc."
+            {...register("address_line_2")}
+          />
         </div>
 
         <div className="flex flex-wrap gap-4">
@@ -124,19 +156,6 @@ const EditFormFour = ({ data }: any) => {
           </div>
 
           <div className="flex-1">
-            <p className="form-label">State *</p>
-            <input
-              type="text"
-              {...register("state", { required: "State is required" })}
-              className="form-input"
-              placeholder="State"
-            />
-            {errors.state && (
-              <p className="text-red-600">{errors.state.message}</p>
-            )}
-          </div>
-
-          <div className="flex-1">
             <p className="form-label">Zipcode *</p>
             <input
               type="text"
@@ -146,6 +165,56 @@ const EditFormFour = ({ data }: any) => {
             />
             {errors.postal_code && (
               <p className="text-red-600">{errors.postal_code.message}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-4">
+          <div className="flex-1">
+            <p className="form-label">Country *</p>
+            <select
+              {...register("country", { required: "Country is required" })}
+              className="form-input"
+              value={country}
+              onChange={handleCountryChange}
+            >
+              {allowedCountries.map(item => (
+                <option key={item.isoCode} value={item.isoCode}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+            {errors.country && (
+              <p className="text-red-600">{errors.country.message}</p>
+            )}
+          </div>
+
+          <div className="flex-1">
+            <p className="form-label">State *</p>
+            <select
+              {...register("state", {
+                required: "State is required",
+              })}
+              className="form-input"
+              value={state}
+              onChange={e => {
+                const selectedState = e.target.value;
+                setState(selectedState);
+                setValue("state", selectedState, {
+                  shouldValidate: true,
+                });
+              }}
+            >
+              <option value="">Select State</option>
+              {State.getStatesOfCountry(country).map(item => (
+                <option key={item.isoCode} value={item.isoCode}>
+                  {item.name} ({item.isoCode})
+                </option>
+              ))}
+            </select>
+
+            {errors.state && (
+              <p className="text-red-600">{errors.state.message}</p>
             )}
           </div>
         </div>

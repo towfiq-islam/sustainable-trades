@@ -227,7 +227,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <PrivateLayout>
+    // <PrivateLayout>
       <section className=" flex flex-col">
         {/* Dashboard Header */}
         <DashboardHeader setOpen={setOpen} user={user} />
@@ -263,6 +263,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           />
         </main>
       </section>
-    </PrivateLayout>
+    // </PrivateLayout>
   );
 }

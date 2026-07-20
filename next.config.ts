@@ -1,26 +1,47 @@
-let domain = "example.com";
+import type { NextConfig } from "next";
+
+const FALLBACK_DOMAIN = "example.com";
+
+let protocol: "http" | "https" = "https";
+let hostname = FALLBACK_DOMAIN;
+let port = "";
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
 if (siteUrl) {
   try {
-    domain = new URL(siteUrl).hostname;
-  } catch (error) {
+    const url = new URL(siteUrl);
+    protocol = url.protocol.replace(":", "") as "http" | "https";
+    hostname = url.hostname;
+    port = url.port || "";
+  } catch {
     console.warn("Invalid NEXT_PUBLIC_SITE_URL, using fallback domain.");
   }
 } else {
   console.warn("NEXT_PUBLIC_SITE_URL not set, using fallback domain.");
 }
 
-const nextConfig = {
+const backendUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:8000";
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: domain,
-        port: "",
+        protocol,
+        hostname,
+        port,
         pathname: "/**",
       },
     ],
+  },
+
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${backendUrl}/api/:path*`,
+      },
+    ];
   },
 };
 

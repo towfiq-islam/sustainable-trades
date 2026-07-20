@@ -1,4 +1,4 @@
-import { useGetOrderStatisticsQuery } from "@/redux/api/orderApi";
+import { useGetOrderStatisticsQuery } from "@/redux/api/ordersApi";
 import { useGetVendorListingsQuery } from "@/redux/api/productApi";
 import { useGetTradesDataQuery } from "@/redux/api/tradeApi";
 import { useGetVisitorDataQuery } from "@/redux/api/vendorApi";

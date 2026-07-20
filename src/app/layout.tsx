@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Lato, Geist } from "next/font/google";
 import ToastProvider from "@/Provider/ToastProvider/ToastProvider";
 import ReduxProvider from "@/Provider/ReduxProvider/ReduxProvider";
+import LocationProvider from "@/Provider/LocationProvider/LocationProvider";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 // Fonts
@@ -32,8 +33,10 @@ export default async function RootLayout({
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className={`${lato.variable} antialiased`}>
         <ReduxProvider>
-          <ToastProvider />
-          {children}
+          <LocationProvider>
+            <ToastProvider />
+            {children}
+          </LocationProvider>
         </ReduxProvider>
       </body>
     </html>

@@ -79,9 +79,25 @@ const PriceSection = ({
         {getErrorMessage("cost") && (
           <p className="text-red-600 text-sm mt-1">{getErrorMessage("cost")}</p>
         )}
+
+        <div className="border mt-5 border-off-green/40 bg-off-green/20 rounded-lg p-5">
+          <div className="flex gap-3">
+            <div className="size-8 shrink-0 rounded-full bg-primary-green text-white flex items-center justify-center">
+              i
+            </div>
+
+            <p className="text-[#374151] leading-6">
+              <span className="font-bold block mb-1">Use Shippo for shipping?</span>
+             
+              
+              The package dimensions and weight you enter here are used to
+              choose and create the shipping label in Shippo.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-5">
         <h3
           className={`text-[20px] md:text-[24px] font-semibold ${
             isBasicMember ? "text-gray-400" : "text-secondary-black"

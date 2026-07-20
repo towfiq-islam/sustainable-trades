@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import moment from "moment";
-import { useDownloadInvoiceMutation } from "@/redux/api/orderApi";
+import { useDownloadInvoiceMutation } from "@/redux/api/ordersApi";
 
 type OrderImage = {
   image: string;

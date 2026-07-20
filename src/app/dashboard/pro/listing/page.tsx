@@ -6,6 +6,7 @@ import Image, { StaticImageData } from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ProductRowSkeleton } from "@/Components/Loader/Loader";
 import { useGetProductsQuery } from "@/redux/api/productApi";
+import { TbEdit } from "react-icons/tb";
 
 type ImageItem = {
   image: string;
@@ -165,39 +166,14 @@ export default function Page() {
                     </td>
 
                     <td className="relative">
-                      <button
-                        className="cursor-pointer"
-                        onClick={() =>
-                          setOpenMenu(openMenu === p.id ? null : p.id)
-                        }
+                      <Link
+                        href={`/dashboard/pro/view-listing/${p.id}`}
+                        className="w-fit mx-auto"
                       >
-                        <FiMoreVertical />
-                      </button>
-                      {openMenu === p.id && (
-                        <div
-                          ref={menuRef}
-                          className="product-menu absolute right-0 mt-2 bg-white border border-gray-400 rounded shadow-lg w-28 z-10"
-                        >
-                          <Link href={`/dashboard/pro/view-listing/${p.id}`}>
-                            <button
-                              onClick={() => setOpenMenu(null)}
-                              className="block w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                            >
-                              Edit
-                            </button>
-                          </Link>
-
-                          {/* <button
-                            onClick={() => {
-                              setProducts(products.filter(x => x.id !== p.id));
-                              setOpenMenu(null);
-                            }}
-                            className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 cursor-pointer"
-                          >
-                            Delete
-                          </button> */}
-                        </div>
-                      )}
+                        <button className="text-center cursor-pointer text-xl">
+                          <TbEdit />
+                        </button>
+                      </Link>
                     </td>
                   </tr>
                 ))}

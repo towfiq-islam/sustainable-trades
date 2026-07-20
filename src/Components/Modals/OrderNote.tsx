@@ -1,5 +1,5 @@
 "use client";
-import { useAddOrderNoteMutation } from "@/redux/api/orderApi";
+import { useAddOrderNoteMutation } from "@/redux/api/ordersApi";
 import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";

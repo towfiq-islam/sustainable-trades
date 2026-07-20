@@ -10,7 +10,7 @@ import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import {
   useDownloadInvoiceMutation,
   useGetMyOrdersQuery,
-} from "@/redux/api/orderApi";
+} from "@/redux/api/ordersApi";
 
 type OrdersListProps = {
   role: "customer" | "pro";

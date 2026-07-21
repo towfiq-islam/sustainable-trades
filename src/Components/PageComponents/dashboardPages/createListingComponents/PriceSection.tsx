@@ -1,4 +1,4 @@
-import { Controller, Control, FieldErrors, FieldError } from "react-hook-form";
+import { Controller, FieldErrors, FieldError } from "react-hook-form";
 import { FormData } from "./CreateListing";
 
 interface PriceSectionProps {
@@ -80,21 +80,23 @@ const PriceSection = ({
           <p className="text-red-600 text-sm mt-1">{getErrorMessage("cost")}</p>
         )}
 
-        <div className="border mt-5 border-off-green/40 bg-off-green/20 rounded-lg p-5">
-          <div className="flex gap-3">
-            <div className="size-8 shrink-0 rounded-full bg-primary-green text-white flex items-center justify-center">
-              i
-            </div>
+        {!isBasicMember && (
+          <div className="border mt-5 border-off-green/40 bg-off-green/20 rounded-lg p-5">
+            <div className="flex gap-3">
+              <div className="size-8 shrink-0 rounded-full bg-primary-green text-white flex items-center justify-center">
+                i
+              </div>
 
-            <p className="text-[#374151] leading-6">
-              <span className="font-bold block mb-1">Use Shippo for shipping?</span>
-             
-              
-              The package dimensions and weight you enter here are used to
-              choose and create the shipping label in Shippo.
-            </p>
+              <p className="text-[#374151] leading-6">
+                <span className="font-bold block mb-1">
+                  Use Shippo for shipping?
+                </span>
+                The package dimensions and weight you enter here are used to
+                choose and create the shipping label in Shippo.
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="mt-5">
@@ -109,7 +111,7 @@ const PriceSection = ({
           name="weight"
           control={control}
           rules={{
-            required: "Weight is required",
+            required: isBasicMember ? false : "Weight is required",
             pattern: {
               value: /^\d+$/,
               message: "Weight must be a number",

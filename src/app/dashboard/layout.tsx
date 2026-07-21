@@ -31,7 +31,7 @@ export default async function DashboardLayout({
 }) {
   const initialUser = await getServerUser();
   return (
-    <DashboardLayoutClient initialUser={initialUser}>
+    <DashboardLayoutClient initialUser={initialUser?.data}>
       {children}
     </DashboardLayoutClient>
   );

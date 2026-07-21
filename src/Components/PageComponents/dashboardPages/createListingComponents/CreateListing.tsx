@@ -133,7 +133,8 @@ const CreateListing = ({
   const subcategories: SubCategory[] = subcategoriess?.data ?? [];
 
   const { ref: _imageRef, ...imageFieldProps } = register("images", {
-    validate: () => imageFiles.length > 0 || "At least one image is required",
+    validate: value =>
+      (value && value.length > 0) || "At least one image is required",
   });
 
   // ── submit ────────────────────────────────────────────────────────────────
@@ -245,11 +246,21 @@ const CreateListing = ({
       <Header isBasicMember={isBasicMember} />
 
       {isBasicMember && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-          <p className="text-sm text-blue-800">
-            <strong>Note:</strong> Some features are available with a Pro
-            Membership. Upgrade your account to enable advanced listing options.
-          </p>
+        <div className="border mt-5 border-off-green/40 bg-off-green/20 rounded-lg p-5">
+          <div className="flex gap-3">
+            <div className="size-8 shrink-0 rounded-full bg-primary-green text-white flex items-center justify-center">
+              i
+            </div>
+
+            <p className="text-[#374151] leading-6">
+              <span className="font-bold block mb-1">
+                You're currently using a Basic Membership.
+              </span>
+              Some listing features are only available with a Pro Membership. To
+              unlock all listing options, visit the Membership tab to upgrade
+              your account.
+            </p>
+          </div>
         </div>
       )}
 
@@ -334,7 +345,6 @@ const CreateListing = ({
               control={control}
               errors={errors}
               isBasicMember={isBasicMember}
-              // isBasicMember={false}
             />
 
             {/* Description */}

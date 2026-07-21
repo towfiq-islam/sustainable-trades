@@ -828,7 +828,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
                 name="weight"
                 control={control}
                 rules={{
-                  required: "Weight is required",
+                  required: proOnly ? "Weight is required" : false,
                 }}
                 render={({ field }) => (
                   <input

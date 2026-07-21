@@ -3,17 +3,21 @@ import { cookies } from "next/headers";
 
 async function getServerUser() {
   const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
-  if (!cookieHeader) return null;
+  // const cookieHeader = cookieStore.toString();
+  // if (!cookieHeader) return null;
+
+  const token = cookieStore.get("token")?.value;
+  if (!token) return null;
 
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/users/data`,
       {
-        headers: {
-          Cookie: cookieHeader,
-          Accept: "application/json",
-        },
+        // headers: {
+        //   Cookie: cookieHeader,
+        //   Accept: "application/json",
+        // },
+        headers: { Cookie: `token=${token}` },
         cache: "no-store",
       },
     );

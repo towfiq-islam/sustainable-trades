@@ -223,7 +223,7 @@ const customerNavLinks = [
 
 type Props = {
   children: ReactNode;
-  initialUser?: any; // whatever your User type is
+  initialUser?: any;
 };
 
 export default function DashboardLayoutClient({
@@ -232,9 +232,6 @@ export default function DashboardLayoutClient({
 }: Props) {
   const { user: liveUser } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
-  console.log("initial", initialUser);
-
-  // Prefer the live RTK Query cache once it resolves; fall back to SSR value until then
   const user = liveUser ?? initialUser;
 
   return (
@@ -255,7 +252,7 @@ export default function DashboardLayoutClient({
               : user?.role === "vendor" &&
                   user?.membership?.membership_type === "basic"
                 ? basicNavLinks
-                : user // only fall back to customer nav once we actually know the role
+                : user
                   ? customerNavLinks
                   : []
           }

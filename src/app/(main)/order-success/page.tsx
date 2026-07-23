@@ -5,7 +5,6 @@ import { FaCheck } from "react-icons/fa";
 import Container from "@/Components/Common/Container";
 import Product from "@/Components/Common/Product";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
-import { useSearchParams } from "next/navigation";
 import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
 import useAuth from "@/Hooks/useAuth";
 import {
@@ -13,12 +12,15 @@ import {
   useGetMyFavoriteQuery,
 } from "@/redux/api/productApi";
 import { useGetOrderDetailsQuery } from "@/redux/api/ordersApi";
+import { use } from "react";
 
-export default function Page() {
+type Props = {
+  searchParams: Promise<{ order_id: number; shop_id: number }>;
+};
+
+export default function Page({ searchParams }: Props) {
   const { user } = useAuth();
-  const searchParams = useSearchParams();
-  const order_id = Number(searchParams.get("order_id"));
-  const shop_id = Number(searchParams.get("shop_id"));
+  const { order_id, shop_id } = use(searchParams);
   const { data: myFavorites, isLoading: isFavoriteLoading } =
     useGetMyFavoriteQuery(undefined, { skip: !user });
   const { data: singleOrder, isLoading } = useGetOrderDetailsQuery(order_id);

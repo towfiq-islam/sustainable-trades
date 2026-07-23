@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import shopBg from "@/Assets/shoppers.png";
 import magicBg from "@/Assets/magic_markers.png";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   AppleLogoSvg,
   FacebookLogoSvg,
@@ -26,10 +26,13 @@ type formData = {
   agree_to_terms: boolean;
 };
 
-export default function page() {
+type Props = {
+  searchParams: Promise<{ role: string }>;
+};
+
+export default function page({ searchParams }: Props) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const selected_role = searchParams.get("role");
+  const { role: selected_role } = use(searchParams);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);

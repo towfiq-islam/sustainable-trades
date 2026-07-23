@@ -8,7 +8,6 @@ const allowedCountries = Country.getAllCountries().filter(
 const AddressForm = () => {
   const [state, setState] = useState<any>(null);
   const [country, setCountry] = useState<any>(null);
-  const usStates = State.getStatesOfCountry("US");
 
   const {
     register,
@@ -76,7 +75,6 @@ const AddressForm = () => {
         )}
       </div>
 
-      {/* State + country */}
       <div className="grid grid-cols-2 gap-5">
         {/* Country */}
         <div>
@@ -131,7 +129,7 @@ const AddressForm = () => {
           >
             <option value="">Select State</option>
 
-            {usStates.map(item => (
+            {State.getStatesOfCountry(country).map(item => (
               <option key={item.isoCode} value={item.isoCode}>
                 {item.name} ({item.isoCode})
               </option>

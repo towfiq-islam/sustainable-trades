@@ -38,6 +38,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
     resetField("address_line_2");
     resetField("city");
     resetField("state");
+    resetField("country");
     resetField("zip_code");
   };
 
@@ -95,6 +96,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
       "city",
       "state",
       "zip_code",
+      "country",
     ]);
 
     if (!isValid) return;
@@ -218,9 +220,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
               toast.error("Please save your location before continuing.");
             }
           }}
-          className={`auth-secondary-btn w-full sm:w-auto ${
-            isPending && "!cursor-not-allowed"
-          }`}
+          className={`auth-secondary-btn disabled:opacity-70 disabled:cursor-not-allowed w-full sm:w-auto `}
         >
           {isPending ? (
             <p className="flex gap-2 items-center justify-center">

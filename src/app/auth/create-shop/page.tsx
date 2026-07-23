@@ -12,6 +12,8 @@ import StepTwo from "./_components/StepTwo";
 import StepThree from "./_components/StepThree";
 import StepFour from "./_components/StepFour";
 import StepFive from "./_components/StepFive";
+import Link from "next/link";
+import { RxCross2 } from "react-icons/rx";
 
 type StepItem = {
   smLabel: string;
@@ -166,7 +168,15 @@ const page = () => {
   }, [step]);
 
   return (
-    <section ref={formRef} className="py-12">
+    <section ref={formRef} className="py-12 relative">
+      {/* Close btn */}
+      <Link
+        href="/"
+        className="absolute top-10 right-20 text-xl cursor-pointer hover:bg-gray-200 px-2 py-2 rounded-lg duration-200 transition-colors"
+      >
+        <RxCross2 />
+      </Link>
+
       <Container>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>

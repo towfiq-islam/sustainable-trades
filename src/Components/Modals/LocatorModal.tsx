@@ -6,14 +6,15 @@ const allowedCountries = Country.getAllCountries().filter(
 );
 
 const AddressForm = () => {
-  const [state, setState] = useState<any>(null);
-  const [country, setCountry] = useState<any>(null);
-
   const {
     register,
     setValue,
+    getValues,
     formState: { errors },
   } = useFormContext();
+
+  const [state, setState] = useState<any>(() => getValues("state") || "");
+  const [country, setCountry] = useState<any>(() => getValues("country") || "");
 
   return (
     <form className="my-6 flex flex-col gap-3">

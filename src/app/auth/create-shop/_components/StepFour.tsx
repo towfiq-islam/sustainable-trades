@@ -6,10 +6,11 @@ import {
   useJsApiLoader,
 } from "@react-google-maps/api";
 import toast from "react-hot-toast";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useFormContext } from "react-hook-form";
 import AddressForm from "@/Components/Modals/LocatorModal";
+import Modal from "@/Components/Common/Modal";
 
 const containerStyle = {
   width: "100%",
@@ -18,7 +19,7 @@ const containerStyle = {
 };
 
 const StepFour = ({ setStep, step, isPending }: any) => {
-  const { setValue, trigger, getValues, resetField } = useFormContext();
+  const { setValue, trigger, getValues } = useFormContext();
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<{
@@ -29,34 +30,17 @@ const StepFour = ({ setStep, step, isPending }: any) => {
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
   const { isLoaded } = useJsApiLoader({ googleMapsApiKey: API_KEY || "" });
 
-  // Reset all location-related form fields and state
-  const resetLocationState = () => {
-    setSelectedLocation(null);
-    setValue("latitude", "");
-    setValue("longitude", "");
-    resetField("address_line_1");
-    resetField("address_line_2");
-    resetField("city");
-    resetField("state");
-    resetField("country");
-    resetField("zip_code");
-  };
-
   //  Handle switching options
   const handleCheckboxClick = (option: number) => {
-    if (selectedOption === option) return;
+    if (selectedOption === option) {
+      setIsModalOpen(true);
+      return;
+    }
 
-    resetLocationState();
     setSelectedOption(option);
-
-    setValue("address_10_mile", 0);
-    setValue("display_my_address", 0);
-    setValue("do_not_display", 0);
-
-    if (option === 1) setValue("display_my_address", 1);
-    if (option === 2) setValue("address_10_mile", 1);
-    if (option === 3) setValue("do_not_display", 1);
-
+    setValue("address_10_mile", option === 2 ? 1 : 0);
+    setValue("display_my_address", option === 1 ? 1 : 0);
+    setValue("do_not_display", option === 3 ? 1 : 0);
     setIsModalOpen(true);
   };
 
@@ -120,6 +104,21 @@ const StepFour = ({ setStep, step, isPending }: any) => {
     setIsModalOpen(false);
   };
 
+  useEffect(() => {
+    const values = getValues();
+
+    if (values.display_my_address) setSelectedOption(1);
+    else if (values.address_10_mile) setSelectedOption(2);
+    else if (values.do_not_display) setSelectedOption(3);
+
+    if (values.latitude && values.longitude) {
+      setSelectedLocation({
+        lat: Number(values.latitude),
+        lng: Number(values.longitude),
+      });
+    }
+  }, []);
+
   return (
     <section className="lg:px-12">
       <div className="lg:my-16 my-8 text-center lg:text-left">
@@ -135,6 +134,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
       <div className="relative w-full">
         {isLoaded && (
           <GoogleMap
+            key={selectedOption}
             mapContainerStyle={containerStyle}
             center={selectedLocation || { lat: 37.7749, lng: -122.4194 }}
             zoom={selectedLocation ? 14 : 10}
@@ -172,7 +172,8 @@ const StepFour = ({ setStep, step, isPending }: any) => {
                   type="radio"
                   name="location_option"
                   checked={selectedOption === opt}
-                  onChange={() => handleCheckboxClick(opt)}
+                  onChange={() => {}}
+                  onClick={() => handleCheckboxClick(opt)}
                   className="mt-2 size-5 shrink-0 cursor-pointer accent-primary-green"
                 />
 
@@ -234,39 +235,33 @@ const StepFour = ({ setStep, step, isPending }: any) => {
       </div>
 
       {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
-          <div className="bg-[#f7f7f7] rounded-lg p-6 max-w-lg w-full pt-[52px] relative">
-            <p className="mb-4 text-sm">
-              {selectedOption === 1 &&
-                "Enter the exact address you want to display."}
-              {selectedOption === 2 &&
-                "Enter your address to display your 0.5 mile radius."}
-              {selectedOption === 3 &&
-                "Enter city/state to only display general location."}
-            </p>
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        className="bg-[#f7f7f7] max-w-lg"
+      >
+        <div>
+          <p className="mb-4 text-sm">
+            {selectedOption === 1 &&
+              "Enter the exact address you want to display."}
+            {selectedOption === 2 &&
+              "Enter your address to display your 0.5 mile radius."}
+            {selectedOption === 3 &&
+              "Enter city/state to only display general location."}
+          </p>
 
-            <AddressForm />
+          <AddressForm />
 
+          <div className="flex justify-end gap-4 mt-6">
             <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-2 right-2 text-3xl text-gray-500 cursor-pointer"
-              aria-label="Close modal"
+              onClick={handleSave}
+              className="auth-secondary-btn max-w-[150px] w-full"
             >
-              ×
+              Save
             </button>
-
-            <div className="flex justify-end gap-4 mt-6">
-              <button
-                onClick={handleSave}
-                className="auth-secondary-btn max-w-[150px] w-full"
-              >
-                Save
-              </button>
-            </div>
           </div>
         </div>
-      )}
+      </Modal>
     </section>
   );
 };

@@ -6,8 +6,7 @@ import {
   ShopFAQSkeleton,
   ShopPoliciesSkeleton,
 } from "@/Components/Loader/Loader";
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { use, useState } from "react";
 import ShopFAQ from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopFAQ";
 import AboutShop from "@/Components/PageComponents/mainPages/shopDetailsComponents/AboutShop";
 import ShopBanner from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopBanner";
@@ -27,12 +26,12 @@ import {
   useGetShopReviewsQuery,
 } from "@/redux/api/shopApi";
 
-const page = () => {
-  // Hook
-  const searchParams = useSearchParams();
-  const id = Number(searchParams.get("id"));
-  const listing_id = Number(searchParams.get("listing_id"));
-  const view = String(searchParams.get("view"));
+type Props = {
+  searchParams: Promise<{ id: number; listing_id: number; view: string }>;
+};
+
+const page = ({ searchParams }: Props) => {
+  const { id, listing_id, view } = use(searchParams);
 
   // States
   const [category_id, setCategory] = useState<string>("");

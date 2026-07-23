@@ -77,6 +77,10 @@ html {
   @apply text-secondary-black block w-full font-semibold;
 }
 
+.form-label span {
+  @apply text-red-600 text-xl;
+}
+
 .form-input {
   @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2  lg:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray;
 }

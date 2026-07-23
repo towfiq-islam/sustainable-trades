@@ -21,6 +21,7 @@ import {
   useGetCategoryDetailsQuery,
   useGetProductCategoriesQuery,
 } from "@/redux/api/productApi";
+import { useParams } from "next/navigation";
 
 type categoryItem = {
   id: number;
@@ -29,8 +30,8 @@ type categoryItem = {
   icon: string;
 };
 
-const page = ({ params }: any) => {
-  const id = Number(params?.id);
+const page = () => {
+  const id = Number(useParams()?.id);
   const { latitude, longitude } = useAuth();
   const [page, setPage] = useState<string>("");
   const [categoryId, setCategoryId] = useState<number>(id);
@@ -151,19 +152,18 @@ const page = ({ params }: any) => {
               <ProductSkeleton key={idx} />
             ))}
           </div>
-        ) : categoryDetails?.data?.products?.length === 0 ||
-          !categoryDetails ? (
+        ) : categoryDetails?.data?.products?.data?.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+            {categoryDetails.data.products.data.map((product: any) => (
+              <Product key={product?.id} product={product} />
+            ))}
+          </div>
+        ) : (
           <div className="flex flex-col justify-center items-center gap-3 lg:gap-4 text-center py-5 md:py-20">
             <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
             <p className="text-gray-600 text-sm md:text-lg font-semibold">
               No products found!!
             </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-            {categoryDetails?.data?.products?.map((product: any) => (
-              <Product key={product?.id} product={product} />
-            ))}
           </div>
         )}
 

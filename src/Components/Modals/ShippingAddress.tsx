@@ -1,5 +1,4 @@
 "use client";
-import { Lock } from "lucide-react";
 import useAuth from "@/Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
@@ -9,6 +8,7 @@ import {
   useGetShippingTaxMutation,
 } from "@/redux/api/taxApi";
 import toast from "react-hot-toast";
+import { MdLockOpen } from "react-icons/md";
 
 type FormData = {
   first_name: string;
@@ -387,7 +387,7 @@ const ShippingAddress = ({
       </form>
 
       <div className="flex items-center justify-center gap-2 mt-3 text-gray-500">
-        <Lock size={16} />
+        <MdLockOpen size={16} />
         <span>Your information is secure and encrypted.</span>
       </div>
     </>

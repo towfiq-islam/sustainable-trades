@@ -7,8 +7,8 @@ import h3 from "@/Assets/h3.svg";
 import h4 from "@/Assets/h4.svg";
 import h5 from "@/Assets/h5.svg";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
-import { X } from "lucide-react";
+import { useState } from "react";
+import { RxCross2 } from "react-icons/rx";
 
 const Sidebar = ({ open, setOpen, dynamicPage }: any) => {
   const navLinks = [
@@ -68,19 +68,19 @@ const Sidebar = ({ open, setOpen, dynamicPage }: any) => {
           onClick={() => setOpen(!open)}
           className="p-2 text-primary-green cursor-pointer"
         >
-          <X size={28} />
+          <RxCross2 size={28} />
         </button>
       </div>
 
       <div className="flex flex-col h-full px-3 gap-3">
-        {navLinks.map((item) => {
+        {navLinks.map(item => {
           const isActive =
             pathname === item.path ||
             (item.sub_menu &&
               item.sub_menu.some(
                 (sub: any) =>
                   pathname === sub.path ||
-                  pathname === `/about/${sub.page_slug}`
+                  pathname === `/about/${sub.page_slug}`,
               ));
 
           return (
@@ -146,7 +146,7 @@ const Sidebar = ({ open, setOpen, dynamicPage }: any) => {
                           <span>{page_title}</span>
                         </Link>
                       );
-                    }
+                    },
                   )}
                 </div>
               )}

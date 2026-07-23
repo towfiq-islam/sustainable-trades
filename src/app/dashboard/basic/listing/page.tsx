@@ -94,13 +94,15 @@ const Page = () => {
             >
               {/* Image */}
               <div className="relative w-full h-[250px]">
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product.images[0].image}`}
-                  alt={product.product_name}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
+                {product.images?.length > 0 && (
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product.images[0].image}`}
+                    alt={product.product_name}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                )}
 
                 <Link href={`/dashboard/basic/listing/${product.id}`}>
                   <button

@@ -96,10 +96,8 @@ const StepFour = ({ setStep, step, isPending }: any) => {
       "state",
       "zip_code",
     ]);
-    if (!isValid) {
-      toast.error("Please fill all required address fields.");
-      return;
-    }
+
+    if (!isValid) return;
 
     const { address_line_1, address_line_2, city, state, zip_code, country } =
       getValues();
@@ -173,7 +171,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
                   name="location_option"
                   checked={selectedOption === opt}
                   onChange={() => handleCheckboxClick(opt)}
-                  className="mt-2 size-5 shrink-0"
+                  className="mt-2 size-5 shrink-0 cursor-pointer accent-primary-green"
                 />
 
                 <div>

@@ -133,7 +133,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             onChange={handleImageChange}
           />
           {errors.about_image && (
-            <p className="text-red-600 lg:text-start text-center">
+            <p className="text-red-600 lg:text-start text-center text-sm pt-1">
               {errors.about_image.message as string}
             </p>
           )}
@@ -164,7 +164,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
               className="form-input lg:h-fit h-32"
             />
             {errors.tagline && (
-              <p className="text-red-600 mt-1">
+              <p className="text-red-600 text-sm mt-1">
                 {errors.tagline.message as string}
               </p>
             )}
@@ -184,7 +184,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
               className="form-input lg:h-fit h-32"
             />
             {errors.statement && (
-              <p className="text-red-600 mt-1">
+              <p className="text-red-600 text-sm mt-1">
                 {errors.statement.message as string}
               </p>
             )}
@@ -204,7 +204,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
               className="form-input lg:h-fit h-32"
             />
             {errors.our_story && (
-              <p className="text-red-600 mt-1">
+              <p className="text-red-600 text-sm mt-1">
                 {errors.our_story.message as string}
               </p>
             )}
@@ -248,7 +248,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             </div>
 
             {errors.payment_methods && (
-              <p className="text-red-600 mt-2">
+              <p className="text-red-600 text-sm mt-2">
                 {errors.payment_methods.message as string}
               </p>
             )}
@@ -267,7 +267,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
               className="form-input lg:h-fit h-32"
             />
             {errors.shipping_information && (
-              <p className="text-red-600 mt-1">
+              <p className="text-red-600 text-sm mt-1">
                 {errors.shipping_information.message as string}
               </p>
             )}
@@ -287,7 +287,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
               className="form-input lg:h-fit h-32"
             />
             {errors.return_policy && (
-              <p className="text-red-600 mt-1">
+              <p className="text-red-600 text-sm mt-1">
                 {errors.return_policy.message as string}
               </p>
             )}
@@ -315,7 +315,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             <button
               type="button"
               onClick={handleSaveFaq}
-              className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
+              className="bg-primary-green text-white px-4 py-2 rounded cursor-pointer"
             >
               {editingFaqIndex !== null ? "Update" : "Save"}
             </button>
@@ -326,7 +326,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
                   setNewFaq({ question: "", answer: "" });
                   setEditingFaqIndex(null);
                 }}
-                className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                className="bg-gray-300 text-gray-800 px-3 py-2 cursor-pointer rounded"
               >
                 Cancel Edit
               </button>
@@ -365,14 +365,14 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
                           <button
                             type="button"
                             onClick={() => handleEditFaq(index)}
-                            className="p-1 text-green-600 hover:bg-green-100 rounded cursor-pointer"
+                            className="p-1 shrink-0 text-primary-green hover:bg-green-100 rounded cursor-pointer"
                           >
                             ✏️
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDeleteFaq(index)}
-                            className="p-1 text-red-600 hover:bg-red-100 rounded cursor-pointer"
+                            className="px-2 py-1 shrink-0 text-red-600 hover:bg-red-100 rounded cursor-pointer"
                           >
                             🗑
                           </button>

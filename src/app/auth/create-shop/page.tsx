@@ -4,14 +4,14 @@ import { useSearchParams } from "next/navigation";
 import Container from "@/Components/Common/Container";
 import { useForm, FormProvider } from "react-hook-form";
 import { CheckSvg, StepSvg } from "@/Components/Svg/SvgContainer";
-import StepOne from "@/Components/PageComponents/authPages/stepForm/StepOne";
-import StepTwo from "@/Components/PageComponents/authPages/stepForm/StepTwo";
-import StepFour from "@/Components/PageComponents/authPages/stepForm/StepFour";
-import StepFive from "@/Components/PageComponents/authPages/stepForm/StepFive";
-import StepThree from "@/Components/PageComponents/authPages/stepForm/StepThree";
 import toast from "react-hot-toast";
 import { useCreateShopMutation } from "@/redux/api/authApi";
 import useAuth from "@/Hooks/useAuth";
+import StepOne from "./_components/StepOne";
+import StepTwo from "./_components/StepTwo";
+import StepThree from "./_components/StepThree";
+import StepFour from "./_components/StepFour";
+import StepFive from "./_components/StepFive";
 
 type StepItem = {
   smLabel: string;
@@ -24,7 +24,7 @@ const page = () => {
   const searchParams = useSearchParams();
   const formRef = useRef<HTMLDivElement | null>(null);
   const newStep = Number(searchParams.get("step"));
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(4);
   const [createShop, { isLoading }] = useCreateShopMutation();
   const onNext = () => setStep(prev => Math.min(prev + 1, steps.length));
   const onPrev = () => setStep(prev => Math.max(prev - 1, 1));
@@ -43,7 +43,6 @@ const page = () => {
 
       // StepTwo
       shop_name: "",
-      // shop_city: "",
       shop_image: null,
       shop_banner: null,
 
@@ -172,7 +171,9 @@ const page = () => {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             {/* Step bar */}
-            <div className="flex 2xl:gap-28 xl:gap-x-20 gap-5 justify-center items-center">
+            <div className="relative flex justify-between items-start max-w-5xl mx-auto">
+              <div className="absolute left-[8%] right-[8%] top-5 border-t-2 border-dashed border-light-green z-0" />
+
               {steps.map((item, index) => {
                 const isActive = index + 1 === step;
                 const isCompleted = index + 1 < step;
@@ -180,22 +181,21 @@ const page = () => {
                 return (
                   <div
                     key={index}
-                    className={`text-center ${
+                    className={`relative z-10 flex flex-1 flex-col items-center ${
                       isActive ? "text-primary-green" : "text-secondary-gray"
                     }`}
                   >
                     <div
-                      className={`rounded-full grid place-items-center mx-auto mb-2 ${
-                        isActive || isCompleted
-                          ? "bg-primary-green lg:size-12 size-6"
-                          : "bg-light-green lg:size-10 size-5"
-                      }`}
+                      className={`flex items-center justify-center rounded-full lg:w-12 lg:h-12 w-7 h-7 ring-6 ring-white ${isActive || isCompleted ? "bg-primary-green" : "bg-light-green"}`}
                     >
-                      {isActive && <StepSvg />}
-                      {isCompleted && <CheckSvg />}
+                      {isCompleted ? (
+                        <CheckSvg />
+                      ) : isActive ? (
+                        <StepSvg />
+                      ) : null}
                     </div>
 
-                    <p className="text-[12px] lg:text-[18px]">
+                    <p className="mt-3 text-center text-xs lg:text-base">
                       <span className="block lg:hidden">{item.smLabel}</span>
                       <span className="hidden lg:block">{item.lgLabel}</span>
                     </p>

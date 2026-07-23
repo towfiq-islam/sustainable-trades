@@ -1,4 +1,3 @@
-import React from "react";
 import Pricing from "@/app/(main)/_Components/Pricing";
 
 const StepFive = ({ step, setStep }: any) => {

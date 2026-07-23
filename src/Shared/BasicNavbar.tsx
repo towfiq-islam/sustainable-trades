@@ -8,7 +8,7 @@ import h4 from "@/Assets/h4.svg";
 import h5 from "@/Assets/h5.svg";
 import useAuth from "@/Hooks/useAuth";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiLogOut } from "react-icons/fi";
 import Container from "@/Components/Common/Container";
 import {
@@ -20,6 +20,7 @@ import {
 } from "@/Components/Svg/SvgContainer";
 import Sidebar from "@/Components/Common/Sidebar";
 import { FaUser } from "react-icons/fa";
+import { FaAngleDown } from "react-icons/fa6";
 import { useLogoutMutation } from "@/redux/api/authApi";
 import { useAppDispatch } from "@/redux/store";
 import toast from "react-hot-toast";
@@ -87,15 +88,28 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const pathname = usePathname();
-  const [showMenu, setShowMenu] = useState<boolean>(false);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [showPopover, setShowPopover] = useState<boolean>(false);
-  const [activeSubMenu, setActiveSubMenu] = useState<number>(0);
+  const [activeSubMenu, setActiveSubMenu] = useState<number | null>(0);
   const [logout, { isLoading }] = useLogoutMutation();
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openSubMenu = (id: number) => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setActiveSubMenu(id);
+  };
+
+  const scheduleCloseSubMenu = () => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setActiveSubMenu(null);
+    }, 150);
+  };
 
   useEffect(() => {
     const handleWindowClick = () => {
-      setShowMenu(false);
       setShowPopover(false);
     };
 
@@ -103,6 +117,12 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
 
     return () => {
       window.removeEventListener("click", handleWindowClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
     };
   }, []);
 
@@ -148,88 +168,108 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
             <div className="lg:flex hidden gap-5 xl:gap-10 items-center relative">
               {navLins?.map(item => {
                 const isActive = pathname === item?.path;
+                const hasSubMenu = !!item?.sub_menu?.length;
+                const isOpen = activeSubMenu === item?.id;
+
+                if (!hasSubMenu) {
+                  return (
+                    <Link
+                      className={`text-lg text-white transition-colors duration-200 ${
+                        isActive ? "font-semibold" : "hover:text-white/80"
+                      }`}
+                      key={item?.id}
+                      href={item?.path}
+                    >
+                      {item?.label}
+                    </Link>
+                  );
+                }
 
                 return (
-                  <Link
-                    className={`text-lg text-white ${
-                      isActive && "font-semibold "
-                    }`}
+                  <div
                     key={item?.id}
-                    href={item?.id == 4 || item?.id == 5 ? "#" : item?.path}
-                    onClick={e => {
-                      e.stopPropagation();
-                      if (item?.id == 4 || item?.id == 5) {
-                        e.preventDefault();
-                      }
-                      setShowMenu(true);
-                      setActiveSubMenu(item?.id);
-                    }}
+                    className="relative"
+                    onMouseEnter={() => openSubMenu(item?.id)}
+                    onMouseLeave={scheduleCloseSubMenu}
                   >
-                    {item?.label}
-                  </Link>
+                    <button
+                      type="button"
+                      className={`flex items-center gap-1.5 text-lg text-white transition-colors duration-200 cursor-pointer ${
+                        isActive || isOpen
+                          ? "font-semibold"
+                          : "hover:text-white/80"
+                      }`}
+                    >
+                      {item?.label}
+                      <span
+                        className={`transition-transform text-base duration-300 ${
+                          isOpen ? "rotate-180" : "rotate-0"
+                        }`}
+                      >
+                        <FaAngleDown />
+                      </span>
+                    </button>
+
+                    {/* Sub Menu */}
+                    <div
+                      className={`absolute z-20 top-[calc(100%+1.5rem)] left-1/2 -translate-x-1/2 bg-white shadow-[0_10px_30px_-5px_rgba(0,0,0,0.18)] w-[250px] py-3 px-2 rounded-xl border border-gray-100 flex flex-col gap-1 transition-all duration-200 ease-out origin-top ${
+                        isOpen
+                          ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
+                          : "opacity-0 -translate-y-1 scale-95 pointer-events-none"
+                      }`}
+                    >
+                      {item?.sub_menu?.map(
+                        ({
+                          id,
+                          page_title,
+                          page_slug,
+                          path,
+                          icon,
+                          logo,
+                        }: any) => {
+                          const itemPath = path ? path : `/about/${page_slug}`;
+                          const itemIsActive = pathname === itemPath;
+
+                          return (
+                            <Link
+                              key={id}
+                              href={itemPath}
+                              onClick={() => setActiveSubMenu(null)}
+                              className={`flex gap-3 items-center px-3 py-2.5 rounded-lg text-[15px] transition-colors duration-150 ${
+                                itemIsActive
+                                  ? "bg-primary-green/10 text-primary-green font-semibold"
+                                  : "text-gray-700 hover:bg-gray-100 hover:text-primary-green"
+                              }`}
+                            >
+                              <figure className="size-[22px] relative shrink-0">
+                                {icon ? (
+                                  <Image
+                                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${icon}`}
+                                    alt="icon"
+                                    fill
+                                    unoptimized
+                                    className="size-full object-cover"
+                                  />
+                                ) : (
+                                  <Image
+                                    src={logo}
+                                    alt="logo"
+                                    fill
+                                    unoptimized
+                                    className="size-full object-cover"
+                                  />
+                                )}
+                              </figure>
+
+                              <span>{page_title}</span>
+                            </Link>
+                          );
+                        },
+                      )}
+                    </div>
+                  </div>
                 );
               })}
-
-              {/* Sub Menu */}
-              <div
-                onClick={e => e.stopPropagation()}
-                className={`absolute z-10 top-12 ${
-                  activeSubMenu === 4 ? "-right-32" : "-right-56"
-                } bg-white drop-shadow  w-[280px] py-7 px-5 border-gray-50 rounded-lg flex flex-col gap-7 ${
-                  showMenu && (activeSubMenu === 4 || activeSubMenu === 5)
-                    ? "block"
-                    : "hidden"
-                }`}
-              >
-                {navLins?.map(
-                  item =>
-                    item?.id === activeSubMenu &&
-                    item?.sub_menu?.map(
-                      ({
-                        id,
-                        page_title,
-                        page_slug,
-                        path,
-                        icon,
-                        logo,
-                      }: any) => (
-                        <Link
-                          key={id}
-                          href={`${path ? path : `/about/${page_slug}`}`}
-                          onClick={() => setShowMenu(false)}
-                          className={`flex gap-2.5 items-center text-[17px] duration-300 transition-all text-primary-green ${
-                            (pathname === `/about/${page_slug}` ||
-                              pathname === path) &&
-                            "font-semibold text-primary-green"
-                          }
-                        `}
-                        >
-                          <figure className="size-[24px] relative">
-                            {icon ? (
-                              <Image
-                                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${icon}`}
-                                alt="icon"
-                                fill
-                                unoptimized
-                                className="size-full object-cover"
-                              />
-                            ) : (
-                              <Image
-                                src={logo}
-                                alt="logo"
-                                fill
-                                unoptimized
-                                className="size-full object-cover"
-                              />
-                            )}
-                          </figure>
-
-                          <span>{page_title}</span>
-                        </Link>
-                      ),
-                    ),
-                )}
-              </div>
             </div>
           </div>
 

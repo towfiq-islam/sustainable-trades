@@ -39,7 +39,9 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
         <div className="mt-5 grid lg:grid-cols-2 grid-cols-1 xl:gap-x-[96px] gap-x-10 items-center lg:gap-y-10 gap-y-5 font-lato">
           {/* Shop Name */}
           <div>
-            <p className="form-label">Name Your Shop *</p>
+            <p className="form-label">
+              Name Your Shop <span>*</span>
+            </p>
             <input
               type="text"
               className="form-input"
@@ -55,7 +57,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
               })}
             />
             {errors.shop_name && (
-              <p className="text-red-600">
+              <p className="text-red-600 text-sm pt-1">
                 {errors.shop_name.message as string}
               </p>
             )}
@@ -103,7 +105,8 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
           {/* Shop Photo */}
           <div>
             <p className="text-[18px] text-secondary-black font-lato lg:text-start text-center">
-              Add A Profile Photo *
+              Add A Profile Photo{" "}
+              <span className="text-red-600 text-xl">*</span>
             </p>
 
             <div
@@ -147,7 +150,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
                     }}
                   />
                   {errors.shop_image && (
-                    <p className="text-red-600">
+                    <p className="text-red-600 text-center text-sm pt-2">
                       {errors.shop_image.message as string}
                     </p>
                   )}
@@ -159,7 +162,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
           {/* Cover Photo */}
           <div className="w-full lg:mt-0 mt-10">
             <p className="text-[18px] text-secondary-black font-lato lg:text-start text-center">
-              Add A Shop Banner *
+              Add A Shop Banner <span className="text-red-600 text-xl">*</span>
             </p>
 
             <div
@@ -204,7 +207,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
                     }}
                   />
                   {errors.shop_banner && (
-                    <p className="text-red-600">
+                    <p className="text-red-600 text-sm pt-2">
                       {errors.shop_banner.message as string}
                     </p>
                   )}

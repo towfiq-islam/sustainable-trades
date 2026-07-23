@@ -6,14 +6,15 @@ const allowedCountries = Country.getAllCountries().filter(
 );
 
 const AddressForm = () => {
-  const [state, setState] = useState<any>(null);
-  const [country, setCountry] = useState<any>(null);
-  const usStates = State.getStatesOfCountry("US");
   const {
     register,
     setValue,
+    getValues,
     formState: { errors },
   } = useFormContext();
+
+  const [state, setState] = useState<any>(() => getValues("state") || "");
+  const [country, setCountry] = useState<any>(() => getValues("country") || "");
 
   return (
     <form className="my-6 flex flex-col gap-3">
@@ -28,7 +29,7 @@ const AddressForm = () => {
           placeholder="Address Line"
         />
         {errors.address_line_1 && (
-          <span className="text-red-500">
+          <span className="text-red-500 text-sm pt-1">
             {errors.address_line_1.message as string}
           </span>
         )}
@@ -53,13 +54,15 @@ const AddressForm = () => {
           placeholder="City"
         />
         {errors.city && (
-          <span className="text-red-500">{errors.city.message as string}</span>
+          <span className="text-red-500 text-sm pt-1">
+            {errors.city.message as string}
+          </span>
         )}
       </div>
 
       {/* Zip */}
       <div>
-        <p className="form-label font-bold">zip_code *</p>
+        <p className="form-label font-bold">Zip Code *</p>
         <input
           type="text"
           {...register("zip_code", { required: "zip_code is required" })}
@@ -67,13 +70,12 @@ const AddressForm = () => {
           placeholder="zip_code"
         />
         {errors.zip_code && (
-          <span className="text-red-500">
+          <span className="text-red-500 text-sm pt-1">
             {errors.zip_code.message as string}
           </span>
         )}
       </div>
 
-      {/* State + country */}
       <div className="grid grid-cols-2 gap-5">
         {/* Country */}
         <div>
@@ -103,7 +105,7 @@ const AddressForm = () => {
           </select>
 
           {errors.country && (
-            <span className="text-red-500">
+            <span className="text-red-500 text-sm pt-1">
               {errors.country.message as string}
             </span>
           )}
@@ -128,7 +130,7 @@ const AddressForm = () => {
           >
             <option value="">Select State</option>
 
-            {usStates.map(item => (
+            {State.getStatesOfCountry(country).map(item => (
               <option key={item.isoCode} value={item.isoCode}>
                 {item.name} ({item.isoCode})
               </option>
@@ -136,7 +138,7 @@ const AddressForm = () => {
           </select>
 
           {errors.state && (
-            <span className="text-red-500">
+            <span className="text-red-500 text-sm pt-1">
               {errors.state.message as string}
             </span>
           )}

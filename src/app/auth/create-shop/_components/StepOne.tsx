@@ -1,5 +1,4 @@
-"use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { BsEyeFill } from "react-icons/bs";
 import { PiEyeClosed } from "react-icons/pi";
@@ -30,10 +29,12 @@ const StepOne = ({ step, totalSteps }: any) => {
           Note: Email and password entered here will be your login credentials
         </h6>
 
-        <div className="mt-12 grid lg:grid-cols-2 grid-cols-1 gap-x-[96px] lg:gap-y-10 gap-y-5 font-lato">
+        <div className="mt-12 grid lg:grid-cols-2 grid-cols-1 gap-x-20 lg:gap-y-10 gap-y-5 font-lato">
           {/* First Name */}
           <div>
-            <p className="form-label">First Name *</p>
+            <p className="form-label">
+              First Name <span>*</span>
+            </p>
             <input
               type="text"
               className="form-input"
@@ -43,7 +44,7 @@ const StepOne = ({ step, totalSteps }: any) => {
               })}
             />
             {errors.first_name?.message && (
-              <p className="text-red-600">
+              <p className="text-red-600 text-sm pt-1">
                 {errors.first_name.message as string}
               </p>
             )}
@@ -51,7 +52,9 @@ const StepOne = ({ step, totalSteps }: any) => {
 
           {/* Last Name */}
           <div>
-            <p className="form-label">Last Name *</p>
+            <p className="form-label">
+              Last Name <span>*</span>
+            </p>
             <input
               type="text"
               className="form-input"
@@ -59,7 +62,7 @@ const StepOne = ({ step, totalSteps }: any) => {
               {...register("last_name", { required: "Last name is required" })}
             />
             {errors.last_name && (
-              <p className="text-red-600">
+              <p className="text-red-600 text-sm pt-1">
                 {errors.last_name.message as string}
               </p>
             )}
@@ -67,7 +70,9 @@ const StepOne = ({ step, totalSteps }: any) => {
 
           {/* Email */}
           <div>
-            <p className="form-label">Email / Log In *</p>
+            <p className="form-label">
+              Email <span>*</span>
+            </p>
             <input
               type="email"
               className="form-input"
@@ -78,13 +83,17 @@ const StepOne = ({ step, totalSteps }: any) => {
               })}
             />
             {errors.email && (
-              <p className="text-red-600">{errors.email.message as string}</p>
+              <p className="text-red-600 text-sm pt-1">
+                {errors.email.message as string}
+              </p>
             )}
           </div>
 
           {/* Phone Number */}
           <div>
-            <p className="form-label">Phone Number *</p>
+            <p className="form-label">
+              Phone Number <span>*</span>
+            </p>
             <input
               type="number"
               className="form-input"
@@ -98,13 +107,17 @@ const StepOne = ({ step, totalSteps }: any) => {
               })}
             />
             {errors.phone && (
-              <p className="text-red-600">{errors.phone.message as string}</p>
+              <p className="text-red-600 text-sm pt-1">
+                {errors.phone.message as string}
+              </p>
             )}
           </div>
 
           {/* Password */}
           <div className="relative">
-            <p className="form-label">Password *</p>
+            <p className="form-label">
+              Password <span>*</span>
+            </p>
             <input
               type={showPassword ? "text" : "password"}
               className="form-input pr-10"
@@ -126,7 +139,7 @@ const StepOne = ({ step, totalSteps }: any) => {
               )}
             </button>
             {errors.password && (
-              <p className="text-red-600">
+              <p className="text-red-600 text-sm pt-1">
                 {errors.password.message as string}
               </p>
             )}
@@ -134,7 +147,9 @@ const StepOne = ({ step, totalSteps }: any) => {
 
           {/* Re-enter Password */}
           <div className="relative">
-            <p className="form-label">Re-enter Password *</p>
+            <p className="form-label">
+              Re-enter Password <span>*</span>
+            </p>
 
             <input
               type={showRePassword ? "text" : "password"}
@@ -159,7 +174,7 @@ const StepOne = ({ step, totalSteps }: any) => {
               )}
             </button>
             {errors.password_confirmation && (
-              <p className="text-red-600">
+              <p className="text-red-600 text-sm pt-1">
                 {errors.password_confirmation.message as string}
               </p>
             )}

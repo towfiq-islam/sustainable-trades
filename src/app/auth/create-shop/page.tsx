@@ -1,14 +1,13 @@
 import CreateShop from "./_components/CreateShop";
 
-type PageProps = {
+type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-const page = async ({ searchParams }: PageProps) => {
+const page = async ({ searchParams }: Props) => {
   const params = await searchParams;
-  const step = params.step;
-
-  return <CreateShop/>;
+  const step = Number(params?.step);
+  return <CreateShop newStep={step} />;
 };
 
 export default page;

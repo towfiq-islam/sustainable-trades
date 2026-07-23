@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Container from "@/Components/Common/Container";
 import { useForm, FormProvider } from "react-hook-form";
 import { CheckSvg, StepSvg } from "@/Components/Svg/SvgContainer";
@@ -21,11 +20,9 @@ type StepItem = {
   component: React.ComponentType<any>;
 };
 
-const CreateShop = () => {
+const CreateShop = ({ newStep }: { newStep: number }) => {
   const { setAuthenticated } = useAuth();
-  const searchParams = useSearchParams();
   const formRef = useRef<HTMLDivElement | null>(null);
-  const newStep = Number(searchParams.get("step"));
   const [step, setStep] = useState<number>(1);
   const [createShop, { isLoading }] = useCreateShopMutation();
   const onNext = () => setStep(prev => Math.min(prev + 1, steps.length));

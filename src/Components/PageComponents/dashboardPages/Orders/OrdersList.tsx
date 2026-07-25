@@ -93,7 +93,7 @@ const OrdersList = ({
   };
 
   return (
-    <section className="pt-10">
+    <section>
       {showHeader && (
         <DashBoardHeader heading="Yours Orders" placeholder="Search Orders" />
       )}

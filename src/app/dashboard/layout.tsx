@@ -1,4 +1,5 @@
 import DashboardLayoutClient from "@/Shared/DashboardLayoutClient";
+import { getUser } from "@/lib/getUser";
 import { serverFetch } from "@/lib/serverFetch";
 
 export default async function DashboardLayout({
@@ -10,6 +11,9 @@ export default async function DashboardLayout({
     endpoint: "/api/users/data",
     mode: "SSR",
   });
+
+  const user = await getUser();
+  console.log(user);
 
   return (
     <DashboardLayoutClient initialUser={initialUser?.data}>

@@ -50,10 +50,6 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
                 required: "Shop name is required",
                 minLength: { value: 4, message: "Minimum 4 characters" },
                 maxLength: { value: 30, message: "Maximum 30 characters" },
-                pattern: {
-                  value: /^[A-Za-z0-9 ]+$/,
-                  message: "Only letters, numbers, and spaces allowed",
-                },
               })}
             />
             {errors.shop_name && (

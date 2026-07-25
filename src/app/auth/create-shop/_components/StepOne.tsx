@@ -124,7 +124,7 @@ const StepOne = ({ step, totalSteps }: any) => {
               placeholder="Password"
               {...register("password", {
                 required: "Password is required",
-                minLength: { value: 6, message: "Minimum length is 6" },
+                minLength: { value: 8, message: "Minimum length is 8" },
               })}
             />
             <button

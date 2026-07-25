@@ -23,15 +23,9 @@ const ProdashboardStatistics = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-x-20 lg:gap-y-12 pt-4 lg:pt-8 pb-8 lg:pb-24 lg:px-20">
         <div className="border border-accent-gray p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
-            <div className="flex justify-between">
-              <h5 className="text-[16px] text-secondary-black font-semibold text-center">
-                Listings
-              </h5>
-              <h6 className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer">
-                More
-                <FaAngleRight />
-              </h6>
-            </div>
+            <h5 className="text-[16px] text-secondary-black font-semibold">
+              Listings
+            </h5>
 
             <div className="flex justify-between">
               <h5 className="text-[14px] text-secondary-black font-semibold text-center">
@@ -65,15 +59,9 @@ const ProdashboardStatistics = () => {
 
         <div className="border border-accent-gray p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
-            <div className="flex justify-between">
-              <h5 className="text-[16px] text-secondary-black font-semibold text-center">
-                Orders
-              </h5>
-              <h6 className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer">
-                More
-                <FaAngleRight />
-              </h6>
-            </div>
+            <h5 className="text-[16px] text-secondary-black font-semibold">
+              Orders
+            </h5>
 
             <div className="flex justify-between">
               <h5 className="text-[14px] text-secondary-black font-semibold text-center">
@@ -106,15 +94,9 @@ const ProdashboardStatistics = () => {
 
         <div className="border border-accent-gray p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
-            <div className="flex justify-between">
-              <h5 className="text-[16px] text-secondary-black font-semibold text-center">
-                Trades
-              </h5>
-              <h6 className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer">
-                More
-                <FaAngleRight />
-              </h6>
-            </div>
+            <h5 className="text-[16px] text-secondary-black font-semibold">
+              Trades
+            </h5>
 
             <div className="flex justify-between">
               <h5 className="text-[14px] text-secondary-black font-semibold text-center">
@@ -146,15 +128,9 @@ const ProdashboardStatistics = () => {
 
         <div className="border border-accent-gray p-4 rounded-[8px]">
           <div className="flex flex-col gap-y-4">
-            <div className="flex justify-between">
-              <h5 className="text-[16px] text-secondary-black font-semibold text-center">
-                Visitors
-              </h5>
-              <h6 className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer">
-                More
-                <FaAngleRight />
-              </h6>
-            </div>
+            <h5 className="text-[16px] text-secondary-black font-semibold">
+              Visitors
+            </h5>
 
             <div className="flex justify-between">
               <h5 className="text-[14px] text-secondary-black font-semibold text-center">

@@ -7,6 +7,8 @@ import {
   useClearCartMutation,
   useGetProductCartQuery,
 } from "@/redux/api/cartApi";
+import emptyAnimation from "@/Assets/cart.json";
+import Lottie from "lottie-react";
 
 const PaymentOptions = () => {
   const { data: cartData, isLoading } = useGetProductCartQuery();
@@ -21,9 +23,11 @@ const PaymentOptions = () => {
             : "Cart is empty"}
         </h3>
 
-        <p className="text-lg text-secondary-black font-semibold">
-          Subtotal: ${cartData?.data?.total_price?.toFixed(2)}
-        </p>
+        {cartData?.data?.total_cart_items && (
+          <p className="text-lg text-secondary-black font-semibold">
+            Subtotal: ${cartData?.data?.total_price?.toFixed(2)}
+          </p>
+        )}
       </div>
 
       <p className="text-secondary-gray mb-5">
@@ -53,16 +57,30 @@ const PaymentOptions = () => {
       )}
 
       <div className="space-y-7">
-        {isLoading
-          ? [1, 2].map((_, idx) => <CartItemSkeleton key={idx} />)
-          : !cartData?.data || cartData?.data?.length === 0
-            ? "No Cart Found"
-            : cartData?.data?.cart?.map((item: any) => (
-                <CartItem
-                  key={item?.id}
-                  item={item}
-                />
-              ))}
+        {isLoading ? (
+          [1, 2].map((_, idx) => <CartItemSkeleton key={idx} />)
+        ) : !cartData?.data || cartData?.data?.length === 0 ? (
+          <div className="flex flex-col gap-2 md:gap-3 items-center">
+            <div className="w-40 md:w-48 lg:w-54 mx-auto">
+              <Lottie
+                animationData={emptyAnimation}
+                loop={true}
+                autoplay={true}
+              />
+            </div>
+            <h3 className="text-lg md:text-xl lg:text-2xl font-medium mb-1">
+              Your Cart is Empty
+            </h3>
+            <h3 className="text-sm md:text-base italic text-gray-500 text-center max-w-md mx-auto">
+              Add some awesome products to your cart to get started on your next
+              mission.
+            </h3>
+          </div>
+        ) : (
+          cartData?.data?.cart?.map((item: any) => (
+            <CartItem key={item?.id} item={item} />
+          ))
+        )}
       </div>
     </section>
   );

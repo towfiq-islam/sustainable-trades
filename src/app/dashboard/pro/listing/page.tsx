@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { ProductRowSkeleton } from "@/Components/Loader/Loader";
 import { useGetProductsQuery } from "@/redux/api/productApi";
 import { TbEdit } from "react-icons/tb";
+import { FiPackage } from "react-icons/fi";
 
 type ImageItem = {
   image: string;
@@ -92,93 +93,135 @@ export default function Page() {
 
       {/* Desktop Table */}
       <div className="hidden lg:block mt-10">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="text-left border-b border-accent-gray">
-              <th className="text-secondary-black font-semibold text-[16px] pb-5">
-                Product
-              </th>
-              <th className="text-secondary-black font-semibold text-[16px] pb-5">
-                Approval Status
-              </th>
-              <th className="text-secondary-black font-semibold text-[16px] pb-5">
-                Stock
-              </th>
-              <th className="text-secondary-black font-semibold text-[16px] pb-5">
-                Price
-              </th>
-              <th className="text-secondary-black font-semibold text-[16px] pb-5">
-                Cost
-              </th>
-              <th className="text-secondary-black font-semibold text-[16px] pb-5">
-                Action
-              </th>
-            </tr>
-          </thead>
+        {isLoading ? (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="text-left border-b border-accent-gray">
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Product
+                </th>
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Approval Status
+                </th>
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Stock
+                </th>
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Price
+                </th>
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Cost
+                </th>
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from({ length: 3 }).map((_, idx) => (
+                <ProductRowSkeleton key={idx} />
+              ))}
+            </tbody>
+          </table>
+        ) : allListings?.data?.length > 0 ? (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="text-left border-b border-accent-gray">
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Product
+                </th>
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Approval Status
+                </th>
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Stock
+                </th>
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Price
+                </th>
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Cost
+                </th>
+                <th className="text-secondary-black font-semibold text-[16px] pb-5">
+                  Action
+                </th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {isLoading
-              ? Array.from({ length: 3 }).map((_, idx) => (
-                  <ProductRowSkeleton key={idx} />
-                ))
-              : allListings?.data?.map((p: productItem) => (
-                  <tr
-                    key={p?.id}
-                    className="border-b border-accent-gray hover:bg-gray-50"
-                  >
-                    <td className="py-3 text-secondary-black font-semibold text-[14px]">
-                      <div className="flex items-center gap-5">
-                        <figure className="h-[80px] w-[100px] rounded-lg relative">
-                          <Image
-                            src={`${process.env.NEXT_PUBLIC_SITE_URL}/${p?.images[0]?.image}`}
-                            alt={p?.product_name}
-                            fill
-                            unoptimized
-                            className="h-full w-full rounded-lg"
-                          />
-                        </figure>
+            <tbody>
+              {allListings?.data?.map((p: productItem) => (
+                <tr
+                  key={p?.id}
+                  className="border-b border-accent-gray hover:bg-gray-50"
+                >
+                  <td className="py-3 text-secondary-black font-semibold text-[14px]">
+                    <div className="flex items-center gap-5">
+                      <figure className="h-[80px] w-[100px] rounded-lg relative">
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_SITE_URL}/${p?.images[0]?.image}`}
+                          alt={p?.product_name}
+                          fill
+                          unoptimized
+                          className="h-full w-full rounded-lg"
+                        />
+                      </figure>
 
-                        <span>{p?.product_name}</span>
-                      </div>
-                    </td>
-                    <td>
-                      <span
-                        className={`px-4 py-2 rounded-full text-sm capitalize`}
-                      >
-                        {p.status}
-                      </span>
-                    </td>
+                      <span>{p?.product_name}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span
+                      className={`px-4 py-2 rounded-full text-sm capitalize`}
+                    >
+                      {p.status}
+                    </span>
+                  </td>
 
-                    <td className="text-secondary-black font-semibold text-[14px]">
-                      {p?.out_of_stock
-                        ? "Out of Stock"
-                        : p?.unlimited_stock
-                          ? "Unlimited stock"
-                          : p?.product_quantity}
-                    </td>
+                  <td className="text-secondary-black font-semibold text-[14px]">
+                    {p?.out_of_stock
+                      ? "Out of Stock"
+                      : p?.unlimited_stock
+                        ? "Unlimited stock"
+                        : p?.product_quantity}
+                  </td>
 
-                    <td className="text-secondary-black font-semibold text-[14px]">
-                      ${p.product_price.toFixed(2)}
-                    </td>
+                  <td className="text-secondary-black font-semibold text-[14px]">
+                    ${p.product_price.toFixed(2)}
+                  </td>
 
-                    <td className="text-secondary-black font-semibold text-[14px]">
-                      ${Number(p?.cost)?.toFixed(2)}
-                    </td>
+                  <td className="text-secondary-black font-semibold text-[14px]">
+                    ${Number(p?.cost)?.toFixed(2)}
+                  </td>
 
-                    <td className="relative">
-                      <Link
-                        href={`/dashboard/pro/view-listing/${p.id}`}
-                        className="w-fit mx-auto"
-                      >
-                        <button className="text-center cursor-pointer text-xl">
-                          <TbEdit />
-                        </button>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-          </tbody>
-        </table>
+                  <td className="relative">
+                    <Link
+                      href={`/dashboard/pro/view-listing/${p.id}`}
+                      className="w-fit mx-auto"
+                    >
+                      <button className="text-center cursor-pointer text-xl">
+                        <TbEdit />
+                      </button>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="flex flex-col items-center justify-center text-center py-16 border border-gray-200 rounded-[8px]">
+            <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+              <FiPackage className="text-accent-red text-2xl" />
+            </div>
+            <h6 className="text-secondary-black font-semibold">
+              {search ? "No matching listings" : "No listings yet"}
+            </h6>
+            <p className="text-sm text-gray-500 font-normal mt-3 max-w-[260px]">
+              {search
+                ? "Try a different search term."
+                : "Products you add to your store will show up here."}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Mobile Card Layout */}

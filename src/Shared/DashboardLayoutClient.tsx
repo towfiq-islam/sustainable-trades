@@ -224,15 +224,18 @@ const customerNavLinks = [
 type Props = {
   children: ReactNode;
   initialUser?: any;
+  Myuser?: any;
 };
 
 export default function DashboardLayoutClient({
+  Myuser,
   children,
   initialUser,
 }: Props) {
   const { user: liveUser } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const user = liveUser ?? initialUser;
+  console.log(Myuser);
 
   return (
     <section className=" flex flex-col">

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { FiDollarSign, FiRepeat } from "react-icons/fi";
 
 type DateRange = {
   from: string;
@@ -47,21 +48,25 @@ const AccountTable = ({
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between gap-3 border-b border-gray-400 pb-2">
+      <div
+        className={`flex flex-col sm:flex-row justify-between gap-3 ${data?.length > 0 && "border-b pb-2"} border-gray-400`}
+      >
         <h4 className="text-[20px] sm:text-[24px] font-semibold text-secondary-black">
           {title}
         </h4>
 
-        <select
-          className="w-full sm:w-[200px] border rounded-lg p-2"
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
-        >
-          <option value="last_30_days">Last 30 Days</option>
-          <option value="year_to_date">Year to Date</option>
-          <option value="custom_date_range">Custom Date Range</option>
-          <option value="specific_year">Specific Year</option>
-        </select>
+        {data?.length > 0 && (
+          <select
+            className="w-full sm:w-[200px] border rounded-lg p-2"
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+          >
+            <option value="last_30_days">Last 30 Days</option>
+            <option value="year_to_date">Year to Date</option>
+            <option value="custom_date_range">Custom Date Range</option>
+            <option value="specific_year">Specific Year</option>
+          </select>
+        )}
       </div>
 
       {/* Date range */}
@@ -96,26 +101,25 @@ const AccountTable = ({
 
       {/* Desktop Table */}
       <div className="overflow-x-auto mt-5">
-        <table className="w-full min-w-[800px] border-collapse">
-          <thead>
-            <tr className="bg-primary-green text-[#fff] text-[14px] sm:text-[16px] font-semibold">
-              <th className="py-2 px-4 text-left"># Order</th>
-              <th className="py-2 px-4 text-left">Revenue</th>
-              <th className="py-2 px-4 text-left">Profit</th>
-              <th className="py-2 px-4 text-left">Expenses</th>
-              <th className="py-2 px-4 text-left">Shipping</th>
-              <th className="py-2 px-4 text-left">Sales Tax</th>
-              <th className="py-2 px-4 text-left">Tax State</th>
-              <th className="py-2 px-4 text-left">Discount</th>
-              <th className="py-2 px-4 text-left">Payment Method</th>
-              <th className="py-2 px-4 text-left">Total</th>
-              <th className="py-2 px-4 text-center">Date</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {isLoading ? (
-              Array.from({ length: 4 }).map((_, idx) => (
+        {isLoading ? (
+          <table className="w-full min-w-[800px] border-collapse">
+            <thead>
+              <tr className="bg-primary-green text-[#fff] text-[14px] sm:text-[16px] font-semibold">
+                <th className="py-2 px-4 text-left"># Order</th>
+                <th className="py-2 px-4 text-left">Revenue</th>
+                <th className="py-2 px-4 text-left">Profit</th>
+                <th className="py-2 px-4 text-left">Expenses</th>
+                <th className="py-2 px-4 text-left">Shipping</th>
+                <th className="py-2 px-4 text-left">Sales Tax</th>
+                <th className="py-2 px-4 text-left">Tax State</th>
+                <th className="py-2 px-4 text-left">Discount</th>
+                <th className="py-2 px-4 text-left">Payment Method</th>
+                <th className="py-2 px-4 text-left">Total</th>
+                <th className="py-2 px-4 text-center">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from({ length: 4 }).map((_, idx) => (
                 <tr
                   key={idx}
                   className="border-b border-gray-300 animate-pulse"
@@ -151,9 +155,28 @@ const AccountTable = ({
                     <div className="h-4 w-24 bg-gray-200 rounded mx-auto" />
                   </td>
                 </tr>
-              ))
-            ) : data?.length > 0 ? (
-              data?.map((row, idx) => (
+              ))}
+            </tbody>
+          </table>
+        ) : data?.length > 0 ? (
+          <table className="w-full min-w-[800px] border-collapse">
+            <thead>
+              <tr className="bg-primary-green text-[#fff] text-[14px] sm:text-[16px] font-semibold">
+                <th className="py-2 px-4 text-left"># Order</th>
+                <th className="py-2 px-4 text-left">Revenue</th>
+                <th className="py-2 px-4 text-left">Profit</th>
+                <th className="py-2 px-4 text-left">Expenses</th>
+                <th className="py-2 px-4 text-left">Shipping</th>
+                <th className="py-2 px-4 text-left">Sales Tax</th>
+                <th className="py-2 px-4 text-left">Tax State</th>
+                <th className="py-2 px-4 text-left">Discount</th>
+                <th className="py-2 px-4 text-left">Payment Method</th>
+                <th className="py-2 px-4 text-left">Total</th>
+                <th className="py-2 px-4 text-center">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data?.map((row, idx) => (
                 <tr
                   key={idx}
                   className="border-b border-gray-300 text-secondary-black text-[14px] font-medium"
@@ -177,12 +200,27 @@ const AccountTable = ({
                   <td className="py-3 px-4">{row.total}</td>
                   <td className="py-3 px-4 text-center">{row?.date}</td>
                 </tr>
-              ))
-            ) : (
-              <p className="text-primary-red pt-5">"No data found"</p>
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="flex flex-col items-center justify-center text-center py-16 border border-gray-200 rounded-[8px]">
+            <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+              {isTradeAndBarter ? (
+                <FiRepeat className="text-accent-red text-2xl" />
+              ) : (
+                <FiDollarSign className="text-accent-red text-2xl" />
+              )}
+            </div>
+            <h6 className="text-secondary-black font-semibold">
+              No {isTradeAndBarter ? "trades" : "sales"} in this period
+            </h6>
+            <p className="text-sm text-gray-500 font-normal mt-2 max-w-[280px]">
+              Try widening the date range or switching to a different filter
+              above.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

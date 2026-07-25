@@ -2,6 +2,7 @@
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { CustomerReviewCardSkeleton } from "@/Components/Loader/Loader";
 import Image from "next/image";
+import { FiStar } from "react-icons/fi";
 
 type ImageItem = {
   image: string;
@@ -68,7 +69,17 @@ const Review = ({ reviews, isLoading, setPage }: ReviewProps) => {
             </div>
           ))
         ) : (
-          <p className="text-red-500 font-semibold text-lg">No Reviews Found</p>
+          <div className="col-span-full flex flex-col items-center justify-center text-center">
+            <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+              <FiStar className="text-accent-red text-2xl" />
+            </div>
+            <h6 className="text-secondary-black font-semibold">
+              No reviews yet
+            </h6>
+            <p className="text-sm text-gray-500 font-normal mt-2 max-w-[280px]">
+              Reviews customers leave on your products will show up here.
+            </p>
+          </div>
         )}
       </div>
 

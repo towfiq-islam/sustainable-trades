@@ -131,10 +131,26 @@ const InboxMessage = ({ search, activeTab }: Props) => {
           ),
         )
       ) : (
-        <div className="pt-20 flex justify-center items-center flex-col gap-1">
-          <IoChatboxEllipsesOutline className="text-5xl text-gray-700" />
-          <p className="text-gray-700 text-lg font-semibold">
-            No Conversation Found!!
+        <div className="pt-20 pb-10 flex justify-center items-center flex-col gap-1 text-center px-5">
+          <IoChatboxEllipsesOutline className="text-5xl text-gray-500 mb-3" />
+          <p className="text-secondary-black font-semibold mb-1">
+            {search
+              ? "No conversations match your search"
+              : activeTab === "unread"
+                ? "No unread messages"
+                : activeTab === "sent"
+                  ? "No sent messages yet"
+                  : "No conversations yet"}
+              </p>
+              
+          <p className="text-gray-500 text-sm font-normal max-w-[280px]">
+            {search
+              ? "Try a different name or check your spelling."
+              : activeTab === "unread"
+                ? "You're all caught up — nice work."
+                : activeTab === "sent"
+                  ? "Messages you send will appear here."
+                  : "When customers or shops message you, it'll show up here."}
           </p>
         </div>
       )}

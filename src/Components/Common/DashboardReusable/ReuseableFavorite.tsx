@@ -6,6 +6,7 @@ import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { useGetFollowedShopsQuery } from "@/redux/api/shopApi";
 import { useGetMyFavoriteQuery } from "@/redux/api/productApi";
+import { FiHeart, FiHome } from "react-icons/fi";
 
 type ShopItem = {
   id: number;
@@ -81,9 +82,17 @@ const ReuseableFavorite = () => {
               />
             ))
           ) : (
-            <p className="text-gray-500 text-center col-span-full">
-              No products found in your wishlist.
-            </p>
+            <div className="col-span-full flex flex-col items-center justify-center text-center py-16">
+              <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+                <FiHeart className="text-accent-red text-2xl" />
+              </div>
+              <h6 className="text-secondary-black font-semibold">
+                Your wishlist is empty
+              </h6>
+              <p className="text-sm text-gray-500 font-normal mt-2 max-w-xs">
+                Tap the heart icon on any product to save it here for later.
+              </p>
+            </div>
           )}
         </div>
       )}
@@ -98,10 +107,19 @@ const ReuseableFavorite = () => {
               <Shop key={item?.id} shop={item} />
             ))
           ) : (
-            <p className="text-gray-500 text-center col-span-full">
-              No followed shops found.
-            </p>
-          )}
+            <div className="col-span-full flex flex-col items-center justify-center text-center py-16">
+              <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+                <FiHome className="text-accent-red text-2xl" />
+              </div>
+              <h6 className="text-secondary-black font-semibold">
+                You're not following any shops yet
+              </h6>
+              <p className="text-sm text-gray-500 font-normal mt-2 max-w-xs">
+                Follow shops you like to keep track of their new listings and
+                deals.
+              </p>
+            </div>
+          )}{" "}
         </div>
       )}
     </>

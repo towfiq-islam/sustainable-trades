@@ -16,6 +16,7 @@ import {
   useApproveTradeOfferMutation,
   useCancelTradeOfferMutation,
 } from "@/redux/api/tradeApi";
+import { FiRepeat } from "react-icons/fi";
 
 export type TradeItem = {
   image: StaticImageData | string;
@@ -138,7 +139,17 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
           <TradeRequestSkeleton key={i} />
         ))
       ) : tradeRequests?.length === 0 ? (
-        <p className="text-center mt-5 h-[300px]">No Offered Found</p>
+        <div className="mt-10 flex flex-col items-center justify-center text-center py-16 border border-gray-200 rounded-[8px]">
+          <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+            <FiRepeat className="text-accent-red text-2xl" />
+          </div>
+          <h6 className="text-[15px] text-secondary-black font-semibold">
+            No trade requests yet
+          </h6>
+          <p className="text-sm text-gray-500 font-normal mt-2 max-w-xs">
+            When someone offers a trade for your listings, it'll show up here.
+          </p>
+        </div>
       ) : (
         <div className="h-[600px] overflow-y-auto mt-2 sm:p-6 flex flex-col gap-6">
           {tradeRequests?.map((trade: TradeRequest) => (

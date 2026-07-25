@@ -8,6 +8,7 @@ import {
   useDeleteAllNotificationsMutation,
   useGetNotificationsQuery,
 } from "@/redux/api/vendorApi";
+import { FiInbox } from "react-icons/fi";
 
 type notificationItem = {
   id: number;
@@ -36,17 +37,19 @@ const ReuseableNotification = () => {
             Notifications
           </h3>
 
-          <button
-            disabled={isPending}
-            onClick={() => deleteAllNotifications().unwrap()}
-            className="size-10 grid place-items-center rounded-lg cursor-pointer bg-primary-red disabled:cursor-not-allowed disabled:opacity-85"
-          >
-            {isPending ? (
-              <span className="inline-block animate-spin">⏳</span>
-            ) : (
-              <RiDeleteBin6Line className="text-xl text-white" />
-            )}
-          </button>
+          {notificationsData?.data?.notifications?.data?.length !== 0 && (
+            <button
+              disabled={isPending}
+              onClick={() => deleteAllNotifications().unwrap()}
+              className="size-10 grid place-items-center rounded-lg cursor-pointer bg-primary-red disabled:cursor-not-allowed disabled:opacity-85"
+            >
+              {isPending ? (
+                <span className="inline-block animate-spin">⏳</span>
+              ) : (
+                <RiDeleteBin6Line className="text-xl text-white" />
+              )}
+            </button>
+          )}
         </div>
 
         {isLoading ? (
@@ -54,8 +57,16 @@ const ReuseableNotification = () => {
             <NotificationSkeleton key={idx} />
           ))
         ) : notificationsData?.data?.notifications?.data?.length === 0 ? (
-          <div className="p-5 text-center text-red-500">
-            No notifications found
+          <div className="flex flex-col items-center justify-center text-center py-16 px-5">
+            <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+              <FiInbox className="text-accent-red text-2xl" />
+            </div>
+            <h6 className="text-secondary-black font-semibold">
+              You're all caught up
+            </h6>
+            <p className="text-sm text-gray-500 font-normal mt-2 max-w-xs">
+              New orders, trades, and messages will show up here as they happen.
+            </p>
           </div>
         ) : (
           notificationsData?.data?.notifications?.data?.map(
@@ -101,25 +112,22 @@ const ReuseableNotification = () => {
         )}
 
         {/* Pagination */}
-        {!isLoading && (
-          <div className="py-8 flex justify-center items-center gap-2 flex-wrap">
-            {notificationsData?.data?.notifications?.links?.map(
-              (item: any, idx: number) => (
-                <button
-                  key={idx}
-                  onClick={() => item.url && setPage(item.url.split("=")[1])}
-                  className={`px-3 py-1 rounded border transition-all duration-200 
-        ${
-          item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"
-        } 
-        ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                  disabled={!item.url}
-                  dangerouslySetInnerHTML={{ __html: item.label }}
-                />
-              ),
-            )}
-          </div>
-        )}
+        {!isLoading &&
+          notificationsData?.data?.notifications?.data?.length !== 0 && (
+            <div className="py-8 flex justify-center items-center gap-2 flex-wrap">
+              {notificationsData?.data?.notifications?.links?.map(
+                (item: any, idx: number) => (
+                  <button
+                    key={idx}
+                    onClick={() => item.url && setPage(item.url.split("=")[1])}
+                    className={`px-3 py-1 rounded border transition-all duration-200 ${item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"} ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                    disabled={!item.url}
+                    dangerouslySetInnerHTML={{ __html: item.label }}
+                  />
+                ),
+              )}
+            </div>
+          )}
       </div>
     </>
   );

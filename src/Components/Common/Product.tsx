@@ -18,6 +18,7 @@ import {
 } from "../Svg/SvgContainer";
 import { useAddFavoriteMutation } from "@/redux/api/productApi";
 import { useAddToCartMutation } from "@/redux/api/cartApi";
+import { useRouter } from "next/navigation";
 
 type imageItem = {
   id: number;
@@ -53,6 +54,7 @@ const Product = ({
   has_cart = true,
   isMiles = false,
 }: ProductProps) => {
+  const router = useRouter();
   const { user } = useAuth();
   const [addFavoriteMutation, { isLoading: isPending }] =
     useAddFavoriteMutation();
@@ -62,7 +64,9 @@ const Product = ({
   // Func for add to favorite
   const handleAddFavorite = (product_id: any) => {
     if (!user) {
-      return toast.error("Please login first to proceed");
+      toast.error("Please login first to proceed");
+      router.push("/auth/login");
+      return;
     }
     addFavoriteMutation(product_id)
       .unwrap()
@@ -77,7 +81,9 @@ const Product = ({
   // Func for add to cart
   const handleAddToCart = (id: number) => {
     if (!user) {
-      return toast.error("Please login first to proceed");
+      toast.error("Please login first to proceed");
+      router.push("/auth/login");
+      return;
     }
 
     addToCartMutation({ productId: id, data: { quantity: 1 } })

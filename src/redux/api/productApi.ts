@@ -22,13 +22,14 @@ export const productApi = apiSlice.injectEndpoints({
 
     // All Products
     getAllProducts: builder.query({
-      query: ({ search, lat, lng, page }) => ({
+      query: ({ search, lat, lng, page, per_page }) => ({
         url: "/api/all-products",
         params: {
           search,
           lat,
           lng,
           page,
+          per_page,
         },
       }),
       providesTags: ["product"],

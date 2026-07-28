@@ -25,7 +25,13 @@ export const chatApi = apiSlice.injectEndpoints({
 
     // Get Single Conversation
     getSingleConversation: builder.query({
-      query: ({ id, type }: { id: number; type: "private" | "order" }) => ({
+      query: ({
+        id,
+        type,
+      }: {
+        id: number;
+        type: "private" | "order" | "guest_order";
+      }) => ({
         url: "/api/message",
         params: {
           receiver_id: id,

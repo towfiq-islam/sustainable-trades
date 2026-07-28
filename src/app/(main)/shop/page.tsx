@@ -36,7 +36,6 @@ const page = () => {
   const [page, setPage] = useState<string>("");
   const [nearbyPage, setNearbyPage] = useState<string>("");
   const { data: spotlightData } = useGetMembershipSpotlightQuery({});
-
   const { data: allCategory, isLoading: categoryLoading } =
     useGetProductCategoriesQuery({});
 

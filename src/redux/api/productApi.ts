@@ -22,13 +22,14 @@ export const productApi = apiSlice.injectEndpoints({
 
     // All Products
     getAllProducts: builder.query({
-      query: ({ search, lat, lng, page }) => ({
+      query: ({ search, lat, lng, page, per_page }) => ({
         url: "/api/all-products",
         params: {
           search,
           lat,
           lng,
           page,
+          per_page,
         },
       }),
       providesTags: ["product"],
@@ -186,30 +187,6 @@ export const productApi = apiSlice.injectEndpoints({
       }),
 
       invalidatesTags: ["product", "favorite"],
-
-      // OPTIMISTIC UPDATE
-      // async onQueryStarted({ id, payload }, { dispatch, queryFulfilled }) {
-      //   const patchResult = dispatch(
-      //     apiSlice.util.updateQueryData(
-      //       "getNearbyProducts",
-      //       undefined,
-      //       draft => {
-      //         const product = draft.products.find(item => item.id === id);
-
-      //         if (product) {
-      //           product.title = payload.title;
-      //           product.price = payload.price;
-      //         }
-      //       },
-      //     ),
-      //   );
-
-      //   try {
-      //     await queryFulfilled;
-      //   } catch {
-      //     patchResult.undo();
-      //   }
-      // },
     }),
 
     // Product Categories

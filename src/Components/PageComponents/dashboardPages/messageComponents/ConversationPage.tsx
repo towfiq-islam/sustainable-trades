@@ -73,7 +73,7 @@ export type MessageItem = {
   };
 };
 
-export type ConversationType = "private" | "order";
+export type ConversationType = "private" | "order" | "guest_order";
 
 interface ConversationPageProps {
   conversationId: number;
@@ -299,6 +299,10 @@ const ConversationPage = ({
       formData.append("type", "order");
     }
 
+    if (type === "guest_order") {
+      formData.append("type", "guest_order");
+    }
+
     selectedFiles.forEach(file => {
       formData.append("file[]", file);
     });
@@ -435,7 +439,8 @@ const ConversationPage = ({
 
                 <div className="max-w-[550px]">
                   {/* Plain message */}
-                  {!msg.cart && !msg.order && (
+                  {/* {!msg.cart && !msg.order && ( */}
+                  {!msg.cart && (
                     <div
                       className={`${compact ? "text-sm py-2 px-3" : "text-[15px] py-3 px-3.5"} relative font-lato leading-[160%] rounded-[6px] shadow ${bubbleClass}`}
                     >
@@ -493,7 +498,7 @@ const ConversationPage = ({
                   )}
 
                   {/* Order message */}
-                  {msg.order && (
+                  {/* {msg.order && (
                     <AttachedItemCard message={msg.message} time={time}>
                       {msg.order.order_items.map(item => (
                         <ProductCard
@@ -506,7 +511,7 @@ const ConversationPage = ({
                         />
                       ))}
                     </AttachedItemCard>
-                  )}
+                  )} */}
                 </div>
               </div>
             );

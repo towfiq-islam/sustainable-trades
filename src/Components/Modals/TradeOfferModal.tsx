@@ -62,9 +62,7 @@ const TradeOfferModal = ({
 
   // Receiver trades
   const { data: tradeProducts, isLoading: tradeLoading } =
-    useGetTradeShopProductQuery(id, {
-      skip: !sellingOption,
-    });
+    useGetTradeShopProductQuery(id);
 
   // Sender trades
   const { data: myTradeProducts, isLoading: myTradeLoading } =

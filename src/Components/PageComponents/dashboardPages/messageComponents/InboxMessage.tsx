@@ -141,8 +141,8 @@ const InboxMessage = ({ search, activeTab }: Props) => {
                 : activeTab === "sent"
                   ? "No sent messages yet"
                   : "No conversations yet"}
-              </p>
-              
+          </p>
+
           <p className="text-gray-500 text-sm font-normal max-w-[280px]">
             {search
               ? "Try a different name or check your spelling."

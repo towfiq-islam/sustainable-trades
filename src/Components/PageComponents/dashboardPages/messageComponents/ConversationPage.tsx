@@ -76,7 +76,8 @@ export type MessageItem = {
 export type ConversationType = "private" | "order" | "guest_order";
 
 interface ConversationPageProps {
-  conversationId: number;
+  receiverId: number;
+  conversationId?: number;
   type: ConversationType;
   compact?: boolean;
 }
@@ -151,6 +152,7 @@ function AttachedItemCard({
 // ---- Main Component ----
 
 const ConversationPage = ({
+  receiverId,
   conversationId,
   type,
   compact,
@@ -202,11 +204,11 @@ const ConversationPage = ({
   const { data: singleConversation, isLoading: chatLoading } =
     useGetSingleConversationQuery(
       {
-        id: conversationId,
+        id: receiverId,
         type,
       },
       {
-        skip: !conversationId,
+        skip: !receiverId,
       },
     );
 
@@ -290,7 +292,10 @@ const ConversationPage = ({
 
     const formData = new FormData();
 
-    formData.append("receiver_id", String(conversationId));
+    formData.append("receiver_id", String(receiverId));
+    if (conversationId) {
+      formData.append("conversation_id", String(conversationId));
+    }
     if (message) {
       formData.append("message", message);
     }
@@ -299,9 +304,9 @@ const ConversationPage = ({
       formData.append("type", "order");
     }
 
-    if (type === "guest_order") {
-      formData.append("type", "guest_order");
-    }
+    // if (type === "guest_order") {
+    //   formData.append("type", "guest_order");
+    // }
 
     selectedFiles.forEach(file => {
       formData.append("file[]", file);
@@ -439,8 +444,7 @@ const ConversationPage = ({
 
                 <div className="max-w-[550px]">
                   {/* Plain message */}
-                  {/* {!msg.cart && !msg.order && ( */}
-                  {!msg.cart && (
+                  {!msg.cart && !msg.order && (
                     <div
                       className={`${compact ? "text-sm py-2 px-3" : "text-[15px] py-3 px-3.5"} relative font-lato leading-[160%] rounded-[6px] shadow ${bubbleClass}`}
                     >
@@ -498,7 +502,7 @@ const ConversationPage = ({
                   )}
 
                   {/* Order message */}
-                  {/* {msg.order && (
+                  {msg.order && (
                     <AttachedItemCard message={msg.message} time={time}>
                       {msg.order.order_items.map(item => (
                         <ProductCard
@@ -511,7 +515,7 @@ const ConversationPage = ({
                         />
                       ))}
                     </AttachedItemCard>
-                  )} */}
+                  )}
                 </div>
               </div>
             );

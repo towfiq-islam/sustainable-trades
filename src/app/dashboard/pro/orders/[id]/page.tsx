@@ -394,7 +394,7 @@ const Page = () => {
 
           <Link
             className="primary_btn"
-            href={`/dashboard/pro/messages/inbox/${singleOrder?.data?.user_id}`}
+            href={`/dashboard/pro/messages/inbox/${singleOrder?.data?.user_id}?type=${singleOrder?.data?.conversation?.type}`}
           >
             Go to Messages Board
           </Link>

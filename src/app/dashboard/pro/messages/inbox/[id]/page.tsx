@@ -1,11 +1,16 @@
 "use client";
+import { use } from "react";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
-import { useParams } from "next/navigation";
 
-const page = () => {
-  const params = useParams();
-  const id = Number(params.id);
-  return <ConversationPage receiverId={id} type="private" />;
+type Props = {
+  searchParams: Promise<{ type: string }>;
+  params: Promise<{ id: number }>;
+};
+
+const page = ({ params, searchParams }: Props) => {
+  const { id } = use(params);
+  const { type } = use(searchParams);
+  return <ConversationPage receiverId={id} type={type} />;
 };
 
 export default page;

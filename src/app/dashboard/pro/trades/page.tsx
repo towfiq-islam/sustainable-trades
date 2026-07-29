@@ -13,22 +13,8 @@ import {
 const Page = () => {
   const { data } = useGetTradeCountsQuery({});
   const { data: tradeData, isLoading } = useGetTradesQuery("");
-
   const [activeTab, setActiveTab] = useState("Pending");
 
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggle = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
-  // // map tab label to child index
-  // const tabIndexMap: Record<typeof initialTab, number> = {
-  //   Pending: 0,
-  //   Sent: 1,
-  //   Approved: 2,
-  //   Canceled: 3,
-  // };
   const tradetabs = [
     {
       id: 1,
@@ -123,40 +109,6 @@ const Page = () => {
           isLoading={isLoading}
         />
       )}
-
-      {/* <div className="w-2/5 mt-10 border border-gray-300 rounded-lg p-6 ml-5">
-        <h3 className="text-secondary-black text-[16px] font-semibold">
-          Tips for Trading
-        </h3>
-
-        <div className="mt-4 space-y-2">
-          {tips.map((tip, index) => (
-            <div key={index} className="border-b border-gray-400">
-              <div
-                className="flex justify-between items-center cursor-pointer py-2"
-                onClick={() => toggle(index)}
-              >
-                <h4 className="text-secondary-black text-[14px] font-normal">
-                  {tip.question}
-                </h4>
-                <FaAngleDown
-                  className={`transition-transform duration-300 ${
-                    openIndex === index ? "rotate-180" : ""
-                  }`}
-                />
-              </div>
-              <div
-                className={`overflow-hidden transition-[max-height] duration-500 ease-in-out`}
-                style={{
-                  maxHeight: openIndex === index ? "200px" : "0px",
-                }}
-              >
-                <p className="mt-2 text-secondary-gray text-[14px]">{tip.answer}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div> */}
     </div>
   );
 };

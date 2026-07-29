@@ -122,15 +122,17 @@ const CounterTrades = ({ id }: { id: string }) => {
     }));
   };
 
-  // shop products for addon
-  const getShopProducts = (product: any) =>
-    product?.product?.shop_info_id === data?.data?.sender?.shop_info?.id
-      ? requestedShopProduct?.data || []
-      : offerShopProduct?.data || [];
+  const getShopProductsForType = (type: "offered" | "requested") => {
+    const belongsToSender = type === "requested";
+    const isMine = isUserSender === belongsToSender;
+    return isMine
+      ? offerShopProduct?.data || []
+      : requestedShopProduct?.data || [];
+  };
 
   // Get single addon price
   const getAddonPrice = (itemId: number, addon: Addon, product: any) => {
-    const shopProducts = getShopProducts(product);
+    const shopProducts = getShopProductsForType(product?.type);
     const price =
       shopProducts.find((p: any) => +p.id === +addon.productId)
         ?.product_price || 0;
@@ -155,12 +157,23 @@ const CounterTrades = ({ id }: { id: string }) => {
   // Send counter
   const handleSendCounter = () => {
     if (!data?.data) return;
-    const receiverId = data?.data?.sender?.id;
+    // const receiverId = data?.data?.sender?.id;
+    const receiverId = isUserSender
+      ? data?.data?.receiver?.id
+      : data?.data?.sender?.id;
 
     const offeredItems: any[] = [];
     const requestedItems: any[] = [];
 
     data?.data?.items?.forEach((item: any) => {
+      const mainItem = {
+        product_id: selectedProducts[item.id],
+        quantity: quantities[item.id] || 1,
+      };
+      if (item.type === "offered") offeredItems.push(mainItem);
+      if (item.type === "requested") requestedItems.push(mainItem);
+
+      // include addons for this item
       const addons = addonProducts[item.id] || [];
       addons.forEach(a => {
         if (a.productId && a.quantity > 0) {
@@ -170,7 +183,6 @@ const CounterTrades = ({ id }: { id: string }) => {
         }
       });
     });
-
     if (offeredItems.length === 0 && requestedItems.length === 0) {
       toast.error("Please add at least one addon product before sending.");
       return;
@@ -196,7 +208,11 @@ const CounterTrades = ({ id }: { id: string }) => {
       formData.append(`requested_items[${i}][quantity]`, String(item.quantity));
     });
 
-    sendTradeOffer({ id, data: formData }).unwrap();
+    sendTradeOffer({ id, data: formData })
+      .unwrap()
+      .then(() => {
+        router.back();
+      });
   };
 
   if (offerLoading || requestLoading) {
@@ -223,8 +239,8 @@ const CounterTrades = ({ id }: { id: string }) => {
       </h3>
 
       <div>
-        {data?.data?.items
-          ?.sort((a: any, b: any) =>
+        {[...(data?.data?.items ?? [])]
+          .sort((a: any, b: any) =>
             a.type === "requested" && b.type === "offered" ? -1 : 1,
           )
           .map((product: any, i: number, sortedItems: any[]) => {
@@ -293,7 +309,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                       </div>
                       <div className="flex gap-x-2 items-center">
                         <LocationSvg1 />
-                        <h5 className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray font-lato">
+                        <h5 className="text-[12px] lg:text-[14px] text-accent-gray font-lato">
                           {product?.type === "offered"
                             ? data?.data?.receiver?.shop_info?.address
                                 ?.address_line_1
@@ -319,36 +335,30 @@ const CounterTrades = ({ id }: { id: string }) => {
                           }
                           className="px-4 py-2 rounded-[10px] border border-accent-gray w-full sm:w-[300px] xl:w-[500px]"
                         >
-                          {product?.type === "offered"
-                            ? offerShopProduct?.data?.map((p: any) => (
-                                <option key={p?.id} value={p?.id}>
-                                  {p?.product_name?.length > 50
-                                    ? `${p.product_name.substring(0, 50)}...`
-                                    : p?.product_name}{" "}
-                                </option>
-                              ))
-                            : requestedShopProduct?.data?.map((p: any) => (
-                                <option key={p?.id} value={p?.id}>
-                                  {p?.product_name?.length > 50
-                                    ? `${p.product_name.substring(0, 50)}...`
-                                    : p?.product_name}{" "}
-                                </option>
-                              ))}
+                          {getShopProductsForType(product?.type).map(
+                            (p: any) => (
+                              <option key={p?.id} value={p?.id}>
+                                {p?.product_name?.length > 50
+                                  ? `${p.product_name.substring(0, 50)}...`
+                                  : p?.product_name}
+                              </option>
+                            ),
+                          )}
                         </select>
                       </div>
 
                       {/* Quantity */}
-                      <div className="px-4 py-1 rounded-[10px] border border-accent-gray flex gap-x-3">
+                      <div className="px-4 py-1.5 rounded-[10px] border border-accent-gray flex gap-x-3">
                         <button
                           onClick={() => handleDecrement(itemId)}
-                          className="font-bold text-[20px]"
+                          className="font-bold text-xl cursor-pointer"
                         >
                           -
                         </button>
-                        <span className="font-bold text-[20px]">{qty}</span>
+                        <span className="font-medium text-lg">{qty}</span>
                         <button
                           onClick={() => handleIncrement(itemId)}
-                          className="font-bold text-[20px]"
+                          className="font-bold text-xl cursor-pointer"
                         >
                           +
                         </button>
@@ -356,7 +366,7 @@ const CounterTrades = ({ id }: { id: string }) => {
 
                       {/* Unit Price */}
                       <input
-                        className="border border-gray-300 rounded-md p-2 w-full md:w-24 text-center shrink-0"
+                        className="py-2 rounded-[10px] border border-accent-gray px-2 w-full md:w-24 text-center shrink-0"
                         value={(selectedProductPrice * qty).toFixed(2)}
                         readOnly
                       />
@@ -366,7 +376,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                     {(addonProducts[itemId] || []).map((addon, idx) => (
                       <div
                         key={idx}
-                        className="flex flex-wrap gap-2 items-center mt-2 border border-[#E5E5E5] rounded-lg p-2"
+                        className="flex w-full flex-wrap gap-2 items-center mt-2 border border-[#E5E5E5] rounded-lg p-2"
                       >
                         <select
                           value={addon.productId}
@@ -377,21 +387,24 @@ const CounterTrades = ({ id }: { id: string }) => {
                               Number(e.target.value),
                             )
                           }
-                          className="px-4 py-2 rounded-[10px] border border-accent-gray w-full sm:w-[300px] xl:w-[400px]"
+                          className="px-4 py-2 outline-none rounded-[10px] border border-accent-gray grow"
                         >
                           <option value={0}>Choose Add-on</option>
-                          {getShopProducts(product).map((p: any) => (
-                            <option key={p.id} value={p.id}>
-                              {p?.product_name?.length > 50
-                                ? `${p.product_name.substring(0, 50)}...`
-                                : p?.product_name}{" "}
-                            </option>
-                          ))}
+                          {getShopProductsForType(product?.type).map(
+                            (p: any) => (
+                              <option key={p.id} value={p.id}>
+                                {p?.product_name?.length > 50
+                                  ? `${p.product_name.substring(0, 50)}...`
+                                  : p?.product_name}
+                              </option>
+                            ),
+                          )}
                         </select>
 
                         {/* Quantity controls */}
-                        <div className="px-4 py-1 rounded-[10px] border border-accent-gray flex gap-x-3 items-center">
+                        <div className="px-4 py-1.5 rounded-[10px] border border-accent-gray flex gap-x-3 items-center">
                           <button
+                            className="cursor-pointer text-lg font-bold"
                             onClick={() =>
                               updateAddonQuantity(
                                 itemId,
@@ -402,8 +415,11 @@ const CounterTrades = ({ id }: { id: string }) => {
                           >
                             -
                           </button>
-                          <span>{addon.quantity}</span>
+                          <span className="font-semibold">
+                            {addon.quantity}
+                          </span>
                           <button
+                            className="cursor-pointer text-lg font-bold"
                             onClick={() =>
                               updateAddonQuantity(
                                 itemId,
@@ -418,7 +434,7 @@ const CounterTrades = ({ id }: { id: string }) => {
 
                         {/* Addon price */}
                         <input
-                          className="border border-gray-300 rounded-md p-2 w-full md:w-24 text-center shrink-0"
+                          className="py-2 rounded-[10px] border border-accent-gray w-full md:w-24 text-center shrink-0"
                           value={getAddonPrice(itemId, addon, product).toFixed(
                             2,
                           )}
@@ -427,7 +443,7 @@ const CounterTrades = ({ id }: { id: string }) => {
 
                         <button
                           onClick={() => removeAddonProduct(itemId, idx)}
-                          className="text-red-500 hover:text-red-700 font-semibold cursor-pointer text-sm ml-2"
+                          className="text-red-400 hover:text-red-700 font-semibold cursor-pointer text-xl bg-red-500/10 hover:bg-red-500/20 p-2 rounded-lg ml-1"
                         >
                           <FaRegTrashAlt />
                         </button>
@@ -436,13 +452,13 @@ const CounterTrades = ({ id }: { id: string }) => {
 
                     {/* Add addon button */}
                     <div
-                      className="flex gap-x-2 items-center cursor-pointer hover:opacity-70 transition-opacity mt-2"
+                      className="flex gap-x-2 items-center cursor-pointer hover:opacity-80 transition-opacity mt-2"
                       onClick={() => addAddonProduct(itemId)}
                     >
                       <h6 className="text-[16px] font-semibold text-accent-gray">
                         +
                       </h6>
-                      <p className="text-[16px] font-semibold text-accent-gray">
+                      <p className="text-sm font-medium text-accent-gray">
                         Add another product/service
                       </p>
                     </div>
@@ -459,7 +475,7 @@ const CounterTrades = ({ id }: { id: string }) => {
 
                 {/* Dynamic divider */}
                 {showReloadBetween && (
-                  <div className="flex gap-x-5 items-center my-8">
+                  <div className="flex gap-x-5 items-center my-4">
                     <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
                     <div className="inline-block bg-white">
                       <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
@@ -477,7 +493,7 @@ const CounterTrades = ({ id }: { id: string }) => {
         placeholder="Add your message..."
         value={message}
         onChange={e => setMessage(e.target.value)}
-        className="border border-gray-300 rounded-md p-3 mt-6 w-full"
+        className="border border-gray-300 outline-none rounded-md p-3 mt-6 w-full"
         rows={3}
       />
 

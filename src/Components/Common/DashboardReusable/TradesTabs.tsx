@@ -52,7 +52,7 @@ export type TradeRequest = {
   id: number;
   created_at: string;
   inquiry: number;
-  status: "pending" | "sent" | "accepted" | "cancelled";
+  status: string;
   items: TradeItem[];
   sender_id: number;
   receiver_id: number;
@@ -66,8 +66,8 @@ type TradesTabsProps = {
 const actionButtons: Record<TradeRequest["status"], string[]> = {
   pending: ["Approve", "Deny", "Counter", "Message"],
   sent: ["Message"],
-  accepted: ["Message", "Write A review"],
-  cancelled: ["Message"],
+  accepted: ["Message"],
+  // cancelled: ["Message"],
 };
 const actionButtonStyles: Record<
   string,
@@ -97,6 +97,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
 }) => {
   const { user } = useAuth();
   const [userId, setUserId] = useState<number | null>(null);
+  const [tradeId, setTradeId] = useState<number | null>(null);
   const [msgOpen, setMsgOpen] = useState<boolean>(false);
   const router = useRouter();
   const [approveTradeMutation, { isLoading: isApproving }] =
@@ -170,7 +171,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                   </h5>
                 </div>
                 <button
-                  className={`px-2 py-1 rounded-[8px] min-w-[100px] inline-block  cursor-pointer capitalize font-semibold ${
+                  className={`px-3 text-sm py-2 rounded-lg min-w-[100px] inline-block capitalize font-semibold ${
                     trade.status === "pending"
                       ? "bg-accent-red text-white"
                       : trade.status === "sent"
@@ -236,7 +237,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                             </div>
                           </div>
 
-                          <h2 className="text-[16px] sm:text-[20px] font-normal text-secondary-gray">
+                          <h2 className="text-[16px] sm:text-lg font-normal text-secondary-gray">
                             Total amount:{" "}
                             <span className="font-semibold text-secondary-black">
                               ${+item?.quantity * +item?.product?.product_price}
@@ -248,7 +249,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
 
                     {/*  DIVIDER */}
                     {requestedItems?.length > 0 && offeredItems?.length > 0 && (
-                      <div className="flex gap-x-5 items-center my-8">
+                      <div className="flex gap-x-5 items-center">
                         <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
                         <div className="inline-block bg-white">
                           <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
@@ -298,7 +299,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                             </div>
                           </div>
 
-                          <h2 className="text-[16px] sm:text-[20px] font-normal text-secondary-gray">
+                          <h2 className="text-[16px] sm:text-lg font-normal text-secondary-gray">
                             Total amount:{" "}
                             <span className="font-semibold text-secondary-black">
                               ${+item?.quantity * +item?.product?.product_price}
@@ -335,16 +336,19 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                                 `/dashboard/${user?.membership?.membership_type}/trades/counter/${trade?.id}`,
                               );
                             } else {
+                              setTradeId(trade?.id);
                               setUserId(trade?.receiver_id);
                               handleTrade(btn, trade?.id);
                             }
                           }}
-                          className={`relative cursor-pointer py-[10px] border px-4 rounded-md font-lato font-semibold overflow-hidden hover:scale-110 duration-500 ease-in-out ${
-                            style.bg || ""
-                          } ${style.border || "border-2"} ${style.text}`}
+                          className={`relative cursor-pointer py-[10px] border px-4 rounded-md font-lato font-semibold overflow-hidden hover:scale-110 duration-500 ease-in-out 
+                            ${style.bg || ""} 
+                          ${style.border || "border-2"} ${style.text}`}
                         >
                           <span className="relative z-10">
-                            {btn === "Deny" && isCancelling ? (
+                            {btn === "Deny" &&
+                            isCancelling &&
+                            tradeId === trade?.id ? (
                               <ImSpinner9 className="animate-spin inline-block text-lg" />
                             ) : btn === "Approve" && isApproving ? (
                               <ImSpinner9 className="animate-spin inline-block text-lg" />

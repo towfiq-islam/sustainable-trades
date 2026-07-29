@@ -73,11 +73,9 @@ export type MessageItem = {
   };
 };
 
-export type ConversationType = "private" | "order" | "guest_order";
-
 interface ConversationPageProps {
-  conversationId: number;
-  type: ConversationType;
+  receiverId: number;
+  type: string;
   compact?: boolean;
 }
 // ---- Helpers ----
@@ -151,7 +149,7 @@ function AttachedItemCard({
 // ---- Main Component ----
 
 const ConversationPage = ({
-  conversationId,
+  receiverId,
   type,
   compact,
 }: ConversationPageProps) => {
@@ -165,6 +163,22 @@ const ConversationPage = ({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [chats, setChats] = useState<MessageItem[]>([]);
+  const [message, setMessage] = useState("");
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  const [sendMessageMutation, { isLoading: isPending }] =
+    useSendMessageMutation();
+
+  const { data: singleConversation, isLoading: chatLoading } =
+    useGetSingleConversationQuery(
+      {
+        id: receiverId,
+        type,
+      },
+      {
+        skip: !receiverId,
+      },
+    );
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -191,24 +205,6 @@ const ConversationPage = ({
       return prev.filter((_, i) => i !== index);
     });
   };
-
-  const [chats, setChats] = useState<MessageItem[]>([]);
-  const [message, setMessage] = useState("");
-  const chatContainerRef = useRef<HTMLDivElement | null>(null);
-
-  const [sendMessageMutation, { isLoading: isPending }] =
-    useSendMessageMutation();
-
-  const { data: singleConversation, isLoading: chatLoading } =
-    useGetSingleConversationQuery(
-      {
-        id: conversationId,
-        type,
-      },
-      {
-        skip: !conversationId,
-      },
-    );
 
   useEffect(() => {
     return () => {
@@ -248,7 +244,6 @@ const ConversationPage = ({
             return exists ? prev : [...prev, e.data];
           });
         }
-        // queryClient.invalidateQueries(["get-all-conversation"] as any);
         dispatch(chatApi.util.invalidateTags(["conversation"]));
       })
       .error((error: any) => {
@@ -264,6 +259,7 @@ const ConversationPage = ({
   const handleSend = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const tempId = Date.now();
+    const conversationId = singleConversation?.data?.conversation?.id;
 
     const tempAttachments = selectedFiles.map((file, index) => ({
       id: -(index + 1),
@@ -290,17 +286,15 @@ const ConversationPage = ({
 
     const formData = new FormData();
 
-    formData.append("receiver_id", String(conversationId));
+    formData.append("receiver_id", String(receiverId));
+    formData.append("conversation_id", String(conversationId));
+
     if (message) {
       formData.append("message", message);
     }
 
     if (type === "order") {
       formData.append("type", "order");
-    }
-
-    if (type === "guest_order") {
-      formData.append("type", "guest_order");
     }
 
     selectedFiles.forEach(file => {
@@ -331,6 +325,7 @@ const ConversationPage = ({
 
   const participant =
     singleConversation?.data?.conversation?.participants?.[0]?.participant;
+
   const dashboardSegment = getDashboardSegment(user);
 
   return (
@@ -439,8 +434,7 @@ const ConversationPage = ({
 
                 <div className="max-w-[550px]">
                   {/* Plain message */}
-                  {/* {!msg.cart && !msg.order && ( */}
-                  {!msg.cart && (
+                  {!msg.cart && !msg.order && (
                     <div
                       className={`${compact ? "text-sm py-2 px-3" : "text-[15px] py-3 px-3.5"} relative font-lato leading-[160%] rounded-[6px] shadow ${bubbleClass}`}
                     >
@@ -498,7 +492,7 @@ const ConversationPage = ({
                   )}
 
                   {/* Order message */}
-                  {/* {msg.order && (
+                  {msg.order && (
                     <AttachedItemCard message={msg.message} time={time}>
                       {msg.order.order_items.map(item => (
                         <ProductCard
@@ -511,7 +505,7 @@ const ConversationPage = ({
                         />
                       ))}
                     </AttachedItemCard>
-                  )} */}
+                  )}
                 </div>
               </div>
             );

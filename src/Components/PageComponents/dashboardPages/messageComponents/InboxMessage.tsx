@@ -27,6 +27,7 @@ type Participant = {
 
 type conversationItem = {
   id: number;
+  type: string;
   unread_messages_count: number;
   participants: Participant[];
   last_message: {
@@ -80,7 +81,7 @@ const InboxMessage = ({ search, activeTab }: Props) => {
                     : "customer"
               }/messages/inbox/${
                 conversation?.participants[0]?.participant_id
-              }`}
+              }?type=${conversation?.type}`}
               className="border-b-2 border-gray-200 py-7 cursor-pointer duration-300 transition-all hover:bg-gray-100 px-5 flex justify-between items-center"
             >
               {/* Left */}

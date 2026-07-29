@@ -349,6 +349,27 @@ export default function TaxRatePage() {
                   </button>
                 </div>
 
+                {/* Product Tax */}
+                <div className="flex items-center justify-between border-t pt-5">
+                  <span className="font-semibold text-secondary-black">
+                    Charge taxes on food and produce
+                  </span>
+
+                  <button
+                    type="button"
+                    // onClick={() => setChargeOnShipping(!chargeOnShipping)}
+                    className={`cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      chargeOnShipping ? "bg-primary-green" : "bg-gray-300"
+                    }`}
+                  >
+                    {/* <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        chargeOnShipping ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    /> */}
+                  </button>
+                </div>
+
                 {/* Save Button */}
                 <button
                   type="submit"

@@ -385,7 +385,7 @@ const Page = () => {
             </div>
             <div className="h-[480px] flex flex-col p-3">
               <ConversationPage
-                conversationId={singleOrder?.data?.user_id}
+                receiverId={singleOrder?.data?.user_id}
                 type={singleOrder?.data?.is_guest ? "guest_order" : "private"}
                 compact={true}
               />

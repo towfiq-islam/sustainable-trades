@@ -223,8 +223,8 @@ const CounterTrades = ({ id }: { id: string }) => {
       </h3>
 
       <div>
-        {data?.data?.items
-          ?.sort((a: any, b: any) =>
+        {[...(data?.data?.items ?? [])]
+          .sort((a: any, b: any) =>
             a.type === "requested" && b.type === "offered" ? -1 : 1,
           )
           .map((product: any, i: number, sortedItems: any[]) => {
@@ -293,7 +293,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                       </div>
                       <div className="flex gap-x-2 items-center">
                         <LocationSvg1 />
-                        <h5 className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray font-lato">
+                        <h5 className="text-[12px] lg:text-[14px] text-accent-gray font-lato">
                           {product?.type === "offered"
                             ? data?.data?.receiver?.shop_info?.address
                                 ?.address_line_1
@@ -459,7 +459,7 @@ const CounterTrades = ({ id }: { id: string }) => {
 
                 {/* Dynamic divider */}
                 {showReloadBetween && (
-                  <div className="flex gap-x-5 items-center my-8">
+                  <div className="flex gap-x-5 items-center my-4">
                     <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
                     <div className="inline-block bg-white">
                       <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />

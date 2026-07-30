@@ -51,6 +51,7 @@ export default function TaxRatePage() {
   const [apiKey, setApiKey] = useState("");
   const [chargeOnServices, setChargeOnServices] = useState(true);
   const [chargeOnShipping, setChargeOnShipping] = useState(false);
+  const [chargeOnProduce, setChargeOnProduce] = useState(false);
   const [states, setStates] = useState(taxData?.data?.states || []);
 
   const handleStateToggle = (id: number) => {
@@ -96,6 +97,7 @@ export default function TaxRatePage() {
       rate: data.rate,
       is_digital_products: chargeOnServices ? 1 : 0,
       is_shipping: chargeOnShipping ? 1 : 0,
+      is_food_products: chargeOnProduce ? 1 : 0,
     };
 
     saveTax(payload)
@@ -308,7 +310,7 @@ export default function TaxRatePage() {
                 </div>
 
                 {/* Digital Products */}
-                <div className="flex items-center justify-between border-t pt-5">
+                <div className="flex items-center justify-between border-t border-gray-300 pt-5">
                   <span className="font-semibold text-secondary-black">
                     Charge taxes on services and digital products
                   </span>
@@ -329,7 +331,7 @@ export default function TaxRatePage() {
                 </div>
 
                 {/* Shipping */}
-                <div className="flex items-center justify-between border-t pt-5">
+                <div className="flex items-center justify-between border-t border-gray-300 pt-5">
                   <span className="font-semibold text-secondary-black">
                     Charge taxes on shipping
                   </span>
@@ -350,23 +352,23 @@ export default function TaxRatePage() {
                 </div>
 
                 {/* Product Tax */}
-                <div className="flex items-center justify-between border-t pt-5">
+                <div className="flex items-center justify-between border-t border-gray-300 pt-5">
                   <span className="font-semibold text-secondary-black">
                     Charge taxes on food and produce
                   </span>
 
                   <button
                     type="button"
-                    // onClick={() => setChargeOnShipping(!chargeOnShipping)}
+                    onClick={() => setChargeOnProduce(!chargeOnProduce)}
                     className={`cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      chargeOnShipping ? "bg-primary-green" : "bg-gray-300"
+                      chargeOnProduce ? "bg-primary-green" : "bg-gray-300"
                     }`}
                   >
-                    {/* <span
+                    <span
                       className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        chargeOnShipping ? "translate-x-6" : "translate-x-1"
+                        chargeOnProduce ? "translate-x-6" : "translate-x-1"
                       }`}
-                    /> */}
+                    />
                   </button>
                 </div>
 

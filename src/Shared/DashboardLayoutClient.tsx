@@ -230,6 +230,7 @@ export default function DashboardLayoutClient({
   children,
   initialUser,
 }: Props) {
+  console.log("initialUser", initialUser);
   const { user: liveUser } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const user = liveUser ?? initialUser;

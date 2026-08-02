@@ -140,7 +140,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
                     e.stopPropagation();
                     setSidebarOpen(true);
                   }}
-                  className="block lg:hidden text-white text-2xl cursor-pointer"
+                  className="block 2xl:hidden text-white text-2xl cursor-pointer"
                 >
                   ☰
                 </button>
@@ -151,6 +151,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
                 open={sidebarOpen}
                 setOpen={setSidebarOpen}
               />
+
               <Link href="/">
                 <figure className="size-10 md:size-14 rounded-full relative">
                   <Image
@@ -165,7 +166,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
             </div>
 
             {/* NavLinks */}
-            <div className="lg:flex hidden gap-7 2xl:gap-10 items-center relative">
+            <div className="2xl:flex hidden gap-7 2xl:gap-10 items-center relative">
               {navLins?.map(item => {
                 const isActive = pathname === item?.path;
                 const hasSubMenu = !!item?.sub_menu?.length;

@@ -69,8 +69,8 @@ export default function page({ searchParams }: Props) {
     <section className="min-h-screen max-h-screen flex">
       {/* Left - Form */}
       <div className="flex-1 grid place-items-center side-scrollbar ">
-        <div className="w-full  xl:w-[750px] mx-auto p-5 xl:p-10">
-          <h2 className="text-xl  md:text-2xl  lg:text-3xl xl:text-4xl font-semibold text-secondary-black mb-7">
+        <div className="w-full 2xl:w-[750px] mx-auto p-5 xl:p-10">
+          <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-semibold text-secondary-black mb-7">
             Welcome,
             <span className="text-primary-green">
               {selected_role === "magic_maker"

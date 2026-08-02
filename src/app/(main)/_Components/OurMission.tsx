@@ -42,12 +42,12 @@ const OurMission = async () => {
 
                 {/* Index */}
                 <div className="flex gap-5 items-center">
-                  <p className="text-base md:text-lg lg:text-3xl font-semibold text-primary-green">
+                  <p className="text-base md:text-xl 2xl:text-3xl font-semibold text-primary-green">
                     {idx + 1}.
                   </p>
 
                   {/* Mission Name */}
-                  <p className="text-primary-green text-sm md:text-base lg:text-xl font-semibold">
+                  <p className="text-primary-green text-sm md:text-base 2xl:text-xl font-semibold">
                     {name}
                   </p>
                 </div>

@@ -68,7 +68,7 @@ const Page = () => {
     <section className="min-h-screen max-h-screen flex">
       {/* Left - From */}
       <div className="flex-1 grid place-items-center">
-        <div className="w-full  xl:w-[750px] mx-auto p-5 xl:p-10">
+        <div className="w-full 2xl:w-[750px] mx-auto p-5 xl:p-10">
           {/* Back to home */}
           <div className="flex items-center gap-1 text-center mb-8 hover:underline">
             <IoArrowBackOutline className="text-primary-green" />
@@ -212,7 +212,7 @@ const Page = () => {
       </div>
 
       {/* Right - Image */}
-      <div className="hidden lg:block flex-1 relative">
+      <div className="flex-1 hidden lg:block relative">
         <Image
           src={loginBg}
           alt="welcome_img"

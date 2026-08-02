@@ -165,7 +165,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
             </div>
 
             {/* NavLinks */}
-            <div className="lg:flex hidden gap-5 xl:gap-10 items-center relative">
+            <div className="lg:flex hidden gap-7 2xl:gap-10 items-center relative">
               {navLins?.map(item => {
                 const isActive = pathname === item?.path;
                 const hasSubMenu = !!item?.sub_menu?.length;
@@ -174,7 +174,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
                 if (!hasSubMenu) {
                   return (
                     <Link
-                      className={`text-lg text-white transition-colors duration-200 ${
+                      className={`2xl:text-lg text-white transition-colors duration-200 ${
                         isActive ? "font-semibold" : "hover:text-white/80"
                       }`}
                       key={item?.id}
@@ -274,7 +274,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
           </div>
 
           {/* Right */}
-          <div className="flex gap-5 items-center">
+          <div className="flex gap-4 2xl:gap-5 items-center">
             {/* Message */}
             <Link
               href={`${

@@ -102,8 +102,8 @@ const BannerSlider = ({ data }: bannerProps) => {
           })}
         </Swiper>
       </header>
-      
-      <header className="md:hidden block px-5  ">
+
+      <header className="md:hidden block px-5">
         <Swiper
           modules={[Autoplay]}
           speed={1000}

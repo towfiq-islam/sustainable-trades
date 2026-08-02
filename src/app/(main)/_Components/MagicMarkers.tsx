@@ -16,7 +16,7 @@ const MagicMarkers = () => {
   };
 
   return (
-    <section className="my-5 xl:my-10">
+    <section className="my-5 2xl:my-10">
       <Container>
         <div className="h-[500px] relative">
           {/* Iframe */}

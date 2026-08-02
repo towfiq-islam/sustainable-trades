@@ -33,7 +33,7 @@ const page = () => {
 
       <section className="mb-15 lg:mb-40 mt-10 lg:mt-20">
         <Container>
-          <div className="flex flex-col lg:flex-row items-start gap-5 md:gap-14">
+          <div className="flex flex-col lg:flex-row items-start gap-5 md:gap-10 2xl:gap-14">
             {/* Left - Tabs */}
             <HelpUsTab />
 
@@ -42,7 +42,7 @@ const page = () => {
               {/* Upper Part */}
               <div className="flex flex-col sm:flex-row lg:justify-between items-center gap-4 sm:gap-0 mb-5 md:mb-10 ">
                 {/* Title */}
-                <h2 className="text-primary-green text-xl md:text-2xl lg:text-3xl  xl:text-4xl font-semibold w-full">
+                <h2 className="text-primary-green text-xl md:text-2xl lg:text-3xl 2xl:text-4xl font-semibold w-full">
                   How-To Tutorials
                 </h2>
 

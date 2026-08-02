@@ -17,7 +17,7 @@ const page = async ({ params }: any) => {
 
       <section className="mb-10 lg:mb-40 mt-10 lg:mt-20">
         <Container>
-          <div className="flex flex-col lg:flex-row items-start gap-5 lg:gap-14">
+          <div className="flex flex-col lg:flex-row items-start gap-5 md:gap-10 2xl:gap-14">
             {/* Left - Tabs */}
             <AboutUsTab dynamicPage={dynamicPage?.data} />
 

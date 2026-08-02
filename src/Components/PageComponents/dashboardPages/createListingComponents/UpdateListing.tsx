@@ -499,7 +499,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
       <div className="flex justify-between items-center gap-3">
         <div>
           <h3 className="text-[30px] md:text-[40px] font-semibold text-secondary-black">
-            {watch("product_name") || "Edit Listing"}
+            Edit Listing
           </h3>
           <div className="flex gap-x-2 items-center pt-2">
             <span className="text-[16px] text-secondary-black">Listings</span>

@@ -17,7 +17,7 @@ const Navbar = ({ dynamicPage }: any) => {
     <>
       {/* Top Navbar */}
       <div
-        className={`bg-accent-red text-secondary-black text-lg font-semibold text-center py-2 ${
+        className={`bg-accent-red text-secondary-black 2xl:text-lg font-semibold text-center py-2 ${
           !user && pathname === "/" ? "block" : "hidden"
         }`}
       >

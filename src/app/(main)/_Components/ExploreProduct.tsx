@@ -19,7 +19,7 @@ const ExploreProduct = async () => {
           Explore Sustainable Products
         </h2>
 
-        <div className="grid grid-cols-2  lg:grid-cols-4 gap-x-10 gap-y-16">
+        <div className="grid grid-cols-2  lg:grid-cols-4 gap-x-10 gap-y-12 2xl:gap-y-16">
           {productCategories?.data?.map(({ id, name, image }: categoryItem) => (
             <Link
               key={id}
@@ -27,7 +27,7 @@ const ExploreProduct = async () => {
               className="text-center"
             >
               {/* Category Image */}
-              <figure className="size-30 lg:size-52 mx-auto cursor-pointer rounded-full overflow-hidden relative">
+              <figure className="size-30 md:size-44 2xl:size-52 mx-auto cursor-pointer rounded-full overflow-hidden relative">
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${image}`}
                   alt="shop_image"
@@ -38,7 +38,7 @@ const ExploreProduct = async () => {
               </figure>
 
               {/* Category Name */}
-              <h3 className="mt-4 text-sm md:text-lg text-accent-white">
+              <h3 className="mt-4 2xl:text-lg text-accent-white">
                 {name}
               </h3>
             </Link>

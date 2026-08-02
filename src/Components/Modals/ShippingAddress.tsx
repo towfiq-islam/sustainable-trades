@@ -22,11 +22,40 @@ type FormData = {
   state: string;
   postal_code: string;
   shipping_option: string;
+  latitude: string;
+  longitude: string;
 };
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
 );
+
+const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
+
+// Full address string into { lat, lng } via Google Geocoding API
+const getLatLng = async (
+  fullAddress: string,
+): Promise<{ lat: number | null; lng: number | null }> => {
+  try {
+    const res = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        fullAddress,
+      )}&key=${API_KEY}`,
+    );
+    const json = await res.json();
+
+    if (json?.status === "OK" && json?.results?.length > 0) {
+      const { lat, lng } = json.results[0].geometry.location;
+      return { lat, lng };
+    }
+
+    console.warn("Geocoding returned no results:", json?.status);
+    return { lat: null, lng: null };
+  } catch (err) {
+    console.error("Geocoding failed:", err);
+    return { lat: null, lng: null };
+  }
+};
 
 const ShippingAddress = ({
   onNext,
@@ -43,13 +72,14 @@ const ShippingAddress = ({
   shippingMethod: any;
   setTaxData: any;
 }) => {
-  const { user, latitude } = useAuth();
+  const { user } = useAuth();
   const [shippingTaxMutation, { isLoading: isPending }] =
     useGetShippingTaxMutation();
   const [guestTaxMutation, { isLoading: isWorking }] =
     useGetGuestShippingTaxMutation();
   const [country, setCountry] = useState<any>(null);
   const [state, setState] = useState<any>(null);
+  const [isGeocoding, setIsGeocoding] = useState(false);
 
   const {
     register,
@@ -59,6 +89,11 @@ const ShippingAddress = ({
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
+    setIsGeocoding(true);
+    const fullAddress = `${data?.address} ${data?.apt || ""} ${data?.city} ${state} ${data?.postal_code} ${country}`;
+    const { lat, lng } = await getLatLng(fullAddress);
+    setIsGeocoding(false);
+
     const guestTaxData = {
       product_id: cart_id,
       quantity: 1,
@@ -102,8 +137,8 @@ const ShippingAddress = ({
             ...data,
             country,
             state,
-            latitude: latitude?.toString(),
-            longitude: latitude?.toString(),
+            latitude: lat?.toString() ?? "",
+            longitude: lng?.toString() ?? "",
             shipping_option:
               shippingMethod === "proceed"
                 ? "proceed_to_shipping"
@@ -127,8 +162,8 @@ const ShippingAddress = ({
             ...data,
             country,
             state,
-            latitude: latitude?.toString(),
-            longitude: latitude?.toString(),
+            latitude: lat?.toString() ?? "",
+            longitude: lng?.toString() ?? "",
             shipping_option:
               shippingMethod === "proceed"
                 ? "proceed_to_shipping"
@@ -379,7 +414,7 @@ const ShippingAddress = ({
         {/* Button */}
         <button
           type="submit"
-          disabled={isPending || isWorking}
+          disabled={isPending || isWorking || isGeocoding}
           className="primary_btn cursor-pointer disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-70"
         >
           Review Order

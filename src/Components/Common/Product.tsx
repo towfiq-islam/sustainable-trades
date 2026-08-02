@@ -211,20 +211,13 @@ const Product = ({
           <button
             onClick={() => handleAddToCart(+product?.id)}
             disabled={
+              !user ||
               addCardPending ||
               product?.selling_option === "trade/barter" ||
               (!product?.unlimited_stock && product?.out_of_stock) ||
               (!product?.unlimited_stock && product?.product_quantity === 0)
             }
-            className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm ${
-              addCardPending ||
-              product?.selling_option === "trade/barter" ||
-              (!product?.unlimited_stock && product?.out_of_stock) ||
-              (!product?.unlimited_stock && product?.product_quantity === 0)
-                ? "cursor-not-allowed opacity-75 border-gray-400"
-                : "cursor-pointer border-secondary-gray hover:bg-primary-green hover:text-accent-white hover:scale-95"
-            }
-              `}
+            className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm disabled:cursor-not-allowed disabled:opacity-75 disabled:border-gray-400 cursor-pointer border-secondary-gray enabled:hover:bg-primary-green enabled:hover:text-accent-white enabled:hover:scale-95`}
           >
             {addCardPending ? (
               <p className="flex gap-2 items-center justify-center">
@@ -233,7 +226,7 @@ const Product = ({
               </p>
             ) : (
               <p className="flex gap-2 items-center">
-                <span>{user ? "Add to Cart" : "Buy Now"}</span>
+                <span>Add to Cart</span>
                 <AddToCartSvg />
               </p>
             )}

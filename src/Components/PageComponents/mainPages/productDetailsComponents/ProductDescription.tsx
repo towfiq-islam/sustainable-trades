@@ -123,7 +123,9 @@ const ProductDescription = ({ data }: descriptionProps) => {
   // Func for add to cart
   const handleAddToCart = (id: number) => {
     if (!user) {
-      return toast.error("Please login first to proceed");
+      return toast.error(
+        "To continue as a guest, use the 'Buy It Now' button below, or create a free Sustainable Shopper account to use the shopping cart.",
+      );
     }
 
     addToCartMutation({ productId: id, data: { quantity } })

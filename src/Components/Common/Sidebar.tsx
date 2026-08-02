@@ -59,7 +59,7 @@ const Sidebar = ({ open, setOpen, dynamicPage }: any) => {
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-full w-[280px] bg-white shadow-lg transform transition-transform duration-300 z-50
+      className={`fixed top-0 left-0 h-full w-[280px] bg-white py-7 px-3 shadow-lg transform transition-transform duration-300 z-50
       ${open ? "translate-x-0" : "-translate-x-full"} `}
     >
       {/* Close button for mobile */}
@@ -91,7 +91,7 @@ const Sidebar = ({ open, setOpen, dynamicPage }: any) => {
                   onClick={() =>
                     setActiveSubMenu(activeSubMenu === item.id ? null : item.id)
                   }
-                  className={`text-left text-lg text-primary-green transition-all hover:font-semibold ${
+                  className={`text-left cursor-pointer text-primary-green transition-all ${
                     isActive ? "font-semibold" : ""
                   }`}
                 >
@@ -101,7 +101,7 @@ const Sidebar = ({ open, setOpen, dynamicPage }: any) => {
                 <Link
                   href={item.path}
                   onClick={() => setOpen(false)}
-                  className={`text-lg text-primary-green transition-all hover:font-semibold ${
+                  className={`text-primary-green transition-all ${
                     isActive ? "font-semibold" : ""
                   }`}
                 >
@@ -119,7 +119,7 @@ const Sidebar = ({ open, setOpen, dynamicPage }: any) => {
                         <Link
                           key={id}
                           href={path ? path : `/about/${page_slug}`}
-                          className={`flex gap-2 items-center text-gray-600 hover:text-primary-green text-base transition-all ${
+                          className={`flex gap-2 items-center text-gray-600 hover:text-primary-green text-[15px] transition-all ${
                             subIsActive
                               ? "font-semibold text-primary-green"
                               : ""

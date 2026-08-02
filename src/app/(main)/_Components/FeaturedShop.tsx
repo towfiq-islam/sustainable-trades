@@ -34,15 +34,15 @@ const FeaturedShops = () => {
   });
 
   return (
-    <section className="mt-50 md:mt-0 py-20">
+    <section className="mt-50 md:mt-0 py-10 xl:py-20">
       <Container>
         {/* Title */}
-        <h3 className="section_title md:text-start text-center ">
+        <h3 className="section_title md:text-start text-center">
           Featured Shops
         </h3>
 
         {/* Shops */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-10">
           {isLoading ? (
             [...Array(4)].map((_, idx) => <ShopCardSkeleton key={idx} />)
           ) : featuredData?.data?.length > 0 ? (
@@ -55,7 +55,7 @@ const FeaturedShops = () => {
                 className="text-center space-y-1.5"
               >
                 {/* Shop Image */}
-                <figure className="size-52 2xl:size-64 mx-auto cursor-pointer rounded-full border border-gray-100 group relative">
+                <figure className="size-44 xl:size-52 2xl:size-64 mx-auto cursor-pointer rounded-full border border-gray-100 group relative">
                   <div className="absolute bg-black/50 size-full rounded-full inset-0 opacity-0 duration-500 transition-all group-hover:opacity-100 flex justify-center items-center group-hover:backdrop-blur-[1px]">
                     <IoLink className="text-white text-2xl" />
                   </div>
@@ -70,7 +70,7 @@ const FeaturedShops = () => {
                 </figure>
 
                 {/* Shop Name */}
-                <h3 className="mt-4 text-sm md:text-base 2xl:text-xl font-semibold text-primary-green">
+                <h3 className="mt-4 text-sm xl:text-base 2xl:text-xl font-semibold text-primary-green">
                   {shop_info?.shop_name}
                 </h3>
 

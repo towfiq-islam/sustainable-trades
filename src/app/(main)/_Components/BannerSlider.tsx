@@ -36,7 +36,7 @@ interface bannerProps {
 const BannerSlider = ({ data }: bannerProps) => {
   return (
     <>
-      <header className="hidden md:block relative h-[600px] overflow-hidden">
+      <header className="hidden md:block relative h-[500px] xl:h-[600px] overflow-hidden">
         <Swiper
           modules={[Pagination, Autoplay]}
           spaceBetween={20}
@@ -57,7 +57,7 @@ const BannerSlider = ({ data }: bannerProps) => {
 
             return (
               <SwiperSlide key={item?.id}>
-                <div className="relative h-[600px]">
+                <div className="relative h-[500px] xl:h-[600px]">
                   {/* Background image */}
                   <Image
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${sliderData?.image}`}
@@ -70,7 +70,7 @@ const BannerSlider = ({ data }: bannerProps) => {
                   {/* Content */}
                   <Container>
                     <div
-                      className={`flex items-center w-full  h-[600px] ${
+                      className={`flex items-center w-full h-[500px] xl:h-[600px] ${
                         idx % 2 === 0 ? "justify-start" : "justify-end"
                       }`}
                     >

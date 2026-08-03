@@ -140,7 +140,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
                     e.stopPropagation();
                     setSidebarOpen(true);
                   }}
-                  className="block lg:hidden text-white text-2xl cursor-pointer"
+                  className="block 2xl:hidden text-white text-2xl cursor-pointer"
                 >
                   ☰
                 </button>
@@ -151,6 +151,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
                 open={sidebarOpen}
                 setOpen={setSidebarOpen}
               />
+
               <Link href="/">
                 <figure className="size-10 md:size-14 rounded-full relative">
                   <Image
@@ -165,7 +166,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
             </div>
 
             {/* NavLinks */}
-            <div className="lg:flex hidden gap-5 xl:gap-10 items-center relative">
+            <div className="2xl:flex hidden gap-7 2xl:gap-10 items-center relative">
               {navLins?.map(item => {
                 const isActive = pathname === item?.path;
                 const hasSubMenu = !!item?.sub_menu?.length;
@@ -174,7 +175,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
                 if (!hasSubMenu) {
                   return (
                     <Link
-                      className={`text-lg text-white transition-colors duration-200 ${
+                      className={`2xl:text-lg text-white transition-colors duration-200 ${
                         isActive ? "font-semibold" : "hover:text-white/80"
                       }`}
                       key={item?.id}
@@ -274,7 +275,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
           </div>
 
           {/* Right */}
-          <div className="flex gap-5 items-center">
+          <div className="flex gap-4 2xl:gap-5 items-center">
             {/* Message */}
             <Link
               href={`${
@@ -337,7 +338,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
                 }}
                 className="cursor-pointer flex gap-2 items-center"
               >
-                <figure className="size-10 rounded-full border-2 border-white relative grid place-items-center text-lg text-white font-semibold bg-accent-red">
+                <figure className="size-9 md:size-10 rounded-full border md:border-2 border-white relative grid place-items-center md:text-lg text-white font-semibold bg-accent-red">
                   {user?.avatar ? (
                     <Image
                       src={`${process.env.NEXT_PUBLIC_SITE_URL}/${user?.avatar}`}
@@ -363,7 +364,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
               {/* Popover */}
               <div
                 onClick={e => e.stopPropagation()}
-                className={`bg-white border border-gray-100 z-50 rounded-xl w-60 absolute right-0 top-full mt-3 p-4   translate-y-2 hidden lg:block overflow-hidden duration-300 transition-all ${
+                className={`bg-white border border-gray-100 z-50 rounded-xl w-60 absolute right-0 top-full mt-3 p-4   translate-y-2 overflow-hidden duration-300 transition-all ${
                   showPopover
                     ? "opacity-100 scale-100"
                     : "opacity-0 pointer-events-none scale-95"

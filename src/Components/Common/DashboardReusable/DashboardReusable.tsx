@@ -3,14 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
 import ProdashboardStatistics from "./ProdashboardStatistics";
-import { FaAngleRight } from "react-icons/fa";
 import moment from "moment";
 import {
   InventoryItemSkeleton,
   NotificationSkeleton,
 } from "@/Components/Loader/Loader";
 import { useGetLatestProductsQuery } from "@/redux/api/productApi";
-import { useGetDashboardHomeDataQuery, useGetTodaysNotificationsQuery } from "@/redux/api/vendorApi";
+import {
+  useGetDashboardHomeDataQuery,
+  useGetTodaysNotificationsQuery,
+} from "@/redux/api/vendorApi";
+import { FaAngleRight } from "react-icons/fa";
+import { FiBox, FiBell } from "react-icons/fi";
 
 type ImageItem = {
   image: string;
@@ -142,13 +146,15 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                   Inventory
                 </h5>
 
-                <Link
-                  href={`/dashboard/${user?.membership?.membership_type}/listing`}
-                  className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer"
-                >
-                  More
-                  <FaAngleRight />
-                </Link>
+                {latestProductsData?.data?.length > 0 && (
+                  <Link
+                    href={`/dashboard/${user?.membership?.membership_type}/listing`}
+                    className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+                  >
+                    More
+                    <FaAngleRight />
+                  </Link>
+                )}
               </div>
 
               {latestProductsLoading ? (
@@ -194,9 +200,26 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                   </div>
                 ))
               ) : (
-                <p className="font-semibold text-red-500 mt-5">
-                  No inventory found
-                </p>
+                <div className="flex flex-col items-center justify-center pt-5 pb-10 px-4 text-center">
+                  <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-4">
+                    <FiBox className="text-accent-red text-2xl" />
+                  </div>
+
+                  <h6 className="text-[15px] text-secondary-black font-semibold">
+                    No inventory yet
+                  </h6>
+
+                  <p className="text-sm text-[#67645F] font-normal mt-2 max-w-[250px]">
+                    Products you add to your store will show up here.
+                  </p>
+
+                  <Link
+                    href={`/dashboard/${user?.membership?.membership_type}/create-listing`}
+                    className="mt-4 px-5 py-2 rounded-[8px] bg-accent-red text-[13px] font-semibold text-gray-50 border border-accent-red duration-300"
+                  >
+                    Add Product
+                  </Link>
+                </div>
               )}
             </div>
           </div>
@@ -230,13 +253,15 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             Recent Activity
           </h5>
 
-          <Link
-            href={`/dashboard/${user?.membership?.membership_type}/notification`}
-            className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer"
-          >
-            More
-            <FaAngleRight />
-          </Link>
+          {notificationsData?.data?.data?.length > 0 && (
+            <Link
+              href={`/dashboard/${user?.membership?.membership_type}/notification`}
+              className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+            >
+              More
+              <FaAngleRight />
+            </Link>
+          )}
         </div>
 
         {notificationLoading ? (
@@ -286,9 +311,17 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             </div>
           ))
         ) : (
-          <p className="font-semibold text-red-500 mt-2 ps-3 pb-3">
-            No activity found yet
-          </p>
+          <div className="flex flex-col items-center justify-center pb-10 px-4 text-center">
+            <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-4">
+              <FiBell className="text-accent-red text-2xl" />
+            </div>
+            <h6 className="text-[15px] text-secondary-black font-semibold">
+              You&apos;re all caught up
+            </h6>
+            <p className="text-sm text-[#67645F] font-normal mt-2 max-w-[250px]">
+              New orders, trades, and messages will appear here as they happen.
+            </p>
+          </div>
         )}
       </div>
 

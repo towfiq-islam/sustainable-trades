@@ -101,12 +101,12 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
   return (
     <div className="bg-white py-4 drop-shadow">
       <Container>
-        <div className="flex justify-between items-center">
+        <div className="flex md:gap-5 justify-between items-center">
           {/* Left - NavLinks */}
           <div>
             <div
-              className={`gap-5 xl:gap-10 items-center relative ${
-                user ? "hidden" : "hidden lg:flex"
+              className={`gap-7 2xl:gap-10 items-center relative ${
+                user ? "hidden" : "hidden xl:flex"
               }`}
             >
               {navLins?.map(item => {
@@ -117,7 +117,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
                 if (!hasSubMenu) {
                   return (
                     <Link
-                      className={`text-lg transition-colors duration-200 ${
+                      className={`2xl:text-lg transition-colors duration-200 ${
                         isActive
                           ? "font-semibold text-primary-green"
                           : "text-primary-green"
@@ -139,7 +139,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
                   >
                     <button
                       type="button"
-                      className={`flex items-center gap-1.5 text-lg transition-colors duration-200 cursor-pointer ${
+                      className={`flex items-center gap-1.5 2xl:text-lg transition-colors duration-200 cursor-pointer ${
                         isActive || isOpen
                           ? "font-semibold text-primary-green"
                           : "text-primary-green"
@@ -157,7 +157,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
 
                     {/* Sub Menu */}
                     <div
-                      className={`absolute z-20 top-[calc(100%+1.5rem)] left-1/2 -translate-x-1/2 bg-white shadow-[0_10px_30px_-5px_rgba(0,0,0,0.18)] w-[250px] py-3 px-2 rounded-xl border border-gray-100 flex flex-col gap-1 transition-all duration-200 ease-out origin-top ${
+                      className={`absolute z-20 top-[calc(100%+1.5rem)] left-1/2 -translate-x-1/2 bg-white shadow-[0_10px_30px_-5px_rgba(0,0,0,0.18)] w-[250px] py-3 px-2 rounded-xl border border-gray-100 flex flex-col gap-0.5 2xl:gap-1 transition-all duration-200 ease-out origin-top ${
                         isOpen
                           ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
                           : "opacity-0 -translate-y-1 scale-95 pointer-events-none"
@@ -180,7 +180,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
                               key={id}
                               href={itemPath}
                               onClick={() => setActiveSubMenu(null)}
-                              className={`flex gap-3 items-center px-3 py-2.5 rounded-lg text-[15px] transition-colors duration-150 ${
+                              className={`flex gap-2 2xl:gap-3 items-center px-3 py-2.5 rounded-lg text-[15px] transition-colors duration-150 ${
                                 itemIsActive
                                   ? "bg-primary-green/10 text-primary-green font-semibold"
                                   : "text-gray-700 hover:bg-gray-100 hover:text-primary-green"
@@ -220,7 +220,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
             <Link
               href="/"
               className={`text-base xl:text-lg text-primary-green font-semibold ${
-                user ? "block" : "hidden"
+                user ? "hidden md:block" : "hidden"
               }`}
             >
               Home
@@ -228,7 +228,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
           </div>
 
           {/* Right - Searchbar */}
-          <div className="flex gap-1 items-center border border-primary-green px-3 py-2 rounded-lg w-full lg:w-[400px]  xl:w-[528px]">
+          <div className="flex gap-1 items-center border border-primary-green px-2 md:px-3 py-1.5 md:py-2 rounded-lg w-full lg:w-[450px] 2xl:w-[528px]">
             <SearchSvg />
             <input
               type="text"

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { useGetProductsQuery } from "@/redux/api/productApi";
 const allStatus = ["pending", "confirmed", "shipped", "approved", "cancelled"];
-
+import { FiArchive } from "react-icons/fi";
 interface ProductType {
   id: number;
   product_name: string;
@@ -84,7 +84,27 @@ const Page = () => {
           ))}
         </div>
       ) : productList?.data?.length === 0 ? (
-        <p className="mt-10 text-center text-lg">No products found.</p>
+        <div className="flex flex-col items-center justify-center text-center py-16 mt-10 border border-gray-200 rounded-[8px]">
+          <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+            <FiArchive className="text-accent-red text-2xl" />
+          </div>
+          <h6 className="text-secondary-black font-semibold">
+            {statusFilter ? "No matching listings" : "No listings yet"}
+          </h6>
+          <p className="text-sm text-gray-500 font-normal mt-2 max-w-xs">
+            {statusFilter
+              ? `You have no listings with status "${statusFilter}".`
+              : "Products you add to your store will show up here."}
+          </p>
+          {statusFilter && (
+            <button
+              onClick={() => setStatusFilter("")}
+              className="mt-4 px-5 py-2 rounded-[8px] text-[13px] font-semibold text-secondary-black border border-accent-red hover:bg-accent-red duration-300 cursor-pointer"
+            >
+              Clear Filter
+            </button>
+          )}
+        </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 xl:gap-6 mt-10">
           {productList?.data?.map((product: ProductType) => (

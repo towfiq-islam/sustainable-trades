@@ -157,7 +157,7 @@ const ProductMap: React.FC<ProductMapProps> = ({
   });
 
   return (
-    <div className="relative w-full h-[550px]">
+    <div className="relative w-full h-[450px] xl:h-[550px]">
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={defaultCenter}

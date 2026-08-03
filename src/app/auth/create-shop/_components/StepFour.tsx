@@ -164,8 +164,8 @@ const StepFour = ({ setStep, step, isPending }: any) => {
         )}
 
         {/* Options Panel */}
-        <div className="absolute top-8 right-10 z-10 py-6 max-w-[528px] overflow-y-auto">
-          <div className="bg-accent-white px-6 py-10 rounded-lg flex flex-col gap-y-6">
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 md:left-auto px-3 md:right-10 z-10 py-6 max-w-[528px] overflow-y-auto">
+          <div className="bg-accent-white px-6 py-10 rounded-lg flex flex-col gap-y-5 md:gap-y-6">
             {[1, 2, 3].map(opt => (
               <div key={opt} className="flex gap-x-4 items-start">
                 <input
@@ -178,7 +178,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
                 />
 
                 <div>
-                  <h3 className="text-secondary-black font-semibold text-[22px]">
+                  <h3 className="text-secondary-black font-semibold text-sm md:text-[22px]">
                     {opt === 1 && "Display my business’ exact address."}
                     {opt === 2 &&
                       "Display my location within a 0.5-mile radius of my address."}

@@ -46,7 +46,8 @@ const ProductGallery = ({ data }: galleryProps) => {
           w-full 
           md:w-[120px] 
           h-[100px] 
-          md:h-[450px] 
+          md:h-[400px] 
+          xl:h-[450px]
           rounded-xl 
           shrink-0
           order-2 md:order-1
@@ -75,7 +76,7 @@ const ProductGallery = ({ data }: galleryProps) => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="
           w-full
-          h-[250px] sm:h-[300px] md:h-[445px]
+          h-[250px] sm:h-[400px] xl:h-[445px]
           rounded-xl relative 
           order-1 md:order-2
         "

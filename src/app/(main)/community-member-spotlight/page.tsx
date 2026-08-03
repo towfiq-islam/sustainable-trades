@@ -43,7 +43,7 @@ const Community = async () => {
               </figure>
 
               {/* Right */}
-              <div className="lg:grow px-5">
+              <div className="lg:grow px-5 py-5">
                 <div className="flex flex-col sm:flex-row md:justify-between md:items-center">
                   {/* Shop Name */}
                   <h3 className="tracking-[0.2px] font-semibold text-secondary-gray text-xl mb-1">

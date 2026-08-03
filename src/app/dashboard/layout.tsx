@@ -1,18 +1,15 @@
 import DashboardLayoutClient from "@/Shared/DashboardLayoutClient";
-import { serverFetch } from "@/lib/serverFetch";
+import { getUser } from "@/lib/getUser";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const initialUser = await serverFetch({
-    endpoint: "/api/users/data",
-    mode: "SSR",
-  });
+  const initialUser = await getUser();
 
   return (
-    <DashboardLayoutClient initialUser={initialUser?.data}>
+    <DashboardLayoutClient initialUser={initialUser}>
       {children}
     </DashboardLayoutClient>
   );

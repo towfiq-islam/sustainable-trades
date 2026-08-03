@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 const page = () => {
   const params = useParams();
   const id = Number(params.id);
-  return <ConversationPage conversationId={id} type="order" />;
+  return <ConversationPage receiverId={id} type="order" />;
 };
 
 export default page;

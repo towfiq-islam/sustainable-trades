@@ -12,6 +12,7 @@ import {
   useChangeDiscountStatusMutation,
   useGetDiscountsQuery,
 } from "@/redux/api/discountApi";
+import { FiTag } from "react-icons/fi";
 
 const DiscountsPage = () => {
   const [status, setStatus] = useState<string>("active");
@@ -99,7 +100,7 @@ const DiscountsPage = () => {
 
           {/* Create button */}
           <Link href="/dashboard/pro/discounts/create-discount">
-            <button className="hover:border-off-green hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2 px-5 text-[178px] md:text-[20px] font-semibold cursor-pointer w-full md:w-fit bg-off-green text-primary-green duration-500 ease-in-out">
+            <button className="hover:border-off-green hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2 px-5  md:text-lg font-semibold cursor-pointer w-full md:w-fit bg-off-green text-primary-green duration-500 ease-in-out">
               Create Discount
             </button>
           </Link>
@@ -123,19 +124,21 @@ const DiscountsPage = () => {
         ))}
 
         {/* For Delete */}
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          className={`flex items-center justify-center gap-2 border-2 border-primary-green text-primary-green hover:bg-off-green rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 font-semibold capitalize ${
-            isDeleting ? "cursor-not-allowed" : "cursor-pointer"
-          }`}
-        >
-          {isDeleting ? (
-            <CgSpinnerTwo className="text-lg animate-spin" />
-          ) : (
-            <Delete className="size-5" />
-          )}
-        </button>
+        {discountData?.data?.length !== 0 && (
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className={`flex items-center justify-center gap-2 border-2 border-primary-green text-primary-green hover:bg-off-green rounded-[6px] px-4 py-1 text-base md:py-2 duration-300 font-semibold capitalize ${
+              isDeleting ? "cursor-not-allowed" : "cursor-pointer"
+            }`}
+          >
+            {isDeleting ? (
+              <CgSpinnerTwo className="text-lg animate-spin" />
+            ) : (
+              <Delete className="size-5" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Discounts list */}
@@ -143,9 +146,19 @@ const DiscountsPage = () => {
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => <DiscountSkeleton key={i} />)
         ) : discountData?.data?.length === 0 ? (
-          <p className="py-6 text-center text-primary-red font-semibold">
-            No discounts found
-          </p>
+          <div className="flex flex-col items-center justify-center text-center py-14">
+            <div className="size-14 rounded-full bg-primary-green/10 grid place-items-center mb-5">
+              <FiTag className="text-primary-green text-2xl" />
+            </div>
+            <h6 className="text-secondary-black font-semibold">
+              No {status} discounts
+            </h6>
+            <p className="text-sm text-gray-500 font-normal mt-2 max-w-[280px]">
+              {status === "active"
+                ? "Create a discount code to start offering deals to shoppers."
+                : "Discounts you deactivate will appear here."}
+            </p>
+          </div>
         ) : (
           discountData?.data?.map((d: any) => (
             <div

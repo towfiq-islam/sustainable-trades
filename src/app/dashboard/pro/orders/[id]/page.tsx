@@ -385,8 +385,8 @@ const Page = () => {
             </div>
             <div className="h-[480px] flex flex-col p-3">
               <ConversationPage
-                conversationId={singleOrder?.data?.user_id}
-                type="private"
+                receiverId={singleOrder?.data?.user_id}
+                type={singleOrder?.data?.is_guest ? "guest_order" : "private"}
                 compact={true}
               />
             </div>
@@ -394,7 +394,7 @@ const Page = () => {
 
           <Link
             className="primary_btn"
-            href={`/dashboard/pro/messages/inbox/${singleOrder?.data?.user_id}`}
+            href={`/dashboard/pro/messages/inbox/${singleOrder?.data?.user_id}?type=${singleOrder?.data?.conversation?.type}`}
           >
             Go to Messages Board
           </Link>

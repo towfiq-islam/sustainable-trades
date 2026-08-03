@@ -40,7 +40,7 @@ const Footer = async ({ dynamicPage }: any) => {
           </div>
 
           {/* Right */}
-          <div className="flex flex-wrap gap-5 xl:gap-24">
+          <div className="flex flex-wrap gap-10 xl:gap-24">
             {/* About */}
             <div>
               <h3 className={footer_title_class}>About</h3>

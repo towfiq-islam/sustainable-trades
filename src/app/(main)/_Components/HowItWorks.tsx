@@ -18,7 +18,7 @@ const HowItWorks = async () => {
       <Container>
         <h2 className="section_title text-center">How It Works</h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 gap-10 text-center mb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 text-center mb-10">
           {howItWorksData?.data?.map((item: workItem) => (
             <div key={item?.id} className="space-y-5">
               <figure className="size-15 lg:size-24 xl:size-40 mx-auto relative">

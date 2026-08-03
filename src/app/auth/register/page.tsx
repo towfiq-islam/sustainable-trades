@@ -70,7 +70,7 @@ export default function page({ searchParams }: Props) {
       {/* Left - Form */}
       <div className="flex-1 grid place-items-center side-scrollbar ">
         <div className="w-full 2xl:w-[750px] mx-auto p-5 xl:p-10">
-          <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-semibold text-secondary-black mb-7">
+          <h2 className="text-xl md:text-2xl xl:text-4xl 2xl:text-5xl font-semibold text-secondary-black mb-7">
             Welcome,
             <span className="text-primary-green">
               {selected_role === "magic_maker"
@@ -241,7 +241,7 @@ export default function page({ searchParams }: Props) {
             <button
               type="submit"
               disabled={isLoading}
-              className={`px-10 py-1.5 sm:py-3 md:py-4 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white md:font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green text-sm md:text-lg block w-full ${
+              className={`px-10 py-1.5 sm:py-3 xl:py-4 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white md:font-medium duration-500 transition-all hover:bg-transparent hover:text-primary-green xl:text-lg block w-full ${
                 isLoading ? "cursor-not-allowed" : "cursor-pointer"
               }`}
             >
@@ -259,7 +259,7 @@ export default function page({ searchParams }: Props) {
           </form>
 
           {/* Sign in link */}
-          <div className="flex gap-1 items-center md:text-lg text-secondary-black mt-3">
+          <div className="flex gap-1 items-center xl:text-lg text-secondary-black mt-3">
             <p>Already have an account?</p>
             <Link
               className="text-primary-green font-semibold underline"
@@ -270,7 +270,7 @@ export default function page({ searchParams }: Props) {
           </div>
 
           {/* Divider */}
-          <div className="my-7 flex gap-1 items-center text-gray-400 font-semibold">
+          <div className="my-5 xl:my-7 flex gap-1 items-center text-gray-400 font-semibold">
             <div className="border-b border-gray-300 flex-1"></div>
             <div>OR</div>
             <div className="border-b border-gray-300 flex-1"></div>

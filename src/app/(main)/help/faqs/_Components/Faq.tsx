@@ -49,7 +49,7 @@ const Faq = ({ data }: Props) => {
                 >
                   {/* Question */}
                   <div className="flex justify-between items-center">
-                    <h3 className=" sm:text-lg lg:text-xl font-semibold text-secondary-black">
+                    <h3 className="xl:text-lg 2xl:text-xl font-semibold text-secondary-black">
                       {item?.question}
                     </h3>
                     <span className="text-lg md:text-xl lg:text-2xl text-secondary-black">
@@ -65,7 +65,7 @@ const Faq = ({ data }: Props) => {
                         : "max-h-0 opacity-0"
                     }`}
                   >
-                    <p className="text-secondary-gray md:text-base text-sm lg:text-[17px]">
+                    <p className="text-secondary-gray md:text-base text-sm xl:text-[17px]">
                       {item?.answer}
                     </p>
                   </div>

@@ -53,7 +53,7 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
   const [showMoreId, setShowMoreId] = useState<number>(0);
 
   return (
-    <section id="Reviews" className="mt-24">
+    <section id="Reviews" className="mt-14 xl:mt-24">
       <Container>
         <h2 className="section_sub_title !mb-3">Read Our Reviews</h2>
 
@@ -193,7 +193,7 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
               </div>
             ))
           ) : (
-            <div className="flex flex-col justify-center items-center gap-3 text-center py-5 md:py-20">
+            <div className="flex flex-col justify-center items-center gap-3 text-center py-5 xl:py-20">
               <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
               <p className="text-gray-600 text-sm md:text-lg font-semibold">
                 No Review found!!

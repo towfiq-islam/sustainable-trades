@@ -80,7 +80,7 @@ const ProductLocation = () => {
         <div className="grid lg:grid-cols-2 gap-5 border border-gray-100 rounded-lg p-3">
           {/* Left - Product List */}
           {search ? (
-            <div className="space-y-2 md:h-[550px] overflow-y-auto">
+            <div className="space-y-2 xl:h-[550px] overflow-y-auto">
               {productLoading && page === 1 ? (
                 Array.from({ length: 7 }).map((_, idx) => (
                   <ShopListSkeleton key={idx} />
@@ -198,7 +198,7 @@ const ProductLocation = () => {
           )}
 
           {/* Right - Google Map */}
-          <div className="md:h-[550px]">
+          <div className="xl:h-[550px]">
             {products.length > 0 ? (
               <ProductMap
                 products={products}

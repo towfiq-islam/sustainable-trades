@@ -142,7 +142,7 @@ const Product = ({
           <SwiperSlide key={idx}>
             <figure
               className={`w-full rounded-lg border border-gray-100 relative ${
-                is_feathered ? "h-[350px]" : "h-[270px]"
+                is_feathered ? "h-[270px] xl:h-[350px]" : "h-[270px]"
               }`}
             >
               <div className="absolute inset-0 bg-black/20 rounded-lg" />
@@ -161,7 +161,7 @@ const Product = ({
       {/* Product Name */}
       <Link
         href={`/product-details/${product?.id}`}
-        className="text-primary-green md:text-lg sm:text-base text-sm lg:text-xl font-semibold py-3 truncate hover:underline block"
+        className="text-primary-green md:text-lg text-sm sm:text-base xl:text-xl font-semibold py-3 truncate hover:underline block"
       >
         {product?.product_name}
       </Link>

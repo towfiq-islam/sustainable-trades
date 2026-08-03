@@ -62,13 +62,13 @@ const Pricing = ({
   });
 
   return (
-    <section id="membership_plan" className="py-8 md:py-20">
+    <section id="membership_plan" className="py-10 xl:py-20">
       <Container>
-        <h2 className="section_title text-center !mb-4 md:!mb-7">
+        <h2 className="section_title text-center !mb-4 xl:!mb-7">
           Plans & Benefits
         </h2>
 
-        <p className="text-center text-base sm:text-lg md:text-xl text-secondary-gray mb-7">
+        <p className="text-center text-base sm:text-lg xl:text-xl text-secondary-gray mb-7">
           {description}
         </p>
 

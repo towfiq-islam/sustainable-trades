@@ -80,7 +80,7 @@ const page = () => {
           </div>
 
           {/* Right */}
-          <div className="space-y-10 md:space-y-16">
+          <div className="space-y-10 xl:space-y-16">
             {/* Product Description */}
             <ProductDescription data={productDetailsData?.data} />
 

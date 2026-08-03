@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Product from "@/Components/Common/Product";
 import { AiOutlineFileUnknown } from "react-icons/ai";
 
@@ -19,15 +18,15 @@ interface moreProductProps {
 
 const MoreProduct = ({ data }: moreProductProps) => {
   return (
-    <section className="my-10 md:my-20">
+    <section className="my-10 xl:my-20">
       {/* Title */}
-      <h3 className="text-3xl font-semibold text-secondary-black mb-7">
+      <h3 className="text-2xl xl:text-3xl font-semibold text-secondary-black mb-4 xl:mb-7">
         More from this shop
       </h3>
 
       {/* Products */}
       {data?.more_products_from_shop?.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-10">
           {data?.more_products_from_shop?.map(product => (
             <Product
               key={product?.id}
@@ -43,20 +42,6 @@ const MoreProduct = ({ data }: moreProductProps) => {
           <p className="text-gray-600 text-sm md:text-lg font-semibold">
             No product found!!
           </p>
-        </div>
-      )}
-
-      {/* View All Btn */}
-      {data?.more_products_from_shop?.length > 0 && (
-        <div className="flex items-center justify-end mt-8">
-          <Link
-            href={`/shop-details?view=${"customer"}&id=${
-              data?.shop?.user_id
-            }&listing_id=${data?.shop?.id}`}
-            className="text-primary-green font-semibold text-lg cursor-pointer"
-          >
-            View all....
-          </Link>
         </div>
       )}
     </section>

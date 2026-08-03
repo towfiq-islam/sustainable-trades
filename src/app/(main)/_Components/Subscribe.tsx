@@ -11,7 +11,7 @@ const Subscribe = () => {
     useSubscribeNewsletterMutation();
 
   return (
-    <section className="pb-10 md:pb-28">
+    <section className="pb-16 xl:pb-28">
       <Container>
         <h2 className="section_title  text-center !mb-4 md:!mb-7">
           Stay Loop’d on the Eco-Front!

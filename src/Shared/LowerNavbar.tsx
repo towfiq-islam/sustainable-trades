@@ -106,7 +106,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
           <div>
             <div
               className={`gap-7 2xl:gap-10 items-center relative ${
-                user ? "hidden" : "hidden lg:flex"
+                user ? "hidden" : "hidden xl:flex"
               }`}
             >
               {navLins?.map(item => {

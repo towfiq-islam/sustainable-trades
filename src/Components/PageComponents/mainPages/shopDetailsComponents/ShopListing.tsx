@@ -41,7 +41,7 @@ const ShopListing = ({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 mb-5 lg:mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-7 mb-5 lg:mb-10">
             {featuredListings?.slice(0, 3)?.map((product: any) => (
               <Product
                 key={product?.id}
@@ -53,15 +53,15 @@ const ShopListing = ({
         )}
 
         {/* All Listings */}
-        <h2 className="section_sub_title ">All Listings</h2>
+        <h2 className="section_sub_title">All Listings</h2>
 
         {/* Filtering */}
         {categoryLoading && subCategoryLoading ? (
           <FilteringSkeleton />
         ) : (
-          <div className="flex flex-col gap-3 lg:gap-0 lg:flex-row lg:justify-between lg:items-end mb-8">
+          <div className="flex flex-col gap-3 flex-wrap lg:flex-row lg:justify-between lg:items-end mb-8">
             {/* Left - Filter */}
-            <div className="flex flex-col md:flex-row gap-3.5 lg:gap-7 md:items-center">
+            <div className="flex flex-col md:flex-row gap-4 xl:gap-7 md:items-center">
               <div className="w-full">
                 <h3 className="text-secondary-gray md:text-base text-xs font-semibold mb-1.5">
                   Product Category

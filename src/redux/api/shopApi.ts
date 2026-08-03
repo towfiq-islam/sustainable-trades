@@ -145,7 +145,7 @@ export const shopApi = apiSlice.injectEndpoints({
         url: `/api/follow-shop/${shopId}`,
         method: "POST",
       }),
-      invalidatesTags: ["shop"],
+      invalidatesTags: ["product"],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;

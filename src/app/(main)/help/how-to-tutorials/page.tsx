@@ -31,9 +31,9 @@ const page = () => {
         bgImg={`${process.env.NEXT_PUBLIC_SITE_URL}/${tutorialsData?.data?.banner?.image}`}
       />
 
-      <section className="mb-15 lg:mb-40 mt-10 lg:mt-20">
+      <section className="lg:mb-40 lg:mt-20">
         <Container>
-          <div className="flex flex-col lg:flex-row items-start gap-5 md:gap-14">
+          <div className="flex flex-col lg:flex-row items-start gap-5 md:gap-10 2xl:gap-14">
             {/* Left - Tabs */}
             <HelpUsTab />
 
@@ -42,7 +42,7 @@ const page = () => {
               {/* Upper Part */}
               <div className="flex flex-col sm:flex-row lg:justify-between items-center gap-4 sm:gap-0 mb-5 md:mb-10 ">
                 {/* Title */}
-                <h2 className="text-primary-green text-xl md:text-2xl lg:text-3xl  xl:text-4xl font-semibold w-full">
+                <h2 className="text-primary-green text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-semibold w-full">
                   How-To Tutorials
                 </h2>
 
@@ -62,7 +62,7 @@ const page = () => {
               <div className="flex gap-5 items-center mb-12">
                 <button
                   onClick={() => setActiveTab("owner")}
-                  className={`text-sm md:text-lg cursor-pointer px-10 pb-1${
+                  className={`text-sm md:text-base lg:text-lg cursor-pointer px-3 lg:px-5 xl:px-10 pb-1${
                     activeTab === "owner"
                       ? "text-primary-green font-semibold border-b-2 border-primary-green"
                       : "text-gray-500"
@@ -73,7 +73,7 @@ const page = () => {
 
                 <button
                   onClick={() => setActiveTab("buyer")}
-                  className={`text-sm md:text-lg cursor-pointer px-10 pb-1  ${
+                  className={`text-sm md:text-base lg:text-lg cursor-pointer px-3 lg:px-5 xl:px-10 pb-1  ${
                     activeTab === "buyer"
                       ? "text-primary-green font-semibold border-b-2 border-primary-green"
                       : "text-gray-500"

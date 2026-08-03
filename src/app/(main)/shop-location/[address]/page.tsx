@@ -65,9 +65,9 @@ const page = ({ params }: Props) => {
       <LocalMagicMarker address={address} />
 
       {/* All Categories */}
-      <section className="mb-20">
+      <section className="mb-10 md:mb-16 xl:mb-20">
         <Container>
-          <h2 className="text-2xl md:text-3xl font-semibold text-secondary-black mb-10 capitalize">
+          <h2 className="text-xl md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5 xl:mb-10 capitalize">
             Explore Sustainable Products & Services Nearby
           </h2>
 
@@ -156,7 +156,7 @@ const page = ({ params }: Props) => {
         {isLoading ? (
           <h2 className="w-60 h-6 mb-7 animate-pulse bg-gray-200 rounded"></h2>
         ) : (
-          <h2 className="text-xl md:text-3xl font-semibold text-secondary-black mb-4 md:mb-7">
+          <h2 className="text-xl md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-4 xl:mb-7">
             {categoryDetails?.data?.category?.name}
           </h2>
         )}
@@ -202,7 +202,7 @@ const page = ({ params }: Props) => {
       </Container>
 
       {/* Community Member */}
-      <div className="my-20">
+      <div className="md:my-10 xl:my-20">
         <MemberSpotlight data={spotlightData?.data} />
       </div>
 

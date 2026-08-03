@@ -62,9 +62,9 @@ const page = () => {
       <MagicMarkers />
 
       {/* All Categories */}
-      <section className="mb-20">
+      <section className="mb-10 md:mb-20">
         <Container>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-secondary-black mb-5 md:mb-10 capitalize">
+          <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black pt-3 xl:pt-0 mb-5 lg:mb-10 capitalize">
             Explore Category Wise Sustainable Products Nearby
           </h2>
 
@@ -153,7 +153,7 @@ const page = () => {
         {isLoading ? (
           <h2 className="w-60 h-6 mb-7 animate-pulse bg-gray-200 rounded"></h2>
         ) : (
-          <h2 className="text-2xl md:text-3xl font-semibold text-secondary-black mb-7">
+          <h2 className="text-lg md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5 xl:mb-7">
             {categoryDetails?.data?.category?.name}
           </h2>
         )}
@@ -199,7 +199,7 @@ const page = () => {
 
       {/* Nearby Listings */}
       <Container>
-        <h2 className="mt-16 text-xl sm:text-2xl md:text-3xl font-semibold text-secondary-black mb-10 capitalize">
+        <h2 className="mt-8 xl:mt-16 text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5 lg:mb-10 capitalize">
           Sustainable Products & Services Nearby
         </h2>
 
@@ -209,8 +209,8 @@ const page = () => {
               <ProductSkeleton key={idx} />
             ))}
           </div>
-        ) : nearbyProducts?.data?.data?.length === 0 || !nearbyProducts ? (
-          <div className="flex flex-col justify-center items-center gap-3 lg:gap-4 text-center py-5 md:py-20">
+        ) : nearbyProducts?.data?.length === 0 ? (
+          <div className="flex flex-col justify-center items-center gap-3 lg:gap-4 text-center py-5 xl:py-20">
             <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
             <p className="text-gray-600 text-sm md:text-lg font-semibold">
               No products found!!

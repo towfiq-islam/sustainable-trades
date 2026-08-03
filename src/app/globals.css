@@ -16,16 +16,6 @@
 
   /* Font Family */
   --font-lato: var(--font-lato);
-
-  /* Breakpoints */
-  /* --breakpoint-sm: 480px;
-  --breakpoint-md: 576px;
-  --breakpoint-lg: 768px;
-  --breakpoint-xl: 1024px;
-  --breakpoint-2xl: 1280px; */
-  --breakpoint-xxs: 350px;
-  --breakpoint-xs: 400px;
-  --breakpoint-1xl: 1200px;
 }
 
 html {
@@ -38,15 +28,15 @@ html {
 
 /* Custom CSS */
 .section_title {
-  @apply text-2xl  md:text-3xl  lg:text-4xl xl:text-[45px] text-primary-green  mb-12;
+  @apply font-medium text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-[45px] text-primary-green mb-5 lg:mb-8 xl:mb-12;
 }
 
 .section_sub_title {
-  @apply text-2xl lg:text-4xl text-secondary-black font-semibold mb-3.5 md:mb-7;
+  @apply text-xl md:text-2xl lg:text-3xl xl:text-4xl text-secondary-black font-semibold mb-3.5 lg:mb-7;
 }
 
 .auth-primary-btn {
-  @apply text-secondary-black bg-transparent px-14 font-semibold py-3 rounded-[6px] shadow border-2 border-secondary-black cursor-pointer hover:scale-95 duration-500 ease-in-out;
+  @apply text-secondary-black bg-transparent px-14 font-semibold py-2 xl:py-3 rounded-[6px] shadow border-2 border-secondary-black cursor-pointer hover:scale-95 duration-500 ease-in-out;
 }
 
 .primary_btn {
@@ -58,15 +48,15 @@ html {
 }
 
 .auth-heading {
-  @apply text-xl sm:text-2xl  md:text-3xl  lg:text-4xl xl:text-5xl font-semibold text-secondary-black mb-5;
+  @apply text-lg md:text-xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-semibold text-secondary-black mb-3 md:mb-5;
 }
 
 .auth_title {
-  @apply text-primary-green text-[40px] font-lato font-bold text-center;
+  @apply text-primary-green text-2xl md:text-3xl lg:text-[40px] font-semibold text-center;
 }
 
 .auth_description {
-  @apply font-lato text-[18px] font-normal max-w-[350px] w-full mx-auto text-center;
+  @apply text-sm md:text-[18px] mt-1 font-normal max-w-[350px] w-full mx-auto text-center;
 }
 
 .form-group {
@@ -74,7 +64,7 @@ html {
 }
 
 .form-label {
-  @apply text-secondary-black block w-full font-semibold;
+  @apply text-secondary-black text-sm md:text-base block w-full font-semibold;
 }
 
 .form-label span {
@@ -82,7 +72,7 @@ html {
 }
 
 .form-input {
-  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2  lg:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray;
+  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2 xl:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray;
 }
 
 .shipping_form .form-input {

@@ -75,12 +75,12 @@ const ProductLocation = () => {
   }, [hasMore, isFetching, products]);
 
   return (
-    <section className="mt-10 mb-16">
+    <section className="mt-5 md:mt-10 mb-10 xl:mb-16">
       <Container>
         <div className="grid lg:grid-cols-2 gap-5 border border-gray-100 rounded-lg p-3">
           {/* Left - Product List */}
           {search ? (
-            <div className="space-y-2 md:h-[550px] overflow-y-auto">
+            <div className="space-y-1 xl:space-y-2 h-[400px] md:h-[450px] xl:h-[550px] overflow-y-auto">
               {productLoading && page === 1 ? (
                 Array.from({ length: 7 }).map((_, idx) => (
                   <ShopListSkeleton key={idx} />
@@ -96,12 +96,12 @@ const ProductLocation = () => {
                     <Link
                       key={product?.id}
                       href={`/product-details/${product?.id}`}
-                      className="flex flex-row gap-2.5 md:gap-5 md:items-center border-b last:border-b-0 border-gray-300 py-2 md:py-3 cursor-pointer hover:bg-green-50"
+                      className="flex flex-row gap-4 xl:gap-5 md:items-center border-b last:border-b-0 border-gray-300 py-2 xl:py-3 cursor-pointer hover:bg-green-50"
                       onMouseEnter={() => setHoveredProduct(product)}
                       onMouseLeave={() => setHoveredProduct(null)}
                     >
                       {/* Product Image */}
-                      <figure className="size-16 md:size-24 shrink-0 rounded-lg relative">
+                      <figure className="size-20 xl:size-24 shrink-0 rounded-lg relative">
                         <Image
                           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product?.images[0]?.image}`}
                           alt="product_image"
@@ -114,7 +114,7 @@ const ProductLocation = () => {
                       <div className="flex flex-col md:flex-row gap-2.5 md:gap-5 md:items-center grow">
                         <div className="grow">
                           {/* Product Name */}
-                          <h3 className="font-semibold text-primary-green text-sm md:text-base">
+                          <h3 className="font-semibold text-primary-green text-sm xl:text-base">
                             {product?.product_name}
                           </h3>
 
@@ -125,7 +125,7 @@ const ProductLocation = () => {
                             }).map((_, idx) => (
                               <FaStar
                                 key={idx}
-                                className="text-primary-green text-xs md:text-sm"
+                                className="text-primary-green text-xs xl:text-sm"
                               />
                             ))}
 
@@ -134,13 +134,13 @@ const ProductLocation = () => {
                             }).map((_, index) => (
                               <FaRegStar
                                 key={index}
-                                className="text-primary-green text-xs md:text-sm"
+                                className="text-primary-green text-xs xl:text-sm"
                               />
                             ))}
                           </div>
 
                           {/* Distance */}
-                          <p className="text-secondary-gray font-semibold text-xs md:text-sm mb-0.5">
+                          <p className="text-secondary-gray font-semibold text-xs xl:text-sm mb-0.5">
                             {Number(product?.distance).toFixed(1)} mi
                           </p>
 
@@ -191,14 +191,14 @@ const ProductLocation = () => {
               )}
             </div>
           ) : (
-            <div className="text-gray-700 font-semibold text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-[#d4e2cb2f]">
-              <LuFileQuestion className="text-5xl text-gray-600" />
+            <div className="text-gray-700 font-semibold xl:text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-[#d4e2cb2f]">
+              <LuFileQuestion className="text-4xl xl:text-5xl text-gray-600" />
               No Product Found
             </div>
           )}
 
           {/* Right - Google Map */}
-          <div className="md:h-[550px]">
+          <div className="h-[350px] md:h-[450px] xl:h-[550px] overflow-hidden rounded">
             {products.length > 0 ? (
               <ProductMap
                 products={products}

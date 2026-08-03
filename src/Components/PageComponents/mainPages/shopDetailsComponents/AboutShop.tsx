@@ -26,11 +26,11 @@ const AboutShop = ({ data }: AboutProps) => {
   const [showMore, setShowMore] = useState<boolean>(false);
 
   return (
-    <section id="About" className="mt-4 md:mt-8 lg:mt-16">
+    <section id="About" className="mt-4 md:mt-8 xl:mt-16">
       <Container>
         <h2 className="section_sub_title">About us</h2>
 
-        <div className="flex flex-col lg:flex-row gap-5 md:gap-10 lg:items-center">
+        <div className="flex flex-col lg:flex-row gap-5 xl:gap-10 lg:items-center">
           <div className="flex flex-col sm:flex-row gap-5 md:gap-10 grow">
             {/* Left - Shop Image */}
             <figure className="size-auto xs:size-[220px] md:size-[280px] lg:size-[350px] shrink-0 border border-gray-50 rounded-xl relative">
@@ -45,7 +45,7 @@ const AboutShop = ({ data }: AboutProps) => {
             </figure>
 
             <div>
-              <h3 className="mb-2.5 md:mb-5 text-secondary-black text-sm sm:text-base md:text-lg lg:text-xl  xl:text-2xl font-semibold">
+              <h3 className="mb-2.5 md:mb-5 text-secondary-black text-sm sm:text-base xl:text-lg 2xl:text-2xl font-semibold">
                 {data?.shop_name}
               </h3>
 
@@ -53,15 +53,15 @@ const AboutShop = ({ data }: AboutProps) => {
                 {data?.about?.tagline}
               </h4>
 
-              <p className="text-secondary-gray text-xs sm:text-sm md:text-base">
+              <p className="text-secondary-gray text-sm sm:text-[15px] xl:text-base">
                 {data?.about?.statement}
               </p>
 
-              <h4 className="text-sm sm:text-base md:text-lg font-semibold text-primary-green my-5">
+              <h4 className="text-sm sm:text-base xl:text-lg font-semibold text-primary-green my-3 xl:my-5">
                 Our Story
               </h4>
 
-              <p className="text-secondary-gray text-xs sm:text-sm md:text-base">
+              <p className="text-secondary-gray text-sm sm:text-[15px] xl:text-base">
                 {showMore
                   ? data?.about?.our_story
                   : data?.about?.our_story?.slice(0, 400)}

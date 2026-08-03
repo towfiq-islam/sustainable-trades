@@ -164,7 +164,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
       </div>
       <div className="flex gap-5 justify-between items-start mb-5">
         {/* Product Name */}
-        <h3 className="text-xl md:text-2xl font-semibold text-secondary-black">
+        <h3 className="text-lg md:text-xl md:text-2xl font-semibold text-secondary-black">
           {data?.product_name}
         </h3>
 
@@ -196,17 +196,17 @@ const ProductDescription = ({ data }: descriptionProps) => {
       </div>
 
       {/* Product Description */}
-      <p className="text-primary-green text-lg md:text-xl font-semibold mb-3">
+      <p className="text-primary-green md:text-lg lg:text-xl font-semibold mb-3">
         Product Description
       </p>
-      <p className="text-secondary-gray mb-5">{data?.description}</p>
+      <p className="text-secondary-gray text-sm md:text-base mb-5">{data?.description}</p>
       <div className="flex gap-3 items-center mb-2">
         {/* Shop Name */}
         <Link
           href={`/shop-details?view=${"customer"}&id=${
             data?.shop?.user_id
           }&listing_id=${data?.shop?.id}`}
-          className="md:text-lg underline font-semibold text-secondary-black"
+          className="text-sm md:text-lg underline font-semibold text-secondary-black"
         >
           {data?.shop?.shop_name}
         </Link>
@@ -214,12 +214,12 @@ const ProductDescription = ({ data }: descriptionProps) => {
         {/* Shop Reviews */}
         <div className="flex gap-1 items-center">
           {Array.from({ length: +data?.reviews_avg_rating }).map((_, index) => (
-            <FaStar key={index} className="text-primary-green text-sm" />
+            <FaStar key={index} className="text-primary-green text-xs md:text-sm" />
           ))}
         </div>
       </div>
       {/* Location */}
-      <p className="flex gap-2 items-center underline font-semibold text-secondary-black mb-5">
+      <p className="flex gap-2 text-sm md:text-base items-center underline font-semibold text-secondary-black mb-5">
         <MyLocationSvg />
         <span>
           {data?.shop?.address?.display_my_address
@@ -230,11 +230,11 @@ const ProductDescription = ({ data }: descriptionProps) => {
 
       {/* Selling Option & Fulfillment */}
       <div>
-        <h3 className="text-lg text-primary-green font-semibold mb-2">
+        <h3 className="md:text-lg text-primary-green font-semibold mb-2">
           This product is available for:
         </h3>
 
-        <p className="mb-2 font-semibold">
+        <p className="mb-2 font-semibold text-sm md:text-base">
           {data?.fulfillment === "arrange_local_pickup"
             ? "Arrange Local Pickup"
             : data?.fulfillment === "shipping"

@@ -69,7 +69,7 @@ const page = () => {
       {/* All Categories */}
       <section className="mb-20">
         <Container>
-          <h2 className="text-2xl md:text-3xl font-semibold text-secondary-black mb-10 capitalize">
+          <h2 className="text-xl md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-7 xl:mb-10 capitalize">
             Explore Sustainable Products & Services Nearby
           </h2>
 
@@ -158,7 +158,7 @@ const page = () => {
         {isLoading ? (
           <h2 className="w-60 h-6 mb-7 animate-pulse bg-gray-200 rounded"></h2>
         ) : (
-          <h2 className="text-2xl md:text-3xl font-semibold text-secondary-black mb-7">
+          <h2 className="text-2xl xl:text-3xl font-semibold text-secondary-black mb-4 xl:mb-7">
             {categoryDetails?.data?.category?.name}
           </h2>
         )}
@@ -203,7 +203,7 @@ const page = () => {
       </Container>
 
       {/* Community Member */}
-      <div className="my-20">
+      <div className="my-10 xl:my-20">
         <MemberSpotlight data={spotlightData?.data} />
       </div>
 

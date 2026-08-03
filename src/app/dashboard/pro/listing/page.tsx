@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FaSearch } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
 import Image, { StaticImageData } from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductRowSkeleton } from "@/Components/Loader/Loader";
 import { useGetProductsQuery } from "@/redux/api/productApi";
 import { TbEdit } from "react-icons/tb";
@@ -30,7 +30,6 @@ type productItem = {
 export default function Page() {
   const [search, setSearch] = useState("");
   const { data: allListings, isLoading } = useGetProductsQuery({});
-  const menuRef = useRef<HTMLDivElement | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
   const [openMenu, setOpenMenu] = useState<number | null>(null);
 

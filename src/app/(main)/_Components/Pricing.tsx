@@ -68,7 +68,7 @@ const Pricing = ({
           Plans & Benefits
         </h2>
 
-        <p className="text-center text-base sm:text-lg xl:text-xl text-secondary-gray mb-7">
+        <p className="text-center text-base sm:text-lg xl:text-xl text-secondary-gray mb-4 lg:mb-7">
           {description}
         </p>
 
@@ -81,7 +81,7 @@ const Pricing = ({
               e.stopPropagation();
               setActiveTab("yearly");
             }}
-            className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm md:text-base ${
+            className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm lg:text-base ${
               activeTab === "yearly"
                 ? "text-primary-green bg-accent-white"
                 : "text-accent-white bg-transparent"
@@ -97,7 +97,7 @@ const Pricing = ({
               e.stopPropagation();
               setActiveTab("monthly");
             }}
-            className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm md:text-base ${
+            className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm lg:text-base ${
               activeTab === "monthly"
                 ? "text-primary-green bg-accent-white"
                 : "text-accent-white bg-transparent"
@@ -108,7 +108,7 @@ const Pricing = ({
         </div>
 
         {/* Pricing Plan */}
-        <div className="flex flex-col md:flex-row gap-5 md:gap-10 justify-center">
+        <div className="flex flex-col md:flex-row gap-5 lg:gap-10 justify-center">
           {isLoading
             ? Array.from({ length: 2 }).map((_, i) => (
                 <PricingSkeletonCard key={i} />

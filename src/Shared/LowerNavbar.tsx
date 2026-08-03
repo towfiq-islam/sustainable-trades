@@ -101,7 +101,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
   return (
     <div className="bg-white py-4 drop-shadow">
       <Container>
-        <div className="flex justify-between items-center">
+        <div className="flex gap-5 justify-between items-center">
           {/* Left - NavLinks */}
           <div>
             <div

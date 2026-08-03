@@ -15,16 +15,16 @@ const page = async ({ params }: any) => {
         bgImg={`${process.env.NEXT_PUBLIC_SITE_URL}/${pageData?.data?.page_image}`}
       />
 
-      <section className="mb-10 lg:mb-40 mt-10 lg:mt-20">
+      <section className="lg:mb-40 lg:mt-20">
         <Container>
-          <div className="flex flex-col lg:flex-row items-start gap-5 md:gap-10 2xl:gap-14">
+          <div className="flex flex-col lg:flex-row items-start gap-5 lg:gap-10 2xl:gap-14">
             {/* Left - Tabs */}
             <AboutUsTab dynamicPage={dynamicPage?.data} />
 
             {/* Right - Content */}
             <div className="grow">
               {/* Page Title */}
-              <h2 className="text-2xl xl:text-3xl font-semibold text-secondary-black mb-2.5 md:mb-5">
+              <h2 className="text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black mb-2.5 md:mb-5">
                 {pageData?.data?.page_title}
               </h2>
 
@@ -33,7 +33,7 @@ const page = async ({ params }: any) => {
                 dangerouslySetInnerHTML={{
                   __html: pageData?.data?.page_content,
                 }}
-                className="text-secondary-gray leading-8 max-w-[900px] [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:pl-5 [&_ol]:list-decimal"
+                className="text-secondary-gray text-sm lg:text-base leading-8 max-w-[900px] [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:pl-5 [&_ol]:list-decimal"
               />
             </div>
           </div>

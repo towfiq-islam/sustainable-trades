@@ -14,7 +14,7 @@ const HowItWorks = async () => {
   const howItWorksData = await getHowItWorksData();
 
   return (
-    <section id="how-it-works" className="py-10 xl:py-20">
+    <section id="how-it-works" className="pb-10 lg:py-10 xl:py-20">
       <Container>
         <h2 className="section_title text-center">How It Works</h2>
 

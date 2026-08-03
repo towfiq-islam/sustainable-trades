@@ -18,7 +18,7 @@ const OurMission = async () => {
         {/* Title */}
         <h2 className="section_title text-center">Our Mission</h2>
 
-        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-6">
           {missionData?.data?.map(
             ({ id, name, image, description }: missionItem, idx: number) => (
               <div

@@ -34,7 +34,7 @@ const FeaturedShops = () => {
   });
 
   return (
-    <section className="mt-50 md:mt-0 py-10 xl:py-20">
+    <section className="py-7 lg:py-10 xl:py-20">
       <Container>
         {/* Title */}
         <h3 className="section_title md:text-start text-center">
@@ -42,7 +42,7 @@ const FeaturedShops = () => {
         </h3>
 
         {/* Shops */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 xl:gap-10">
           {isLoading ? (
             [...Array(4)].map((_, idx) => <ShopCardSkeleton key={idx} />)
           ) : featuredData?.data?.length > 0 ? (

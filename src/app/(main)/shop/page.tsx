@@ -64,7 +64,7 @@ const page = () => {
       {/* All Categories */}
       <section className="mb-20">
         <Container>
-          <h2 className="text-xl sm:text-2xl xl:text-3xl font-semibold text-secondary-black pt-3 xl:pt-0 mb-5 md:mb-10 capitalize">
+          <h2 className="text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black pt-3 xl:pt-0 mb-5 lg:mb-10 capitalize">
             Explore Category Wise Sustainable Products Nearby
           </h2>
 
@@ -199,7 +199,7 @@ const page = () => {
 
       {/* Nearby Listings */}
       <Container>
-        <h2 className="mt-8 xl:mt-16 text-xl sm:text-2xl xl:text-3xl font-semibold text-secondary-black mb-10 capitalize">
+        <h2 className="mt-8 xl:mt-16 text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5 lg:mb-10 capitalize">
           Sustainable Products & Services Nearby
         </h2>
 

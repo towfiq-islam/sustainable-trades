@@ -364,7 +364,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
               {/* Popover */}
               <div
                 onClick={e => e.stopPropagation()}
-                className={`bg-white border border-gray-100 z-50 rounded-xl w-60 absolute right-0 top-full mt-3 p-4   translate-y-2 hidden lg:block overflow-hidden duration-300 transition-all ${
+                className={`bg-white border border-gray-100 z-50 rounded-xl w-60 absolute right-0 top-full mt-3 p-4   translate-y-2 overflow-hidden duration-300 transition-all ${
                   showPopover
                     ? "opacity-100 scale-100"
                     : "opacity-0 pointer-events-none scale-95"

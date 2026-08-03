@@ -28,11 +28,11 @@ html {
 
 /* Custom CSS */
 .section_title {
-  @apply text-2xl md:text-3xl xl:text-4xl 2xl:text-[45px] text-primary-green mb-8 xl:mb-12;
+  @apply text-2xl font-medium lg:text-3xl xl:text-4xl 2xl:text-[45px] text-primary-green mb-5 lg:mb-8 xl:mb-12;
 }
 
 .section_sub_title {
-  @apply text-3xl xl:text-4xl text-secondary-black font-semibold mb-3.5 md:mb-7;
+  @apply text-2xl lg:text-3xl xl:text-4xl text-secondary-black font-semibold mb-3.5 lg:mb-7;
 }
 
 .auth-primary-btn {

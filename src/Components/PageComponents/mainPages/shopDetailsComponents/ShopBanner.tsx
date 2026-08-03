@@ -77,14 +77,14 @@ const ShopBanner = ({ id, data }: BannerProps) => {
       style={{
         backgroundImage: `url(${bannerUrl})`,
       }}
-      className="h-[470px] 2xl:h-[600px] bg-no-repeat bg-center bg-cover bg-black/50 bg-blend-overlay py-10 bg-fixed mb-10"
+      className="h-[400px] lg:h-[470px] 2xl:h-[600px] bg-no-repeat bg-center bg-cover bg-black/50 bg-blend-overlay py-10 bg-fixed mb-10"
     >
       <Container>
         <div className="flex flex-col md:flex-row justify-between">
           {/* Left - Shop Info */}
-          <div className="space-y-3.5 2xl:space-y-4">
+          <div className="space-y-1.5 lg:space-y-3.5 2xl:space-y-4">
             {/* Shop Profile */}
-            <div className="flex md:justify-start justify-center items-center ">
+            <div className="flex md:justify-start justify-center items-center">
               <figure className="size-23 xl:size-25 2xl:size-[153px] rounded-full relative">
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.shop_info?.shop_image}`}
@@ -96,12 +96,9 @@ const ShopBanner = ({ id, data }: BannerProps) => {
               </figure>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-3 2xl:gap-6 md:items-center">
-              {/* Shop Name */}
-              <h3 className="text-white text-2xl xl:text-3xl 2xl:text-4xl font-semibold leading-[36px]">
-                {data?.shop_info?.shop_name}
-              </h3>
-            </div>
+            <h3 className="text-white text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-semibold leading-[36px]">
+              {data?.shop_info?.shop_name}
+            </h3>
 
             {/* Description */}
             <p className="md:max-w-[350px] text-accent-white 2xl:text-lg">

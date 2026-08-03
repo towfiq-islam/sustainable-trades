@@ -52,7 +52,7 @@ const page = () => {
       {/* All Categories */}
       <section className="mb-20">
         <Container>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-secondary-black mb-10 capitalize">
+          <h2 className="text-xl sm:text-2xl xl:text-3xl font-semibold text-secondary-black mb-10 capitalize">
             Explore Sustainable Products & Services Nearby
           </h2>
 
@@ -185,7 +185,7 @@ const page = () => {
         )}
       </Container>
 
-      <div className="py-10 md:py-16">
+      <div className="py-10 xl:py-16">
         <MemberSpotlight data={spotlightData?.data} has_community={true} />
       </div>
       <Subscribe />

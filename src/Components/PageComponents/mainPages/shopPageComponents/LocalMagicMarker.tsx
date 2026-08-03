@@ -27,12 +27,12 @@ const LocalMagicMarker = ({ address }: Props) => {
   });
 
   return (
-    <section className="mt-10 mb-10 xl:mb-16">
+    <section className="mt-5 md:mt-10 mb-10 xl:mb-16">
       <Container>
         <div className="space-y-4 xl:space-y-7">
           {/* Upper Part */}
           <div className="flex flex-col md:flex-row gap-2.5 md:gap-0 justify-between items-center">
-            <h3 className="text-2xl xl:text-3xl font-semibold text-secondary-black">
+            <h3 className="text-xl md:text-2xl xl:text-3xl font-semibold text-secondary-black">
               Find Your Local Magic Makers
             </h3>
 
@@ -52,7 +52,7 @@ const LocalMagicMarker = ({ address }: Props) => {
           <div className="grid lg:grid-cols-2 gap-5 border border-gray-100 rounded-lg p-3">
             {/* Left - Shop List */}
             {searchShop ? (
-              <div className="space-y-1 xl:space-y-2 h-[450px] xl:h-[550px] overflow-y-auto">
+              <div className="space-y-1 xl:space-y-2 h-[400px] md:h-[450px] xl:h-[550px] overflow-y-auto">
                 {shopLoading ? (
                   Array.from({ length: 7 }).map((_, idx) => (
                     <ShopListSkeleton key={idx} />
@@ -151,7 +151,7 @@ const LocalMagicMarker = ({ address }: Props) => {
             )}
 
             {/* Right - Google Map */}
-            <div className="h-[450px] xl:h-[550px] overflow-hidden rounded">
+            <div className="h-[350px] md:h-[450px] xl:h-[550px] overflow-hidden rounded">
               {shopData?.data?.data && shopData?.data?.data?.length > 0 ? (
                 <ShopsMap
                   shops={shopData?.data?.data}

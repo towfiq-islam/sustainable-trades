@@ -13,13 +13,13 @@ const ExploreProduct = async () => {
   const productCategories = await getProductCategories();
 
   return (
-    <section className="py-12 bg-primary-green">
+    <section className="py-10 md:py-12 bg-primary-green">
       <Container>
         <h2 className="section_title !text-accent-white md:text-start text-center">
           Explore Sustainable Products
         </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-10 gap-y-12 2xl:gap-y-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7 md:gap-x-10 md:gap-y-12 2xl:gap-y-16">
           {productCategories?.data?.map(({ id, name, image }: categoryItem) => (
             <Link
               key={id}
@@ -38,7 +38,7 @@ const ExploreProduct = async () => {
               </figure>
 
               {/* Category Name */}
-              <h3 className="mt-4 2xl:text-lg text-accent-white">
+              <h3 className="mt-4 text-sm 2xl:text-lg text-accent-white">
                 {name}
               </h3>
             </Link>

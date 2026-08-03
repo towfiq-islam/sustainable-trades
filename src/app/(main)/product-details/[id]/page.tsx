@@ -59,9 +59,9 @@ const page = () => {
           <button>{productDetailsData?.data?.product_name}</button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 2xl:gap-12 lg:mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 md:gap-8 2xl:gap-12 lg:mb-16">
           {/* Left */}
-          <div className="space-y-10 md:space-y-16">
+          <div className="space-y-5 md:space-y-10 lg:space-y-16">
             {/* Thumbnail Gallery */}
             <ProductGallery data={productDetailsData?.data} />
 

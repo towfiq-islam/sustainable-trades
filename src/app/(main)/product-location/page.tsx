@@ -69,7 +69,7 @@ const page = () => {
       {/* All Categories */}
       <section className="mb-20">
         <Container>
-          <h2 className="text-2xl xl:text-3xl font-semibold text-secondary-black mb-7 xl:mb-10 capitalize">
+          <h2 className="text-xl md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-7 xl:mb-10 capitalize">
             Explore Sustainable Products & Services Nearby
           </h2>
 

@@ -75,12 +75,12 @@ const ProductLocation = () => {
   }, [hasMore, isFetching, products]);
 
   return (
-    <section className="mt-10 mb-10 xl:mb-16">
+    <section className="mt-5 md:mt-10 mb-10 xl:mb-16">
       <Container>
         <div className="grid lg:grid-cols-2 gap-5 border border-gray-100 rounded-lg p-3">
           {/* Left - Product List */}
           {search ? (
-            <div className="space-y-1 xl:space-y-2 h-[450px] xl:h-[550px] overflow-y-auto">
+            <div className="space-y-1 xl:space-y-2 h-[400px] md:h-[450px] xl:h-[550px] overflow-y-auto">
               {productLoading && page === 1 ? (
                 Array.from({ length: 7 }).map((_, idx) => (
                   <ShopListSkeleton key={idx} />
@@ -198,7 +198,7 @@ const ProductLocation = () => {
           )}
 
           {/* Right - Google Map */}
-          <div className="h-[450px] xl:h-[550px] overflow-hidden rounded">
+          <div className="h-[350px] md:h-[450px] xl:h-[550px] overflow-hidden rounded">
             {products.length > 0 ? (
               <ProductMap
                 products={products}

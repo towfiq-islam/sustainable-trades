@@ -55,7 +55,7 @@ const FeaturedShops = () => {
                 className="text-center space-y-1.5"
               >
                 {/* Shop Image */}
-                <figure className="size-44 xl:size-52 2xl:size-64 mx-auto cursor-pointer rounded-full border border-gray-100 group relative">
+                <figure className="size-34 md:size-44 xl:size-52 2xl:size-64 mx-auto cursor-pointer rounded-full border border-gray-100 group relative">
                   <div className="absolute bg-black/50 size-full rounded-full inset-0 opacity-0 duration-500 transition-all group-hover:opacity-100 flex justify-center items-center group-hover:backdrop-blur-[1px]">
                     <IoLink className="text-white text-2xl" />
                   </div>
@@ -89,12 +89,12 @@ const FeaturedShops = () => {
                       (_, index) => (
                         <FaRegStar
                           key={index}
-                          className="text-primary-green text-sm"
+                          className="text-primary-green text-xs md:text-base"
                         />
                       ),
                     )}
                   </div>
-                  <p className="text-sm font-semibold text-secondary-black">
+                  <p className="text-xs md:text-sm font-semibold text-secondary-black">
                     ({shop_info?.avg_rating})
                   </p>
                 </div>

@@ -169,7 +169,7 @@ const CreateShop = ({ newStep }: { newStep: number }) => {
       {/* Close btn */}
       <Link
         href="/"
-        className="absolute top-5 xl:top-10 right-5 xl:right-20 text-xl cursor-pointer hover:bg-gray-200 px-2 py-2 rounded-lg duration-200 transition-colors z-50"
+        className="absolute top-3 md:top-5 xl:top-10 right-3 md:right-5 xl:right-20 text-xl cursor-pointer hover:bg-gray-200 px-2 py-2 rounded-lg duration-200 transition-colors z-50"
       >
         <RxCross2 />
       </Link>

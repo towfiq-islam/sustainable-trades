@@ -77,7 +77,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
       style={{
         backgroundImage: `url(${bannerUrl})`,
       }}
-      className="h-[400px] lg:h-[470px] 2xl:h-[600px] bg-no-repeat bg-center bg-cover bg-black/50 bg-blend-overlay py-10 bg-fixed mb-10"
+      className="h-[450px] md:h-[400px] lg:h-[470px] 2xl:h-[600px] bg-no-repeat bg-center bg-cover bg-black/50 bg-blend-overlay py-10 bg-fixed mb-10"
     >
       <Container>
         <div className="flex flex-col md:flex-row justify-between">
@@ -200,60 +200,6 @@ const ShopBanner = ({ id, data }: BannerProps) => {
               <p className="text-lg text-accent-gray font-semibold">
                 {data?.shop_info?.order_count || 0} Sales
               </p>
-            </div>
-          </div>
-
-          <div className="md:hidden block relative mt-14 md:w-[320px] border border-gray-600 rounded-lg shadow-lg px-6 py-5 bg-black/30">
-            {/* Profile Image - floating top center */}
-            <figure className="absolute -top-8 left-1/2 -translate-x-1/2 rounded-full size-14 grid place-items-center text-xl text-white font-semibold bg-accent-red">
-              {data?.avatar ? (
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.avatar}`}
-                  alt="author"
-                  fill
-                  unoptimized
-                  className="size-full rounded-full"
-                />
-              ) : (
-                <span>{data?.first_name.at(0)}</span>
-              )}
-            </figure>
-
-            {/* Name & Description */}
-            <div className="flex justify-between items-center ">
-              <div className="">
-                <h3 className="text-white font-semibold text-xl">
-                  {data?.first_name} {data?.last_name}
-                </h3>
-                <p className="text-gray-300 text-sm">
-                  {data?.shop_info?.shop_name}
-                </p>
-              </div>
-
-              {/* Veterinarian Tag */}
-              <p className=" rounded-full font-medium px-3 py-1 text-xs bg-white text-black">
-                Veterinarian
-              </p>
-            </div>
-
-            <div className="flex  gap-3 items-center mt-4">
-              {/* Trades */}
-              <div className="flex  items-center gap-2">
-                <span className="flex items-center justify-center size-7 rounded-full bg-off-green">
-                  <p className="size-5 rounded-full bg-off-green"></p>
-                </span>
-                <p className="text-lg text-gray-300 font-semibold">
-                  {data?.trade_offers_count || 0} Trades
-                </p>
-              </div>
-
-              {/* Sales */}
-              <div className="flex items-center gap-2">
-                <p className="size-5 rounded-full bg-accent-red"></p>
-                <p className="text-lg text-gray-300 font-semibold">
-                  {data?.shop_info?.order_count || 0} Sales
-                </p>
-              </div>
             </div>
           </div>
         </div>

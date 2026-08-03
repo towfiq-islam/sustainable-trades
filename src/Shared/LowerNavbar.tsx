@@ -101,7 +101,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
   return (
     <div className="bg-white py-4 drop-shadow">
       <Container>
-        <div className="flex gap-5 justify-between items-center">
+        <div className="flex md:gap-5 justify-between items-center">
           {/* Left - NavLinks */}
           <div>
             <div
@@ -220,7 +220,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
             <Link
               href="/"
               className={`text-base xl:text-lg text-primary-green font-semibold ${
-                user ? "block" : "hidden"
+                user ? "hidden md:block" : "hidden"
               }`}
             >
               Home
@@ -228,7 +228,7 @@ const LowerNavbar = ({ user, dynamicPage }: any) => {
           </div>
 
           {/* Right - Searchbar */}
-          <div className="flex gap-1 items-center border border-primary-green px-3 py-2 rounded-lg w-full lg:w-[450px]  2xl:w-[528px]">
+          <div className="flex gap-1 items-center border border-primary-green px-2 md:px-3 py-1.5 md:py-2 rounded-lg w-full lg:w-[450px] 2xl:w-[528px]">
             <SearchSvg />
             <input
               type="text"

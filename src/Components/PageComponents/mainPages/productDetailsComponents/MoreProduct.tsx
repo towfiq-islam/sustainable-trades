@@ -20,13 +20,13 @@ const MoreProduct = ({ data }: moreProductProps) => {
   return (
     <section className="my-10 xl:my-20">
       {/* Title */}
-      <h3 className="text-2xl xl:text-3xl font-semibold text-secondary-black mb-4 xl:mb-7">
+      <h3 className="text-xl md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-4 xl:mb-7">
         More from this shop
       </h3>
 
       {/* Products */}
       {data?.more_products_from_shop?.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-x-5 md:gap-y-10">
           {data?.more_products_from_shop?.map(product => (
             <Product
               key={product?.id}

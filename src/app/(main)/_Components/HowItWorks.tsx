@@ -18,9 +18,9 @@ const HowItWorks = async () => {
       <Container>
         <h2 className="section_title text-center">How It Works</h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 text-center mb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10 text-center mb-10">
           {howItWorksData?.data?.map((item: workItem) => (
-            <div key={item?.id} className="space-y-5">
+            <div key={item?.id} className="space-y-3 md:space-y-5">
               <figure className="size-15 lg:size-24 xl:size-40 mx-auto relative">
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.image}`}
@@ -30,7 +30,7 @@ const HowItWorks = async () => {
                 />
               </figure>
 
-              <h3 className="text-2xl 2xl:text-3xl font-semibold text-primary-green">
+              <h3 className="text-xl md:text-2xl 2xl:text-3xl font-semibold text-primary-green">
                 {item?.title}
               </h3>
 

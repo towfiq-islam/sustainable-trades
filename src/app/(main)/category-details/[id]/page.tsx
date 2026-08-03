@@ -50,9 +50,9 @@ const page = () => {
       <MagicMarkers />
 
       {/* All Categories */}
-      <section className="mb-20">
+      <section className="mb-10 md:mb-20">
         <Container>
-          <h2 className="text-xl sm:text-2xl xl:text-3xl font-semibold text-secondary-black mb-10 capitalize">
+          <h2 className="text-lg md:text-xl sm:text-2xl xl:text-3xl font-semibold text-secondary-black mb-10 capitalize">
             Explore Sustainable Products & Services Nearby
           </h2>
 
@@ -141,7 +141,7 @@ const page = () => {
         {isLoading ? (
           <h2 className="w-60 h-6 mb-7 animate-pulse bg-gray-200 rounded"></h2>
         ) : (
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-secondary-black mb-7">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-secondary-black mb-4 md:mb-7">
             {categoryDetails?.data?.category?.name}
           </h2>
         )}

@@ -108,7 +108,7 @@ const Pricing = ({
         </div>
 
         {/* Pricing Plan */}
-        <div className="flex flex-col md:flex-row gap-5 lg:gap-10 justify-center">
+        <div className="flex flex-col w-full md:flex-row gap-5 lg:gap-10 justify-center">
           {isLoading
             ? Array.from({ length: 2 }).map((_, i) => (
                 <PricingSkeletonCard key={i} />

@@ -53,7 +53,7 @@ const AboutShop = ({ data }: AboutProps) => {
                 {data?.about?.tagline}
               </h4>
 
-              <p className="text-secondary-gray sm:text-[15px] xl:text-base">
+              <p className="text-secondary-gray text-sm sm:text-[15px] xl:text-base">
                 {data?.about?.statement}
               </p>
 
@@ -61,7 +61,7 @@ const AboutShop = ({ data }: AboutProps) => {
                 Our Story
               </h4>
 
-              <p className="text-secondary-gray sm:text-[15px] xl:text-base">
+              <p className="text-secondary-gray text-sm sm:text-[15px] xl:text-base">
                 {showMore
                   ? data?.about?.our_story
                   : data?.about?.our_story?.slice(0, 400)}

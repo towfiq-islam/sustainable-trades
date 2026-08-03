@@ -28,11 +28,11 @@ html {
 
 /* Custom CSS */
 .section_title {
-  @apply text-2xl font-medium lg:text-3xl xl:text-4xl 2xl:text-[45px] text-primary-green mb-5 lg:mb-8 xl:mb-12;
+  @apply font-medium text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-[45px] text-primary-green mb-5 lg:mb-8 xl:mb-12;
 }
 
 .section_sub_title {
-  @apply text-2xl lg:text-3xl xl:text-4xl text-secondary-black font-semibold mb-3.5 lg:mb-7;
+  @apply text-xl md:text-2xl lg:text-3xl xl:text-4xl text-secondary-black font-semibold mb-3.5 lg:mb-7;
 }
 
 .auth-primary-btn {
@@ -48,15 +48,15 @@ html {
 }
 
 .auth-heading {
-  @apply text-xl sm:text-2xl md:text-3xl xl:text-4xl 2xl:text-5xl font-semibold text-secondary-black mb-5;
+  @apply text-lg md:text-xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-semibold text-secondary-black mb-3 md:mb-5;
 }
 
 .auth_title {
-  @apply text-primary-green text-[40px] font-lato font-bold text-center;
+  @apply text-primary-green text-2xl md:text-3xl lg:text-[40px] font-semibold text-center;
 }
 
 .auth_description {
-  @apply font-lato text-[18px] font-normal max-w-[350px] w-full mx-auto text-center;
+  @apply text-sm md:text-[18px] mt-1 font-normal max-w-[350px] w-full mx-auto text-center;
 }
 
 .form-group {
@@ -64,7 +64,7 @@ html {
 }
 
 .form-label {
-  @apply text-secondary-black block w-full font-semibold;
+  @apply text-secondary-black text-sm md:text-base block w-full font-semibold;
 }
 
 .form-label span {

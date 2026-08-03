@@ -24,7 +24,7 @@ const page = async ({ params }: any) => {
             {/* Right - Content */}
             <div className="grow">
               {/* Page Title */}
-              <h2 className="text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black mb-2.5 md:mb-5">
+              <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black mb-2.5 md:mb-5">
                 {pageData?.data?.page_title}
               </h2>
 

@@ -124,7 +124,7 @@ const Page = () => {
                       e.preventDefault();
                       setShowPassword(!showPassword);
                     }}
-                    className="absolute top-4 right-4 cursor-pointer"
+                    className="absolute top-2.5 md:top-4 right-4 cursor-pointer"
                   >
                     {showPassword ? (
                       <FiEye className="text-lg" />

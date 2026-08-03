@@ -158,7 +158,7 @@ export default function page({ searchParams }: Props) {
                     e.preventDefault();
                     setShowPassword(!showPassword);
                   }}
-                  className="absolute top-4 right-4 cursor-pointer"
+                  className="absolute top-2.5 md:top-4 right-4 cursor-pointer"
                 >
                   {showPassword ? (
                     <FiEye className="text-lg" />
@@ -193,7 +193,7 @@ export default function page({ searchParams }: Props) {
                     e.preventDefault();
                     setShowConfirmPassword(!showConfirmPassword);
                   }}
-                  className="absolute top-4 right-4 cursor-pointer"
+                  className="absolute top-2.5 md:top-4 right-4 cursor-pointer"
                 >
                   {showConfirmPassword ? (
                     <FiEye className="text-lg" />

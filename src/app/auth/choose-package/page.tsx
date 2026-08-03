@@ -44,7 +44,7 @@ const Page = () => {
           selectedRole === "magic_maker"
             ? "/auth/create-shop"
             : `/auth/register?role=${selectedRole}`
-        }`
+        }`,
       );
     }
   };
@@ -63,22 +63,11 @@ const Page = () => {
         />
       </div>
 
-      <div className="block lg:hidden relative h-[50vh] w-full">
-        <Image
-          src={welcomeBg}
-          alt="welcome_img"
-          fill
-          unoptimized
-          className="w-full h-full object-cover"
-          placeholder="blur"
-        />
-      </div>
-
       {/* Right */}
-      <div className="flex-1 grid place-items-center side-scrollbar w-[90%] mx-auto -mt-40 lg:mt-0 z-50 bg-white lg:bg-transparent rounded-[8px] lg:rounded-0 ">
+      <div className="flex-1 grid place-items-center side-scrollbar w-full lg:w-[90%] mx-auto lg:mt-0 z-50 bg-white lg:bg-transparent rounded-[8px] lg:rounded-0 ">
         <div className=" p-3.5 md:p-5 lg:p-10">
           {/* Back to home */}
-          <div className="flex  text-sm 2xl:text-base items-center gap-1 text-center mb-0 md:mb-5 2xl:mb-8 hover:underline">
+          <div className="flex  text-sm 2xl:text-base items-center gap-1 text-center mb-3 md:mb-5 2xl:mb-8 hover:underline">
             <IoArrowBackOutline className="text-primary-green" />
             <Link
               href="/"
@@ -112,7 +101,7 @@ const Page = () => {
                     checked={selectedRole === item.role}
                     onChange={() =>
                       setSelectedRole(prev =>
-                        prev === item.role ? null : item.role
+                        prev === item.role ? null : item.role,
                       )
                     }
                     className="size-4 lg:size-6 xl:size-8 cursor-pointer appearance-none rounded-full border border-gray-300  checked:bg-primary-green checked:border-transparent focus:outline-none shrink-0"

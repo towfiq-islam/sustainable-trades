@@ -15,6 +15,7 @@ import {
   useGetVendorOrdersQuery,
 } from "@/redux/api/ordersApi";
 import toast from "react-hot-toast";
+import { FiShoppingBag } from "react-icons/fi";
 
 type orderItem = {
   id: number;
@@ -59,7 +60,7 @@ const page = () => {
   ];
 
   const [cancelOrder, { isLoading: isCancelling }] = useCancelOrderMutation();
-  const { data: allOrders, isLoading } = useGetVendorOrdersQuery({
+  const { data: allOrders, isFetching: isLoading } = useGetVendorOrdersQuery({
     status,
     search,
     page,
@@ -229,207 +230,256 @@ const page = () => {
         <div className="w-full pt-10">
           {/* Desktop Table */}
           <div className="hidden lg:block overflow-x-auto">
-            <table className="w-full border-collapse text-nowrap">
-              <thead>
-                <tr className="border-b-2 border-gray-300 text-secondary-black text-[15px] xl:text-[16px] font-semibold">
-                  <th className="py-3 px-4 text-left">Order #</th>
-                  <th className="py-3 px-4 text-left">Order Date</th>
-                  <th className="py-3 px-4 text-left">Customer</th>
-                  <th className="py-3 px-4 text-left">Opt In</th>
-                  <th className="py-3 px-4 text-left">Items</th>
-                  <th className="py-3 px-4 text-left">Amount</th>
-                  <th className="py-3 px-4 text-left">Payment Method</th>
-                  <th className="py-3 px-4 text-left">Payment Status</th>
-                  <th className="py-3 px-4 text-left">Order Status</th>
-                  <th className="py-3 px-4 text-left">FullFillment</th>
-                  <th className="py-3 px-4 text-left">Notes</th>
-                  <th className="py-3 px-4 text-center">Action</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {isLoading ? (
-                  [1, 2, 3, 4, 5].map((_, idx) => (
+            {isLoading ? (
+              <table className="w-full border-collapse text-nowrap">
+                <thead>
+                  <tr className="border-b-2 border-gray-300 text-secondary-black text-[15px] xl:text-[16px] font-semibold">
+                    <th className="py-3 px-4 text-left">Order #</th>
+                    <th className="py-3 px-4 text-left">Order Date</th>
+                    <th className="py-3 px-4 text-left">Customer</th>
+                    <th className="py-3 px-4 text-left">Opt In</th>
+                    <th className="py-3 px-4 text-left">Items</th>
+                    <th className="py-3 px-4 text-left">Amount</th>
+                    <th className="py-3 px-4 text-left">Payment Method</th>
+                    <th className="py-3 px-4 text-left">Payment Status</th>
+                    <th className="py-3 px-4 text-left">Order Status</th>
+                    <th className="py-3 px-4 text-left">FullFillment</th>
+                    <th className="py-3 px-4 text-left">Notes</th>
+                    <th className="py-3 px-4 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[1, 2, 3, 4, 5].map((_, idx) => (
                     <OrderRowSkeleton key={idx} />
-                  ))
-                ) : allOrders?.data?.data?.length > 0 ? (
-                  allOrders?.data?.data?.map((order: orderItem, i: number) => (
-                    <tr
-                      key={i}
-                      className="border-b border-gray-300 text-secondary-black text-[14px] font-semibold last:border-b-0 hover:bg-gray-100 duration-200 transition-all"
-                    >
-                      <td className="py-4 px-4">{order?.order_number}</td>
-                      <td className="py-4 px-4">
-                        {moment(order?.created_at).format("ll")}
-                      </td>
-                      <td className="py-4 px-4">
-                        <div className="flex flex-col">
-                          <span>
-                            {order?.user?.first_name} {order?.user?.last_name}
-                          </span>
-                          <span className="text-sm text-gray-500">
-                            {order?.user?.email}
-                          </span>
-                        </div>
-                      </td>
-
-                      <td className="py-4 px-4">
-                        {order?.subscribe_website ? "Yes" : "No"}
-                      </td>
-                      <td className="py-4 px-4">{order?.total_quantity}</td>
-                      <td className="py-4 px-4">${order?.total_amount}</td>
-                      <td className="py-4 px-4">
-                        {order?.payment_method === "paypal"
-                          ? "Paypal"
-                          : "Cash On Delivery"}
-                      </td>
-
-                      <td className="py-4 px-4">
-                        <span
-                          className={`min-w-[100px] capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
-                            order?.payment_status === "pending"
-                              ? "text-red-500"
-                              : "text-primary-green"
-                          }`}
-                        >
-                          {order?.payment_status}
-                        </span>
-                      </td>
-
-                      <td className="py-4 px-4">
-                        <span
-                          className={`min-w-[100px] ${order?.status === "processing" ? "text-primary-green" : order?.status === "shipped" ? "text-secondary-gray" : "text-white"} capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
-                            order?.status === "delivered"
-                              ? "bg-primary-green"
-                              : order?.status === "pending" ||
-                                  order?.status === "local_pickup_requested"
-                                ? "bg-accent-red"
-                                : order?.status === "confirmed"
-                                  ? "bg-dark-green"
-                                  : order?.status === "processing"
-                                    ? "bg-off-green"
-                                    : order?.status === "cancelled"
-                                      ? "bg-primary-red"
-                                      : order?.status === "shipped"
-                                        ? "bg-accent-blue"
-                                        : order?.status === "paid"
-                                          ? "bg-light-green"
-                                          : "bg-gray-500"
-                          }`}
-                        >
-                          {order?.status === "local_pickup_requested"
-                            ? "Local pickup requested"
-                            : order?.status === "awaiting_payment"
-                              ? "Awaiting Payment"
-                              : order?.status}
-                        </span>
-                      </td>
-
-                      <td className="py-4 px-4">
-                        {order?.shipping_option === "local_pickup"
-                          ? "Local pickup"
-                          : "Shipping"}
-                      </td>
-
-                      <td className="py-4 px-4 capitalize">
-                        <button
-                          disabled={!order?.note}
-                          onClick={() => {
-                            setNote(order?.note);
-                            setShowNote(true);
-                          }}
-                          className={`px-2.5 py-1 text-xs font-semibold rounded-full border-2 text-accent-red ${
-                            order?.note
-                              ? "border-accent-red cursor-pointer hover:bg-accent-red hover:text-white duration-300 transition-all"
-                              : "opacity-70 bg-gray-200 cursor-not-allowed"
-                          }`}
-                        >
-                          View
-                        </button>
-                      </td>
-
-                      <td className="py-4 px-4 flex justify-center items-center relative">
-                        <button
-                          onClick={e => {
-                            e.stopPropagation();
-                            setOrderId(order?.id);
-                            setOpenPopup(!openPopup);
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <BsThreeDotsVertical />
-                        </button>
-
-                        {openPopup && orderId === order.id && (
-                          <div
-                            onClick={e => e.stopPropagation()}
-                            className={`absolute right-16 px-1 py-2 w-[120px] bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-200 ${
-                              i === allOrders?.data?.data?.length - 1 &&
-                              allOrders?.data?.data?.length > 5
-                                ? "-top-20"
-                                : "top-8"
-                            }`}
-                          >
-                            <Link
-                              href={`/dashboard/${user?.membership?.membership_type}/orders/${order?.id}`}
-                              className="w-full text-left px-3 py-1.5 hover:bg-gray-100 cursor-pointer block"
-                            >
-                              View Details
-                            </Link>
-
-                            <button
-                              disabled={isCancelling}
-                              onClick={() => {
-                                cancelOrder(order?.id)
-                                  .unwrap()
-                                  .then(res => {
-                                    if (res?.success) {
-                                      toast.success(res?.message);
-                                    }
-                                  })
-                                  .catch(err => {
-                                    toast.error(err?.data?.message);
-                                  });
-
-                                setOpenPopup(false);
-                              }}
-                              className="w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block disabled:cursor-not-allowed disabled:opacity-85 cursor-pointer"
-                            >
-                              {isCancelling ? "Cancelling..." : " Cancel Order"}
-                            </button>
-                          </div>
-                        )}
-                      </td>
+                  ))}
+                </tbody>
+              </table>
+            ) : allOrders?.data?.data?.length > 0 ? (
+              <>
+                <table className="w-full border-collapse text-nowrap">
+                  <thead>
+                    <tr className="border-b-2 border-gray-300 text-secondary-black text-[15px] xl:text-[16px] font-semibold">
+                      <th className="py-3 px-4 text-left">Order #</th>
+                      <th className="py-3 px-4 text-left">Order Date</th>
+                      <th className="py-3 px-4 text-left">Customer</th>
+                      <th className="py-3 px-4 text-left">Opt In</th>
+                      <th className="py-3 px-4 text-left">Items</th>
+                      <th className="py-3 px-4 text-left">Amount</th>
+                      <th className="py-3 px-4 text-left">Payment Method</th>
+                      <th className="py-3 px-4 text-left">Payment Status</th>
+                      <th className="py-3 px-4 text-left">Order Status</th>
+                      <th className="py-3 px-4 text-left">FullFillment</th>
+                      <th className="py-3 px-4 text-left">Notes</th>
+                      <th className="py-3 px-4 text-center">Action</th>
                     </tr>
-                  ))
-                ) : (
-                  <p className="text-red-500 font-semibold text-lg mt-5">
-                    No orders found
-                  </p>
-                )}
-              </tbody>
-            </table>
+                  </thead>
 
-            {/* Pagination */}
-            {!isLoading && (
-              <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">
-                {allOrders?.data?.links?.map((item: any, idx: number) => (
+                  <tbody>
+                    {allOrders?.data?.data?.map(
+                      (order: orderItem, i: number) => (
+                        <tr
+                          key={i}
+                          className="border-b border-gray-300 text-secondary-black text-[14px] font-semibold last:border-b-0 hover:bg-gray-100 duration-200 transition-all"
+                        >
+                          <td className="py-4 px-4">{order?.order_number}</td>
+                          <td className="py-4 px-4">
+                            {moment(order?.created_at).format("ll")}
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex flex-col">
+                              <span>
+                                {order?.user?.first_name}{" "}
+                                {order?.user?.last_name}
+                              </span>
+                              <span className="text-sm text-gray-500">
+                                {order?.user?.email}
+                              </span>
+                            </div>
+                          </td>
+
+                          <td className="py-4 px-4">
+                            {order?.subscribe_website ? "Yes" : "No"}
+                          </td>
+                          <td className="py-4 px-4">{order?.total_quantity}</td>
+                          <td className="py-4 px-4">${order?.total_amount}</td>
+                          <td className="py-4 px-4">
+                            {order?.payment_method === "paypal"
+                              ? "Paypal"
+                              : "Cash On Delivery"}
+                          </td>
+
+                          <td className="py-4 px-4">
+                            <span
+                              className={`min-w-[100px] capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
+                                order?.payment_status === "pending"
+                                  ? "text-red-500"
+                                  : "text-primary-green"
+                              }`}
+                            >
+                              {order?.payment_status}
+                            </span>
+                          </td>
+
+                          <td className="py-4 px-4">
+                            <span
+                              className={`min-w-[100px] ${order?.status === "processing" ? "text-primary-green" : order?.status === "shipped" ? "text-secondary-gray" : "text-white"} capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
+                                order?.status === "delivered"
+                                  ? "bg-primary-green"
+                                  : order?.status === "pending" ||
+                                      order?.status === "local_pickup_requested"
+                                    ? "bg-accent-red"
+                                    : order?.status === "confirmed"
+                                      ? "bg-dark-green"
+                                      : order?.status === "processing"
+                                        ? "bg-off-green"
+                                        : order?.status === "cancelled"
+                                          ? "bg-primary-red"
+                                          : order?.status === "shipped"
+                                            ? "bg-accent-blue"
+                                            : order?.status === "paid"
+                                              ? "bg-light-green"
+                                              : "bg-gray-500"
+                              }`}
+                            >
+                              {order?.status === "local_pickup_requested"
+                                ? "Local pickup requested"
+                                : order?.status === "awaiting_payment"
+                                  ? "Awaiting Payment"
+                                  : order?.status}
+                            </span>
+                          </td>
+
+                          <td className="py-4 px-4">
+                            {order?.shipping_option === "local_pickup"
+                              ? "Local pickup"
+                              : "Shipping"}
+                          </td>
+
+                          <td className="py-4 px-4 capitalize">
+                            <button
+                              disabled={!order?.note}
+                              onClick={() => {
+                                setNote(order?.note);
+                                setShowNote(true);
+                              }}
+                              className={`px-2.5 py-1 text-xs font-semibold rounded-full border-2 text-accent-red ${
+                                order?.note
+                                  ? "border-accent-red cursor-pointer hover:bg-accent-red hover:text-white duration-300 transition-all"
+                                  : "opacity-70 bg-gray-200 cursor-not-allowed"
+                              }`}
+                            >
+                              View
+                            </button>
+                          </td>
+
+                          <td className="py-4 px-4 flex justify-center items-center relative">
+                            <button
+                              onClick={e => {
+                                e.stopPropagation();
+                                setOrderId(order?.id);
+                                setOpenPopup(!openPopup);
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <BsThreeDotsVertical />
+                            </button>
+
+                            {openPopup && orderId === order.id && (
+                              <div
+                                onClick={e => e.stopPropagation()}
+                                className={`absolute right-16 px-1 py-2 w-[120px] bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-200 ${
+                                  i === allOrders?.data?.data?.length - 1 &&
+                                  allOrders?.data?.data?.length > 5
+                                    ? "-top-20"
+                                    : "top-8"
+                                }`}
+                              >
+                                <Link
+                                  href={`/dashboard/${user?.membership?.membership_type}/orders/${order?.id}`}
+                                  className="w-full text-left px-3 py-1.5 hover:bg-gray-100 cursor-pointer block"
+                                >
+                                  View Details
+                                </Link>
+
+                                <button
+                                  disabled={isCancelling}
+                                  onClick={() => {
+                                    cancelOrder(order?.id)
+                                      .unwrap()
+                                      .then(res => {
+                                        if (res?.success) {
+                                          toast.success(res?.message);
+                                        }
+                                      })
+                                      .catch(err => {
+                                        toast.error(err?.data?.message);
+                                      });
+
+                                    setOpenPopup(false);
+                                  }}
+                                  className="w-full text-left px-3 py-1.5 hover:bg-gray-100 text-red-500 block disabled:cursor-not-allowed disabled:opacity-85 cursor-pointer"
+                                >
+                                  {isCancelling
+                                    ? "Cancelling..."
+                                    : " Cancel Order"}
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ),
+                    )}
+                  </tbody>
+                </table>
+
+                {/* Pagination */}
+                <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">
+                  {allOrders?.data?.links?.map((item: any, idx: number) => (
+                    <button
+                      key={idx}
+                      disabled={!item.url}
+                      dangerouslySetInnerHTML={{ __html: item.label }}
+                      onClick={() =>
+                        item.url && setPage(item.url.split("=")[1])
+                      }
+                      className={`px-3 py-1 rounded border transition-all duration-200  ${
+                        item.active
+                          ? "bg-primary-green text-white"
+                          : "bg-white text-gray-700"
+                      } ${
+                        !item.url
+                          ? "opacity-50 cursor-not-allowed"
+                          : "cursor-pointer"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center text-center py-14 border border-gray-200 rounded-[8px]">
+                <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+                  <FiShoppingBag className="text-accent-red text-2xl" />
+                </div>
+                <h6 className="text-[15px] text-secondary-black font-semibold">
+                  No orders found
+                </h6>
+                <p className="text-sm text-gray-500 font-normal mt-2 max-w-xs">
+                  {search || status
+                    ? "Try adjusting your search or filters to find what you're looking for."
+                    : "Orders will show up here once customers start purchasing."}
+                </p>
+                {(search || status) && (
                   <button
-                    key={idx}
-                    disabled={!item.url}
-                    dangerouslySetInnerHTML={{ __html: item.label }}
-                    onClick={() => item.url && setPage(item.url.split("=")[1])}
-                    className={`px-3 py-1 rounded border transition-all duration-200  ${
-                      item.active
-                        ? "bg-primary-green text-white"
-                        : "bg-white text-gray-700"
-                    } ${
-                      !item.url
-                        ? "opacity-50 cursor-not-allowed"
-                        : "cursor-pointer"
-                    }`}
-                  />
-                ))}
+                    onClick={() => {
+                      setSearch("");
+                      setStatus("");
+                      setIsActive("orders");
+                    }}
+                    className="mt-4 px-5 py-2 rounded-[8px] text-[13px] font-semibold text-secondary-black border border-accent-red hover:bg-accent-red duration-300 cursor-pointer"
+                  >
+                    Clear Filters
+                  </button>
+                )}
               </div>
             )}
           </div>

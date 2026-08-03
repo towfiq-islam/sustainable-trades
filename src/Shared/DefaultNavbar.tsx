@@ -33,7 +33,7 @@ const DefaultNavbar = ({ user, dynamicPage }: any) => {
                   e.stopPropagation();
                   setOpen(true);
                 }}
-                className="block lg:hidden text-white text-2xl cursor-pointer"
+                className="block xl:hidden text-white text-2xl cursor-pointer"
               >
                 ☰
               </button>

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import Container from "@/Components/Common/Container";
 const tabs = [
   { id: 1, label: "Listings" },

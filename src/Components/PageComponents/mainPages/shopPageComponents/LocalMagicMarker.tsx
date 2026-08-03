@@ -27,12 +27,12 @@ const LocalMagicMarker = ({ address }: Props) => {
   });
 
   return (
-    <section className="mt-10 mb-16">
+    <section className="mt-5 md:mt-10 mb-10 xl:mb-16">
       <Container>
-        <div className="space-y-7">
+        <div className="space-y-4 xl:space-y-7">
           {/* Upper Part */}
           <div className="flex flex-col md:flex-row gap-2.5 md:gap-0 justify-between items-center">
-            <h3 className="text-2xl lg:text-3xl font-semibold text-secondary-black">
+            <h3 className="text-xl md:text-2xl xl:text-3xl font-semibold text-secondary-black">
               Find Your Local Magic Makers
             </h3>
 
@@ -52,7 +52,7 @@ const LocalMagicMarker = ({ address }: Props) => {
           <div className="grid lg:grid-cols-2 gap-5 border border-gray-100 rounded-lg p-3">
             {/* Left - Shop List */}
             {searchShop ? (
-              <div className="space-y-2 md:h-[550px] overflow-y-auto">
+              <div className="space-y-1 xl:space-y-2 h-[400px] md:h-[450px] xl:h-[550px] overflow-y-auto">
                 {shopLoading ? (
                   Array.from({ length: 7 }).map((_, idx) => (
                     <ShopListSkeleton key={idx} />
@@ -69,11 +69,11 @@ const LocalMagicMarker = ({ address }: Props) => {
                         item?.shop_info?.user_id
                       }&listing_id=${item?.shop_info?.id}`}
                       key={item?.id}
-                      className="flex gap-2.5 md:gap-5 md:items-center border-b last:border-b-0 border-gray-300 py-2 sm:py-3 cursor-pointer hover:bg-green-50"
+                      className="flex gap-4 xl:gap-5 md:items-center border-b last:border-b-0 border-gray-300 py-2 xl:py-3 cursor-pointer hover:bg-green-50"
                       onMouseEnter={() => setHoveredShop(item)}
                       onMouseLeave={() => setHoveredShop(null)}
                     >
-                      <figure className="size-17 sm:size-22 shrink-0 rounded-lg relative">
+                      <figure className="size-20 xl:size-22 shrink-0 rounded-lg relative">
                         <Image
                           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.shop_info?.shop_image}`}
                           alt="shop_image"
@@ -85,17 +85,17 @@ const LocalMagicMarker = ({ address }: Props) => {
 
                       <div className="flex flex-col md:flex-row gap-2.5 md:gap-5 md:items-center grow">
                         <div className="grow">
-                          <h3 className="text-sm sm:text-lg font-semibold text-primary-green truncate">
+                          <h3 className="text-sm xl:text-lg font-semibold text-primary-green truncate">
                             {item?.shop_info?.shop_name}
                           </h3>
 
-                          <div className="flex gap-1 items-center py-1.5 sm:py-2">
+                          <div className="flex gap-1 items-center py-1.5 xl:py-2">
                             {Array.from({
                               length: +item?.shop_info?.avg_rating,
                             }).map((_, idx) => (
                               <FaStar
                                 key={idx}
-                                className="text-primary-green text-xs md:text-base"
+                                className="text-primary-green text-xs xl:text-base"
                               />
                             ))}
                             {Array.from({
@@ -103,7 +103,7 @@ const LocalMagicMarker = ({ address }: Props) => {
                             }).map((_, index) => (
                               <FaRegStar
                                 key={index}
-                                className="text-primary-green text-sm"
+                                className="text-primary-green text-xs xl:text-sm"
                               />
                             ))}
                           </div>
@@ -151,7 +151,7 @@ const LocalMagicMarker = ({ address }: Props) => {
             )}
 
             {/* Right - Google Map */}
-            <div className="md:h-[550px]">
+            <div className="h-[350px] md:h-[450px] xl:h-[550px] overflow-hidden rounded">
               {shopData?.data?.data && shopData?.data?.data?.length > 0 ? (
                 <ShopsMap
                   shops={shopData?.data?.data}

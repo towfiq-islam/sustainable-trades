@@ -45,7 +45,7 @@ const MessageShopOwner = ({ id, data, setMsgOpen }: messageProps) => {
       const res = await sendMessageMutation(payload).unwrap();
 
       if (res?.success) {
-        toast.success(data?.message);
+        toast.success("Successfully sent message");
         reset();
         setMsgOpen(false);
       }

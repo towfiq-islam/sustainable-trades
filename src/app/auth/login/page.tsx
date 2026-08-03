@@ -68,7 +68,7 @@ const Page = () => {
     <section className="min-h-screen max-h-screen flex">
       {/* Left - From */}
       <div className="flex-1 grid place-items-center">
-        <div className="w-full  xl:w-[750px] mx-auto p-5 xl:p-10">
+        <div className="w-full 2xl:w-[750px] mx-auto p-5 xl:p-10">
           {/* Back to home */}
           <div className="flex items-center gap-1 text-center mb-8 hover:underline">
             <IoArrowBackOutline className="text-primary-green" />
@@ -124,7 +124,7 @@ const Page = () => {
                       e.preventDefault();
                       setShowPassword(!showPassword);
                     }}
-                    className="absolute top-4 right-4 cursor-pointer"
+                    className="absolute top-2.5 md:top-4 right-4 cursor-pointer"
                   >
                     {showPassword ? (
                       <FiEye className="text-lg" />
@@ -165,7 +165,7 @@ const Page = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`px-10 py-1.5 sm:py-3 md:py-4 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green md:text-lg block w-full ${
+              className={`px-10 py-1.5 sm:py-3 xl:py-4 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green xl:text-lg block w-full ${
                 isLoading ? "cursor-not-allowed" : "cursor-pointer"
               }`}
             >
@@ -212,7 +212,7 @@ const Page = () => {
       </div>
 
       {/* Right - Image */}
-      <div className="hidden lg:block flex-1 relative">
+      <div className="flex-1 hidden lg:block relative">
         <Image
           src={loginBg}
           alt="welcome_img"

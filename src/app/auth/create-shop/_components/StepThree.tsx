@@ -81,7 +81,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
     <>
       <h2 className="auth_title lg:mt-16 mt-8">About Your Shop</h2>
 
-      <div className="border border-accent-gray rounded-[20px] lg:my-[56px] my-8 lg:p-20 px-5">
+      <div className="border border-accent-gray rounded-[20px] my-8 lg:my-[56px] py-5 lg:p-20 px-5">
         {/* Profile Picture */}
         <div className="lg:mt-8 mt-5">
           <p className="form-label text-center lg:text-start">
@@ -144,7 +144,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
         </div>
 
         {/* About Your Shop */}
-        <div className="my-8 border rounded-lg lg:p-8 p-4">
+        <div className="my-5 md:my-8 md:border rounded-lg lg:p-8">
           <p className="text-[20px] font-normal text-secondary-black mb-4">
             About Shop
           </p>
@@ -212,7 +212,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
         </div>
 
         {/* Shop Policies */}
-        <div className="border rounded-lg lg:p-8 p-4">
+        <div className="md:border rounded-lg lg:p-8">
           <p className="text-[20px] font-normal text-secondary-black mb-4">
             Shop Policies
           </p>
@@ -393,7 +393,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
           )}
         </div>
 
-        <li className="text-[16px] text-secondary-gray font-semibold list-disc mt-2">
+        <li className="text-sm md:text-[16px] text-secondary-gray font-semibold list-inside list-disc mt-2">
           You can add up to 10 FAQs ({fields.length}/10)
         </li>
       </div>

@@ -18,6 +18,7 @@ import {
 } from "../Svg/SvgContainer";
 import { useAddFavoriteMutation } from "@/redux/api/productApi";
 import { useAddToCartMutation } from "@/redux/api/cartApi";
+import { useRouter } from "next/navigation";
 
 type imageItem = {
   id: number;
@@ -53,6 +54,7 @@ const Product = ({
   has_cart = true,
   isMiles = false,
 }: ProductProps) => {
+  const router = useRouter();
   const { user } = useAuth();
   const [addFavoriteMutation, { isLoading: isPending }] =
     useAddFavoriteMutation();
@@ -62,7 +64,9 @@ const Product = ({
   // Func for add to favorite
   const handleAddFavorite = (product_id: any) => {
     if (!user) {
-      return toast.error("Please login first to proceed");
+      toast.error("Please login first to proceed");
+      router.push("/auth/login");
+      return;
     }
     addFavoriteMutation(product_id)
       .unwrap()
@@ -77,7 +81,9 @@ const Product = ({
   // Func for add to cart
   const handleAddToCart = (id: number) => {
     if (!user) {
-      return toast.error("Please login first to proceed");
+      toast.error("Please login first to proceed");
+      router.push("/auth/login");
+      return;
     }
 
     addToCartMutation({ productId: id, data: { quantity: 1 } })
@@ -136,7 +142,7 @@ const Product = ({
           <SwiperSlide key={idx}>
             <figure
               className={`w-full rounded-lg border border-gray-100 relative ${
-                is_feathered ? "h-[350px]" : "h-[270px]"
+                is_feathered ? "h-[270px] xl:h-[350px]" : "h-[270px]"
               }`}
             >
               <div className="absolute inset-0 bg-black/20 rounded-lg" />
@@ -155,7 +161,7 @@ const Product = ({
       {/* Product Name */}
       <Link
         href={`/product-details/${product?.id}`}
-        className="text-primary-green md:text-lg sm:text-base text-sm lg:text-xl font-semibold py-3 truncate hover:underline block"
+        className="text-primary-green md:text-lg text-sm sm:text-base xl:text-xl font-semibold py-3 truncate hover:underline block"
       >
         {product?.product_name}
       </Link>
@@ -205,20 +211,13 @@ const Product = ({
           <button
             onClick={() => handleAddToCart(+product?.id)}
             disabled={
+              !user ||
               addCardPending ||
               product?.selling_option === "trade/barter" ||
               (!product?.unlimited_stock && product?.out_of_stock) ||
               (!product?.unlimited_stock && product?.product_quantity === 0)
             }
-            className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm ${
-              addCardPending ||
-              product?.selling_option === "trade/barter" ||
-              (!product?.unlimited_stock && product?.out_of_stock) ||
-              (!product?.unlimited_stock && product?.product_quantity === 0)
-                ? "cursor-not-allowed opacity-75 border-gray-400"
-                : "cursor-pointer border-secondary-gray hover:bg-primary-green hover:text-accent-white hover:scale-95"
-            }
-              `}
+            className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm disabled:cursor-not-allowed disabled:opacity-75 disabled:border-gray-400 cursor-pointer border-secondary-gray enabled:hover:bg-primary-green enabled:hover:text-accent-white enabled:hover:scale-95`}
           >
             {addCardPending ? (
               <p className="flex gap-2 items-center justify-center">
@@ -227,7 +226,7 @@ const Product = ({
               </p>
             ) : (
               <p className="flex gap-2 items-center">
-                <span>{user ? "Add to Cart" : "Buy Now"}</span>
+                <span>Add to Cart</span>
                 <AddToCartSvg />
               </p>
             )}

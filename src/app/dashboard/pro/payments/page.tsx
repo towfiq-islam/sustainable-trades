@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { PaymentRowSkeleton } from "@/Components/Loader/Loader";
 import { useGetPaymentsQuery } from "@/redux/api/vendorApi";
+import { FiCreditCard } from "react-icons/fi";
 
 type orderItem = {
   payment_method: string;
@@ -75,24 +76,38 @@ const page = () => {
         <div className="w-full mt-7">
           {/* Desktop Table */}
           <div className="hidden md:block overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b-2 border-gray-300 text-secondary-black text-[16px] font-semibold">
-                  <th className="py-3 px-4 text-left"># Order ID</th>
-                  <th className="py-3 px-4 text-left">Purchase Date</th>
-                  <th className="py-3 px-4 text-left">Billing to</th>
-                  <th className="py-3 px-4 text-left">Amount</th>
-                  <th className="py-3 px-4 text-left">Payment Method</th>
-                  <th className="py-3 px-4 text-left">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {isLoading ? (
-                  Array.from({ length: 3 }).map((_, idx) => (
+            {isLoading ? (
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-gray-300 text-secondary-black text-[16px] font-semibold">
+                    <th className="py-3 px-4 text-left"># Order ID</th>
+                    <th className="py-3 px-4 text-left">Purchase Date</th>
+                    <th className="py-3 px-4 text-left">Billing to</th>
+                    <th className="py-3 px-4 text-left">Amount</th>
+                    <th className="py-3 px-4 text-left">Payment Method</th>
+                    <th className="py-3 px-4 text-left">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 3 }).map((_, idx) => (
                     <PaymentRowSkeleton key={idx} />
-                  ))
-                ) : allPayments?.data?.length > 0 ? (
-                  allPayments?.data?.map((order: orderItem, i: number) => (
+                  ))}
+                </tbody>
+              </table>
+            ) : allPayments?.data?.length > 0 ? (
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-gray-300 text-secondary-black text-[16px] font-semibold">
+                    <th className="py-3 px-4 text-left"># Order ID</th>
+                    <th className="py-3 px-4 text-left">Purchase Date</th>
+                    <th className="py-3 px-4 text-left">Billing to</th>
+                    <th className="py-3 px-4 text-left">Amount</th>
+                    <th className="py-3 px-4 text-left">Payment Method</th>
+                    <th className="py-3 px-4 text-left">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allPayments?.data?.map((order: orderItem, i: number) => (
                     <tr
                       key={i}
                       className="border-b border-gray-300 text-secondary-black text-[15px] font-semibold"
@@ -128,14 +143,35 @@ const page = () => {
                         </span>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <p className="text-primary-red text-lg pt-5 font-semibold">
-                    No payment history found!
-                  </p>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="flex flex-col items-center justify-center text-center py-16 border border-gray-200 rounded-[8px]">
+                <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+                  <FiCreditCard className="text-accent-red text-2xl" />
+                </div>
+                <h6 className="text-secondary-black font-semibold">
+                  {status ? `No ${status} payments` : "No payment history yet"}
+                </h6>
+                <p className="text-sm text-gray-500 font-normal mt-3 max-w-[260px]">
+                  {status
+                    ? "Try checking a different tab or check back later."
+                    : "Once orders are paid, they'll show up here."}
+                </p>
+                {status && (
+                  <button
+                    onClick={() => {
+                      setIsActive("All Payments");
+                      setStatus("");
+                    }}
+                    className="mt-5 px-5 py-2 rounded-[8px] text-[13px] font-semibold text-secondary-black border border-accent-red hover:bg-accent-red duration-300 cursor-pointer"
+                  >
+                    View All Payments
+                  </button>
                 )}
-              </tbody>
-            </table>
+              </div>
+            )}
           </div>
 
           {/* Mobile Cards */}

@@ -36,6 +36,7 @@ const page = () => {
   const [page, setPage] = useState<string>("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
 
+
   // Hooks
   const { latitude, longitude } = useAuth();
 
@@ -43,12 +44,18 @@ const page = () => {
   const { data: spotlightData } = useGetMembershipSpotlightQuery({});
   const { data: allCategory, isLoading: categoryLoading } =
     useGetProductCategoriesQuery({});
-  const { data: categoryDetails, isLoading } = useGetCategoryDetailsQuery({
-    id: categoryId,
-    lat: latitude,
-    lng: longitude,
-    page,
-  });
+  const { data: categoryDetails, isLoading } = useGetCategoryDetailsQuery(
+    {
+      id: categoryId,
+      lat: latitude,
+      lng: longitude,
+      page,
+    },
+    {
+      skip: !categoryId,
+    },
+  );
+  console.log(categoryDetails?.data);
 
   useEffect(() => {
     setCategoryId(allCategory?.data[0]?.id);
@@ -62,7 +69,7 @@ const page = () => {
       {/* All Categories */}
       <section className="mb-20">
         <Container>
-          <h2 className="text-2xl md:text-3xl font-semibold text-secondary-black mb-10 capitalize">
+          <h2 className="text-xl md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-7 xl:mb-10 capitalize">
             Explore Sustainable Products & Services Nearby
           </h2>
 
@@ -151,7 +158,7 @@ const page = () => {
         {isLoading ? (
           <h2 className="w-60 h-6 mb-7 animate-pulse bg-gray-200 rounded"></h2>
         ) : (
-          <h2 className="text-2xl md:text-3xl font-semibold text-secondary-black mb-7">
+          <h2 className="text-2xl xl:text-3xl font-semibold text-secondary-black mb-4 xl:mb-7">
             {categoryDetails?.data?.category?.name}
           </h2>
         )}
@@ -162,8 +169,7 @@ const page = () => {
               <ProductSkeleton key={idx} />
             ))}
           </div>
-        ) : categoryDetails?.data?.products?.data?.length === 0 ||
-          !categoryDetails ? (
+        ) : categoryDetails?.data?.length === 0 ? (
           <div className="flex flex-col justify-center items-center gap-3 lg:gap-4 text-center py-5 md:py-20">
             <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
             <p className="text-gray-600 text-sm md:text-lg font-semibold">
@@ -197,7 +203,7 @@ const page = () => {
       </Container>
 
       {/* Community Member */}
-      <div className="my-20">
+      <div className="my-10 xl:my-20">
         <MemberSpotlight data={spotlightData?.data} />
       </div>
 

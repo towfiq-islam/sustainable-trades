@@ -105,6 +105,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
   const router = useRouter();
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
   const proOnly = config.proFeaturesEnabled;
+  const prevAutoTagsRef = useRef<string[]>([]);
 
   const hasPaymentProcessor = !!user?.onboarded;
   const hasShippingCalculator =
@@ -114,6 +115,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
   const { data: listing, isLoading } = useGetSingleProductQuery(id, {
     skip: !id,
   });
+
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
   const [deleteProductImage, { isLoading: isDeletingImage }] =
@@ -236,7 +238,6 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
     if (!categories.length) return;
 
     const autoTags: string[] = [];
-
     if (user?.shop_info?.shop_name) autoTags.push(user.shop_info.shop_name);
 
     const selectedCat = categories.find(
@@ -249,9 +250,22 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
     );
     if (selectedSub) autoTags.push(selectedSub.sub_category_name);
 
-    const unique = [...new Set(autoTags)];
-    setMetaTags(unique);
-    setValue("tags", unique);
+    const uniqueAuto = [...new Set(autoTags)];
+    const prevAuto = prevAutoTagsRef.current;
+
+    setMetaTags(prev => {
+      const withoutStaleAuto = prev.filter(
+        t => !prevAuto.includes(t) || uniqueAuto.includes(t),
+      );
+      const merged = [
+        ...withoutStaleAuto,
+        ...uniqueAuto.filter(t => !withoutStaleAuto.includes(t)),
+      ];
+      setValue("tags", merged);
+      return merged;
+    });
+
+    prevAutoTagsRef.current = uniqueAuto;
   }, [categoryId, subCategoryId, categories, subcategories]);
 
   // ── Shipping guard (pro only) ──────────────────────────────────────────────
@@ -485,7 +499,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
       <div className="flex justify-between items-center gap-3">
         <div>
           <h3 className="text-[30px] md:text-[40px] font-semibold text-secondary-black">
-            {watch("product_name") || "Edit Listing"}
+            Edit Listing
           </h3>
           <div className="flex gap-x-2 items-center pt-2">
             <span className="text-[16px] text-secondary-black">Listings</span>

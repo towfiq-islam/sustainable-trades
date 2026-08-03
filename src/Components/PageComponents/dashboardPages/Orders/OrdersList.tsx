@@ -11,6 +11,7 @@ import {
   useDownloadInvoiceMutation,
   useGetMyOrdersQuery,
 } from "@/redux/api/ordersApi";
+import { FiShoppingCart } from "react-icons/fi";
 
 type OrdersListProps = {
   role: "customer" | "pro";
@@ -92,7 +93,7 @@ const OrdersList = ({
   };
 
   return (
-    <section className="pt-10">
+    <section>
       {showHeader && (
         <DashBoardHeader heading="Yours Orders" placeholder="Search Orders" />
       )}
@@ -314,9 +315,21 @@ const OrdersList = ({
             </div>
           ))
         ) : (
-          <p className="text-primary-red font-semibold text-lg">
-            No Orders Found
-          </p>
+          <div className="flex flex-col items-center justify-center text-center py-16">
+            <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+              <FiShoppingCart className="text-accent-red text-2xl" />
+            </div>
+
+            <h6 className="text-secondary-black font-semibold">
+              {status ? `No ${status} orders` : "No orders yet"}
+            </h6>
+
+            <p className="text-sm text-gray-500 font-normal mt-2 max-w-[280px]">
+              {status
+                ? "Try checking a different tab."
+                : "Orders you place will show up here."}
+            </p>
+          </div>
         )}
       </div>
 

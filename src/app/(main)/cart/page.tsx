@@ -8,12 +8,14 @@ const page = () => {
   const { data: cartData } = useGetProductCartQuery();
 
   return (
-      <section className="my-10">
-        <Container>
-          <PaymentOptions />
+    <section className="my-10">
+      <Container>
+        <PaymentOptions />
+        {cartData?.data?.total_cart_items && (
           <ShopLocation cartData={cartData?.data} />
-        </Container>
-      </section>
+        )}
+      </Container>
+    </section>
   );
 };
 

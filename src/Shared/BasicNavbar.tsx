@@ -22,10 +22,11 @@ import Sidebar from "@/Components/Common/Sidebar";
 import { FaUser } from "react-icons/fa";
 import { FaAngleDown } from "react-icons/fa6";
 import { useLogoutMutation } from "@/redux/api/authApi";
-import { useAppDispatch } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import toast from "react-hot-toast";
 
-const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
+const BasicNavbar = ({ dynamicPage }: any) => {
+  const { items } = useAppSelector(state => state.cart);
   const navLins = [
     { id: 1, label: "Home", path: "/" },
     { id: 2, label: "Shop", path: "/shop" },
@@ -309,7 +310,7 @@ const BasicNavbar = ({ cart_quantity, dynamicPage }: any) => {
             {/* Cart */}
             <Link href="/cart" className="cursor-pointer relative">
               <button className="absolute -top-4 -right-4 size-5 font-semibold text-xs grid place-items-center rounded-full bg-accent-red text-white cursor-pointer">
-                {cart_quantity}
+                {items?.length ? items?.length : 0}
               </button>
               <CartSvg2 />
             </Link>

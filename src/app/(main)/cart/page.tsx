@@ -2,18 +2,15 @@
 import Container from "@/Components/Common/Container";
 import PaymentOptions from "@/Components/PageComponents/mainPages/cartPageComponents/PaymentOptions";
 import ShopLocation from "@/Components/PageComponents/mainPages/cartPageComponents/ShopLocation";
-import { useGetProductCartQuery } from "@/redux/api/cartApi";
 
 const page = () => {
-  const { data: cartData } = useGetProductCartQuery();
-
   return (
     <section className="my-10">
       <Container>
         <PaymentOptions />
-        {cartData?.data?.total_cart_items && (
+        {/* {cartData?.data?.total_cart_items && (
           <ShopLocation cartData={cartData?.data} />
-        )}
+        )} */}
       </Container>
     </section>
   );

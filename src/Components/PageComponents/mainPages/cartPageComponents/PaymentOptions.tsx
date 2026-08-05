@@ -1,32 +1,34 @@
 "use client";
 import CartItem from "./CartItem";
-import { TiDelete } from "react-icons/ti";
-import { CgSpinnerTwo } from "react-icons/cg";
-import { CartItemSkeleton } from "@/Components/Loader/Loader";
-import {
-  useClearCartMutation,
-  useGetProductCartQuery,
-} from "@/redux/api/cartApi";
 import emptyAnimation from "@/Assets/cart.json";
 import Lottie from "lottie-react";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { TiDelete } from "react-icons/ti";
+import { clearCart } from "@/redux/slices/cartSlice";
 
 const PaymentOptions = () => {
-  const { data: cartData, isLoading } = useGetProductCartQuery();
-  const [clearCartMutation, { isLoading: isPending }] = useClearCartMutation();
+  const dispatch = useAppDispatch();
+  const { items, totalQuantity, totalPrice } = useAppSelector(
+    state => state.cart,
+  );
 
   return (
     <section className="mb-20">
       <div className="flex items-center justify-between gap-3 mb-3">
         <h3 className="section_sub_title !mb-0">
-          {cartData?.data?.total_cart_items
-            ? `${cartData?.data?.total_cart_items} Items In Your Cart`
+          {totalQuantity
+            ? `${totalQuantity} Items In Your Cart`
             : "Cart is empty"}
         </h3>
 
-        {cartData?.data?.total_cart_items && (
-          <p className="text-lg text-secondary-black font-semibold">
-            Subtotal: ${cartData?.data?.total_price?.toFixed(2)}
-          </p>
+        {items?.length > 0 && (
+          <button
+            onClick={() => dispatch(clearCart())}
+            className="px-3 py-1.5 text-sm rounded-full font-medium bg-primary-red cursor-pointer text-white flex gap-1 items-center"
+          >
+            <TiDelete className="text-lg" />
+            Clear Cart
+          </button>
         )}
       </div>
 
@@ -34,54 +36,55 @@ const PaymentOptions = () => {
         Shipping and sales tax will be added at checkout if applicable.
       </p>
 
-      {cartData?.data?.length > 0 && (
-        <button
-          disabled={isPending}
-          onClick={() => clearCartMutation().unwrap()}
-          className={`px-3 py-1.5 text-sm rounded-full font-semibold bg-primary-red text-white flex gap-1 items-center ${
-            isPending ? "cursor-not-allowed" : "cursor-pointer"
-          }`}
-        >
-          {isPending ? (
-            <span className="flex gap-2 items-center justify-center">
-              <CgSpinnerTwo className="animate-spin" />
-              <span>Clearing...</span>
-            </span>
-          ) : (
-            <span className="flex gap-1 items-center">
-              <TiDelete className="text-lg" />
-              Clear Cart
-            </span>
-          )}
-        </button>
-      )}
-
-      <div className="space-y-7">
-        {isLoading ? (
-          [1, 2].map((_, idx) => <CartItemSkeleton key={idx} />)
-        ) : !cartData?.data || cartData?.data?.length === 0 ? (
-          <div className="flex flex-col gap-2 md:gap-3 items-center">
-            <div className="w-40 md:w-48 lg:w-54 mx-auto">
-              <Lottie
-                animationData={emptyAnimation}
-                loop={true}
-                autoplay={true}
-              />
-            </div>
-            <h3 className="text-lg md:text-xl lg:text-2xl font-medium mb-1">
-              Your Cart is Empty
-            </h3>
-            <h3 className="text-sm md:text-base italic text-gray-500 text-center max-w-md mx-auto">
-              Add some awesome products to your cart to get started on your next
-              mission.
-            </h3>
+      {items?.length > 0 ? (
+        <div className="grid grid-cols-12 gap-5 items-start">
+          <div className="space-y-5 col-span-8">
+            {items?.map((item: any) => (
+              <CartItem key={item?.id} item={item} />
+            ))}
           </div>
-        ) : (
-          cartData?.data?.cart?.map((item: any) => (
-            <CartItem key={item?.id} item={item} />
-          ))
-        )}
-      </div>
+
+          <div className="col-span-4 border border-gray-300 rounded-lg p-5 space-y-3">
+            <h3 className="text-lg font-semibold text-secondary-black">
+              Order Summary
+            </h3>
+            <p className="text-sm text-gray-500">
+              Subtotal: ${(totalPrice ?? 0).toFixed(2)}
+            </p>
+            <p className="text-sm text-gray-500">
+              Shipping and tax calculated at next step
+            </p>
+            <hr />
+            <p className="text-lg font-bold text-secondary-black">
+              Total: ${(totalPrice ?? 0).toFixed(2)}
+            </p>
+
+            <button
+              disabled={!items?.length}
+              className="w-full mt-2 py-3 rounded-[5px] bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300"
+            >
+              Proceed to Checkout
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2 md:gap-3 items-center">
+          <div className="w-40 md:w-48 lg:w-54 mx-auto">
+            <Lottie
+              animationData={emptyAnimation}
+              loop={true}
+              autoplay={true}
+            />
+          </div>
+          <h3 className="text-lg md:text-xl lg:text-2xl font-medium mb-1">
+            Your Cart is Empty
+          </h3>
+          <h3 className="text-sm md:text-base italic text-gray-500 text-center max-w-md mx-auto">
+            Add some awesome products to your cart to get started on your next
+            mission.
+          </h3>
+        </div>
+      )}
     </section>
   );
 };

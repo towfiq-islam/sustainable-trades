@@ -1,3 +1,4 @@
+import { Fulfillment } from "@/lib/fulfillment";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface ProductItem {
@@ -6,7 +7,7 @@ export interface ProductItem {
   image: string;
   price: number;
   quantity: number;
-  availableFulfillments: string[];
+  fulfillment: Fulfillment[];
 }
 
 export interface CartItem {
@@ -14,6 +15,7 @@ export interface CartItem {
   shop_id: number;
   shop_name: string;
   shop_image: string;
+  selectedFulfillment?: "pickup" | "delivery" | "shipping";
   products: ProductItem[];
 }
 
@@ -140,10 +142,26 @@ const cartSlice = createSlice({
       state.totalPrice = 0;
       state.totalQuantity = 0;
     },
+
+    setVendorFulfillment: (
+      state,
+      action: PayloadAction<{
+        vendor_id: number;
+        fulfillment: Fulfillment;
+      }>,
+    ) => {
+      const vendor = state.items.find(
+        v => v.vendor_id === action.payload.vendor_id,
+      );
+
+      if (vendor) {
+        vendor.selectedFulfillment = action.payload.fulfillment;
+      }
+    },
   },
 });
 
-export const { addToCart, removeFromCart, updateCartQuantity, clearCart } =
+export const { addToCart, removeFromCart, updateCartQuantity, clearCart, setVendorFulfillment } =
   cartSlice.actions;
 
 export default cartSlice.reducer;

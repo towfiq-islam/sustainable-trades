@@ -19,12 +19,14 @@ import { useAddFavoriteMutation } from "@/redux/api/productApi";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/store";
 import { addToCart, CartItem } from "@/redux/slices/cartSlice";
+import { Fulfillment, fulfillmentMap } from "@/lib/fulfillment";
 
 type ProductItem = {
   id: number;
   product_name?: string;
   product_price?: string;
-  fulfillment?: string;
+  fulfillment: Fulfillment[];
+  // fulfillment?: string;
   product_quantity?: number;
   shop?: {
     id: number;
@@ -88,6 +90,8 @@ const Product = ({
       shop_id: product?.shop?.id,
       shop_name: product?.shop?.shop_name,
       shop_image: product?.shop?.shop_image,
+      selectedFulfillment: null,
+
       products: [
         {
           id: product?.id,
@@ -95,13 +99,11 @@ const Product = ({
           image: product?.images?.[0]?.image,
           price: Number(product?.product_price),
           quantity: 1,
-          availableFulfillments: product?.fulfillment
-            ?.split(",")
-            .map((item: string) => item.trim()),
+          fulfillment: fulfillmentMap[product.fulfillment],
         },
       ],
     };
-    
+
     dispatch(addToCart(payload));
     toast.success("Added to cart");
   };

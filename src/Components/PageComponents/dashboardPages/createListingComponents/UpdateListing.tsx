@@ -509,6 +509,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
             </span>
           </div>
         </div>
+
         <Link href={config.listingHref} className="shrink-0">
           <button className="text-secondary-black font-semibold flex gap-x-1 items-center border-2 border-secondary-black rounded-lg py-1.5 md:py-3 px-6 hover:bg-accent-red hover:text-white duration-300 cursor-pointer">
             <MdArrowOutward />
@@ -1067,12 +1068,20 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
                         className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                       >
                         <option value="">Select Fulfillment</option>
-                        <option value="arrange_local_pickup">
-                          Arrange Local Pickup
-                        </option>
+                        <option value="pickup">Arrange Local Pickup</option>
+                        <option value="delivery">Local Delivery</option>
                         <option value="shipping">Shipping</option>
-                        <option value="arrange_local_pickup_and_shipping">
-                          Arrange Local Pickup and Shipping
+                        <option value="pickup_and_delivery">
+                          Arrange Local Pickup + Local Delivery
+                        </option>
+                        <option value="pickup_and_shipping">
+                          Arrange Local Pickup + Shipping
+                        </option>
+                        <option value="delivery_and_shipping">
+                          Local Delivery + Shipping
+                        </option>
+                        <option value="pickup_and_delivery_and_shipping">
+                          Arrange Local Pickup + Local Delivery + Shipping
                         </option>
                       </select>
                     )}

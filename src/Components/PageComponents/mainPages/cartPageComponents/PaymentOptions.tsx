@@ -8,13 +8,17 @@ import { clearCart } from "@/redux/slices/cartSlice";
 import { useState } from "react";
 import FulfillmentModal from "@/app/(main)/cart/_components/FulfillmentModal";
 import Modal from "@/Components/Common/Modal";
+import VendorCheckout from "@/app/(main)/cart/_components/VendorCheckout";
 
 const PaymentOptions = () => {
+  const [step, setStep] = useState<1 | 2>(1);
+  const [checkoutStarted, setCheckoutStarted] = useState(false);
   const [openFulfillment, setOpenFulfillment] = useState(false);
   const dispatch = useAppDispatch();
   const { items, totalQuantity, totalPrice } = useAppSelector(
     state => state.cart,
   );
+  console.log(items);
 
   return (
     <section className="mb-20">
@@ -65,7 +69,10 @@ const PaymentOptions = () => {
 
             <button
               disabled={!items?.length}
-              onClick={() => setOpenFulfillment(true)}
+              onClick={() => {
+                setStep(1);
+                setCheckoutStarted(true);
+              }}
               className="w-full mt-2 py-3 rounded-[5px] bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300"
             >
               Proceed to Checkout
@@ -91,16 +98,29 @@ const PaymentOptions = () => {
         </div>
       )}
 
-      <Modal open={openFulfillment} onClose={() => setOpenFulfillment(false)}>
-        <FulfillmentModal
-          open={openFulfillment}
-          vendors={items}
-          onClose={() => setOpenFulfillment(false)}
-          onContinue={fulfillments => {
-            console.log(fulfillments);
-            setOpenFulfillment(false);
-          }}
-        />
+      <Modal
+        open={checkoutStarted}
+        onClose={() => {
+          setCheckoutStarted(false);
+          setStep(1);
+        }}
+      >
+        {step === 1 && (
+          <FulfillmentModal
+            vendors={items}
+            onContinue={() => {
+              setStep(2);
+            }}
+          />
+        )}
+
+        {step === 2 && (
+          <div className="space-y-8">
+            {items.map(vendor => (
+              <VendorCheckout key={vendor.vendor_id} vendor={vendor} />
+            ))}
+          </div>
+        )}
       </Modal>
     </section>
   );

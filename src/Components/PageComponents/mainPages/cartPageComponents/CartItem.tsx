@@ -8,12 +8,12 @@ import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import { useAppDispatch } from "@/redux/store";
 import { removeFromCart, updateCartQuantity } from "@/redux/slices/cartSlice";
 
 const CartItem = ({ item }: any) => {
   // States
+  
   const dispatch = useAppDispatch();
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
@@ -29,107 +29,130 @@ const CartItem = ({ item }: any) => {
   const [taxData, setTaxData] = useState({});
 
   // Func for update cart quantity
-  const handleUpdateCart = (quantity: number, type: string, id: number) => {
+  const handleUpdateCart = (
+    quantity: number,
+    type: string,
+    product_id: number,
+    vendor_id: number,
+  ) => {
     if (type === "decrease" && quantity > 1) {
-      dispatch(updateCartQuantity({ id, type: "decrease" }));
+      dispatch(updateCartQuantity({ product_id, vendor_id, type: "decrease" }));
     }
     if (type === "increase") {
-      dispatch(updateCartQuantity({ id, type: "increase" }));
+      dispatch(updateCartQuantity({ product_id, vendor_id, type: "increase" }));
     }
   };
 
   // Func for remove from cart
-  const handleRemoveFromCart = (id: number) => {
-    dispatch(removeFromCart({ id }));
+  const handleRemoveFromCart = (product_id: number, vendor_id: number) => {
+    dispatch(removeFromCart({ product_id, vendor_id }));
   };
 
   return (
     <div className="border border-gray-300 p-5 rounded-lg bg-white relative">
-      {/* Product Info */}
-      <div key={item?.id} className="flex flex-col sm:flex-row gap-5">
-        {/* Product Image */}
-        <figure className="w-full sm:w-[180px] h-[140px] shrink-0 rounded-lg border border-gray-100 relative">
-          <div className="absolute inset-0 bg-black/20 rounded-lg" />
-          <Image
-            src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.image}`}
-            alt="product image"
-            fill
-            unoptimized
-            className="w-full h-full object-cover rounded-lg"
-          />
-        </figure>
+      {/* Shop Info */}
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center mt-3 mb-5">
+        <div className="flex gap-2 sm:gap-5 items-center">
+          {/* Shop Image */}
+          <figure className="size-12 rounded-full border border-gray-100 relative">
+            <Image
+              src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.shop_image}`}
+              alt="shop_image"
+              fill
+              unoptimized
+              className="size-full rounded-full object-cover"
+            />
+          </figure>
 
-        <div className="grow">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3">
-            {/* Product Name */}
-            <Link
-              href={`/product-details/${item?.id}`}
-              className="text-xl font-semibold text-secondary-black block hover:underline"
-            >
-              {item?.name}
-            </Link>
-
-            {/* Product Price */}
-            <p className="text-2xl font-bold">
-              ${item?.price * item?.quantity}
-            </p>
-          </div>
-
-          {/* Product Quantity */}
-          <div className="flex gap-3 items-center border rounded-lg px-7 py-2 font-semibold border-gray-300 w-fit mb-3">
-            <button
-              onClick={() => {
-                handleUpdateCart(item?.quantity, "decrease", item?.id);
-              }}
-              className="cursor-pointer disabled:cursor-not-allowed"
-            >
-              <MinSvg />
-            </button>
-
-            <p>Qty:</p>
-            <p>{item?.quantity}</p>
-
-            <button
-              onClick={() => {
-                handleUpdateCart(item?.quantity, "increase", item?.id);
-              }}
-              className="cursor-pointer disabled:cursor-not-allowed"
-            >
-              +
-            </button>
-          </div>
-
-          {/* Remove item */}
-          <button
-            onClick={() => handleRemoveFromCart(item?.id)}
-            className="font-semibold text-primary-green cursor-pointer text-[15px] hover:underline"
+          {/* Shop Name */}
+          <Link
+            href={`/shop-details?view=${"customer"}&id=${item?.vendor_id}&listing_id=${item?.shop_id}`}
+            className="text-xl font-semibold text-primary-green block hover:underline"
           >
-            Remove
-          </button>
+            {item?.shop_name}
+          </Link>
         </div>
       </div>
 
-      {/* Add to cart */}
-      {/* <div className="flex justify-end">
-        <button
-          onClick={() => {
-            setFulfillmentType(item?.fulfillment_type);
-            setShippingMethod(
-              item?.shop?.user?.onboarded &&
-                (item?.fulfillment_type === "shipping" ||
-                  item?.fulfillment_type === "both_local_pickup_and_shipping" ||
-                  item?.fulfillment_type === "both_shipping")
-                ? "proceed"
-                : "local",
-            );
-            setShippingOptionsOpen(true);
-            setCartId(item?.id);
-          }}
-          className="bg-primary-green text-white cursor-pointer font-semibold rounded !w-fit px-4 !py-2 !text-sm"
-        >
-          Proceed to Checkout
-        </button>
-      </div> */}
+      {/* Product Info */}
+      <div className="space-y-6">
+        {item?.products?.map((product: any) => (
+          <div key={product?.id} className="flex flex-col sm:flex-row gap-5">
+            {/* Product Image */}
+            <figure className="w-full sm:w-[180px] h-[140px] shrink-0 rounded-lg border border-gray-100 relative">
+              <div className="absolute inset-0 bg-black/20 rounded-lg" />
+              <Image
+                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product?.image}`}
+                alt="product image"
+                fill
+                unoptimized
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </figure>
+
+            <div className="grow">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3">
+                {/* Product Name */}
+                <Link
+                  href={`/product-details/${product?.id}`}
+                  className="text-xl font-semibold text-secondary-black block hover:underline"
+                >
+                  {product?.name}
+                </Link>
+
+                {/* Product Price */}
+                <p className="text-2xl font-bold">
+                  ${product?.price * product?.quantity}
+                </p>
+              </div>
+
+              {/* Product Quantity */}
+              <div className="flex gap-3 items-center border rounded-lg px-7 py-2 font-semibold border-gray-300 w-fit mb-3">
+                <button
+                  onClick={() => {
+                    handleUpdateCart(
+                      product?.quantity,
+                      "decrease",
+                      product?.id,
+                      item?.vendor_id,
+                    );
+                  }}
+                  className="cursor-pointer disabled:cursor-not-allowed"
+                >
+                  <MinSvg />
+                </button>
+
+                <p>Qty:</p>
+                <p>{product?.quantity}</p>
+
+                <button
+                  onClick={() => {
+                    handleUpdateCart(
+                      product?.quantity,
+                      "increase",
+                      product?.id,
+                      item?.vendor_id,
+                    );
+                  }}
+                  className="cursor-pointer disabled:cursor-not-allowed"
+                >
+                  +
+                </button>
+              </div>
+
+              {/* Remove item */}
+              <button
+                onClick={() =>
+                  handleRemoveFromCart(product?.id, item?.vendor_id)
+                }
+                className="font-semibold text-primary-green cursor-pointer text-[15px] hover:underline"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Modals */}
       <Modal

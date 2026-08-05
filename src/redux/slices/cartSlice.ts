@@ -1,13 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface CartItem {
+export interface ProductItem {
   id: number;
+  name: string;
+  image: string;
   price: number;
   quantity: number;
-  image?: string;
-  name?: string;
-  fulfillment?: string;
-  [key: string]: unknown;
+  availableFulfillments: string[];
+}
+
+export interface CartItem {
+  vendor_id: number;
+  shop_id: number;
+  shop_name: string;
+  shop_image: string;
+  products: ProductItem[];
 }
 
 interface CartState {
@@ -17,21 +24,34 @@ interface CartState {
 }
 
 interface UpdateCartQuantityPayload {
-  id: CartItem["id"];
+  vendor_id: number;
+  product_id: number;
   type: "increase" | "decrease";
 }
 
-const calculateTotalPrice = (items: CartItem[]): number => {
-  const total = items?.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0,
-  );
-  return total ?? 0;
+const calculateTotalPrice = (items: CartItem[]) => {
+  return items.reduce((vendorTotal, vendor) => {
+    return (
+      vendorTotal +
+      vendor.products.reduce(
+        (productTotal, product) =>
+          productTotal + product.price * product.quantity,
+        0,
+      )
+    );
+  }, 0);
 };
 
-const calculateTotalQuantity = (items: CartItem[]): number => {
-  const totalQty = items.reduce((acc, item) => acc + item.quantity, 0);
-  return totalQty;
+const calculateTotalQuantity = (items: CartItem[]) => {
+  return items.reduce((vendorTotal, vendor) => {
+    return (
+      vendorTotal +
+      vendor.products.reduce(
+        (productTotal, product) => productTotal + product.quantity,
+        0,
+      )
+    );
+  }, 0);
 };
 
 const initialState: CartState = {
@@ -45,21 +65,48 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      const item = state.items.find(i => i?.id === action?.payload?.id);
+      const vendor = state.items.find(
+        item => item.vendor_id === action.payload.vendor_id,
+      );
 
-      if (item) {
-        item.quantity += 1;
+      if (vendor) {
+        const newProduct = action.payload.products[0];
+
+        const existingProduct = vendor.products.find(
+          p => p.id === newProduct.id,
+        );
+
+        if (existingProduct) {
+          existingProduct.quantity += 1;
+        } else {
+          vendor.products.push(newProduct);
+        }
       } else {
-        state.items.push({ ...action.payload, quantity: 1 });
+        state.items.push(action.payload);
       }
 
       state.totalPrice = calculateTotalPrice(state.items);
       state.totalQuantity = calculateTotalQuantity(state.items);
     },
 
-    removeFromCart: (state, action: PayloadAction<{ id: CartItem["id"] }>) => {
-      state.items = state.items.filter(i => i?.id !== action.payload.id);
+    removeFromCart: (
+      state,
+      action: PayloadAction<{
+        vendor_id: number;
+        product_id: number;
+      }>,
+    ) => {
+      const vendor = state.items.find(
+        v => v.vendor_id === action.payload.vendor_id,
+      );
 
+      if (!vendor) return;
+
+      vendor.products = vendor.products.filter(
+        p => p.id !== action.payload.product_id,
+      );
+
+      state.items = state.items.filter(v => v.products.length > 0);
       state.totalPrice = calculateTotalPrice(state.items);
       state.totalQuantity = calculateTotalQuantity(state.items);
     },
@@ -68,15 +115,20 @@ const cartSlice = createSlice({
       state,
       action: PayloadAction<UpdateCartQuantityPayload>,
     ) => {
-      const { id, type } = action.payload;
-      const item = state.items.find(i => i?.id === id);
+      const { vendor_id, product_id, type } = action.payload;
 
-      if (item) {
-        if (type === "increase") {
-          item.quantity += 1;
-        } else if (type === "decrease" && item.quantity > 1) {
-          item.quantity -= 1;
-        }
+      const vendor = state.items.find(v => v.vendor_id === vendor_id);
+
+      if (!vendor) return;
+
+      const product = vendor.products.find(p => p.id === product_id);
+
+      if (!product) return;
+
+      if (type === "increase") {
+        product.quantity++;
+      } else if (type === "decrease" && product.quantity > 1) {
+        product.quantity--;
       }
 
       state.totalPrice = calculateTotalPrice(state.items);

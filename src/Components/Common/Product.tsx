@@ -18,7 +18,7 @@ import {
 import { useAddFavoriteMutation } from "@/redux/api/productApi";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/store";
-import { addToCart } from "@/redux/slices/cartSlice";
+import { addToCart, CartItem } from "@/redux/slices/cartSlice";
 
 type ProductItem = {
   id: number;
@@ -26,6 +26,10 @@ type ProductItem = {
   product_price?: string;
   fulfillment?: string;
   product_quantity?: number;
+  shop?: {
+    id: number;
+    shop_name: string;
+  };
   images?: {
     id: number;
     image: string;
@@ -78,16 +82,26 @@ const Product = ({
   };
 
   // Func for add-to-cart
-  const handleAddToCart = (product: ProductItem) => {
+  const handleAddToCart = (product: any) => {
     const payload = {
-      id: product?.id,
-      price: Number(product?.product_price),
-      quantity: 1,
-      fulfillment: product?.fulfillment,
-      name: product?.product_name,
-      image: product?.images?.[0]?.image,
+      vendor_id: product?.shop?.user_id,
+      shop_id: product?.shop?.id,
+      shop_name: product?.shop?.shop_name,
+      shop_image: product?.shop?.shop_image,
+      products: [
+        {
+          id: product?.id,
+          name: product?.product_name,
+          image: product?.images?.[0]?.image,
+          price: Number(product?.product_price),
+          quantity: 1,
+          availableFulfillments: product?.fulfillment
+            ?.split(",")
+            .map((item: string) => item.trim()),
+        },
+      ],
     };
-
+    
     dispatch(addToCart(payload));
     toast.success("Added to cart");
   };

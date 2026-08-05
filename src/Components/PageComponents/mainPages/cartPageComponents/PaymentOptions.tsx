@@ -5,8 +5,12 @@ import Lottie from "lottie-react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { TiDelete } from "react-icons/ti";
 import { clearCart } from "@/redux/slices/cartSlice";
+import { useState } from "react";
+import FulfillmentModal from "@/app/(main)/cart/_components/FulfillmentModal";
+import Modal from "@/Components/Common/Modal";
 
 const PaymentOptions = () => {
+  const [openFulfillment, setOpenFulfillment] = useState(false);
   const dispatch = useAppDispatch();
   const { items, totalQuantity, totalPrice } = useAppSelector(
     state => state.cart,
@@ -40,7 +44,7 @@ const PaymentOptions = () => {
         <div className="grid grid-cols-12 gap-5 items-start">
           <div className="space-y-5 col-span-8">
             {items?.map((item: any) => (
-              <CartItem key={item?.id} item={item} />
+              <CartItem key={item?.vendor_id} item={item} />
             ))}
           </div>
 
@@ -61,6 +65,7 @@ const PaymentOptions = () => {
 
             <button
               disabled={!items?.length}
+              onClick={() => setOpenFulfillment(true)}
               className="w-full mt-2 py-3 rounded-[5px] bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300"
             >
               Proceed to Checkout
@@ -85,6 +90,18 @@ const PaymentOptions = () => {
           </h3>
         </div>
       )}
+
+      <Modal open={openFulfillment} onClose={() => setOpenFulfillment(false)}>
+        <FulfillmentModal
+          open={openFulfillment}
+          vendors={items}
+          onClose={() => setOpenFulfillment(false)}
+          onContinue={fulfillments => {
+            console.log(fulfillments);
+            setOpenFulfillment(false);
+          }}
+        />
+      </Modal>
     </section>
   );
 };

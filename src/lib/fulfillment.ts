@@ -1,4 +1,4 @@
-export const fulfillmentMap: Record<string, string[]> = {
+export const fulfillmentMap: Record<string, Fulfillment[]> = {
   pickup: ["pickup"],
   delivery: ["delivery"],
   shipping: ["shipping"],
@@ -13,6 +13,14 @@ export const fulfillmentMap: Record<string, string[]> = {
 };
 
 export type Fulfillment = "pickup" | "delivery" | "shipping";
+
+export const normalizeFulfillment = (
+  fulfillment?: Fulfillment[] | string,
+): Fulfillment[] => {
+  if (Array.isArray(fulfillment)) return fulfillment;
+  if (typeof fulfillment === "string") return fulfillmentMap[fulfillment] ?? [];
+  return [];
+};
 
 export const fulfillmentLabel: Record<Fulfillment, string> = {
   pickup: "Arrange local pickup",
@@ -38,13 +46,14 @@ export const fulfillmentDescription: Record<Fulfillment, string> = {
  *   [["pickup"], ["delivery"]]                          -> []  (no overlap)
  */
 export const getVendorFulfillmentOptions = (
-  products: { fulfillment: Fulfillment[] }[],
+  products: { fulfillment: Fulfillment[] | string }[],
 ): Fulfillment[] => {
   if (!products.length) return [];
 
   return products.reduce<Fulfillment[]>(
-    (common, product) => common.filter(f => product.fulfillment.includes(f)),
-    products[0].fulfillment,
+    (common, product) =>
+      common.filter(f => normalizeFulfillment(product.fulfillment).includes(f)),
+    normalizeFulfillment(products[0].fulfillment),
   );
 };
 

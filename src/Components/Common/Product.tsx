@@ -19,13 +19,13 @@ import { useAddFavoriteMutation } from "@/redux/api/productApi";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/store";
 import { addToCart, CartItem } from "@/redux/slices/cartSlice";
-import { Fulfillment, fulfillmentMap } from "@/lib/fulfillment";
+import { Fulfillment, normalizeFulfillment } from "@/lib/fulfillment";
 
 type ProductItem = {
   id: number;
   product_name?: string;
   product_price?: string;
-  fulfillment: Fulfillment[];
+  fulfillment?: Fulfillment[];
   // fulfillment?: string;
   product_quantity?: number;
   shop?: {
@@ -90,7 +90,6 @@ const Product = ({
       shop_id: product?.shop?.id,
       shop_name: product?.shop?.shop_name,
       shop_image: product?.shop?.shop_image,
-      selectedFulfillment: null,
 
       products: [
         {
@@ -99,7 +98,7 @@ const Product = ({
           image: product?.images?.[0]?.image,
           price: Number(product?.product_price),
           quantity: 1,
-          fulfillment: fulfillmentMap[product.fulfillment],
+          fulfillment: normalizeFulfillment(product.fulfillment),
         },
       ],
     };

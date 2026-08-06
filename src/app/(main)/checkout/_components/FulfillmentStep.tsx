@@ -8,6 +8,7 @@ import {
   fulfillmentDescription,
   fulfillmentLabel,
   getVendorFulfillmentStatus,
+  normalizeFulfillment,
 } from "@/lib/fulfillment";
 import Image from "next/image";
 
@@ -140,7 +141,7 @@ const FulfillmentStep = () => {
                           {product.name}
                           <span className="text-secondary-gray ml-2">
                             (
-                            {product.fulfillment
+                            {normalizeFulfillment(product.fulfillment)
                               .map(f => fulfillmentLabel[f])
                               .join(", ")}
                             )

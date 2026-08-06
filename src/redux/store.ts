@@ -11,6 +11,7 @@ import {
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "@/redux/api/apiSlice";
 import authReducer from "@/redux/slices/authSlice";
+import cartReducer from "@/redux/slices/cartSlice";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 const localStorage = createWebStorage("local");
@@ -21,11 +22,18 @@ const authPersistConfig = {
   whitelist: ["isAuthenticated", "latitude", "longitude"],
 };
 
+const cartPersistConfig = {
+  key: "cart",
+  storage: localStorage,
+};
+
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedCartReducer = persistReducer(cartPersistConfig, cartReducer);
 
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
+    cart: persistedCartReducer,
 
     [apiSlice.reducerPath]: apiSlice.reducer,
   },

@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { FaHeart } from "react-icons/fa";
 import { Pagination } from "swiper/modules";
-import { CgSpinnerTwo } from "react-icons/cg";
 import { LuLoaderPinwheel } from "react-icons/lu";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -17,29 +16,36 @@ import {
   SignSvg,
 } from "../Svg/SvgContainer";
 import { useAddFavoriteMutation } from "@/redux/api/productApi";
-import { useAddToCartMutation } from "@/redux/api/cartApi";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/redux/store";
+import { addToCart, CartItem } from "@/redux/slices/cartSlice";
+import { Fulfillment, normalizeFulfillment } from "@/lib/fulfillment";
 
-type imageItem = {
+type ProductItem = {
   id: number;
-  image: string;
-};
-
-type ProductData = {
-  id: number;
-  distance: number;
-  images?: imageItem[];
   product_name?: string;
   product_price?: string;
+  fulfillment?: Fulfillment[];
+  // fulfillment?: string;
+  product_quantity?: number;
+  shop?: {
+    id: number;
+    shop_name: string;
+  };
+  images?: {
+    id: number;
+    image: string;
+  }[];
+
+  distance: number;
   is_favorite?: boolean;
   selling_option?: string;
-  product_quantity?: number;
   unlimited_stock?: boolean;
   out_of_stock?: boolean;
 };
 
-type ProductProps = {
-  product: ProductData;
+type Props = {
+  product: ProductItem;
   is_feathered?: boolean;
   has_wishlist?: boolean;
   has_cart?: boolean;
@@ -53,13 +59,12 @@ const Product = ({
   has_wishlist = true,
   has_cart = true,
   isMiles = false,
-}: ProductProps) => {
+}: Props) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { user } = useAuth();
   const [addFavoriteMutation, { isLoading: isPending }] =
     useAddFavoriteMutation();
-  const [addToCartMutation, { isLoading: addCardPending }] =
-    useAddToCartMutation();
 
   // Func for add to favorite
   const handleAddFavorite = (product_id: any) => {
@@ -78,22 +83,28 @@ const Product = ({
       });
   };
 
-  // Func for add to cart
-  const handleAddToCart = (id: number) => {
-    if (!user) {
-      toast.error("Please login first to proceed");
-      router.push("/auth/login");
-      return;
-    }
+  // Func for add-to-cart
+  const handleAddToCart = (product: any) => {
+    const payload = {
+      vendor_id: product?.shop?.user_id,
+      shop_id: product?.shop?.id,
+      shop_name: product?.shop?.shop_name,
+      shop_image: product?.shop?.shop_image,
 
-    addToCartMutation({ productId: id, data: { quantity: 1 } })
-      .unwrap()
-      .then(res => {
-        toast.success(res?.message);
-      })
-      .catch(err => {
-        toast.error(err?.data?.message);
-      });
+      products: [
+        {
+          id: product?.id,
+          name: product?.product_name,
+          image: product?.images?.[0]?.image,
+          price: Number(product?.product_price),
+          quantity: 1,
+          fulfillment: normalizeFulfillment(product.fulfillment),
+        },
+      ],
+    };
+
+    dispatch(addToCart(payload));
+    toast.success("Added to cart");
   };
 
   return (
@@ -209,27 +220,16 @@ const Product = ({
         {/* Cart btn */}
         {has_cart && (
           <button
-            onClick={() => handleAddToCart(+product?.id)}
+            onClick={() => handleAddToCart(product)}
             disabled={
-              !user ||
-              addCardPending ||
               product?.selling_option === "trade/barter" ||
               (!product?.unlimited_stock && product?.out_of_stock) ||
               (!product?.unlimited_stock && product?.product_quantity === 0)
             }
             className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm disabled:cursor-not-allowed disabled:opacity-75 disabled:border-gray-400 cursor-pointer border-secondary-gray enabled:hover:bg-primary-green enabled:hover:text-accent-white enabled:hover:scale-95`}
           >
-            {addCardPending ? (
-              <p className="flex gap-2 items-center justify-center">
-                <CgSpinnerTwo className="animate-spin text-xl" />
-                <span>Adding...</span>
-              </p>
-            ) : (
-              <p className="flex gap-2 items-center">
-                <span>Add to Cart</span>
-                <AddToCartSvg />
-              </p>
-            )}
+            <span>Add to Cart</span>
+            <AddToCartSvg />
           </button>
         )}
       </div>

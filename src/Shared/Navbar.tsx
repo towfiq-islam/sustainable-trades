@@ -33,14 +33,7 @@ const Navbar = ({ dynamicPage }: any) => {
         {user &&
         (user?.role === "customer" ||
           (user?.role === "vendor" && user?.membership)) ? (
-          <BasicNavbar
-            cart_quantity={
-              user?.cart?.cart_items?.length > 0
-                ? user?.cart?.cart_items?.length
-                : 0
-            }
-            dynamicPage={dynamicPage}
-          />
+          <BasicNavbar dynamicPage={dynamicPage} />
         ) : (
           <DefaultNavbar dynamicPage={dynamicPage} user={user} />
         )}

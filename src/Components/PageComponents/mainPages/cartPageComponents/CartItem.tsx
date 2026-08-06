@@ -1,62 +1,20 @@
 import Image from "next/image";
 import { useState } from "react";
-import { CgSpinnerTwo } from "react-icons/cg";
 import { LocationTwoSvg, MinSvg } from "@/Components/Svg/SvgContainer";
 import Modal from "@/Components/Common/Modal";
 import SuccessModal from "@/Components/Modals/SuccessModal";
 import ShippingAddress from "@/Components/Modals/ShippingAddress";
 import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
 import Link from "next/link";
-import {
-  useRemoveCartMutation,
-  useRemoveFromCartMutation,
-  useUpdateCartMutation,
-} from "@/redux/api/cartApi";
-import toast from "react-hot-toast";
+import { useAppDispatch } from "@/redux/store";
+import { removeFromCart, updateCartQuantity } from "@/redux/slices/cartSlice";
 
-interface CartItem {
-  id: number;
-  fulfillment_type: string;
-  shop: {
-    id: number;
-    user: {
-      onboarded: boolean;
-      membership: {
-        membership_type: string;
-      };
-    };
-    user_id: number;
-    shop_name: string;
-    shop_image: string;
-    address: {
-      display_my_address: boolean;
-      address_line_1: string;
-      city: string;
-      state: string;
-    };
-  };
-  cart_items: {
-    id: number;
-    quantity: number;
-    product_id: number;
-    price: string;
-    product: {
-      images: { image: string }[];
-      product_name: string;
-      product_price: string;
-    };
-  }[];
-}
-
-interface CartProps {
-  item: CartItem;
-}
-
-const CartItem = ({ item }: CartProps) => {
+const CartItem = ({ item }: any) => {
   // States
+  
+  const dispatch = useAppDispatch();
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
   const [orderReviewModal, setOrderReviewModal] = useState<boolean>(false);
@@ -65,38 +23,30 @@ const CartItem = ({ item }: CartProps) => {
   const [formData, setFormData] = useState<any>({});
   const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
   const [successOpen, setSuccessOpen] = useState<boolean>(false);
-  const [cartItemId, setCartItemId] = useState<number | null>(null);
   const [cartId, setCartId] = useState<number | null>(null);
   const [fulfillmentType, setFulfillmentType] = useState<string>("");
   const [shippingMethod, setShippingMethod] = useState("");
   const [taxData, setTaxData] = useState({});
 
-  // Query + Mutation
-  const [removeCartItemMutation, { isLoading: cartItemPending }] =
-    useRemoveFromCartMutation();
-  const [updateCartItem, { isLoading: updateItemPending }] =
-    useUpdateCartMutation();
-  const [removeCartMutation, { isLoading: cartPending }] =
-    useRemoveCartMutation();
-
   // Func for update cart quantity
-  const handleUpdateCart = (quantity: number, type: string, id: number) => {
-    if (type === "decrease" && quantity <= 1) return;
-    const newQuantity = type === "increase" ? quantity + 1 : quantity - 1;
-    updateCartItem({ cartId: id, data: { quantity: newQuantity } })
-      .unwrap()
-      .then(res => {
-        toast.success(res?.message);
-      })
-      .catch(err => {
-        toast.error(err?.data?.message);
-      });
+  const handleUpdateCart = (
+    quantity: number,
+    type: string,
+    product_id: number,
+    vendor_id: number,
+  ) => {
+    if (type === "decrease" && quantity > 1) {
+      dispatch(updateCartQuantity({ product_id, vendor_id, type: "decrease" }));
+    }
+    if (type === "increase") {
+      dispatch(updateCartQuantity({ product_id, vendor_id, type: "increase" }));
+    }
   };
 
-  const vendorSubtotal = item.cart_items.reduce(
-    (total, cart) => total + Number(cart.price),
-    0,
-  );
+  // Func for remove from cart
+  const handleRemoveFromCart = (product_id: number, vendor_id: number) => {
+    dispatch(removeFromCart({ product_id, vendor_id }));
+  };
 
   return (
     <div className="border border-gray-300 p-5 rounded-lg bg-white relative">
@@ -106,7 +56,7 @@ const CartItem = ({ item }: CartProps) => {
           {/* Shop Image */}
           <figure className="size-12 rounded-full border border-gray-100 relative">
             <Image
-              src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.shop?.shop_image}`}
+              src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.shop_image}`}
               alt="shop_image"
               fill
               unoptimized
@@ -116,56 +66,23 @@ const CartItem = ({ item }: CartProps) => {
 
           {/* Shop Name */}
           <Link
-            href={`/shop-details?view=${"customer"}&id=${item?.shop?.user_id}&listing_id=${item?.shop?.id}`}
+            href={`/shop-details?view=${"customer"}&id=${item?.vendor_id}&listing_id=${item?.shop_id}`}
             className="text-xl font-semibold text-primary-green block hover:underline"
           >
-            {item?.shop?.shop_name}
+            {item?.shop_name}
           </Link>
         </div>
-
-        {/* Shop Location */}
-        <div className="flex gap-2 items-center">
-          <LocationTwoSvg />
-          <p className="text-primary-green font-semibold">
-            {item?.shop?.address?.display_my_address
-              ? item?.shop?.address?.address_line_1
-              : `${item?.shop?.address?.city}, ${item?.shop?.address?.state}`}
-          </p>
-        </div>
-
-        {/* Remove Cart */}
-        <button
-          disabled={cartPending}
-          onClick={() => {
-            setCartId(item?.id);
-            removeCartMutation(item?.id).unwrap();
-          }}
-          className={`absolute right-2 top-2 size-8 text-sm grid place-items-center rounded-full font-semibold bg-accent-red text-white ${
-            cartPending ? "cursor-not-allowed" : "cursor-pointer"
-          }`}
-        >
-          {cartPending && cartId === item?.id ? (
-            <p className="flex gap-2 items-center justify-center">
-              <CgSpinnerTwo className="animate-spin" />
-            </p>
-          ) : (
-            <RiDeleteBin6Line className="text-lg" />
-          )}
-        </button>
       </div>
 
       {/* Product Info */}
       <div className="space-y-6">
-        {item?.cart_items?.map(cart => (
-          <div
-            key={cart?.id}
-            className="flex flex-col sm:flex-row gap-5 border-b last:border-b-0 border-gray-300 pb-7 last:pb-0"
-          >
+        {item?.products?.map((product: any) => (
+          <div key={product?.id} className="flex flex-col sm:flex-row gap-5">
             {/* Product Image */}
             <figure className="w-full sm:w-[180px] h-[140px] shrink-0 rounded-lg border border-gray-100 relative">
               <div className="absolute inset-0 bg-black/20 rounded-lg" />
               <Image
-                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${cart?.product?.images[0]?.image}`}
+                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product?.image}`}
                 alt="product image"
                 fill
                 unoptimized
@@ -177,23 +94,28 @@ const CartItem = ({ item }: CartProps) => {
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3">
                 {/* Product Name */}
                 <Link
-                  href={`/product-details/${cart?.product_id}`}
+                  href={`/product-details/${product?.id}`}
                   className="text-xl font-semibold text-secondary-black block hover:underline"
                 >
-                  {cart?.product?.product_name}
+                  {product?.name}
                 </Link>
 
                 {/* Product Price */}
-                <p className="text-2xl font-bold">${cart?.price}</p>
+                <p className="text-2xl font-bold">
+                  ${product?.price * product?.quantity}
+                </p>
               </div>
 
               {/* Product Quantity */}
-              <div className="flex gap-3 items-center border rounded-lg px-7 py-2 font-semibold border-primary-green w-fit mb-3">
+              <div className="flex gap-3 items-center border rounded-lg px-7 py-2 font-semibold border-gray-300 w-fit mb-3">
                 <button
-                  disabled={updateItemPending}
                   onClick={() => {
-                    setCartItemId(cart?.id);
-                    handleUpdateCart(cart?.quantity, "decrease", cart?.id);
+                    handleUpdateCart(
+                      product?.quantity,
+                      "decrease",
+                      product?.id,
+                      item?.vendor_id,
+                    );
                   }}
                   className="cursor-pointer disabled:cursor-not-allowed"
                 >
@@ -201,13 +123,16 @@ const CartItem = ({ item }: CartProps) => {
                 </button>
 
                 <p>Qty:</p>
-                <p>{cart?.quantity}</p>
+                <p>{product?.quantity}</p>
 
                 <button
-                  disabled={updateItemPending}
                   onClick={() => {
-                    setCartItemId(cart?.id);
-                    handleUpdateCart(cart?.quantity, "increase", cart?.id);
+                    handleUpdateCart(
+                      product?.quantity,
+                      "increase",
+                      product?.id,
+                      item?.vendor_id,
+                    );
                   }}
                   className="cursor-pointer disabled:cursor-not-allowed"
                 >
@@ -217,49 +142,16 @@ const CartItem = ({ item }: CartProps) => {
 
               {/* Remove item */}
               <button
-                disabled={cartItemPending}
-                onClick={() => {
-                  setCartItemId(cart?.id);
-                  removeCartItemMutation(cart?.id).unwrap();
-                }}
-                className={`font-semibold text-primary-green cursor-pointer text-[15px] ${
-                  cartItemPending ? "cursor-not-allowed" : "cursor-pointer"
-                }`}
+                onClick={() =>
+                  handleRemoveFromCart(product?.id, item?.vendor_id)
+                }
+                className="font-semibold text-primary-green cursor-pointer text-[15px] hover:underline"
               >
-                {cartItemPending && cartItemId === cart?.id ? (
-                  <p className="flex gap-2 items-center justify-center">
-                    <CgSpinnerTwo className="animate-spin text-lg" />
-                    <span>Removing...</span>
-                  </p>
-                ) : (
-                  "Remove"
-                )}
+                Remove
               </button>
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Add to cart */}
-      <div className="flex justify-end">
-        <button
-          onClick={() => {
-            setFulfillmentType(item?.fulfillment_type);
-            setShippingMethod(
-              item?.shop?.user?.onboarded &&
-                (item?.fulfillment_type === "shipping" ||
-                  item?.fulfillment_type === "both_local_pickup_and_shipping" ||
-                  item?.fulfillment_type === "both_shipping")
-                ? "proceed"
-                : "local",
-            );
-            setShippingOptionsOpen(true);
-            setCartId(item?.id);
-          }}
-          className="bg-primary-green text-white cursor-pointer font-semibold rounded !w-fit px-4 !py-2 !text-sm"
-        >
-          Proceed to Checkout
-        </button>
       </div>
 
       {/* Modals */}
@@ -309,7 +201,8 @@ const CartItem = ({ item }: CartProps) => {
           setFormData={setFormData}
           formData={formData}
           cartItems={item}
-          subTotal={vendorSubtotal}
+          subTotal={0}
+          // subTotal={vendorSubtotal}
           cart_id={cartId}
           taxData={taxData}
           shop_name={item?.shop?.shop_name}

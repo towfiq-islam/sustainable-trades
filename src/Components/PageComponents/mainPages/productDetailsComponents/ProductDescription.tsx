@@ -23,7 +23,6 @@ import ShippingAddress from "@/Components/Modals/ShippingAddress";
 import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
 import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
-import { useAddToCartMutation } from "@/redux/api/cartApi";
 import { useRouter } from "next/navigation";
 
 type descriptionItem = {
@@ -97,9 +96,6 @@ const ProductDescription = ({ data }: descriptionProps) => {
   const [addFavoriteMutation, { isLoading: isPending }] =
     useAddFavoriteMutation();
 
-  const [addToCartMutation, { isLoading: addCardPending }] =
-    useAddToCartMutation();
-
   // Func for Increase & Decrease
   const handleIncrease = () => setQuantity(prev => prev + 1);
   const handleDecrease = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
@@ -121,22 +117,22 @@ const ProductDescription = ({ data }: descriptionProps) => {
   };
 
   // Func for add to cart
-  const handleAddToCart = (id: number) => {
-    if (!user) {
-      return toast.error(
-        "To continue as a guest, use the 'Buy It Now' button below, or create a free Sustainable Shopper account to use the shopping cart.",
-      );
-    }
+  // const handleAddToCart = (id: number) => {
+  //   if (!user) {
+  //     return toast.error(
+  //       "To continue as a guest, use the 'Buy It Now' button below, or create a free Sustainable Shopper account to use the shopping cart.",
+  //     );
+  //   }
 
-    addToCartMutation({ productId: id, data: { quantity } })
-      .unwrap()
-      .then(res => {
-        toast.success(res?.message);
-      })
-      .catch(err => {
-        toast.error(err?.data?.message);
-      });
-  };
+  //   addToCartMutation({ productId: id, data: { quantity } })
+  //     .unwrap()
+  //     .then(res => {
+  //       toast.success(res?.message);
+  //     })
+  //     .catch(err => {
+  //       toast.error(err?.data?.message);
+  //     });
+  // };
 
   return (
     <>
@@ -171,27 +167,17 @@ const ProductDescription = ({ data }: descriptionProps) => {
         {/* Add To Cart */}
         <button
           disabled={
-            addCardPending ||
             (!data?.unlimited_stock && data?.out_of_stock) ||
             (!data?.unlimited_stock && data?.product_quantity === 0) ||
             data?.selling_option === "trade/barter"
           }
-          onClick={() => handleAddToCart(data?.id)}
-          className={`border border-primary-green rounded-lg px-4 py-2 enabled:hover:bg-primary-green enabled:hover:text-accent-white duration-500 transition-all shrink-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:border-gray-300 disabled:bg-gray-100 ${
-            addCardPending ? "cursor-not-allowed" : "cursor-pointer"
-          }`}
+          // onClick={() => handleAddToCart(data?.id)}
+          className={`border border-primary-green rounded-lg px-4 py-2 enabled:hover:bg-primary-green enabled:hover:text-accent-white duration-500 transition-all shrink-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:border-gray-300 disabled:bg-gray-100 cursor-pointer`}
         >
-          {addCardPending ? (
-            <p className="flex gap-2 items-center justify-center">
-              <CgSpinnerTwo className="animate-spin text-lg md:text-xl" />
-              <span>Adding...</span>
-            </p>
-          ) : (
-            <p className="flex gap-2 items-center">
-              <span>Add to Cart</span>
-              <AddToCartSvg />
-            </p>
-          )}
+          <p className="flex gap-2 items-center">
+            <span>Add to Cart</span>
+            <AddToCartSvg />
+          </p>
         </button>
       </div>
 
@@ -199,7 +185,9 @@ const ProductDescription = ({ data }: descriptionProps) => {
       <p className="text-primary-green md:text-lg lg:text-xl font-semibold mb-3">
         Product Description
       </p>
-      <p className="text-secondary-gray text-sm md:text-base mb-5">{data?.description}</p>
+      <p className="text-secondary-gray text-sm md:text-base mb-5">
+        {data?.description}
+      </p>
       <div className="flex gap-3 items-center mb-2">
         {/* Shop Name */}
         <Link
@@ -214,7 +202,10 @@ const ProductDescription = ({ data }: descriptionProps) => {
         {/* Shop Reviews */}
         <div className="flex gap-1 items-center">
           {Array.from({ length: +data?.reviews_avg_rating }).map((_, index) => (
-            <FaStar key={index} className="text-primary-green text-xs md:text-sm" />
+            <FaStar
+              key={index}
+              className="text-primary-green text-xs md:text-sm"
+            />
           ))}
         </div>
       </div>
@@ -301,7 +292,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
           );
           setShippingOptionsOpen(true);
         }}
-        className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-semibold border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
+        className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-medium border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
       >
         Buy it now
       </button>

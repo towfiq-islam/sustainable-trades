@@ -4,16 +4,16 @@ import { useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import Container from "@/Components/Common/Container";
 import { useAppSelector } from "@/redux/store";
-
+import CheckoutStepper, { CheckoutStep } from "./_components/CheckoutStepper";
+import FulfillmentStep from "./_components/FulfillmentStep";
 import VendorDetailsStep from "./_components/VendorDetailsStep";
 import OrderSummarySidebar from "./_components/OrderSummarySidebar";
 import ReviewStep from "./_components/ReviewStep";
 import PaymentStep from "./_components/PaymentStep";
-import CheckoutStepper, { CheckoutStep } from "./_components/CheckoutStepper";
 
 const CheckoutContent = () => {
   const searchParams = useSearchParams();
-  const step = (searchParams.get("step") as CheckoutStep) || "details";
+  const step = (searchParams.get("step") as CheckoutStep) || "fulfillment";
   const { items } = useAppSelector(state => state.cart);
 
   const methods = useForm({ defaultValues: { vendors: {} } });
@@ -33,6 +33,8 @@ const CheckoutContent = () => {
       <CheckoutStepper current={step} />
 
       <FormProvider {...methods}>
+        {step === "fulfillment" && <FulfillmentStep />}
+
         {step === "details" && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             <div className="lg:col-span-8">

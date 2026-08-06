@@ -21,7 +21,7 @@ const VendorDetailsStep = () => {
   const base = `vendors.${vendor.vendor_id}`;
 
   const handleBack = () => {
-    if (isFirstVendor) router.push("/cart");
+    if (isFirstVendor) router.push("/checkout?step=fulfillment");
     else setVendorIndex(i => i - 1);
   };
 
@@ -88,7 +88,7 @@ const VendorDetailsStep = () => {
           onClick={handleBack}
           className="px-6 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
         >
-          {isFirstVendor ? "Back to cart" : "Back"}
+          {isFirstVendor ? "Back" : "Back"}
         </button>
         <button
           type="button"

@@ -40,45 +40,89 @@ const VendorDetailsStep = () => {
       </h3>
 
       <div className="space-y-4 mb-6">
-        <input
-          {...register(`${base}.name`)}
-          placeholder="Name"
-          className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
-        />
-        <input
-          {...register(`${base}.phone`)}
-          placeholder="Phone"
-          className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
-        />
+        <div className="flex gap-4 items-center">
+          <input
+            {...register(`${base}.name`)}
+            placeholder="First Name"
+            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+          />
+          <input
+            {...register(`${base}.name`)}
+            placeholder="Last Name"
+            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+          />
+        </div>
+
+        <div className="flex gap-4 items-center">
+          <input
+            {...register(`${base}.phone`)}
+            placeholder="Phone"
+            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+          />
+          <input
+            {...register(`${base}.email`)}
+            placeholder="Email"
+            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+          />
+        </div>
 
         {(fulfillment === "delivery" || fulfillment === "shipping") && (
-          <input
-            {...register(`${base}.address`)}
-            placeholder={
-              fulfillment === "shipping"
-                ? "Shipping address"
-                : "Delivery address"
-            }
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
-          />
-        )}
+          <div className="space-y-3">
+            <textarea
+              {...register(`${base}.address`)}
+              rows={3}
+              placeholder={
+                fulfillment === "shipping"
+                  ? "Shipping address"
+                  : "Delivery address"
+              }
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+            ></textarea>
 
-        {fulfillment === "delivery" && (
-          <textarea
-            {...register(`${base}.instructions`)}
-            placeholder="Delivery instructions"
-            rows={4}
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green resize-none"
-          />
+            <input
+              {...register(`${base}.apt`)}
+              placeholder="Apartment, suite, etc. (optional)"
+              className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+            />
+
+            <div className="flex gap-4 items-center">
+              <input
+                {...register(`${base}.city`)}
+                placeholder="City"
+                className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+              />
+              <input
+                {...register(`${base}.zip`)}
+                placeholder="Zip Code"
+                className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+              />
+            </div>
+
+            <div className="flex gap-4 items-center">
+              <input
+                {...register(`${base}.state`)}
+                placeholder="State"
+                className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+              />
+              <input
+                {...register(`${base}.country`)}
+                placeholder="Country"
+                className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+              />
+            </div>
+          </div>
         )}
 
         {fulfillment === "pickup" && (
-          <textarea
-            {...register(`${base}.instructions`)}
-            placeholder="Pickup notes (optional)"
-            rows={3}
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green resize-none"
-          />
+          <select
+            {...register(`${base}.pickupLocation`)}
+            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+          >
+            <option value="">Select a pickup location</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
         )}
       </div>
 

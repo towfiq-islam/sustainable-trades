@@ -36,8 +36,8 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
                 <p className="text-sm font-medium text-secondary-black">
                   {product.name}
                 </p>
-                <p className="text-xs text-secondary-gray">
-                  {vendor.shop_name} · qty {product.quantity}
+                <p className="text-xs text-secondary-gray pt-0.5">
+                  Qty {product.quantity}
                 </p>
               </div>
               <p className="text-sm font-semibold text-secondary-black">
@@ -48,21 +48,21 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
         )}
       </div>
 
-      <hr />
+      <hr className="text-gray-300" />
 
       <div className="flex justify-between text-sm text-secondary-gray">
         <span>Subtotal</span>
         <span>${subtotal.toFixed(2)}</span>
       </div>
-      <div className="flex justify-between text-sm text-secondary-gray">
+      <div className="flex justify-between text-sm text-secondary-gray -mt-1">
         <span>Tax and shipping</span>
         <span>Calculated next</span>
       </div>
 
-      <hr />
+      <hr className="text-gray-300" />
 
       <div className="flex justify-between font-bold text-secondary-black">
-        <span>Estimated total</span>
+        <span className="text-primary-green">Estimated total</span>
         <span>${subtotal.toFixed(2)}</span>
       </div>
     </aside>

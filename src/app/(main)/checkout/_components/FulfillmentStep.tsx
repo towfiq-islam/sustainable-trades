@@ -9,33 +9,43 @@ import {
   fulfillmentLabel,
   getVendorFulfillmentStatus,
 } from "@/lib/fulfillment";
+import Image from "next/image";
 
 const FulfillmentStep = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { items } = useAppSelector(state => state.cart);
-
   const [selections, setSelections] = useState<Record<number, Fulfillment>>({});
 
-  // Seed selections on mount: keep an existing valid choice, otherwise
-  // default to the vendor's single auto-option (if any).
+  // Keep selections in sync whenever the cart changes (e.g. a product is
+  // removed from a blocked vendor, flipping it to "auto" or "choose").
+  // Preserves any choice the user already made; only fills in the gaps.
   useEffect(() => {
-    const initial: Record<number, Fulfillment> = {};
-    items.forEach(vendor => {
-      const { status, options } = getVendorFulfillmentStatus(vendor.products);
-      if (status === "auto") {
-        initial[vendor.vendor_id] = options[0];
-      } else if (
-        status === "choose" &&
-        vendor.selectedFulfillment &&
-        options.includes(vendor.selectedFulfillment)
-      ) {
-        initial[vendor.vendor_id] = vendor.selectedFulfillment;
-      }
+    setSelections(prev => {
+      const next: Record<number, Fulfillment> = {};
+
+      items.forEach(vendor => {
+        const { status, options } = getVendorFulfillmentStatus(vendor.products);
+
+        if (status === "auto") {
+          next[vendor.vendor_id] = options[0];
+        } else if (status === "choose") {
+          const existing = prev[vendor.vendor_id];
+          next[vendor.vendor_id] =
+            existing && options.includes(existing)
+              ? existing
+              : vendor.selectedFulfillment &&
+                  options.includes(vendor.selectedFulfillment)
+                ? vendor.selectedFulfillment
+                : (undefined as unknown as Fulfillment); // stays unresolved until user picks
+        }
+        // status === "blocked" -> intentionally omitted from `next`,
+        // so a removed vendor or unresolved blocked vendor never counts as resolved
+      });
+
+      return next;
     });
-    setSelections(initial);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [items]);
 
   const handleSelect = (vendor_id: number, fulfillment: Fulfillment) => {
     setSelections(prev => ({ ...prev, [vendor_id]: fulfillment }));
@@ -85,14 +95,22 @@ const FulfillmentStep = () => {
             <div
               key={vendor.vendor_id}
               className={`border rounded-xl p-4 ${
-                status === "blocked" ? "border-accent-red" : "border-gray-200"
+                status === "blocked"
+                  ? "border-accent-red/40 bg-accent-red/5"
+                  : "border-gray-200"
               }`}
             >
               {/* Vendor header */}
               <div className="flex items-center gap-3 mb-4">
-                <span className="size-9 rounded-full bg-primary-green/10 border border-primary-green grid place-items-center shrink-0">
-                  <span className="size-2 rounded-sm bg-primary-green" />
-                </span>
+                <figure className="size-10 rounded-full border border-gray-200 relative shrink-0 bg-gray-100 overflow-hidden">
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${vendor.shop_image}`}
+                    alt={vendor?.shop_name}
+                    fill
+                    unoptimized
+                    className="object-cover"
+                  />
+                </figure>
                 <div>
                   <p className="font-semibold text-secondary-black">
                     {vendor.shop_name}
@@ -104,13 +122,14 @@ const FulfillmentStep = () => {
                 </div>
               </div>
 
-              {/* Blocked: no common method */}
+              {/* Blocked: No common method */}
               {status === "blocked" && (
                 <div className="space-y-3">
                   <p className="text-sm text-accent-red font-medium">
                     These products don't share a common fulfillment method.
                     Remove one to continue, or place separate orders.
                   </p>
+
                   <div className="space-y-2">
                     {vendor.products.map(product => (
                       <div
@@ -144,12 +163,12 @@ const FulfillmentStep = () => {
 
               {/* Auto: exactly one common method, no choice needed */}
               {status === "auto" && (
-                <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-blue-400 bg-blue-50">
-                  <span className="size-5 rounded-full border-2 border-blue-500 grid place-items-center shrink-0">
-                    <span className="size-2.5 rounded-full bg-blue-500" />
+                <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-off-green/70 bg-off-green/40">
+                  <span className="size-5 rounded-full border-2 border-primary-green grid place-items-center shrink-0">
+                    <span className="size-2.5 rounded-full bg-primary-green" />
                   </span>
                   <span>
-                    <span className="block font-semibold text-blue-600">
+                    <span className="block font-semibold text-primary-green">
                       {fulfillmentLabel[options[0]]}
                     </span>
                     <span className="block text-sm text-secondary-gray">
@@ -172,24 +191,26 @@ const FulfillmentStep = () => {
                         onClick={() => handleSelect(vendor.vendor_id, option)}
                         className={`w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg border transition-colors cursor-pointer ${
                           isSelected
-                            ? "bg-blue-50 border-blue-400"
-                            : "border-gray-200 hover:border-gray-400"
+                            ? "bg-off-green/40 border-off-green/70"
+                            : "border-gray-200 hover:border-off-green hover:bg-off-green/20"
                         }`}
                       >
                         <span
                           className={`size-5 rounded-full border-2 grid place-items-center shrink-0 ${
-                            isSelected ? "border-blue-500" : "border-gray-400"
+                            isSelected
+                              ? "border-primary-green"
+                              : "border-gray-400"
                           }`}
                         >
                           {isSelected && (
-                            <span className="size-2.5 rounded-full bg-blue-500" />
+                            <span className="size-2.5 rounded-full bg-primary-green" />
                           )}
                         </span>
                         <span>
                           <span
                             className={`block font-semibold ${
                               isSelected
-                                ? "text-blue-600"
+                                ? "text-primary-green"
                                 : "text-secondary-black"
                             }`}
                           >
@@ -217,11 +238,12 @@ const FulfillmentStep = () => {
         >
           Back
         </button>
+
         <button
           type="button"
           disabled={!allResolved || blockedVendors.length > 0}
           onClick={handleContinue}
-          className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300"
+          className="px-6 py-3 rounded-lg bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:scale-95 transition-all duration-300"
         >
           Continue
         </button>

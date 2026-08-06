@@ -15,13 +15,12 @@ const CheckoutContent = () => {
   const searchParams = useSearchParams();
   const step = (searchParams.get("step") as CheckoutStep) || "fulfillment";
   const { items } = useAppSelector(state => state.cart);
-
   const methods = useForm({ defaultValues: { vendors: {} } });
 
   if (!items.length) {
     return (
       <Container>
-        <p className="text-center text-secondary-gray py-20">
+        <p className="text-center text-secondary-gray text-lg py-20">
           Your cart is empty.
         </p>
       </Container>

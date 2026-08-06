@@ -33,21 +33,18 @@ const CheckoutContent = () => {
       <CheckoutStepper current={step} />
 
       <FormProvider {...methods}>
-        {step === "fulfillment" && <FulfillmentStep />}
-
-        {step === "details" && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            <div className="lg:col-span-8">
-              <VendorDetailsStep />
-            </div>
-            <div className="lg:col-span-4">
-              <OrderSummarySidebar items={items} />
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div className="lg:col-span-8">
+            {step === "fulfillment" && <FulfillmentStep />}
+            {step === "details" && <VendorDetailsStep />}
+            {step === "review" && <ReviewStep />}
+            {step === "payment" && <PaymentStep />}
           </div>
-        )}
 
-        {step === "review" && <ReviewStep />}
-        {step === "payment" && <PaymentStep />}
+          <div className="lg:col-span-4">
+            <OrderSummarySidebar items={items} />
+          </div>
+        </div>
       </FormProvider>
     </Container>
   );

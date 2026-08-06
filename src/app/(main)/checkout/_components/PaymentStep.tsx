@@ -26,7 +26,7 @@ const PaymentStep = () => {
   };
 
   return (
-    <div className="border border-gray-300 rounded-lg p-6 bg-white text-center max-w-md mx-auto">
+    <div className="border border-gray-300 rounded-lg p-6 bg-white text-center">
       <h3 className="text-xl font-semibold text-secondary-black mb-1">
         Confirm and pay
       </h3>

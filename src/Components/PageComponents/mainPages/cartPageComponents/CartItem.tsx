@@ -69,7 +69,7 @@ const CartItem = ({ item }: any) => {
             href={`/shop-details?view=${"customer"}&id=${item?.vendor_id}&listing_id=${item?.shop_id}`}
             className="text-xl font-semibold text-primary-green block hover:underline"
           >
-            {item?.shop_name}
+            Sold by {item?.shop_name}
           </Link>
         </div>
       </div>

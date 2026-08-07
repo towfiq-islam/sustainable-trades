@@ -5,7 +5,7 @@ import ShopLocation from "@/Components/PageComponents/mainPages/cartPageComponen
 
 const page = () => {
   return (
-    <section className="my-10">
+    <section className="mt-7 mb-10">
       <Container>
         <PaymentOptions />
         {/* {cartData?.data?.total_cart_items && (

@@ -1,5 +1,5 @@
 "use client";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import Container from "@/Components/Common/Container";
@@ -15,6 +15,11 @@ const CheckoutContent = () => {
   const searchParams = useSearchParams();
   const step = (searchParams.get("step") as CheckoutStep) || "delivery-options";
   const { items } = useAppSelector(state => state.cart);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [step]);
+
   const methods = useForm({ defaultValues: { vendors: {} } });
 
   if (!items.length) {

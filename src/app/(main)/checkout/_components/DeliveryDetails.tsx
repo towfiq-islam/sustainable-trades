@@ -27,7 +27,10 @@ const DeliveryDetails = () => {
 
   const handleNext = () => {
     if (isLastVendor) router.push("/checkout?step=review-order");
-    else setVendorIndex(i => i + 1);
+    else {
+      setVendorIndex(i => i + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (

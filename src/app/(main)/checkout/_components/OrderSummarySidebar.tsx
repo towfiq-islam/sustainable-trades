@@ -9,43 +9,50 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
   );
 
   return (
-    <aside className="border border-gray-300 rounded-lg p-5 space-y-4 h-fit">
+    <aside className="border border-gray-300 rounded-xl p-5 space-y-4 h-fit">
       <h3 className="text-lg font-semibold text-secondary-black">
         Order Summary
       </h3>
 
-      <div className="space-y-3">
-        {items.map(vendor =>
-          vendor.products.map(product => (
-            <div
-              key={`${vendor.vendor_id}-${product.id}`}
-              className="flex gap-3 items-center"
-            >
-              <figure className="size-12 rounded-md border border-gray-100 relative shrink-0 bg-gray-100">
-                {product.image && (
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product.image}`}
-                    alt={product.name}
-                    fill
-                    unoptimized
-                    className="object-cover rounded-md"
-                  />
-                )}
-              </figure>
-              <div className="grow">
-                <p className="text-sm font-medium text-secondary-black">
-                  {product.name}
-                </p>
-                <p className="text-xs text-secondary-gray pt-0.5">
-                  Qty {product.quantity}
+      <div className="space-y-4">
+        {items.map(vendor => (
+          <div key={vendor.vendor_id} className="space-y-2.5 border-b pb-4 last:pb-1 border-gray-200 last:border-b-0">
+            <h3 className="text-sm font-semibold text-secondary-black">
+              Sold by {vendor.shop_name} ({vendor.products.length} item
+              {vendor.products.length > 1 ? "s" : ""})
+            </h3>
+
+            {vendor.products.map(product => (
+              <div
+                key={`${vendor.vendor_id}-${product.id}`}
+                className="flex gap-3 items-center"
+              >
+                <figure className="size-12 rounded-md border border-gray-100 relative shrink-0 bg-gray-100">
+                  {product.image && (
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product.image}`}
+                      alt={product.name}
+                      fill
+                      unoptimized
+                      className="object-cover rounded-md"
+                    />
+                  )}
+                </figure>
+                <div className="grow">
+                  <p className="text-sm font-medium text-secondary-black">
+                    {product.name}
+                  </p>
+                  <p className="text-xs text-secondary-gray pt-0.5">
+                    Qty {product.quantity}
+                  </p>
+                </div>
+                <p className="text-sm font-semibold text-secondary-black">
+                  ${(product.price * product.quantity).toFixed(2)}
                 </p>
               </div>
-              <p className="text-sm font-semibold text-secondary-black">
-                ${(product.price * product.quantity).toFixed(2)}
-              </p>
-            </div>
-          )),
-        )}
+            ))}
+          </div>
+        ))}
       </div>
 
       <hr className="text-gray-300" />

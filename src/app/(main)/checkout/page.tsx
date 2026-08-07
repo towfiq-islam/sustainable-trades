@@ -5,15 +5,15 @@ import { FormProvider, useForm } from "react-hook-form";
 import Container from "@/Components/Common/Container";
 import { useAppSelector } from "@/redux/store";
 import CheckoutStepper, { CheckoutStep } from "./_components/CheckoutStepper";
-import FulfillmentStep from "./_components/FulfillmentStep";
-import VendorDetailsStep from "./_components/VendorDetailsStep";
 import OrderSummarySidebar from "./_components/OrderSummarySidebar";
 import ReviewStep from "./_components/ReviewStep";
 import PaymentStep from "./_components/PaymentStep";
+import DeliveryOptions from "./_components/DeliveryOptions";
+import DeliveryDetails from "./_components/DeliveryDetails";
 
 const CheckoutContent = () => {
   const searchParams = useSearchParams();
-  const step = (searchParams.get("step") as CheckoutStep) || "fulfillment";
+  const step = (searchParams.get("step") as CheckoutStep) || "delivery-options";
   const { items } = useAppSelector(state => state.cart);
   const methods = useForm({ defaultValues: { vendors: {} } });
 
@@ -34,13 +34,13 @@ const CheckoutContent = () => {
       <FormProvider {...methods}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-8">
-            {step === "fulfillment" && <FulfillmentStep />}
-            {step === "details" && <VendorDetailsStep />}
-            {step === "review" && <ReviewStep />}
+            {step === "delivery-options" && <DeliveryOptions />}
+            {step === "delivery-details" && <DeliveryDetails />}
+            {step === "review-order" && <ReviewStep />}
             {step === "payment" && <PaymentStep />}
           </div>
 
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 sticky top-40">
             <OrderSummarySidebar items={items} />
           </div>
         </div>

@@ -60,7 +60,7 @@ const PaymentOptions = () => {
             ))}
           </div>
 
-          <div className="col-span-4 border border-gray-300 rounded-lg p-5 space-y-4 sticky top-40">
+          <div className="col-span-4 border border-gray-300 rounded-xl p-5 space-y-4 sticky top-40">
             <h3 className="text-lg font-semibold text-secondary-black">
               Order Summary
             </h3>

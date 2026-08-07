@@ -6,7 +6,7 @@ import { useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
 import VendorProgressBar from "./VendorProgressBar";
 
-const VendorDetailsStep = () => {
+const DeliveryDetails = () => {
   const router = useRouter();
   const { items } = useAppSelector(state => state.cart);
   const { register } = useFormContext();
@@ -21,12 +21,12 @@ const VendorDetailsStep = () => {
   const base = `vendors.${vendor.vendor_id}`;
 
   const handleBack = () => {
-    if (isFirstVendor) router.push("/checkout?step=fulfillment");
+    if (isFirstVendor) router.push("/checkout?step=delivery-options");
     else setVendorIndex(i => i - 1);
   };
 
   const handleNext = () => {
-    if (isLastVendor) router.push("/checkout?step=review");
+    if (isLastVendor) router.push("/checkout?step=review-order");
     else setVendorIndex(i => i + 1);
   };
 
@@ -146,4 +146,4 @@ const VendorDetailsStep = () => {
   );
 };
 
-export default VendorDetailsStep;
+export default DeliveryDetails;

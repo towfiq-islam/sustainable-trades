@@ -1,12 +1,16 @@
 "use client";
 import Link from "next/link";
 
-export type CheckoutStep = "fulfillment" | "details" | "review" | "payment";
+export type CheckoutStep =
+  | "delivery-options"
+  | "delivery-details"
+  | "review-order"
+  | "payment";
 
 const STEPS: { key: CheckoutStep; label: string }[] = [
-  { key: "fulfillment", label: "Fulfillment" },
-  { key: "details", label: "Vendor details" },
-  { key: "review", label: "Review" },
+  { key: "delivery-options", label: "Delivery Options" },
+  { key: "delivery-details", label: "Delivery Details" },
+  { key: "review-order", label: "Review Order" },
   { key: "payment", label: "Payment" },
 ];
 

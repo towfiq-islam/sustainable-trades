@@ -11,8 +11,9 @@ import {
   normalizeFulfillment,
 } from "@/lib/fulfillment";
 import Image from "next/image";
+import { IoMdInformationCircleOutline } from "react-icons/io";
 
-const FulfillmentStep = () => {
+const DeliveryOptions = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { items } = useAppSelector(state => state.cart);
@@ -73,17 +74,47 @@ const FulfillmentStep = () => {
         );
       }
     });
-    router.push("/checkout?step=details");
+    router.push("/checkout?step=delivery-details");
   };
 
   return (
-    <div className="border border-gray-300 rounded-lg p-6 bg-white">
-      <h3 className="text-xl font-semibold text-secondary-black mb-1">
-        Choose fulfillment
-      </h3>
-      <p className="text-secondary-gray mb-6">
-        Select a method for each seller
-      </p>
+    <div className="border border-gray-300 rounded-xl p-6 bg-white">
+      <div className="flex gap-20 items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-secondary-black mb-1">
+            Choose Local Delivery, Local Pickup, or Shipping
+          </h3>
+          <p className="text-secondary-gray text-[15px] mb-6">
+            Choose how you'd like to receive your order from each seller.
+            Available options are determined at the listing level by each
+            seller.
+          </p>
+        </div>
+
+        <div className="group relative inline-block">
+          <button
+            type="button"
+            aria-describedby="fulfillment-tooltip"
+            className="text-sm font-medium underline shrink-0 text-primary-green cursor-pointer flex gap-1 items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green/40 rounded min-w-[230px]"
+          >
+            <IoMdInformationCircleOutline className="text-lg" />
+            Why am I choosing separately?
+          </button>
+
+          <div
+            id="fulfillment-tooltip"
+            role="tooltip"
+            className="pointer-events-none absolute right-0 top-full z-20 mt-2 w-72 origin-top-right rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-700 shadow-lg opacity-0 invisible translate-y-1 transition-all duration-150 ease-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0"
+          >
+            <span className="absolute -top-1 right-4 size-2 rotate-45 border-l border-t border-gray-200 bg-white" />
+            Each seller chooses which delivery options are available for each
+            product they list. During checkout, you'll select one delivery
+            method for each seller. If a seller's items don't share a compatible
+            delivery option, you'll need to remove the conflicting item(s) or
+            purchase them in a separate order.
+          </div>
+        </div>
+      </div>
 
       <div className="space-y-4 mb-6">
         {items.map(vendor => {
@@ -97,7 +128,7 @@ const FulfillmentStep = () => {
               key={vendor.vendor_id}
               className={`border rounded-xl p-4 ${
                 status === "blocked"
-                  ? "border-accent-red/40 bg-accent-red/5"
+                  ? "border-off-green/40 bg-off-green/10"
                   : "border-gray-200"
               }`}
             >
@@ -113,8 +144,8 @@ const FulfillmentStep = () => {
                   />
                 </figure>
                 <div>
-                  <p className="font-semibold text-secondary-black">
-                    {vendor.shop_name}
+                  <p className="font-semibold text-[15px] text-secondary-black">
+                    Sold by {vendor.shop_name}
                   </p>
                   <p className="text-sm text-secondary-gray">
                     {vendor.products.length} product
@@ -126,10 +157,19 @@ const FulfillmentStep = () => {
               {/* Blocked: No common method */}
               {status === "blocked" && (
                 <div className="space-y-3">
-                  <p className="text-sm text-accent-red font-medium">
-                    These products don't share a common fulfillment method.
-                    Remove one to continue, or place separate orders.
-                  </p>
+                  <div className="border border-off-green/40 bg-off-green/20 max-w-4xl rounded-lg p-3">
+                    <div className="flex gap-3">
+                      <div className="size-7 shrink-0 rounded-full bg-primary-green text-sm text-white flex items-center justify-center">
+                        i
+                      </div>
+
+                      <p className="text-[#374151] leading-6 text-[14px]">
+                        These products don't share a compatible delivery option.
+                        To continue, remove one or more conflicting items or
+                        purchase them in separate orders.
+                      </p>
+                    </div>
+                  </div>
 
                   <div className="space-y-2">
                     {vendor.products.map(product => (
@@ -147,6 +187,7 @@ const FulfillmentStep = () => {
                             )
                           </span>
                         </span>
+
                         <button
                           type="button"
                           onClick={() =>
@@ -169,12 +210,12 @@ const FulfillmentStep = () => {
                     <span className="size-2.5 rounded-full bg-primary-green" />
                   </span>
                   <span>
-                    <span className="block font-semibold text-primary-green">
+                    <span className="block text-[15px] font-semibold text-primary-green">
                       {fulfillmentLabel[options[0]]}
                     </span>
                     <span className="block text-sm text-secondary-gray">
-                      {fulfillmentDescription[options[0]]} · only option
-                      available for all items from this seller
+                      {fulfillmentDescription[options[0]]} · This is the only
+                      delivery option available for this product.
                     </span>
                   </span>
                 </div>
@@ -207,9 +248,10 @@ const FulfillmentStep = () => {
                             <span className="size-2.5 rounded-full bg-primary-green" />
                           )}
                         </span>
+
                         <span>
                           <span
-                            className={`block font-semibold ${
+                            className={`block font-semibold text-[15px] ${
                               isSelected
                                 ? "text-primary-green"
                                 : "text-secondary-black"
@@ -253,4 +295,4 @@ const FulfillmentStep = () => {
   );
 };
 
-export default FulfillmentStep;
+export default DeliveryOptions;

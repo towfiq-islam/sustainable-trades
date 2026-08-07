@@ -62,7 +62,7 @@ const PaymentStep = () => {
 
       <button
         type="button"
-        onClick={() => router.push("/checkout?step=review")}
+        onClick={() => router.push("/checkout?step=review-order")}
         className="w-full mt-3 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
       >
         Back

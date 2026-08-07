@@ -13,7 +13,7 @@ import { removeFromCart, updateCartQuantity } from "@/redux/slices/cartSlice";
 
 const CartItem = ({ item }: any) => {
   // States
-  
+
   const dispatch = useAppDispatch();
   const [shippingOptionsOpen, setShippingOptionsOpen] =
     useState<boolean>(false);
@@ -49,10 +49,10 @@ const CartItem = ({ item }: any) => {
   };
 
   return (
-    <div className="border border-gray-300 p-5 rounded-lg bg-white relative">
+    <div className="border border-gray-300 rounded-xl bg-white relative">
       {/* Shop Info */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center mt-3 mb-5">
-        <div className="flex gap-2 sm:gap-5 items-center">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center px-3 pt-2 pb-1">
+        <div className="flex gap-2 sm:gap-3 items-center">
           {/* Shop Image */}
           <figure className="size-12 rounded-full border border-gray-100 relative">
             <Image
@@ -67,19 +67,19 @@ const CartItem = ({ item }: any) => {
           {/* Shop Name */}
           <Link
             href={`/shop-details?view=${"customer"}&id=${item?.vendor_id}&listing_id=${item?.shop_id}`}
-            className="text-xl font-semibold text-primary-green block hover:underline"
+            className="font-semibold text-primary-green block hover:underline"
           >
-            {item?.shop_name}
+            Sold by {item?.shop_name}
           </Link>
         </div>
       </div>
 
       {/* Product Info */}
-      <div className="space-y-6">
+      <div className="space-y-6 p-3">
         {item?.products?.map((product: any) => (
-          <div key={product?.id} className="flex flex-col sm:flex-row gap-5">
+          <div key={product?.id} className="flex flex-col sm:flex-row gap-4">
             {/* Product Image */}
-            <figure className="w-full sm:w-[180px] h-[140px] shrink-0 rounded-lg border border-gray-100 relative">
+            <figure className="w-full sm:w-24 h-22 shrink-0 rounded-lg border border-gray-100 relative">
               <div className="absolute inset-0 bg-black/20 rounded-lg" />
               <Image
                 src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product?.image}`}
@@ -91,23 +91,23 @@ const CartItem = ({ item }: any) => {
             </figure>
 
             <div className="grow">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-1.5">
                 {/* Product Name */}
                 <Link
                   href={`/product-details/${product?.id}`}
-                  className="text-xl font-semibold text-secondary-black block hover:underline"
+                  className="font-semibold text-[15px] text-secondary-black block hover:underline"
                 >
                   {product?.name}
                 </Link>
 
                 {/* Product Price */}
-                <p className="text-2xl font-bold">
+                <p className="font-semibold">
                   ${product?.price * product?.quantity}
                 </p>
               </div>
 
               {/* Product Quantity */}
-              <div className="flex gap-3 items-center border rounded-lg px-7 py-2 font-semibold border-gray-300 w-fit mb-3">
+              <div className="flex gap-2 items-center overflow-hidden border h-8 rounded-full font-semibold border-gray-300 w-fit mb-2">
                 <button
                   onClick={() => {
                     handleUpdateCart(
@@ -117,13 +117,15 @@ const CartItem = ({ item }: any) => {
                       item?.vendor_id,
                     );
                   }}
-                  className="cursor-pointer disabled:cursor-not-allowed"
+                  className="cursor-pointer disabled:cursor-not-allowed px-2.5 h-full inline-block hover:bg-gray-100 shrink-0"
                 >
                   <MinSvg />
                 </button>
 
-                <p>Qty:</p>
-                <p>{product?.quantity}</p>
+                <p className="flex text-gray-700 items-center gap-1 text-sm">
+                  <p>Qty:</p>
+                  <p>{product?.quantity}</p>
+                </p>
 
                 <button
                   onClick={() => {
@@ -134,7 +136,7 @@ const CartItem = ({ item }: any) => {
                       item?.vendor_id,
                     );
                   }}
-                  className="cursor-pointer disabled:cursor-not-allowed"
+                  className="cursor-pointer disabled:cursor-not-allowed px-2.5 h-full inline-block hover:bg-gray-100 shrink-0"
                 >
                   +
                 </button>
@@ -145,7 +147,7 @@ const CartItem = ({ item }: any) => {
                 onClick={() =>
                   handleRemoveFromCart(product?.id, item?.vendor_id)
                 }
-                className="font-semibold text-primary-green cursor-pointer text-[15px] hover:underline"
+                className="cursor-pointer text-primary-green font-medium text-sm flex gap-1.5 items-center"
               >
                 Remove
               </button>

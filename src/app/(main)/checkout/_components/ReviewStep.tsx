@@ -82,7 +82,7 @@ const ReviewStep = () => {
       <div className="flex gap-3 justify-between">
         <button
           type="button"
-          onClick={() => router.push("/checkout?step=details")}
+          onClick={() => router.push("/checkout?step=delivery-details")}
           className="px-6 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
         >
           Back

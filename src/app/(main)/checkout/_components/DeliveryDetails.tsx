@@ -5,12 +5,18 @@ import { useFormContext } from "react-hook-form";
 import { useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
 import VendorProgressBar from "./VendorProgressBar";
+import { Country, State } from "country-state-city";
+const allowedCountries = Country.getAllCountries().filter(
+  country => country.isoCode === "US" || country.isoCode === "CA",
+);
 
 const DeliveryDetails = () => {
   const router = useRouter();
   const { items } = useAppSelector(state => state.cart);
   const { register } = useFormContext();
   const [vendorIndex, setVendorIndex] = useState(0);
+  const [country, setCountry] = useState<any>(null);
+  const [state, setState] = useState<any>(null);
 
   const vendor = items[vendorIndex];
   if (!vendor) return null;
@@ -94,6 +100,7 @@ const DeliveryDetails = () => {
                 placeholder="City"
                 className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
               />
+
               <input
                 {...register(`${base}.zip`)}
                 placeholder="Zip Code"
@@ -102,16 +109,47 @@ const DeliveryDetails = () => {
             </div>
 
             <div className="flex gap-4 items-center">
-              <input
-                {...register(`${base}.state`)}
-                placeholder="State"
+              <select
+                value={country || ""}
+                {...register("country", { required: true })}
                 className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
-              />
-              <input
-                {...register(`${base}.country`)}
-                placeholder="Country"
-                className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
-              />
+                onChange={e => {
+                  const selectedCountry = e.target.value;
+                  setCountry(selectedCountry);
+                  setState("");
+                  setValue("country", selectedCountry, {
+                    shouldValidate: true,
+                  });
+                  setValue("state", "");
+                }}
+              >
+                <option value="">Select Country</option>
+                {allowedCountries.map(country => (
+                  <option key={country.isoCode} value={country.isoCode}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                {...register("state", { required: true })}
+                className={`flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green`}
+                value={state}
+                onChange={e => {
+                  const selectedState = e.target.value;
+                  setState(selectedState);
+                  setValue("state", selectedState, {
+                    shouldValidate: true,
+                  });
+                }}
+              >
+                <option value="">Select State / Province</option>
+                {State.getStatesOfCountry(country).map(item => (
+                  <option key={item.isoCode} value={item.isoCode}>
+                    {item.name} ({item.isoCode})
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         )}

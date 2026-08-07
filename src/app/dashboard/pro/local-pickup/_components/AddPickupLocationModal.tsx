@@ -54,7 +54,7 @@ const AddPickupLocationModal = ({ onClose, onSave, defaultValues }: Props) => {
     <div>
       <h2
         id="pickup-modal-title"
-        className="text-2xl font-bold text-secondary-black mb-1"
+        className="text-2xl font-semibold text-secondary-black mb-1"
       >
         {defaultValues ? "Edit Pickup Location" : "Add Pickup Location"}
       </h2>

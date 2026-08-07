@@ -22,6 +22,8 @@ import {
 } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 import DashboardHeader from "@/Shared/DashboardHeader";
+import { MdOutlineWheelchairPickup } from "react-icons/md";
+import { FaTruck } from "react-icons/fa";
 
 const proNavLinks = [
   { id: 1, label: "Dashboard", path: "/dashboard/pro/home", icon: <POneSvg /> },
@@ -80,6 +82,18 @@ const proNavLinks = [
     label: "Discounts",
     path: "/dashboard/pro/discounts",
     icon: <PEightSvg />,
+  },
+  {
+    id: 8,
+    label: "Local Pickup",
+    path: "/dashboard/pro/local-pickup",
+    icon: <MdOutlineWheelchairPickup className="text-xl" />,
+  },
+  {
+    id: 8,
+    label: "Local Delivery",
+    path: "/dashboard/pro/local-delivery",
+    icon: <FaTruck className="text-xl" />,
   },
   {
     id: 9,
@@ -201,12 +215,6 @@ const customerNavLinks = [
     path: "/dashboard/customer/messages",
     icon: <PThirteenSvg />,
   },
-  // {
-  //   id: 29,
-  //   label: "Membership",
-  //   path: "/dashboard/customer/membership",
-  //   icon: <PSevenSvg />,
-  // },
   {
     id: 30,
     label: "Reviews",

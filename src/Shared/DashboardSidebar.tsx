@@ -46,7 +46,7 @@ const DashboardSidebar = ({
       } fixed top-0 left-0 z-[999] xl:static h-screen xl:h-[calc(100vh-80px)] w-72 duration-500 transition-transform border-r border-[#E4E4E4] bg-[#FFFCF9] py-5 px-4 shrink-0 overflow-y-auto side-scrollbar`}
     >
       {/* Nav Links */}
-      <nav className="flex flex-col gap-5">
+      <nav className="flex flex-col gap-3.5">
         {dashboardNavLinks?.map(item => {
           const isActiveParent = pathname === item.path;
           const isActiveSub = item.subMenus?.some(m => pathname === m.path);
@@ -76,7 +76,7 @@ const DashboardSidebar = ({
                 onClick={() =>
                   item.subMenus ? toggleMenu(item.id) : setOpen(false)
                 }
-                className={`w-full text-left ml-1 px-2 py-2 flex gap-3 items-center font-semibold border-l-2 hover:bg-gray-100 duration-300 transition-all hover:scale-[1.03] ${
+                className={`w-full text-left ml-1 px-2 py-2 flex gap-3 items-center text-base font-semibold border-l-2 hover:bg-gray-100 duration-300 transition-all hover:scale-[1.03] ${
                   isActiveParent || isActiveSub || isMessageActive
                     ? "text-primary-green border-primary-green"
                     : "text-light-green border-transparent"

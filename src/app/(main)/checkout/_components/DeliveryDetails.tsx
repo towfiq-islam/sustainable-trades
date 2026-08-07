@@ -1,37 +1,114 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
 import VendorProgressBar from "./VendorProgressBar";
 import { Country, State } from "country-state-city";
+
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
 );
 
+const fieldClass = (hasError: boolean) =>
+  `flex-1 w-full border rounded-lg px-4 py-3 outline-none focus:border-primary-green ${
+    hasError
+      ? "border-red-500 placeholder:text-red-500"
+      : "border-gray-300 placeholder:text-gray-400"
+  }`;
+
 const DeliveryDetails = () => {
   const router = useRouter();
   const { items } = useAppSelector(state => state.cart);
-  const { register } = useFormContext();
+  const {
+    register,
+    watch,
+    setValue,
+    trigger,
+    getValues,
+    formState: { errors },
+  } = useFormContext();
   const [vendorIndex, setVendorIndex] = useState(0);
-  const [country, setCountry] = useState<any>(null);
-  const [state, setState] = useState<any>(null);
 
   const vendor = items[vendorIndex];
   if (!vendor) return null;
-
   const fulfillment = vendor.selectedFulfillment;
   const isLastVendor = vendorIndex === items.length - 1;
   const isFirstVendor = vendorIndex === 0;
   const base = `vendors.${vendor.vendor_id}`;
+  const needsAddress = fulfillment === "delivery" || fulfillment === "shipping";
+  const isPickup = fulfillment === "pickup";
+
+  const fieldsForFulfillment = [
+    `${base}.first_name`,
+    `${base}.last_name`,
+    `${base}.email`,
+    `${base}.phone`,
+    ...(needsAddress
+      ? [
+          `${base}.address`,
+          `${base}.city`,
+          `${base}.postal_code`,
+          `${base}.state`,
+          `${base}.country`,
+        ]
+      : []),
+    ...(isPickup ? [`${base}.pickupLocation`] : []),
+  ];
+
+  const selectedCountry = watch(`${base}.country`);
+  // Namespaced per vendor so vendor A's errors never light up vendor B's fields.
+  const vendorErrors = (errors as any)?.vendors?.[vendor.vendor_id] ?? {};
+
+  // Browser autofill (Google saved data / autosuggest) writes values straight
+  // into the DOM and does not always fire the events react-hook-form listens
+  // to, so RHF's internal state stays empty and validation keeps failing.
+  // Pull the live DOM values back into the form before validating.
+  const syncFromDom = (fields: string[]) => {
+    fields.forEach(field => {
+      const el = document.querySelector<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >(`[name="${field}"]`);
+      if (el && !el.disabled && el.value !== getValues(field)) {
+        setValue(field, el.value);
+      }
+    });
+  };
+
+  // Chrome may autofill right after mount or right after a dropdown pick, so
+  // keep the form state in sync (this also unlocks the state/province select
+  // when the browser autofills the country).
+  useEffect(() => {
+    syncFromDom(fieldsForFulfillment);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [base, needsAddress, isPickup]);
 
   const handleBack = () => {
     if (isFirstVendor) router.push("/checkout?step=delivery-options");
     else setVendorIndex(i => i - 1);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    syncFromDom(fieldsForFulfillment);
+
+    const valid = await trigger(fieldsForFulfillment);
+    if (!valid) return;
+
+    const values = getValues(base);
+    console.log({
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.email,
+      phone: values.phone,
+      address: values.address,
+      apt: values.apt,
+      postal_code: values.postal_code,
+      city: values.city,
+      state: values.state,
+      country: values.country,
+    });
+
     if (isLastVendor) router.push("/checkout?step=review-order");
     else {
       setVendorIndex(i => i + 1);
@@ -51,100 +128,98 @@ const DeliveryDetails = () => {
       <div className="space-y-4 mb-6">
         <div className="flex gap-4 items-center">
           <input
-            {...register(`${base}.name`)}
+            {...register(`${base}.first_name`, { required: true })}
+            autoComplete="given-name"
             placeholder="First Name"
-            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+            className={fieldClass(!!vendorErrors.first_name)}
           />
           <input
-            {...register(`${base}.name`)}
+            {...register(`${base}.last_name`, { required: true })}
+            autoComplete="family-name"
             placeholder="Last Name"
-            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+            className={fieldClass(!!vendorErrors.last_name)}
           />
         </div>
 
         <div className="flex gap-4 items-center">
           <input
-            {...register(`${base}.phone`)}
+            {...register(`${base}.phone`, { required: true })}
+            autoComplete="tel"
             placeholder="Phone"
-            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+            className={fieldClass(!!vendorErrors.phone)}
           />
           <input
-            {...register(`${base}.email`)}
+            {...register(`${base}.email`, {
+              required: true,
+              pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            })}
+            autoComplete="email"
             placeholder="Email"
-            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+            className={fieldClass(!!vendorErrors.email)}
           />
         </div>
 
-        {(fulfillment === "delivery" || fulfillment === "shipping") && (
+        {needsAddress && (
           <div className="space-y-3">
             <textarea
-              {...register(`${base}.address`)}
+              {...register(`${base}.address`, { required: true })}
+              autoComplete="street-address"
               rows={3}
               placeholder={
                 fulfillment === "shipping"
                   ? "Shipping address"
                   : "Delivery address"
               }
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+              className={fieldClass(!!vendorErrors.address)}
             ></textarea>
 
             <input
               {...register(`${base}.apt`)}
+              autoComplete="address-line2"
               placeholder="Apartment, suite, etc. (optional)"
-              className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+              className={fieldClass(false)}
             />
 
             <div className="flex gap-4 items-center">
               <input
-                {...register(`${base}.city`)}
+                {...register(`${base}.city`, { required: true })}
+                autoComplete="address-level2"
                 placeholder="City"
-                className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+                className={fieldClass(!!vendorErrors.city)}
               />
-
               <input
-                {...register(`${base}.zip`)}
+                {...register(`${base}.postal_code`, { required: true })}
+                autoComplete="postal-code"
                 placeholder="Zip Code"
-                className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+                className={fieldClass(!!vendorErrors.postal_code)}
               />
             </div>
 
             <div className="flex gap-4 items-center">
               <select
-                value={country || ""}
-                {...register("country", { required: true })}
-                className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
-                onChange={e => {
-                  const selectedCountry = e.target.value;
-                  setCountry(selectedCountry);
-                  setState("");
-                  setValue("country", selectedCountry, {
-                    shouldValidate: true,
-                  });
-                  setValue("state", "");
-                }}
+                {...register(`${base}.country`, {
+                  required: true,
+                  onChange: () => setValue(`${base}.state`, ""),
+                })}
+                autoComplete="country"
+                className={fieldClass(!!vendorErrors.country)}
               >
                 <option value="">Select Country</option>
-                {allowedCountries.map(country => (
-                  <option key={country.isoCode} value={country.isoCode}>
-                    {country.name}
+                {allowedCountries.map(c => (
+                  <option key={c.isoCode} value={c.isoCode}>
+                    {c.name}
                   </option>
                 ))}
               </select>
 
               <select
-                {...register("state", { required: true })}
-                className={`flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green`}
-                value={state}
-                onChange={e => {
-                  const selectedState = e.target.value;
-                  setState(selectedState);
-                  setValue("state", selectedState, {
-                    shouldValidate: true,
-                  });
-                }}
+                {...register(`${base}.state`, { required: true })}
+                autoComplete="address-level1"
+                className={fieldClass(!!vendorErrors.state)}
+                disabled={!selectedCountry}
               >
                 <option value="">Select State / Province</option>
-                {State.getStatesOfCountry(country).map(item => (
+                {State.getStatesOfCountry(selectedCountry).map(item => (
                   <option key={item.isoCode} value={item.isoCode}>
                     {item.name} ({item.isoCode})
                   </option>
@@ -154,10 +229,10 @@ const DeliveryDetails = () => {
           </div>
         )}
 
-        {fulfillment === "pickup" && (
+        {isPickup && (
           <select
-            {...register(`${base}.pickupLocation`)}
-            className="flex-1 w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-primary-green"
+            {...register(`${base}.pickupLocation`, { required: true })}
+            className={fieldClass(!!vendorErrors.pickupLocation)}
           >
             <option value="">Select a pickup location</option>
             <option value="1">1</option>
@@ -173,7 +248,7 @@ const DeliveryDetails = () => {
           onClick={handleBack}
           className="px-6 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
         >
-          {isFirstVendor ? "Back" : "Back"}
+          Back
         </button>
         <button
           type="button"

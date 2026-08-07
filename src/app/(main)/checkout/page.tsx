@@ -21,7 +21,7 @@ const CheckoutContent = () => {
   }, [step]);
 
   
-  const methods = useForm({ defaultValues: { vendors: {} } });
+  const methods = useForm({ defaultValues: { vendors: {} }, mode: "all" });
 
   if (!items.length) {
     return (

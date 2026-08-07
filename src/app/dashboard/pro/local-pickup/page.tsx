@@ -55,7 +55,7 @@ const INITIAL_LOCATIONS: PickupLocation[] = [
   },
 ];
 
-const LocalPickupPage = () => {
+const Page = () => {
   const [locations, setLocations] =
     useState<PickupLocation[]>(INITIAL_LOCATIONS);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -329,4 +329,4 @@ const LocalPickupPage = () => {
   );
 };
 
-export default LocalPickupPage;
+export default Page;

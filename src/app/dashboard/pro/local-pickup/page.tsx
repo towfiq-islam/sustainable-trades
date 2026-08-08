@@ -216,13 +216,13 @@ const Page = () => {
             )}
           </div>
 
-          <p className="text-sm text-secondary-gray mt-4">
+          {/* <p className="text-sm text-secondary-gray mt-4">
             Need help? Visit our{" "}
             <a href="/help" className="text-primary-green underline">
               Help Center
             </a>{" "}
             to learn more about Local Pickup.
-          </p>
+          </p> */}
         </div>
 
         {/* Sidebar */}

@@ -483,7 +483,7 @@ const EditFormThree = ({ data }: any) => {
           Link Your Shop <span className="text-[#67645F]">(Optional)</span>
         </p>
 
-        <div className="flex flex-col xl:flex-row gap-4">
+        <div className="flex flex-col flex-wrap xl:flex-row gap-4">
           {[
             {
               icon: <Website />,

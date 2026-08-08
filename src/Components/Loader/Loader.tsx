@@ -893,3 +893,29 @@ export const TradeRequestSkeleton = () => {
     </div>
   );
 };
+
+export const LocationRowSkeleton = () => (
+  <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1.6fr_0.8fr_0.8fr] gap-2 md:gap-4 px-5 py-4 items-start md:items-center animate-pulse">
+    {/* location_name */}
+    <div className="h-4 w-2/3 bg-gray-200 rounded" />
+
+    {/* address block: line1 + line2 + country */}
+    <div className="space-y-2">
+      <div className="h-3.5 w-5/6 bg-gray-200 rounded" />
+      <div className="h-3.5 w-3/5 bg-gray-200 rounded" />
+      <div className="h-3.5 w-2/5 bg-gray-200 rounded" />
+    </div>
+
+    {/* status dot + label */}
+    <div className="flex items-center gap-1.5">
+      <span className="size-2 rounded-full bg-gray-200" />
+      <span className="h-3.5 w-14 bg-gray-200 rounded" />
+    </div>
+
+    {/* action icons */}
+    <div className="flex items-center gap-5">
+      <span className="size-4 bg-gray-200 rounded" />
+      <span className="size-4 bg-gray-200 rounded" />
+    </div>
+  </div>
+);

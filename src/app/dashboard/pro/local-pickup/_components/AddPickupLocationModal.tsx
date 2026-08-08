@@ -1,54 +1,177 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { Country, State } from "country-state-city";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  useAddPickupLocationMutation,
+  useEditPickupLocationMutation,
+} from "@/redux/api/vendorApi";
+import toast from "react-hot-toast";
+const allowedCountries = Country.getAllCountries().filter(
+  country => country.isoCode === "US" || country.isoCode === "CA",
+);
+
+const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
+
+// Full address string into { lat, lng } via Google Geocoding API
+const getLatLng = async (
+  fullAddress: string,
+): Promise<{ lat: number | null; lng: number | null }> => {
+  if (!API_KEY) {
+    console.error(
+      "Google Maps API key is missing (NEXT_PUBLIC_GOOGLE_MAP_API_KEY).",
+    );
+    return { lat: null, lng: null };
+  }
+
+  try {
+    const res = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        fullAddress,
+      )}&key=${API_KEY}`,
+    );
+    const json = await res.json();
+
+    if (json?.status === "OK" && json?.results?.length > 0) {
+      const { lat, lng } = json.results[0].geometry.location;
+      return { lat, lng };
+    }
+
+    console.warn("Geocoding returned no results:", json?.status);
+    return { lat: null, lng: null };
+  } catch (err) {
+    console.error("Geocoding failed:", err);
+    return { lat: null, lng: null };
+  }
+};
 
 export type PickupLocationFormValues = {
   location_name: string;
   address: string;
-  apt_suite: string;
+  unit: string;
   city: string;
   state: string;
-  zip: string;
+  zip_code: string;
   country: string;
+  is_active: string | boolean;
 };
 
 const DEFAULT_VALUES: PickupLocationFormValues = {
   location_name: "",
   address: "",
-  apt_suite: "",
+  unit: "",
   city: "",
   state: "",
-  zip: "",
+  zip_code: "",
   country: "",
+  is_active: true,
 };
 
-const allowedCountries = Country.getAllCountries().filter(
-  country => country.isoCode === "US" || country.isoCode === "CA",
-);
-
 type Props = {
+  editingLocation: any;
   onClose: () => void;
-  onSave: (values: PickupLocationFormValues) => void;
   defaultValues?: PickupLocationFormValues;
 };
 
-const AddPickupLocationModal = ({ onClose, onSave, defaultValues }: Props) => {
-  const [country, setCountry] = useState<any>(null);
-  const [state, setState] = useState<any>(null);
+const AddPickupLocationModal = ({
+  onClose,
+  defaultValues,
+  editingLocation,
+}: Props) => {
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [country, setCountry] = useState<any>(defaultValues?.country || null);
+  const [state, setState] = useState<any>(defaultValues?.state || null);
+
+  const [addPickupLocation, { isLoading: isAdding }] =
+    useAddPickupLocationMutation();
+  const [editPickupLocation, { isLoading: isEditing }] =
+    useEditPickupLocationMutation();
 
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors, isSubmitting },
+    reset,
+    formState: { errors },
   } = useForm<PickupLocationFormValues>({
-    defaultValues: DEFAULT_VALUES,
+    defaultValues: defaultValues ?? DEFAULT_VALUES,
   });
 
-  const onSubmit = (values: PickupLocationFormValues) => {
-    onSave(values);
+  const onSubmit = async (values: PickupLocationFormValues) => {
+    setIsGeocoding(true);
+
+    // Use full names, not ISO codes, for a stronger geocoding query.
+    const countryName =
+      allowedCountries.find(c => c.isoCode === values.country)?.name ??
+      values.country;
+    const stateName =
+      State.getStatesOfCountry(values.country).find(
+        s => s.isoCode === values.state,
+      )?.name ?? values.state;
+
+    const fullAddress = [
+      values?.address,
+      values?.unit,
+      values?.city,
+      stateName,
+      values?.zip_code,
+      countryName,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    const { lat, lng } = await getLatLng(fullAddress);
+    setIsGeocoding(false);
+
+    if (lat === null || lng === null) {
+      toast.error(
+        "Couldn't verify this address's map location — the location will still be saved, but you may want to double check the address.",
+      );
+    }
+
+    const formData = new FormData();
+    formData.append("location_name", values?.location_name);
+    formData.append("address", values?.address);
+    formData.append("latitude", lat !== null ? lat.toString() : "0");
+    formData.append("longitude", lng !== null ? lng.toString() : "0");
+    formData.append("unit", values.unit);
+    formData.append("city", values.city);
+    formData.append("zip_code", values.zip_code);
+    formData.append("state", values.state);
+    formData.append("country", values.country);
+    formData.append("is_active", values?.is_active ? "1" : "0");
+
+    try {
+      if (editingLocation) {
+        const res = await editPickupLocation({
+          id: editingLocation?.id,
+          data: formData,
+        }).unwrap();
+        toast.success(res?.message);
+      } else {
+        const res = await addPickupLocation(formData).unwrap();
+        toast.success(res?.message);
+      }
+
+      onClose();
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
+
+  useEffect(() => {
+    reset({
+      ...(defaultValues ?? DEFAULT_VALUES),
+      is_active: Boolean(
+        typeof defaultValues?.is_active === "string"
+          ? defaultValues.is_active === "1" ||
+              defaultValues.is_active === "true"
+          : (defaultValues?.is_active ?? true),
+      ),
+    });
+    setCountry(defaultValues?.country || null);
+    setState(defaultValues?.state || null);
+  }, [defaultValues, reset]);
 
   return (
     <div>
@@ -101,7 +224,7 @@ const AddPickupLocationModal = ({ onClose, onSave, defaultValues }: Props) => {
             type="text"
             placeholder="Apt / Suite / Unit (Optional)"
             className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm outline-none"
-            {...register("apt_suite")}
+            {...register("unit")}
           />
         </div>
 
@@ -196,11 +319,11 @@ const AddPickupLocationModal = ({ onClose, onSave, defaultValues }: Props) => {
               type="text"
               placeholder="e.g. 78701"
               className={`w-full border rounded-lg px-3.5 py-2.5 text-sm outline-none ${
-                errors.zip
+                errors.zip_code
                   ? "border-red-500 placeholder:text-red-500"
                   : "border-gray-300"
               }`}
-              {...register("zip", { required: true })}
+              {...register("zip_code", { required: true })}
             />
           </div>
         </div>
@@ -208,9 +331,8 @@ const AddPickupLocationModal = ({ onClose, onSave, defaultValues }: Props) => {
         <label className="flex items-center gap-2 text-sm text-secondary-black">
           <input
             type="checkbox"
-            defaultChecked
             className="size-4 accent-primary-green"
-            {...register("is_active" as never)}
+            {...register("is_active")}
           />
           This location is active and available for pickup
         </label>
@@ -226,7 +348,7 @@ const AddPickupLocationModal = ({ onClose, onSave, defaultValues }: Props) => {
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isEditing || isAdding || isGeocoding}
             className="flex-1 bg-primary-green text-white rounded-lg py-3 font-semibold hover:bg-primary-green/90 disabled:opacity-60 cursor-pointer"
           >
             Save Location

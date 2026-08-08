@@ -1,63 +1,30 @@
 "use client";
 import { useState } from "react";
-import {
-  FiMapPin,
-  FiAlertTriangle,
-  FiPlus,
-  FiEdit2,
-  FiTrash2,
-} from "react-icons/fi";
+import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import AddPickupLocationModal, {
   PickupLocationFormValues,
 } from "./_components/AddPickupLocationModal";
 import { IoIosWarning } from "react-icons/io";
 import { FaLightbulb } from "react-icons/fa";
 import Modal from "@/Components/Common/Modal";
+import {
+  useDeletePickupLocationMutation,
+  useGetPickupLocationsQuery,
+} from "@/redux/api/vendorApi";
+import { LocationRowSkeleton } from "@/Components/Loader/Loader";
+import toast from "react-hot-toast";
 
 export type PickupLocation = PickupLocationFormValues & {
   id: number;
-  is_active: boolean;
+  is_active: string | boolean;
 };
 
-const INITIAL_LOCATIONS: PickupLocation[] = [
-  {
-    id: 1,
-    location_name: "Main Workshop",
-    address: "123 Craft Lane",
-    apt_suite: "",
-    city: "Austin",
-    state: "TX",
-    zip: "78701",
-    country: "United States",
-    is_active: true,
-  },
-  {
-    id: 2,
-    location_name: "Northside Studio",
-    address: "2500 Maple Ave",
-    apt_suite: "",
-    city: "Austin",
-    state: "TX",
-    zip: "78702",
-    country: "United States",
-    is_active: true,
-  },
-  {
-    id: 3,
-    location_name: "East Austin Workspace",
-    address: "890 Oak Springs Dr",
-    apt_suite: "",
-    city: "Austin",
-    state: "TX",
-    zip: "78702",
-    country: "United States",
-    is_active: true,
-  },
-];
-
 const Page = () => {
-  const [locations, setLocations] =
-    useState<PickupLocation[]>(INITIAL_LOCATIONS);
+  const { data: pickupLocationsData, isLoading } = useGetPickupLocationsQuery(
+    {},
+  );
+  const [deletePickupLocation, { isLoading: isDeleting }] =
+    useDeletePickupLocationMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLocation, setEditingLocation] = useState<PickupLocation | null>(
     null,
@@ -73,27 +40,16 @@ const Page = () => {
     setIsModalOpen(true);
   };
 
-  const handleSave = (values: PickupLocationFormValues) => {
-    if (editingLocation) {
-      // TODO: dispatch(updatePickupLocation({ id: editingLocation.id, ...values }))
-      setLocations(prev =>
-        prev.map(loc =>
-          loc.id === editingLocation.id ? { ...loc, ...values } : loc,
-        ),
-      );
-    } else {
-      // TODO: dispatch(createPickupLocation(values))
-      setLocations(prev => [
-        ...prev,
-        { ...values, id: Date.now(), is_active: true },
-      ]);
-    }
-    setIsModalOpen(false);
-  };
 
   const handleDelete = (id: number) => {
-    // TODO: dispatch(deletePickupLocation(id))
-    setLocations(prev => prev.filter(loc => loc.id !== id));
+    deletePickupLocation(id)
+      .unwrap()
+      .then(res => {
+        toast.success(res.message);
+      })
+      .catch(err => {
+        toast.error(err?.data?.message);
+      });
   };
 
   return (
@@ -176,7 +132,11 @@ const Page = () => {
               </button>
             </div>
 
-            {locations.length > 0 ? (
+            {isLoading ? (
+              Array.from({ length: 2 })?.map((_, idx) => (
+                <LocationRowSkeleton key={idx} />
+              ))
+            ) : pickupLocationsData?.data?.length > 0 ? (
               <>
                 <div className="hidden md:grid grid-cols-[1.2fr_1.6fr_0.8fr_0.8fr] gap-4 px-5 py-3 text-xs font-medium uppercase tracking-wide text-secondary-gray border-b border-gray-100">
                   <span>Location Name</span>
@@ -186,62 +146,67 @@ const Page = () => {
                 </div>
 
                 <div className="divide-y divide-gray-100">
-                  {locations.map(location => (
-                    <div
-                      key={location.id}
-                      className="grid grid-cols-1 md:grid-cols-[1.2fr_1.6fr_0.8fr_0.8fr] gap-2 md:gap-4 px-5 py-4 items-start md:items-center hover:bg-off-green/20"
-                    >
-                      <span className="font-semibold text-primary-green text-[15px]">
-                        {location.location_name}
-                      </span>
-
-                      <span className="text-sm text-secondary-gray leading-relaxed">
-                        {location.address}
-                        {location.apt_suite ? `, ${location.apt_suite}` : ""}
-                        <br />
-                        {location.city}, {location.state} {location.zip}
-                        <br />
-                        {location.country}
-                      </span>
-                      <span className="flex items-center gap-1.5 text-sm">
-                        <span
-                          className={`size-2 rounded-full ${
-                            location.is_active
-                              ? "bg-primary-green"
-                              : "bg-gray-300"
-                          }`}
-                        />
-                        <span
-                          className={
-                            location.is_active
-                              ? "text-primary-green font-medium"
-                              : "text-secondary-gray"
-                          }
-                        >
-                          {location.is_active ? "Active" : "Inactive"}
+                  {pickupLocationsData?.data?.map(
+                    (location: PickupLocation) => (
+                      <div
+                        key={location?.id}
+                        className="grid grid-cols-1 md:grid-cols-[1.2fr_1.6fr_0.8fr_0.8fr] gap-2 md:gap-4 px-5 py-4 items-start md:items-center hover:bg-off-green/20"
+                      >
+                        <span className="font-semibold text-primary-green text-[15px]">
+                          {location?.location_name}
                         </span>
-                      </span>
-                      <span className="flex items-center gap-5">
-                        <button
-                          type="button"
-                          onClick={() => openEditModal(location)}
-                          aria-label={`Edit ${location.location_name}`}
-                          className="text-secondary-gray hover:text-primary-green cursor-pointer"
-                        >
-                          <FiEdit2 />
-                        </button>
 
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(location.id)}
-                          aria-label={`Delete ${location.location_name}`}
-                          className="text-secondary-gray hover:text-red-600 cursor-pointer"
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </span>
-                    </div>
-                  ))}
+                        <span className="text-sm text-secondary-gray leading-relaxed">
+                          {location?.address}
+                          {location?.unit ? `, ${location?.unit}` : ""}
+                          <br />
+                          {location?.city}, {location?.state}{" "}
+                          {location?.zip_code}
+                          <br />
+                          {location?.country}
+                        </span>
+                        <span className="flex items-center gap-1.5 text-sm">
+                          <span
+                            className={`size-2 rounded-full ${
+                              location?.is_active
+                                ? "bg-primary-green"
+                                : "bg-primary-red"
+                            }`}
+                          />
+                          <span
+                            className={
+                              location?.is_active
+                                ? "text-primary-green font-medium"
+                                : "text-primary-red"
+                            }
+                          >
+                            {location.is_active ? "Active" : "Inactive"}
+                          </span>
+                        </span>
+
+                        <span className="flex items-center gap-5">
+                          <button
+                            type="button"
+                            onClick={() => openEditModal(location)}
+                            aria-label={`Edit ${location.location_name}`}
+                            className="text-secondary-gray hover:text-primary-green cursor-pointer"
+                          >
+                            <FiEdit2 />
+                          </button>
+
+                          <button
+                            type="button"
+                            disabled={isDeleting}
+                            onClick={() => handleDelete(location?.id)}
+                            aria-label={`Delete ${location.location_name}`}
+                            className="text-secondary-gray hover:text-red-600 cursor-pointer disabled:cursor-not-allowed disabled: opacity-60 disabled:animate-pulse"
+                          >
+                            <FiTrash2 />
+                          </button>
+                        </span>
+                      </div>
+                    ),
+                  )}
                 </div>
               </>
             ) : (
@@ -319,7 +284,7 @@ const Page = () => {
           className="max-w-lg !rounded-xl"
         >
           <AddPickupLocationModal
-            onSave={handleSave}
+            editingLocation={editingLocation}
             onClose={() => setIsModalOpen(false)}
             defaultValues={editingLocation ?? undefined}
           />

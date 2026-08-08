@@ -194,6 +194,37 @@ export const vendorApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+
+    addPickupLocation: builder.mutation({
+      query: data => ({
+        url: "/api/pickup-locations",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["pickup-locations"],
+    }),
+
+    editPickupLocation: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/api/pickup-location/${id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["pickup-locations"],
+    }),
+
+    deletePickupLocation: builder.mutation({
+      query: id => ({
+        url: `/api/pickup-location/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["pickup-locations"],
+    }),
+
+    getPickupLocations: builder.query({
+      query: () => "/api/pickup-locations",
+      providesTags: ["pickup-locations"],
+    }),
   }),
 });
 
@@ -226,4 +257,9 @@ export const {
   useLocalPickupProMutation,
   useArrangeLocalPickupAddressMutation,
   useLocalPickupPaymentMutation,
+
+  useAddPickupLocationMutation,
+  useGetPickupLocationsQuery,
+  useDeletePickupLocationMutation,
+  useEditPickupLocationMutation,
 } = vendorApi;

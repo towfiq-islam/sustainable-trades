@@ -1,15 +1,26 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/redux/store";
+import { useFormContext } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import {
   calcVendorSubtotal,
   calcVendorTax,
   calcVendorShipping,
+  buildCheckoutPayload,
+  VendorFormValues,
 } from "@/lib/checkout";
+import { clearCart } from "@/redux/slices/cartSlice";
+import toast from "react-hot-toast";
+// import { useCreateCheckoutMutation } from "@/redux/api/checkoutApi";
 
 const PaymentStep = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { items } = useAppSelector(state => state.cart);
+  const { getValues } = useFormContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [createCheckout] = useCreateCheckoutMutation();
 
   const vendorTotals = items.map(vendor => {
     const subtotal = calcVendorSubtotal(vendor.products);
@@ -20,9 +31,26 @@ const PaymentStep = () => {
 
   const grandTotal = vendorTotals.reduce((sum, v) => sum + v.total, 0);
 
-  // TODO: call real order-creation API here before triggering PayPal
-  const handlePaypalCheckout = () => {
-    console.log("Pending order API integration");
+  const handlePaypalCheckout = async () => {
+    const { vendors: formValues } = getValues() as {
+      vendors: VendorFormValues;
+    };
+
+    const payload = buildCheckoutPayload(items, formValues);
+
+    try {
+      setIsSubmitting(true);
+
+      // const res = await createCheckout(payload).unwrap();
+      console.log("POST /checkout payload:", payload);
+
+      // dispatch(clearCart());
+      // router.push(`/order-confirmation/${res.order_group_id}`);
+    } catch (err: any) {
+      toast.error(err?.data?.message ?? "Checkout failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -55,9 +83,10 @@ const PaymentStep = () => {
       <button
         type="button"
         onClick={handlePaypalCheckout}
-        className="w-full py-3 rounded-full bg-[#FFC439] text-[#003087] font-bold cursor-pointer hover:scale-95 transition-all duration-300"
+        disabled={isSubmitting}
+        className="w-full py-3 rounded-full bg-[#FFC439] text-[#003087] font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300"
       >
-        PayPal checkout
+        {isSubmitting ? "Processing..." : "PayPal checkout"}
       </button>
 
       <button

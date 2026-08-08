@@ -1,7 +1,7 @@
 import { CartItem } from "@/redux/slices/cartSlice";
 import { Fulfillment } from "@/lib/fulfillment";
 
-// TODO: swap for real tax/shipping API once order endpoint is ready
+// TODO: swap for real tax/shipping API once available
 export const TAX_RATE = 0.08;
 export const FLAT_SHIPPING_FEE = 5;
 
@@ -14,35 +14,64 @@ export const calcVendorTax = (subtotal: number) => subtotal * TAX_RATE;
 export const calcVendorShipping = (fulfillment?: string) =>
   fulfillment === "shipping" ? FLAT_SHIPPING_FEE : 0;
 
-// Per-vendor form fields collected in VendorDetailsStep,
-// keyed as vendors.{vendor_id}.* in the shared FormProvider
+// Matches the fields registered per-vendor in DeliveryDetails.tsx,
+// under vendors.{vendor_id}.* in the shared FormProvider
 export interface VendorFormFields {
-  name?: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
   phone?: string;
-  address?: string;
-  instructions?: string;
+  // only present when fulfillment needs an address (delivery / shipping)
+  street_address?: string;
+  apt?: string;
+  city?: string;
+  postal_code?: string;
+  state?: string;
+  country?: string;
+  // only present when fulfillment is pickup
+  pickup_id?: string;
 }
 
 export type VendorFormValues = Record<string, VendorFormFields>;
 
-// One line item as sent to the backend
 export interface CheckoutProductPayload {
   product_id: number;
   quantity: number;
   unit_price: number;
 }
 
-// One vendor sub-order as sent to the backend
+// Nested address object — only present when fulfillment is delivery/shipping
+export interface CheckoutAddressPayload {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  street_address: string;
+  apt: string | null;
+  city: string;
+  postal_code: string;
+  state: string;
+  country: string;
+}
+
 export interface CheckoutVendorPayload {
   vendor_id: number;
   shop_id: number;
   fulfillment: Fulfillment;
-  contact_name: string | null;
-  contact_phone: string | null;
-  // only populated for delivery/shipping
-  address: string | null;
-  // delivery instructions or pickup notes, whichever applies
-  instructions: string | null;
+
+  // present only when fulfillment is delivery/shipping
+  address: CheckoutAddressPayload | null;
+
+  // present only when fulfillment is pickup — pickup still needs a name/
+  // phone/email to identify the buyer, so those travel alongside pickup_id
+  pickup: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    pickup_id: string;
+  } | null;
+
   products: CheckoutProductPayload[];
   subtotal: number;
   tax: number;
@@ -58,9 +87,6 @@ export interface CheckoutPayload {
   total: number;
 }
 
-// Builds the full /checkout request body from cart items + RHF form values.
-// Call this right before POSTing from PaymentStep (or the confirm handler
-// on ReviewStep, whichever fires the actual API call).
 export const buildCheckoutPayload = (
   items: CartItem[],
   formValues: VendorFormValues,
@@ -68,22 +94,44 @@ export const buildCheckoutPayload = (
   const vendors: CheckoutVendorPayload[] = items.map(vendor => {
     const fields = formValues[vendor.vendor_id] || {};
     const fulfillment = vendor.selectedFulfillment as Fulfillment;
+    const needsAddress =
+      fulfillment === "delivery" || fulfillment === "shipping";
+    const isPickup = fulfillment === "pickup";
 
     const subtotal = calcVendorSubtotal(vendor.products);
     const tax = calcVendorTax(subtotal);
     const shipping = calcVendorShipping(fulfillment);
 
-    const needsAddress =
-      fulfillment === "delivery" || fulfillment === "shipping";
-
     return {
       vendor_id: vendor.vendor_id,
       shop_id: vendor.shop_id,
       fulfillment,
-      contact_name: fields.name ?? null,
-      contact_phone: fields.phone ?? null,
-      address: needsAddress ? (fields.address ?? null) : null,
-      instructions: fields.instructions ?? null,
+
+      address: needsAddress
+        ? {
+            first_name: fields.first_name ?? "",
+            last_name: fields.last_name ?? "",
+            email: fields.email ?? "",
+            phone: fields.phone ?? "",
+            street_address: fields.street_address ?? "",
+            apt: fields.apt ?? null,
+            city: fields.city ?? "",
+            postal_code: fields.postal_code ?? "",
+            state: fields.state ?? "",
+            country: fields.country ?? "",
+          }
+        : null,
+
+      pickup: isPickup
+        ? {
+            first_name: fields.first_name ?? "",
+            last_name: fields.last_name ?? "",
+            email: fields.email ?? "",
+            phone: fields.phone ?? "",
+            pickup_id: fields.pickup_id ?? "",
+          }
+        : null,
+
       products: vendor.products.map(product => ({
         product_id: product.id,
         quantity: product.quantity,

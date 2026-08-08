@@ -72,7 +72,11 @@ const DeliveryDetails = () => {
       const el = document.querySelector<
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
       >(`[name="${field}"]`);
-      if (el && !el.disabled && el.value !== getValues(field)) {
+      // Only pull non-empty DOM values back into the form. When the form
+      // re-mounts (e.g. after visiting delivery options again) the fresh
+      // inputs are empty while react-hook-form still holds the saved values
+      // - those must win instead of being wiped by the empty DOM.
+      if (el && !el.disabled && el.value && el.value !== getValues(field)) {
         setValue(field, el.value);
       }
     });
@@ -124,6 +128,49 @@ const DeliveryDetails = () => {
 
     if (isLastVendor) router.push("/checkout?step=review-order");
     else {
+      // Carry the buyer's details over to the next vendor's form so they
+      // don't have to re-type everything. The text inputs keep their DOM
+      // values across vendor switches, but the controlled country/state
+      // selects reset - so copy every shared field explicitly.
+      const nextVendor = items[vendorIndex + 1];
+      const nextBase = `vendors.${nextVendor.vendor_id}`;
+      const nextNeedsAddress =
+        nextVendor.selectedFulfillment === "delivery" ||
+        nextVendor.selectedFulfillment === "shipping";
+
+      const fieldsToCopy = [
+        "first_name",
+        "last_name",
+        "email",
+        "phone",
+        ...(nextNeedsAddress
+          ? [
+              "street_address",
+              "apt",
+              "postal_code",
+              "city",
+              "state",
+              "country",
+            ]
+          : []),
+      ];
+
+      fieldsToCopy.forEach(field => {
+        const value = values[field];
+        if (!value) return;
+        // Never clobber values the buyer may have already entered for the
+        // next vendor (e.g. after going Back and re-submitting this step).
+        if (getValues(`${nextBase}.${field}`)) return;
+        // Only carry the state over if it actually belongs to the country
+        // being copied, otherwise the <option> wouldn't exist.
+        if (field === "state") {
+          if (!values.country) return;
+          const validStates = State.getStatesOfCountry(values.country);
+          if (!validStates.some(s => s.isoCode === value)) return;
+        }
+        setValue(`${nextBase}.${field}`, value);
+      });
+
       setVendorIndex(i => i + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }

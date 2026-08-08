@@ -45,6 +45,7 @@ const DeliveryDetails = () => {
     `${base}.last_name`,
     `${base}.email`,
     `${base}.phone`,
+
     ...(needsAddress
       ? [
           `${base}.street_address`,
@@ -54,10 +55,11 @@ const DeliveryDetails = () => {
           `${base}.country`,
         ]
       : []),
-    ...(isPickup ? [`${base}.pickupLocation`] : []),
-  ];
 
+    ...(isPickup ? [`${base}.pickup_id`] : []),
+  ];
   const selectedCountry = watch(`${base}.country`);
+  const selectedState = watch(`${base}.state`);
   // Namespaced per vendor so vendor A's errors never light up vendor B's fields.
   const vendorErrors = (errors as any)?.vendors?.[vendor.vendor_id] ?? {};
 
@@ -96,18 +98,29 @@ const DeliveryDetails = () => {
     if (!valid) return;
 
     const values = getValues(base);
-    console.log({
-      first_name: values.first_name,
-      last_name: values.last_name,
-      email: values.email,
-      phone: values.phone,
-      street_address: values.street_address,
-      apt: values.apt,
-      postal_code: values.postal_code,
-      city: values.city,
-      state: values.state,
-      country: values.country,
-    });
+
+    if (isPickup) {
+      console.log({
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        phone: values.phone,
+        pickup_id: values.pickup_id,
+      });
+    } else {
+      console.log({
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        phone: values.phone,
+        street_address: values.street_address,
+        apt: values.apt,
+        postal_code: values.postal_code,
+        city: values.city,
+        state: values.state,
+        country: values.country,
+      });
+    }
 
     if (isLastVendor) router.push("/checkout?step=review-order");
     else {
@@ -115,7 +128,6 @@ const DeliveryDetails = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
-
   return (
     <div className="border border-gray-300 rounded-lg p-6 bg-white">
       <VendorProgressBar current={vendorIndex + 1} total={items.length} />
@@ -203,6 +215,7 @@ const DeliveryDetails = () => {
                   required: true,
                   onChange: () => setValue(`${base}.state`, ""),
                 })}
+                value={selectedCountry ?? ""}
                 autoComplete="country"
                 className={fieldClass(!!vendorErrors.country)}
               >
@@ -216,6 +229,7 @@ const DeliveryDetails = () => {
 
               <select
                 {...register(`${base}.state`, { required: true })}
+                value={selectedState ?? ""}
                 autoComplete="address-level1"
                 className={fieldClass(!!vendorErrors.state)}
                 disabled={!selectedCountry}
@@ -233,8 +247,8 @@ const DeliveryDetails = () => {
 
         {isPickup && (
           <select
-            {...register(`${base}.pickupLocation`, { required: true })}
-            className={fieldClass(!!vendorErrors.pickupLocation)}
+            {...register(`${base}.pickup_id`, { required: true })}
+            className={fieldClass(!!vendorErrors.pickup_id)}
           >
             <option value="">Select a pickup location</option>
             <option value="1">1</option>

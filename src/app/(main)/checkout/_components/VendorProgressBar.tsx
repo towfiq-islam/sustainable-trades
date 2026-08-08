@@ -5,7 +5,7 @@ const VendorProgressBar = ({
   current: number;
   total: number;
 }) => (
-  <div className="mb-5">
+  <div className="mb-3">
     <div className="flex gap-1.5 mb-2">
       {Array.from({ length: total }).map((_, idx) => (
         <div

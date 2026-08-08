@@ -47,7 +47,7 @@ const DeliveryDetails = () => {
     `${base}.phone`,
     ...(needsAddress
       ? [
-          `${base}.address`,
+          `${base}.street_address`,
           `${base}.city`,
           `${base}.postal_code`,
           `${base}.state`,
@@ -101,7 +101,7 @@ const DeliveryDetails = () => {
       last_name: values.last_name,
       email: values.email,
       phone: values.phone,
-      address: values.address,
+      street_address: values.street_address,
       apt: values.apt,
       postal_code: values.postal_code,
       city: values.city,
@@ -120,10 +120,17 @@ const DeliveryDetails = () => {
     <div className="border border-gray-300 rounded-lg p-6 bg-white">
       <VendorProgressBar current={vendorIndex + 1} total={items.length} />
 
-      <h3 className="text-xl font-semibold text-secondary-black mb-5">
-        {fulfillment ? fulfillmentLabel[fulfillment] : "Fulfillment"} —{" "}
-        {vendor.shop_name}
+      <h3 className="text-lg font-semibold text-secondary-black mb-1 flex gap-3 items-center">
+        Sold by {vendor.shop_name}
+        <p className="size-2 rounded-full bg-primary-green" />
+        Delivery Method:{" "}
+        {fulfillment ? fulfillmentLabel[fulfillment] : "Fulfillment"}
       </h3>
+
+      <p className="text-gray-500 text-[15px] mb-5 max-w-lg">
+        Please provide the shipping details for this seller. You'll review
+        everything before your order is placed.
+      </p>
 
       <div className="space-y-4 mb-6">
         <div className="flex gap-4 items-center">
@@ -161,17 +168,12 @@ const DeliveryDetails = () => {
 
         {needsAddress && (
           <div className="space-y-3">
-            <textarea
-              {...register(`${base}.address`, { required: true })}
+            <input
+              {...register(`${base}.street_address`, { required: true })}
               autoComplete="street-address"
-              rows={3}
-              placeholder={
-                fulfillment === "shipping"
-                  ? "Shipping address"
-                  : "Delivery address"
-              }
-              className={fieldClass(!!vendorErrors.address)}
-            ></textarea>
+              placeholder="Street Address"
+              className={fieldClass(!!vendorErrors.street_address)}
+            />
 
             <input
               {...register(`${base}.apt`)}

@@ -1,20 +1,6 @@
 import { CartItem } from "@/redux/slices/cartSlice";
 import { Fulfillment } from "@/lib/fulfillment";
 
-// ---- Pricing helpers (used by ReviewStep / PaymentStep for on-screen totals) ----
-// TODO: swap for real tax/shipping API once available
-export const TAX_RATE = 0.08;
-export const FLAT_SHIPPING_FEE = 5;
-
-export const calcVendorSubtotal = (
-  products: { price: number; quantity: number }[],
-) => products.reduce((sum, p) => sum + p.price * p.quantity, 0);
-
-export const calcVendorTax = (subtotal: number) => subtotal * TAX_RATE;
-
-export const calcVendorShipping = (fulfillment?: string) =>
-  fulfillment === "shipping" ? FLAT_SHIPPING_FEE : 0;
-
 // ---- Checkout payload builder ----
 
 // Matches the fields registered per-vendor in DeliveryDetails.tsx,
@@ -73,7 +59,6 @@ export interface CheckoutVendorOrder {
   address: CheckoutDeliveryAddressPayload | CheckoutPickupAddressPayload;
 }
 
-// Shared internal builder — both exports below use this.
 const buildVendorOrders = (
   items: CartItem[],
   formValues: VendorFormValues,
@@ -118,8 +103,8 @@ const buildVendorOrders = (
   });
 };
 
-// { vendor_orders: [...] } — used in DeliveryDetails.tsx once the last
-// vendor's form is complete, before payment-specific fields exist yet.
+// { vendor_orders: [...] } — used in DeliveryDetails.tsx to send addresses
+// and product selections for tax/shipping calculation before payment.
 export interface VendorOrdersPayload {
   vendor_orders: CheckoutVendorOrder[];
 }

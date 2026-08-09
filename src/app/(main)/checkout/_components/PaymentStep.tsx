@@ -2,30 +2,25 @@
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { useAppSelector } from "@/redux/store";
-import {
-  calcVendorSubtotal,
-  calcVendorTax,
-  calcVendorShipping,
-  buildCheckoutPayload,
-  VendorFormValues,
-} from "@/lib/checkout";
+import { buildCheckoutPayload, VendorFormValues } from "@/lib/checkout";
 import toast from "react-hot-toast";
 import { useCreateCheckoutMutation } from "@/redux/api/ordersApi";
 
 const PaymentStep = () => {
   const router = useRouter();
   const { items } = useAppSelector(state => state.cart);
+  const { master, vendor_orders: pricingByVendor } = useAppSelector(
+    state => state.checkoutPricing,
+  );
   const { getValues } = useFormContext();
   const [createCheckout, { isLoading }] = useCreateCheckoutMutation();
 
   const vendorTotals = items.map(vendor => {
-    const subtotal = calcVendorSubtotal(vendor.products);
-    const tax = calcVendorTax(subtotal);
-    const shipping = calcVendorShipping(vendor.selectedFulfillment);
-    return { vendor, total: subtotal + tax + shipping };
+    const pricing = pricingByVendor.find(p => p.vendor_id === vendor.vendor_id);
+    return { vendor, total: pricing?.total_amount ?? 0 };
   });
 
-  const grandTotal = vendorTotals.reduce((sum, v) => sum + v.total, 0);
+  const grandTotal = master?.total_amount ?? 0;
 
   const handlePaypalCheckout = async () => {
     const { vendors: formValues } = getValues() as {
@@ -35,8 +30,8 @@ const PaymentStep = () => {
     const payload = buildCheckoutPayload(items, formValues, {
       payment_method: "paypal",
       terms_and_condition: true, // TODO: wire to a real checkbox before this ships
-      subscribe_website: false, // TODO: wire to a real checkbox if you add one
-      coupon_code: null, // TODO: wire to a coupon input if/when you add one
+      subscribe_website: false,
+      coupon_code: null,
     });
 
     try {

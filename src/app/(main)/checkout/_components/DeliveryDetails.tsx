@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
-import { useAppSelector } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
 import VendorProgressBar from "./VendorProgressBar";
 import { Country, State } from "country-state-city";
@@ -13,6 +13,7 @@ import { buildVendorOrdersPayload, VendorFormValues } from "@/lib/checkout";
 import { useGetShippingTaxMutation } from "@/redux/api/taxApi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
+import { setCheckoutPricing } from "@/redux/slices/checkoutPricingSlice";
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
@@ -27,6 +28,7 @@ const fieldClass = (hasError: boolean) =>
 
 const DeliveryDetails = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { latitude, longitude } = useAuth();
   const { items } = useAppSelector(state => state.cart);
   const {
@@ -167,6 +169,7 @@ const DeliveryDetails = () => {
         .unwrap()
         .then(res => {
           if (res?.success) {
+            dispatch(setCheckoutPricing(res.data));
             toast.success(res?.message);
             router.push("/checkout?step=review-order");
           }
@@ -224,7 +227,10 @@ const DeliveryDetails = () => {
         everything before your order is placed.
       </p>
 
-      <div className="space-y-4 mb-6">
+      {/* key forces a full remount per vendor - without this, React reuses
+        the same DOM <input> nodes across vendors, and their stale typed
+        values leak into whichever vendor's fields are currently named. */}
+      <div key={vendor.vendor_id} className="space-y-4 mb-6">
         <div className="flex gap-4 items-center">
           <input
             {...register(`${base}.first_name`, { required: true })}
@@ -352,7 +358,8 @@ const DeliveryDetails = () => {
         <button
           type="button"
           onClick={handleNext}
-          className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer hover:scale-95 transition-all duration-300"
+          disabled={isLoading}
+          className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-60"
         >
           {isLastVendor ? "Review order" : "Next vendor"}
         </button>

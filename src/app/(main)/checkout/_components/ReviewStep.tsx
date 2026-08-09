@@ -2,24 +2,26 @@
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
-import {
-  calcVendorSubtotal,
-  calcVendorTax,
-  calcVendorShipping,
-} from "@/lib/checkout";
 
 const ReviewStep = () => {
   const router = useRouter();
   const { items } = useAppSelector(state => state.cart);
+  const { master, vendor_orders: pricingByVendor } = useAppSelector(
+    state => state.checkoutPricing,
+  );
 
   const vendorTotals = items.map(vendor => {
-    const subtotal = calcVendorSubtotal(vendor.products);
-    const tax = calcVendorTax(subtotal);
-    const shipping = calcVendorShipping(vendor.selectedFulfillment);
-    return { vendor, tax, shipping, total: subtotal + tax + shipping };
+    const pricing = pricingByVendor.find(p => p.vendor_id === vendor.vendor_id);
+    return {
+      vendor,
+      tax: pricing?.tax_amount ?? 0,
+      shipping: pricing?.shipping_amount ?? 0,
+      delivery: pricing?.delivery_amount ?? 0,
+      total: pricing?.total_amount ?? 0,
+    };
   });
 
-  const grandTotal = vendorTotals.reduce((sum, v) => sum + v.total, 0);
+  const grandTotal = master?.total_amount ?? 0;
 
   return (
     <div className="border border-gray-300 rounded-lg p-6 bg-white">
@@ -28,13 +30,13 @@ const ReviewStep = () => {
       </h3>
 
       <div className="space-y-5 mb-6">
-        {vendorTotals.map(({ vendor, tax, shipping, total }) => (
+        {vendorTotals.map(({ vendor, tax, shipping, delivery, total }) => (
           <div
             key={vendor.vendor_id}
             className="border border-gray-200 rounded-lg p-4"
           >
-            <p className="font-semibold text-secondary-black">
-              {vendor.shop_name}
+            <p className="font-semibold text-[15px] text-secondary-black">
+              Sold by {vendor.shop_name}
             </p>
             <p className="text-sm text-secondary-gray mb-3">
               {vendor.selectedFulfillment
@@ -64,6 +66,12 @@ const ReviewStep = () => {
               <div className="flex justify-between text-sm text-secondary-gray">
                 <span>Shipping</span>
                 <span>${shipping.toFixed(2)}</span>
+              </div>
+            )}
+            {delivery > 0 && (
+              <div className="flex justify-between text-sm text-secondary-gray">
+                <span>Delivery</span>
+                <span>${delivery.toFixed(2)}</span>
               </div>
             )}
             <div className="flex justify-between text-sm font-semibold text-secondary-black mt-2 pt-2 border-t border-gray-200">

@@ -58,10 +58,10 @@ const CheckoutStepper = ({ current }: { current: CheckoutStep }) => {
 
             const circle = (
               <span
-                className={`rounded-full flex items-center justify-center transition-all shrink-0 ${
+                className={`rounded-full flex items-center justify-center size-8 sm:size-10 transition-all shrink-0 ${
                   isCurrent
-                    ? "size-9 sm:size-11 bg-primary-green text-white shadow-sm"
-                    : `size-8 sm:size-10 border-2 ${
+                    ? " bg-primary-green text-white shadow-sm"
+                    : `border-2 ${
                         isDone
                           ? "border-primary-green text-white bg-primary-green"
                           : "border-gray-300 text-secondary-gray"

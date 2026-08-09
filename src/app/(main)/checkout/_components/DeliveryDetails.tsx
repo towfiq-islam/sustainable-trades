@@ -2,10 +2,21 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
-import { useAppSelector } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
 import VendorProgressBar from "./VendorProgressBar";
 import { Country, State } from "country-state-city";
+import { useGetAllPickupLocationsQuery } from "@/redux/api/vendorApi";
+import useAuth from "@/Hooks/useAuth";
+import PickupLocationSelect from "./PickupLocationSelect";
+import { buildVendorOrdersPayload, VendorFormValues } from "@/lib/checkout";
+import { useGetShippingTaxMutation } from "@/redux/api/taxApi";
+import toast from "react-hot-toast";
+import { getLatLng } from "@/lib/getLatLng";
+import {
+  setCheckoutPricing,
+  setVendorPickupLocation,
+} from "@/redux/slices/checkoutSlice";
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
@@ -20,6 +31,8 @@ const fieldClass = (hasError: boolean) =>
 
 const DeliveryDetails = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { latitude, longitude } = useAuth();
   const { items } = useAppSelector(state => state.cart);
   const {
     register,
@@ -30,15 +43,26 @@ const DeliveryDetails = () => {
     formState: { errors },
   } = useFormContext();
   const [vendorIndex, setVendorIndex] = useState(0);
-
   const vendor = items[vendorIndex];
   if (!vendor) return null;
+
   const fulfillment = vendor.selectedFulfillment;
   const isLastVendor = vendorIndex === items.length - 1;
   const isFirstVendor = vendorIndex === 0;
   const base = `vendors.${vendor.vendor_id}`;
   const needsAddress = fulfillment === "delivery" || fulfillment === "shipping";
   const isPickup = fulfillment === "pickup";
+
+  const [calculateTaxAndShippingCost, { isLoading }] =
+    useGetShippingTaxMutation();
+  const { data: allPickupLocations } = useGetAllPickupLocationsQuery(
+    {
+      vendor_id: vendor.vendor_id,
+      latitude,
+      longitude,
+    },
+    { skip: !isPickup || !vendor.vendor_id },
+  );
 
   const fieldsForFulfillment = [
     `${base}.first_name`,
@@ -58,6 +82,7 @@ const DeliveryDetails = () => {
 
     ...(isPickup ? [`${base}.pickup_id`] : []),
   ];
+
   const selectedCountry = watch(`${base}.country`);
   const selectedState = watch(`${base}.state`);
   // Namespaced per vendor so vendor A's errors never light up vendor B's fields.
@@ -97,41 +122,65 @@ const DeliveryDetails = () => {
 
   const handleNext = async () => {
     syncFromDom(fieldsForFulfillment);
-
     const valid = await trigger(fieldsForFulfillment);
     if (!valid) return;
-
     const values = getValues(base);
 
-    if (isPickup) {
-      console.log({
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        phone: values.phone,
-        pickup_id: values.pickup_id,
-      });
-    } else {
-      console.log({
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        phone: values.phone,
-        street_address: values.street_address,
-        apt: values.apt,
-        postal_code: values.postal_code,
-        city: values.city,
-        state: values.state,
-        country: values.country,
-      });
-    }
+    if (isLastVendor) {
+      // Geocode every vendor that needs a physical address (delivery/shipping)
+      // before building the payload, so lat/lng travel with the address instead
+      // of being left null. Pickup vendors don't need this - they resolve to a
+      // fixed pickup_id instead.
+      await Promise.all(
+        items.map(async v => {
+          const vendorNeedsAddress =
+            v.selectedFulfillment === "delivery" ||
+            v.selectedFulfillment === "shipping";
+          if (!vendorNeedsAddress) return;
 
-    if (isLastVendor) router.push("/checkout?step=review-order");
-    else {
-      // Carry the buyer's details over to the next vendor's form so they
-      // don't have to re-type everything. The text inputs keep their DOM
-      // values across vendor switches, but the controlled country/state
-      // selects reset - so copy every shared field explicitly.
+          const vBase = `vendors.${v.vendor_id}`;
+          const vValues = getValues(vBase);
+
+          // Skip re-geocoding if this vendor already has coordinates
+          // (e.g. buyer went Back and forward again without changing address).
+          if (vValues?.latitude && vValues?.longitude) return;
+
+          const fullAddress = [
+            vValues?.street_address,
+            vValues?.apt,
+            vValues?.city,
+            vValues?.state,
+            vValues?.postal_code,
+            vValues?.country,
+          ]
+            .filter(Boolean)
+            .join(", ");
+
+          if (!fullAddress) return;
+
+          const { lat, lng } = await getLatLng(fullAddress);
+          if (lat !== null) setValue(`${vBase}.latitude`, lat);
+          if (lng !== null) setValue(`${vBase}.longitude`, lng);
+        }),
+      );
+
+      const { vendors: formValues } = getValues() as {
+        vendors: VendorFormValues;
+      };
+      const payload = buildVendorOrdersPayload(items, formValues);
+      calculateTaxAndShippingCost(payload)
+        .unwrap()
+        .then(res => {
+          if (res?.success) {
+            dispatch(setCheckoutPricing(res.data));
+            toast.success(res?.message);
+            router.push("/checkout?step=review-order");
+          }
+        })
+        .catch(err => {
+          toast.error(err?.data?.message);
+        });
+    } else {
       const nextVendor = items[vendorIndex + 1];
       const nextBase = `vendors.${nextVendor.vendor_id}`;
       const nextNeedsAddress =
@@ -144,25 +193,14 @@ const DeliveryDetails = () => {
         "email",
         "phone",
         ...(nextNeedsAddress
-          ? [
-              "street_address",
-              "apt",
-              "postal_code",
-              "city",
-              "state",
-              "country",
-            ]
+          ? ["street_address", "apt", "postal_code", "city", "state", "country"]
           : []),
       ];
 
       fieldsToCopy.forEach(field => {
         const value = values[field];
         if (!value) return;
-        // Never clobber values the buyer may have already entered for the
-        // next vendor (e.g. after going Back and re-submitting this step).
         if (getValues(`${nextBase}.${field}`)) return;
-        // Only carry the state over if it actually belongs to the country
-        // being copied, otherwise the <option> wouldn't exist.
         if (field === "state") {
           if (!values.country) return;
           const validStates = State.getStatesOfCountry(values.country);
@@ -175,6 +213,7 @@ const DeliveryDetails = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
+
   return (
     <div className="border border-gray-300 rounded-lg p-6 bg-white">
       <VendorProgressBar current={vendorIndex + 1} total={items.length} />
@@ -191,7 +230,10 @@ const DeliveryDetails = () => {
         everything before your order is placed.
       </p>
 
-      <div className="space-y-4 mb-6">
+      {/* key forces a full remount per vendor - without this, React reuses
+        the same DOM <input> nodes across vendors, and their stale typed
+        values leak into whichever vendor's fields are currently named. */}
+      <div key={vendor.vendor_id} className="space-y-4 mb-6">
         <div className="flex gap-4 items-center">
           <input
             {...register(`${base}.first_name`, { required: true })}
@@ -293,15 +335,25 @@ const DeliveryDetails = () => {
         )}
 
         {isPickup && (
-          <select
-            {...register(`${base}.pickup_id`, { required: true })}
-            className={fieldClass(!!vendorErrors.pickup_id)}
-          >
-            <option value="">Select a pickup location</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </select>
+          <div>
+            <label className="block text-sm font-semibold text-secondary-black mb-2">
+              Local pickup options <span className="text-accent-red">*</span>
+            </label>
+
+            <PickupLocationSelect
+              name={`${base}.pickup_id`}
+              locations={allPickupLocations?.data ?? []}
+              hasError={!!vendorErrors.pickup_id}
+              onLocationSelect={location =>
+                dispatch(
+                  setVendorPickupLocation({
+                    vendor_id: vendor.vendor_id,
+                    location,
+                  }),
+                )
+              }
+            />
+          </div>
         )}
       </div>
 
@@ -313,10 +365,12 @@ const DeliveryDetails = () => {
         >
           Back
         </button>
+
         <button
           type="button"
           onClick={handleNext}
-          className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer hover:scale-95 transition-all duration-300"
+          disabled={isLoading}
+          className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-60"
         >
           {isLastVendor ? "Review order" : "Next vendor"}
         </button>

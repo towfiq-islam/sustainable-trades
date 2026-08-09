@@ -7,43 +7,10 @@ import {
   useEditPickupLocationMutation,
 } from "@/redux/api/vendorApi";
 import toast from "react-hot-toast";
+import { getLatLng } from "@/lib/getLatLng";
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
 );
-
-const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY;
-
-// Full address string into { lat, lng } via Google Geocoding API
-const getLatLng = async (
-  fullAddress: string,
-): Promise<{ lat: number | null; lng: number | null }> => {
-  if (!API_KEY) {
-    console.error(
-      "Google Maps API key is missing (NEXT_PUBLIC_GOOGLE_MAP_API_KEY).",
-    );
-    return { lat: null, lng: null };
-  }
-
-  try {
-    const res = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-        fullAddress,
-      )}&key=${API_KEY}`,
-    );
-    const json = await res.json();
-
-    if (json?.status === "OK" && json?.results?.length > 0) {
-      const { lat, lng } = json.results[0].geometry.location;
-      return { lat, lng };
-    }
-
-    console.warn("Geocoding returned no results:", json?.status);
-    return { lat: null, lng: null };
-  } catch (err) {
-    console.error("Geocoding failed:", err);
-    return { lat: null, lng: null };
-  }
-};
 
 export type PickupLocationFormValues = {
   location_name: string;
@@ -99,8 +66,6 @@ const AddPickupLocationModal = ({
 
   const onSubmit = async (values: PickupLocationFormValues) => {
     setIsGeocoding(true);
-
-    // Use full names, not ISO codes, for a stronger geocoding query.
     const countryName =
       allowedCountries.find(c => c.isoCode === values.country)?.name ??
       values.country;

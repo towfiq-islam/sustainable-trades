@@ -6,6 +6,9 @@ import { useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
 import VendorProgressBar from "./VendorProgressBar";
 import { Country, State } from "country-state-city";
+import { useGetAllPickupLocationsQuery } from "@/redux/api/vendorApi";
+import useAuth from "@/Hooks/useAuth";
+import PickupLocationSelect from "./PickupLocationSelect";
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
@@ -20,6 +23,7 @@ const fieldClass = (hasError: boolean) =>
 
 const DeliveryDetails = () => {
   const router = useRouter();
+  const { latitude, longitude } = useAuth();
   const { items } = useAppSelector(state => state.cart);
   const {
     register,
@@ -30,15 +34,24 @@ const DeliveryDetails = () => {
     formState: { errors },
   } = useFormContext();
   const [vendorIndex, setVendorIndex] = useState(0);
-
   const vendor = items[vendorIndex];
   if (!vendor) return null;
+
   const fulfillment = vendor.selectedFulfillment;
   const isLastVendor = vendorIndex === items.length - 1;
   const isFirstVendor = vendorIndex === 0;
   const base = `vendors.${vendor.vendor_id}`;
   const needsAddress = fulfillment === "delivery" || fulfillment === "shipping";
   const isPickup = fulfillment === "pickup";
+
+  const { data: allPickupLocations } = useGetAllPickupLocationsQuery(
+    {
+      vendor_id: vendor.vendor_id,
+      latitude,
+      longitude,
+    },
+    { skip: !isPickup || !vendor.vendor_id },
+  );
 
   const fieldsForFulfillment = [
     `${base}.first_name`,
@@ -58,6 +71,7 @@ const DeliveryDetails = () => {
 
     ...(isPickup ? [`${base}.pickup_id`] : []),
   ];
+
   const selectedCountry = watch(`${base}.country`);
   const selectedState = watch(`${base}.state`);
   // Namespaced per vendor so vendor A's errors never light up vendor B's fields.
@@ -97,10 +111,8 @@ const DeliveryDetails = () => {
 
   const handleNext = async () => {
     syncFromDom(fieldsForFulfillment);
-
     const valid = await trigger(fieldsForFulfillment);
     if (!valid) return;
-
     const values = getValues(base);
 
     if (isPickup) {
@@ -144,14 +156,7 @@ const DeliveryDetails = () => {
         "email",
         "phone",
         ...(nextNeedsAddress
-          ? [
-              "street_address",
-              "apt",
-              "postal_code",
-              "city",
-              "state",
-              "country",
-            ]
+          ? ["street_address", "apt", "postal_code", "city", "state", "country"]
           : []),
       ];
 
@@ -175,6 +180,7 @@ const DeliveryDetails = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
+
   return (
     <div className="border border-gray-300 rounded-lg p-6 bg-white">
       <VendorProgressBar current={vendorIndex + 1} total={items.length} />
@@ -293,15 +299,17 @@ const DeliveryDetails = () => {
         )}
 
         {isPickup && (
-          <select
-            {...register(`${base}.pickup_id`, { required: true })}
-            className={fieldClass(!!vendorErrors.pickup_id)}
-          >
-            <option value="">Select a pickup location</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </select>
+          <div>
+            <label className="block text-sm font-semibold text-secondary-black mb-2">
+              Local pickup options <span className="text-accent-red">*</span>
+            </label>
+
+            <PickupLocationSelect
+              name={`${base}.pickup_id`}
+              locations={allPickupLocations?.data ?? []}
+              hasError={!!vendorErrors.pickup_id}
+            />
+          </div>
         )}
       </div>
 
@@ -313,6 +321,7 @@ const DeliveryDetails = () => {
         >
           Back
         </button>
+
         <button
           type="button"
           onClick={handleNext}

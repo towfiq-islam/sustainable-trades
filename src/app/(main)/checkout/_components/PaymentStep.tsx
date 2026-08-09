@@ -1,8 +1,7 @@
 "use client";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { useAppSelector } from "@/redux/store";
 import {
   calcVendorSubtotal,
   calcVendorTax,
@@ -10,17 +9,14 @@ import {
   buildCheckoutPayload,
   VendorFormValues,
 } from "@/lib/checkout";
-import { clearCart } from "@/redux/slices/cartSlice";
 import toast from "react-hot-toast";
-// import { useCreateCheckoutMutation } from "@/redux/api/checkoutApi";
+import { useCreateCheckoutMutation } from "@/redux/api/ordersApi";
 
 const PaymentStep = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const { items } = useAppSelector(state => state.cart);
   const { getValues } = useFormContext();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  // const [createCheckout] = useCreateCheckoutMutation();
+  const [createCheckout, { isLoading }] = useCreateCheckoutMutation();
 
   const vendorTotals = items.map(vendor => {
     const subtotal = calcVendorSubtotal(vendor.products);
@@ -36,20 +32,19 @@ const PaymentStep = () => {
       vendors: VendorFormValues;
     };
 
-    const payload = buildCheckoutPayload(items, formValues);
+    const payload = buildCheckoutPayload(items, formValues, {
+      payment_method: "paypal",
+      terms_and_condition: true, // TODO: wire to a real checkbox before this ships
+      subscribe_website: false, // TODO: wire to a real checkbox if you add one
+      coupon_code: null, // TODO: wire to a coupon input if/when you add one
+    });
 
     try {
-      setIsSubmitting(true);
-
-      // const res = await createCheckout(payload).unwrap();
-      console.log("POST /checkout payload:", payload);
-
-      // dispatch(clearCart());
+      const res = await createCheckout(payload).unwrap();
+      toast.success(res?.message);
       // router.push(`/order-confirmation/${res.order_group_id}`);
     } catch (err: any) {
-      toast.error(err?.data?.message ?? "Checkout failed. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+      toast.error(err?.data?.message);
     }
   };
 
@@ -83,10 +78,10 @@ const PaymentStep = () => {
       <button
         type="button"
         onClick={handlePaypalCheckout}
-        disabled={isSubmitting}
+        disabled={isLoading}
         className="w-full py-3 rounded-full bg-[#FFC439] text-[#003087] font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300"
       >
-        {isSubmitting ? "Processing..." : "PayPal checkout"}
+        {isLoading ? "Processing..." : "PayPal checkout"}
       </button>
 
       <button

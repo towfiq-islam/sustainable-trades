@@ -225,6 +225,14 @@ export const vendorApi = apiSlice.injectEndpoints({
       query: () => "/api/pickup-locations",
       providesTags: ["pickup-locations"],
     }),
+
+    getAllPickupLocations: builder.query({
+      query: params => ({
+        url: "/api/order-pickup-locations",
+        params,
+      }),
+      providesTags: ["pickup-locations"],
+    }),
   }),
 });
 
@@ -262,4 +270,5 @@ export const {
   useGetPickupLocationsQuery,
   useDeletePickupLocationMutation,
   useEditPickupLocationMutation,
+  useGetAllPickupLocationsQuery,
 } = vendorApi;

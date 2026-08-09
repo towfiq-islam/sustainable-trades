@@ -96,6 +96,14 @@ export const ordersApi = apiSlice.injectEndpoints({
         responseHandler: response => response.blob(),
       }),
     }),
+
+    createCheckout: builder.mutation({
+      query: data => ({
+        url: "/api/multi-vendor-checkout",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -113,4 +121,5 @@ export const {
   useGuestOrderMutation,
   useDownloadInvoiceMutation,
   useAddProductReviewMutation,
+  useCreateCheckoutMutation,
 } = ordersApi;

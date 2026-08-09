@@ -20,9 +20,15 @@ type Props = {
   name: string; // RHF field path, e.g. `vendors.16.pickup_id`
   locations: PickupLocation[];
   hasError?: boolean;
+  onLocationSelect?: (location: PickupLocation) => void;
 };
 
-const PickupLocationSelect = ({ name, locations, hasError }: Props) => {
+const PickupLocationSelect = ({
+  name,
+  locations,
+  hasError,
+  onLocationSelect,
+}: Props) => {
   const { register, watch, setValue, trigger } = useFormContext();
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -47,8 +53,10 @@ const PickupLocationSelect = ({ name, locations, hasError }: Props) => {
     setValue(name, String(id));
     trigger(name);
     setOpen(false);
-  };
 
+    const location = locations.find(loc => loc.id === id);
+    if (location) onLocationSelect?.(location);
+  };
   return (
     <div ref={wrapperRef} className="relative">
       {/* Hidden input keeps this registered with RHF for validation */}

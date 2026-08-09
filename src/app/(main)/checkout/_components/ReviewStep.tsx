@@ -1,10 +1,13 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useFormContext } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
+import { VendorFormFields } from "@/lib/checkout";
 import { useState } from "react";
 import { useApplyCouponMutation } from "@/redux/api/discountApi";
 import { LuLoaderPinwheel } from "react-icons/lu";
+import { IoLocationOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import {
   setSubscribeWebsite,
@@ -16,6 +19,7 @@ import {
 const ReviewStep = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { getValues } = useFormContext();
   const [couponInputs, setCouponInputs] = useState<Record<number, string>>({});
   const [applyingVendorId, setApplyingVendorId] = useState<number | null>(null);
   const { items } = useAppSelector(state => state.cart);
@@ -30,12 +34,16 @@ const ReviewStep = () => {
 
   const vendorTotals = items.map(vendor => {
     const pricing = pricingByVendor.find(p => p.vendor_id === vendor.vendor_id);
+    const formFields: VendorFormFields =
+      getValues(`vendors.${vendor.vendor_id}`) ?? {};
+
     return {
       vendor,
       tax: pricing?.tax_amount ?? 0,
       shipping: pricing?.shipping_amount ?? 0,
       delivery: pricing?.delivery_amount ?? 0,
       total: pricing?.total_amount ?? 0,
+      formFields,
     };
   });
 
@@ -105,10 +113,22 @@ const ReviewStep = () => {
       </label>
 
       <div className="space-y-5 mt-5 mb-6">
-        {vendorTotals.map(({ vendor, tax, shipping, delivery, total }) => {
+        {vendorTotals.map(vendorTotal => {
+          const { vendor, tax, shipping, delivery, total, formFields } =
+            vendorTotal;
           const appliedCoupon = vendorExtras[vendor.vendor_id]?.coupon_code;
           const isSubscribed =
             vendorExtras[vendor.vendor_id]?.subscribe_shop ?? false;
+
+          const fulfillment = vendor.selectedFulfillment;
+          const isPickup = fulfillment === "pickup";
+          const needsAddress =
+            fulfillment === "delivery" || fulfillment === "shipping";
+          const hasContactInfo = Boolean(
+            formFields.first_name || formFields.email,
+          );
+          const pickupLocation =
+            vendorExtras[vendor.vendor_id]?.pickup_location;
 
           return (
             <div
@@ -118,11 +138,53 @@ const ReviewStep = () => {
               <p className="font-semibold text-[15px] text-secondary-black">
                 Sold by {vendor.shop_name}
               </p>
+
               <p className="text-sm text-secondary-gray mb-3">
-                {vendor.selectedFulfillment
-                  ? fulfillmentLabel[vendor.selectedFulfillment]
-                  : "—"}
+                {fulfillment ? fulfillmentLabel[fulfillment] : "—"}
               </p>
+
+              {hasContactInfo && (
+                <div className="bg-gray-50 rounded-lg p-3 mb-3 space-y-1.5">
+                  <p className="text-sm text-secondary-black font-medium">
+                    {formFields.first_name} {formFields.last_name}
+                  </p>
+
+                  <p className="text-[13px] text-secondary-gray">
+                    <span className="block pb-1">{formFields.email}</span>
+
+                    {formFields.phone ? `${formFields.phone}` : ""}
+                  </p>
+
+                  {needsAddress && formFields.street_address && (
+                    <p className="flex items-start gap-1.5 text-[13px] text-secondary-gray">
+                      <IoLocationOutline className="text-primary-green shrink-0 mt-0.5" />
+                      <span>
+                        {formFields.street_address}
+                        {formFields.city ? `, ${formFields.city}` : ""}
+                        {formFields.state ? `, ${formFields.state}` : ""}
+                        {formFields.postal_code
+                          ? ` ${formFields.postal_code}`
+                          : ""}
+                        {formFields.country ? `, ${formFields.country}` : ""}
+                      </span>
+                    </p>
+                  )}
+
+                  {isPickup && pickupLocation && (
+                    <p className="flex items-start gap-1.5 text-[13px] text-secondary-gray">
+                      <IoLocationOutline className="text-primary-green shrink-0 mt-0.5" />
+                      <span>
+                        {pickupLocation.location_name} —{" "}
+                        {pickupLocation.address}
+                        {pickupLocation.unit
+                          ? `, ${pickupLocation.unit}`
+                          : ""}, {pickupLocation.city}, {pickupLocation.state}{" "}
+                        {pickupLocation.zip_code}
+                      </span>
+                    </p>
+                  )}
+                </div>
+              )}
 
               {vendor.products.map(product => (
                 <div
@@ -138,7 +200,6 @@ const ReviewStep = () => {
                 </div>
               ))}
 
-              {/* Promo code */}
               <div className="mt-3 pt-3 border-t border-gray-100">
                 {appliedCoupon ? (
                   <div className="flex items-center justify-between text-sm">
@@ -200,6 +261,7 @@ const ReviewStep = () => {
                   <span>${shipping.toFixed(2)}</span>
                 </div>
               )}
+
               {delivery > 0 && (
                 <div className="flex justify-between text-sm text-secondary-gray">
                   <span>Delivery</span>
@@ -226,7 +288,7 @@ const ReviewStep = () => {
                   }
                   className="size-3 accent-primary-green cursor-pointer"
                 />
-                Subscribe to {vendor?.shop_name} newsletters
+                Subscribe to {vendor.shop_name} newsletters
               </label>
             </div>
           );

@@ -13,7 +13,10 @@ import { buildVendorOrdersPayload, VendorFormValues } from "@/lib/checkout";
 import { useGetShippingTaxMutation } from "@/redux/api/taxApi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
-import { setCheckoutPricing } from "@/redux/slices/checkoutSlice";
+import {
+  setCheckoutPricing,
+  setVendorPickupLocation,
+} from "@/redux/slices/checkoutSlice";
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
@@ -341,6 +344,14 @@ const DeliveryDetails = () => {
               name={`${base}.pickup_id`}
               locations={allPickupLocations?.data ?? []}
               hasError={!!vendorErrors.pickup_id}
+              onLocationSelect={location =>
+                dispatch(
+                  setVendorPickupLocation({
+                    vendor_id: vendor.vendor_id,
+                    location,
+                  }),
+                )
+              }
             />
           </div>
         )}

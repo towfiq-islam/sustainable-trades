@@ -1,5 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export interface PickupLocationSelection {
+  id: number;
+  location_name: string;
+  address: string;
+  unit?: string;
+  city: string;
+  state: string;
+  zip_code: string;
+}
+
 export interface VendorPricing {
   vendor_id: number;
   tax_amount: number;
@@ -21,6 +31,7 @@ export interface MasterPricing {
 export interface VendorExtras {
   coupon_code: string | null;
   subscribe_shop: boolean;
+  pickup_location?: PickupLocationSelection | null;
 }
 
 interface CheckoutState {
@@ -85,6 +96,24 @@ const checkoutSlice = createSlice({
         subscribe_shop: action.payload.subscribe_shop,
       };
     },
+
+    setVendorPickupLocation: (
+      state,
+      action: PayloadAction<{
+        vendor_id: number;
+        location: PickupLocationSelection | null;
+      }>,
+    ) => {
+      const existing = state.vendors[action.payload.vendor_id] ?? {
+        coupon_code: null,
+        subscribe_shop: false,
+      };
+      state.vendors[action.payload.vendor_id] = {
+        ...existing,
+        pickup_location: action.payload.location,
+      };
+    },
+
     clearCheckout: () => initialState,
   },
 });
@@ -95,6 +124,7 @@ export const {
   setTermsAndCondition,
   setVendorCoupon,
   setVendorSubscribeShop,
+  setVendorPickupLocation,
   clearCheckout,
 } = checkoutSlice.actions;
 export default checkoutSlice.reducer;

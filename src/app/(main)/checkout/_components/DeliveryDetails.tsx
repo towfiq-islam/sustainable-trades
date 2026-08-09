@@ -12,6 +12,7 @@ import PickupLocationSelect from "./PickupLocationSelect";
 import { buildVendorOrdersPayload, VendorFormValues } from "@/lib/checkout";
 import { useGetShippingTaxMutation } from "@/redux/api/taxApi";
 import toast from "react-hot-toast";
+import { getLatLng } from "@/lib/getLatLng";
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
@@ -121,11 +122,47 @@ const DeliveryDetails = () => {
     const values = getValues(base);
 
     if (isLastVendor) {
+      // Geocode every vendor that needs a physical address (delivery/shipping)
+      // before building the payload, so lat/lng travel with the address instead
+      // of being left null. Pickup vendors don't need this - they resolve to a
+      // fixed pickup_id instead.
+      await Promise.all(
+        items.map(async v => {
+          const vendorNeedsAddress =
+            v.selectedFulfillment === "delivery" ||
+            v.selectedFulfillment === "shipping";
+          if (!vendorNeedsAddress) return;
+
+          const vBase = `vendors.${v.vendor_id}`;
+          const vValues = getValues(vBase);
+
+          // Skip re-geocoding if this vendor already has coordinates
+          // (e.g. buyer went Back and forward again without changing address).
+          if (vValues?.latitude && vValues?.longitude) return;
+
+          const fullAddress = [
+            vValues?.street_address,
+            vValues?.apt,
+            vValues?.city,
+            vValues?.state,
+            vValues?.postal_code,
+            vValues?.country,
+          ]
+            .filter(Boolean)
+            .join(", ");
+
+          if (!fullAddress) return;
+
+          const { lat, lng } = await getLatLng(fullAddress);
+          if (lat !== null) setValue(`${vBase}.latitude`, lat);
+          if (lng !== null) setValue(`${vBase}.longitude`, lng);
+        }),
+      );
+
       const { vendors: formValues } = getValues() as {
         vendors: VendorFormValues;
       };
       const payload = buildVendorOrdersPayload(items, formValues);
-
       calculateTaxAndShippingCost(payload)
         .unwrap()
         .then(res => {

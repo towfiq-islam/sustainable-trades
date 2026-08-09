@@ -73,25 +73,12 @@ export interface CheckoutVendorOrder {
   address: CheckoutDeliveryAddressPayload | CheckoutPickupAddressPayload;
 }
 
-export interface CheckoutPayload {
-  coupon_code: string | null;
-  payment_method: "paypal";
-  terms_and_condition: boolean;
-  subscribe_website: boolean;
-  vendor_orders: CheckoutVendorOrder[];
-}
-
-export const buildCheckoutPayload = (
+// Shared internal builder — both exports below use this.
+const buildVendorOrders = (
   items: CartItem[],
   formValues: VendorFormValues,
-  options: {
-    coupon_code?: string | null;
-    payment_method?: "paypal";
-    terms_and_condition: boolean;
-    subscribe_website?: boolean;
-  },
-): CheckoutPayload => {
-  const vendor_orders: CheckoutVendorOrder[] = items.map(vendor => {
+): CheckoutVendorOrder[] => {
+  return items.map(vendor => {
     const fields = formValues[vendor.vendor_id] || {};
     const fulfillment = vendor.selectedFulfillment as Fulfillment;
     const isPickup = fulfillment === "pickup";
@@ -129,12 +116,46 @@ export const buildCheckoutPayload = (
       address,
     };
   });
+};
 
+// { vendor_orders: [...] } — used in DeliveryDetails.tsx once the last
+// vendor's form is complete, before payment-specific fields exist yet.
+export interface VendorOrdersPayload {
+  vendor_orders: CheckoutVendorOrder[];
+}
+
+export const buildVendorOrdersPayload = (
+  items: CartItem[],
+  formValues: VendorFormValues,
+): VendorOrdersPayload => {
+  return { vendor_orders: buildVendorOrders(items, formValues) };
+};
+
+// Full /checkout request body — used in PaymentStep.tsx right before hitting
+// the API. Wraps buildVendorOrders with the payment-level fields.
+export interface CheckoutPayload {
+  coupon_code: string | null;
+  payment_method: "paypal";
+  terms_and_condition: boolean;
+  subscribe_website: boolean;
+  vendor_orders: CheckoutVendorOrder[];
+}
+
+export const buildCheckoutPayload = (
+  items: CartItem[],
+  formValues: VendorFormValues,
+  options: {
+    coupon_code?: string | null;
+    payment_method?: "paypal";
+    terms_and_condition: boolean;
+    subscribe_website?: boolean;
+  },
+): CheckoutPayload => {
   return {
     coupon_code: options.coupon_code ?? null,
     payment_method: options.payment_method ?? "paypal",
     terms_and_condition: options.terms_and_condition,
     subscribe_website: options.subscribe_website ?? false,
-    vendor_orders,
+    vendor_orders: buildVendorOrders(items, formValues),
   };
 };

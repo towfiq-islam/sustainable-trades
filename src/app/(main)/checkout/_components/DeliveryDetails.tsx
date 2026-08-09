@@ -9,6 +9,9 @@ import { Country, State } from "country-state-city";
 import { useGetAllPickupLocationsQuery } from "@/redux/api/vendorApi";
 import useAuth from "@/Hooks/useAuth";
 import PickupLocationSelect from "./PickupLocationSelect";
+import { buildVendorOrdersPayload, VendorFormValues } from "@/lib/checkout";
+import { useGetShippingTaxMutation } from "@/redux/api/taxApi";
+import toast from "react-hot-toast";
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
@@ -44,6 +47,8 @@ const DeliveryDetails = () => {
   const needsAddress = fulfillment === "delivery" || fulfillment === "shipping";
   const isPickup = fulfillment === "pickup";
 
+  const [calculateTaxAndShippingCost, { isLoading }] =
+    useGetShippingTaxMutation();
   const { data: allPickupLocations } = useGetAllPickupLocationsQuery(
     {
       vendor_id: vendor.vendor_id,
@@ -115,35 +120,24 @@ const DeliveryDetails = () => {
     if (!valid) return;
     const values = getValues(base);
 
-    if (isPickup) {
-      console.log({
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        phone: values.phone,
-        pickup_id: values.pickup_id,
-      });
-    } else {
-      console.log({
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: values.email,
-        phone: values.phone,
-        street_address: values.street_address,
-        apt: values.apt,
-        postal_code: values.postal_code,
-        city: values.city,
-        state: values.state,
-        country: values.country,
-      });
-    }
+    if (isLastVendor) {
+      const { vendors: formValues } = getValues() as {
+        vendors: VendorFormValues;
+      };
+      const payload = buildVendorOrdersPayload(items, formValues);
 
-    if (isLastVendor) router.push("/checkout?step=review-order");
-    else {
-      // Carry the buyer's details over to the next vendor's form so they
-      // don't have to re-type everything. The text inputs keep their DOM
-      // values across vendor switches, but the controlled country/state
-      // selects reset - so copy every shared field explicitly.
+      calculateTaxAndShippingCost(payload)
+        .unwrap()
+        .then(res => {
+          if (res?.success) {
+            toast.success(res?.message);
+            router.push("/checkout?step=review-order");
+          }
+        })
+        .catch(err => {
+          toast.error(err?.data?.message);
+        });
+    } else {
       const nextVendor = items[vendorIndex + 1];
       const nextBase = `vendors.${nextVendor.vendor_id}`;
       const nextNeedsAddress =
@@ -163,11 +157,7 @@ const DeliveryDetails = () => {
       fieldsToCopy.forEach(field => {
         const value = values[field];
         if (!value) return;
-        // Never clobber values the buyer may have already entered for the
-        // next vendor (e.g. after going Back and re-submitting this step).
         if (getValues(`${nextBase}.${field}`)) return;
-        // Only carry the state over if it actually belongs to the country
-        // being copied, otherwise the <option> wouldn't exist.
         if (field === "state") {
           if (!values.country) return;
           const validStates = State.getStatesOfCountry(values.country);

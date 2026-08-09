@@ -36,18 +36,26 @@ const ReviewStep = () => {
     const pricing = pricingByVendor.find(p => p.vendor_id === vendor.vendor_id);
     const formFields: VendorFormFields =
       getValues(`vendors.${vendor.vendor_id}`) ?? {};
+    const discount = vendorExtras[vendor.vendor_id]?.discount_amount ?? 0;
+    const baseTotal = pricing?.total_amount ?? 0;
 
     return {
       vendor,
       tax: pricing?.tax_amount ?? 0,
       shipping: pricing?.shipping_amount ?? 0,
       delivery: pricing?.delivery_amount ?? 0,
-      total: pricing?.total_amount ?? 0,
+      discount,
+      total: Math.max(baseTotal - discount, 0),
       formFields,
     };
   });
 
-  const grandTotal = master?.total_amount ?? 0;
+  const totalDiscount = Object.values(vendorExtras).reduce(
+    (sum, v) => sum + (v?.discount_amount ?? 0),
+    0,
+  );
+
+  const grandTotal = Math.max((master?.total_amount ?? 0) - totalDiscount, 0);
 
   const handleApplyCoupon = (vendor_id: number) => {
     const vendor = items.find(v => v.vendor_id === vendor_id);
@@ -68,7 +76,13 @@ const ReviewStep = () => {
       .unwrap()
       .then(res => {
         toast.success(res?.message);
-        dispatch(setVendorCoupon({ vendor_id, coupon_code: code }));
+        dispatch(
+          setVendorCoupon({
+            vendor_id,
+            coupon_code: res?.data?.coupon_code ?? code,
+            discount_amount: res?.data?.discount_amount ?? 0,
+          }),
+        );
         setCouponInputs(prev => ({ ...prev, [vendor_id]: "" }));
       })
       .catch(err => {
@@ -114,8 +128,15 @@ const ReviewStep = () => {
 
       <div className="space-y-5 mt-5 mb-6">
         {vendorTotals.map(vendorTotal => {
-          const { vendor, tax, shipping, delivery, total, formFields } =
-            vendorTotal;
+          const {
+            vendor,
+            tax,
+            shipping,
+            delivery,
+            total,
+            formFields,
+            discount,
+          } = vendorTotal;
           const appliedCoupon = vendorExtras[vendor.vendor_id]?.coupon_code;
           const isSubscribed =
             vendorExtras[vendor.vendor_id]?.subscribe_shop ?? false;
@@ -201,73 +222,60 @@ const ReviewStep = () => {
               ))}
 
               <div className="mt-3 pt-3 border-t border-gray-100">
-                {appliedCoupon ? (
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-primary-green font-medium">
-                      {appliedCoupon} applied
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        dispatch(
-                          setVendorCoupon({
-                            vendor_id: vendor.vendor_id,
-                            coupon_code: null,
-                          }),
-                        )
-                      }
-                      className="text-secondary-gray hover:text-accent-red cursor-pointer text-xs font-medium"
-                    >
-                      Remove
-                    </button>
+                <div className="flex gap-2">
+                  <input
+                    value={couponInputs[vendor.vendor_id] ?? ""}
+                    onChange={e =>
+                      setCouponInputs(prev => ({
+                        ...prev,
+                        [vendor.vendor_id]: e.target.value,
+                      }))
+                    }
+                    placeholder="Promo code"
+                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-green"
+                  />
+                  <button
+                    type="button"
+                    disabled={!couponInputs[vendor.vendor_id]}
+                    onClick={() => handleApplyCoupon(vendor.vendor_id)}
+                    className="px-4 py-2 rounded-lg border border-gray-300 text-sm font-semibold text-secondary-black cursor-pointer hover:bg-gray-50 shrink-0 flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {applyingVendorId === vendor.vendor_id && isLoading ? (
+                      <LuLoaderPinwheel className="animate-spin text-sm" />
+                    ) : (
+                      "Apply"
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1 pt-2">
+                <div className="flex justify-between text-sm text-secondary-gray mt-2">
+                  <span>Tax</span>
+                  <span>${tax.toFixed(2)}</span>
+                </div>
+
+                {shipping > 0 && (
+                  <div className="flex justify-between text-sm text-secondary-gray">
+                    <span>Shipping</span>
+                    <span>${shipping.toFixed(2)}</span>
                   </div>
-                ) : (
-                  <div className="flex gap-2">
-                    <input
-                      value={couponInputs[vendor.vendor_id] ?? ""}
-                      onChange={e =>
-                        setCouponInputs(prev => ({
-                          ...prev,
-                          [vendor.vendor_id]: e.target.value,
-                        }))
-                      }
-                      placeholder="Promo code"
-                      className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-green"
-                    />
-                    <button
-                      type="button"
-                      disabled={!couponInputs[vendor.vendor_id]}
-                      onClick={() => handleApplyCoupon(vendor.vendor_id)}
-                      className="px-4 py-2 rounded-lg border border-gray-300 text-sm font-semibold text-secondary-black cursor-pointer hover:bg-gray-50 shrink-0 flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {applyingVendorId === vendor.vendor_id && isLoading ? (
-                        <LuLoaderPinwheel className="animate-spin text-sm" />
-                      ) : (
-                        "Apply"
-                      )}
-                    </button>
+                )}
+
+                {delivery > 0 && (
+                  <div className="flex justify-between text-sm text-secondary-gray">
+                    <span>Delivery</span>
+                    <span>${delivery.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {discount > 0 && (
+                  <div className="flex justify-between text-sm text-primary-green font-semibold">
+                    <span>Discount</span>
+                    <span>-${discount.toFixed(2)}</span>
                   </div>
                 )}
               </div>
-
-              <div className="flex justify-between text-sm text-secondary-gray mt-2">
-                <span>Tax</span>
-                <span>${tax.toFixed(2)}</span>
-              </div>
-
-              {shipping > 0 && (
-                <div className="flex justify-between text-sm text-secondary-gray">
-                  <span>Shipping</span>
-                  <span>${shipping.toFixed(2)}</span>
-                </div>
-              )}
-
-              {delivery > 0 && (
-                <div className="flex justify-between text-sm text-secondary-gray">
-                  <span>Delivery</span>
-                  <span>${delivery.toFixed(2)}</span>
-                </div>
-              )}
 
               <div className="flex justify-between text-sm font-semibold text-secondary-black mt-2 pt-2 border-t border-gray-200">
                 <span>Vendor total</span>

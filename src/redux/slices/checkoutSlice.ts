@@ -31,6 +31,7 @@ export interface MasterPricing {
 export interface VendorExtras {
   coupon_code: string | null;
   subscribe_shop: boolean;
+  discount_amount: number;
   pickup_location?: PickupLocationSelection | null;
 }
 
@@ -72,15 +73,21 @@ const checkoutSlice = createSlice({
     },
     setVendorCoupon: (
       state,
-      action: PayloadAction<{ vendor_id: number; coupon_code: string | null }>,
+      action: PayloadAction<{
+        vendor_id: number;
+        coupon_code: string | null;
+        discount_amount?: number;
+      }>,
     ) => {
       const existing = state.vendors[action.payload.vendor_id] ?? {
         coupon_code: null,
         subscribe_shop: false,
+        discount_amount: 0,
       };
       state.vendors[action.payload.vendor_id] = {
         ...existing,
         coupon_code: action.payload.coupon_code,
+        discount_amount: action.payload.discount_amount ?? 0,
       };
     },
     setVendorSubscribeShop: (

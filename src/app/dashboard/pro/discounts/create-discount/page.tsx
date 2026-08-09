@@ -164,6 +164,21 @@ const CreateDiscount = () => {
         ? code.trim() || generateRandomCode()
         : generateRandomCode();
 
+    const startDatetimeUtc = startDate
+      ? (() => {
+          const [d, t] = startDate.split("T");
+          return toUtcIso(d, t);
+        })()
+      : null;
+
+    const endDatetimeUtc =
+      !neverExpires && endDate
+        ? (() => {
+            const [d, t] = endDate.split("T");
+            return toUtcIso(d, t);
+          })()
+        : null;
+
     const payload = {
       name: name.trim(),
       discount_type:
@@ -192,9 +207,9 @@ const CreateDiscount = () => {
       // start_date: startDate,
       // start_time: startTime || null,
 
-      start_datetime: startDate,
+      start_datetime: startDatetimeUtc,
       never_expires: neverExpires,
-      ...(neverExpires ? { end_datetime: null } : { end_datetime: endDate }),
+      end_datetime: neverExpires ? null : endDatetimeUtc,
 
       // ...(neverExpires
       //   ? { end_date: null, end_time: null }

@@ -12,7 +12,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "@/redux/api/apiSlice";
 import authReducer from "@/redux/slices/authSlice";
 import cartReducer from "@/redux/slices/cartSlice";
-import checkoutPricingReducer from "@/redux/slices/checkoutPricingSlice";
+import checkoutReducer from "@/redux/slices/checkoutSlice";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 const localStorage = createWebStorage("local");
@@ -35,7 +35,7 @@ export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
     cart: persistedCartReducer,
-    checkoutPricing: checkoutPricingReducer,
+    checkout: checkoutReducer,
 
     [apiSlice.reducerPath]: apiSlice.reducer,
   },

@@ -3,7 +3,7 @@ import { CartItem } from "@/redux/slices/cartSlice";
 import { useAppSelector } from "@/redux/store";
 
 const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
-  const { master } = useAppSelector(state => state.checkoutPricing);
+  const { master } = useAppSelector(state => state.checkout);
 
   const subtotal = items.reduce(
     (sum, vendor) =>

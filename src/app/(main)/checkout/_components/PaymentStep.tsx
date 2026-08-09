@@ -9,9 +9,12 @@ import { useCreateCheckoutMutation } from "@/redux/api/ordersApi";
 const PaymentStep = () => {
   const router = useRouter();
   const { items } = useAppSelector(state => state.cart);
-  const { master, vendor_orders: pricingByVendor } = useAppSelector(
-    state => state.checkoutPricing,
-  );
+  const {
+    master,
+    vendor_orders: pricingByVendor,
+    subscribe_website,
+    vendors: vendorExtras,
+  } = useAppSelector(state => state.checkout);
   const { getValues } = useFormContext();
   const [createCheckout, { isLoading }] = useCreateCheckoutMutation();
 
@@ -27,10 +30,10 @@ const PaymentStep = () => {
       vendors: VendorFormValues;
     };
 
-    const payload = buildCheckoutPayload(items, formValues, {
+    const payload = buildCheckoutPayload(items, formValues, vendorExtras, {
       payment_method: "paypal",
       terms_and_condition: true, // TODO: wire to a real checkbox before this ships
-      subscribe_website: false,
+      subscribe_website,
     });
 
     try {

@@ -13,7 +13,7 @@ import { buildVendorOrdersPayload, VendorFormValues } from "@/lib/checkout";
 import { useGetShippingTaxMutation } from "@/redux/api/taxApi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
-import { setCheckoutPricing } from "@/redux/slices/checkoutPricingSlice";
+import { setCheckoutPricing } from "@/redux/slices/checkoutSlice";
 
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",

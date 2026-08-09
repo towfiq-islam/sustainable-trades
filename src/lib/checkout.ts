@@ -3,14 +3,11 @@ import { Fulfillment } from "@/lib/fulfillment";
 
 // ---- Checkout payload builder ----
 
-// Matches the fields registered per-vendor in DeliveryDetails.tsx,
-// under vendors.{vendor_id}.* in the shared FormProvider
 export interface VendorFormFields {
   first_name?: string;
   last_name?: string;
   email?: string;
   phone?: string;
-  // delivery / shipping only
   street_address?: string;
   city?: string;
   state?: string;
@@ -18,7 +15,6 @@ export interface VendorFormFields {
   country?: string;
   latitude?: number;
   longitude?: number;
-  // pickup only
   pickup_id?: string;
 }
 
@@ -55,17 +51,27 @@ export interface CheckoutVendorOrder {
   vendor_id: number;
   shop_id: number;
   selectedFulfillment: Fulfillment;
+  coupon_code: string | null;
+  subscribe_shop: 0 | 1;
   products: CheckoutProductPayload[];
   address: CheckoutDeliveryAddressPayload | CheckoutPickupAddressPayload;
-  coupon_code?: string | null;
 }
+
+// Per-vendor extras that live outside the RHF delivery-details form
+// (set later, on ReviewStep) - coupon code + shop newsletter opt-in.
+export type VendorExtrasMap = Record<
+  number,
+  { coupon_code?: string | null; subscribe_shop?: boolean }
+>;
 
 const buildVendorOrders = (
   items: CartItem[],
   formValues: VendorFormValues,
+  vendorExtras: VendorExtrasMap = {},
 ): CheckoutVendorOrder[] => {
   return items.map(vendor => {
     const fields = formValues[vendor.vendor_id] || {};
+    const extras = vendorExtras[vendor.vendor_id] || {};
     const fulfillment = vendor.selectedFulfillment as Fulfillment;
     const isPickup = fulfillment === "pickup";
 
@@ -95,6 +101,8 @@ const buildVendorOrders = (
       vendor_id: vendor.vendor_id,
       shop_id: vendor.shop_id,
       selectedFulfillment: fulfillment,
+      coupon_code: extras.coupon_code ?? null,
+      subscribe_shop: extras.subscribe_shop ? 1 : 0,
       products: vendor.products.map(product => ({
         id: product.id,
         quantity: product.quantity,
@@ -104,8 +112,8 @@ const buildVendorOrders = (
   });
 };
 
-// { vendor_orders: [...] } — used in DeliveryDetails.tsx to send addresses
-// and product selections for tax/shipping calculation before payment.
+// { vendor_orders: [...] } — used in DeliveryDetails.tsx for the initial
+// tax/shipping calculation, before coupon/newsletter extras exist yet.
 export interface VendorOrdersPayload {
   vendor_orders: CheckoutVendorOrder[];
 }
@@ -113,14 +121,12 @@ export interface VendorOrdersPayload {
 export const buildVendorOrdersPayload = (
   items: CartItem[],
   formValues: VendorFormValues,
+  vendorExtras: VendorExtrasMap = {},
 ): VendorOrdersPayload => {
-  return { vendor_orders: buildVendorOrders(items, formValues) };
+  return { vendor_orders: buildVendorOrders(items, formValues, vendorExtras) };
 };
 
-// Full /checkout request body — used in PaymentStep.tsx right before hitting
-// the API. Wraps buildVendorOrders with the payment-level fields.
 export interface CheckoutPayload {
-  coupon_code: string | null;
   payment_method: "paypal";
   terms_and_condition: boolean;
   subscribe_website: boolean;
@@ -130,18 +136,17 @@ export interface CheckoutPayload {
 export const buildCheckoutPayload = (
   items: CartItem[],
   formValues: VendorFormValues,
+  vendorExtras: VendorExtrasMap,
   options: {
-    coupon_code?: string | null;
     payment_method?: "paypal";
     terms_and_condition: boolean;
-    subscribe_website?: boolean;
+    subscribe_website: boolean;
   },
 ): CheckoutPayload => {
   return {
-    coupon_code: options.coupon_code ?? null,
     payment_method: options.payment_method ?? "paypal",
     terms_and_condition: options.terms_and_condition,
-    subscribe_website: options.subscribe_website ?? false,
-    vendor_orders: buildVendorOrders(items, formValues),
+    subscribe_website: options.subscribe_website,
+    vendor_orders: buildVendorOrders(items, formValues, vendorExtras),
   };
 };

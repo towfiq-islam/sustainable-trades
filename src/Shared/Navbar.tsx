@@ -16,7 +16,7 @@ const Navbar = ({ dynamicPage }: any) => {
   return (
     <>
       {/* Top Navbar */}
-      <div
+      {/* <div
         className={`bg-accent-red text-secondary-black 2xl:text-lg font-semibold text-center py-2 ${
           !user && pathname === "/" ? "hidden lg:block" : "hidden"
         }`}
@@ -26,7 +26,7 @@ const Navbar = ({ dynamicPage }: any) => {
             Free Month Trial! Sign Up
           </Link>
         </Container>
-      </div>
+      </div> */}
 
       <nav className="sticky top-0 z-50">
         {/* Upper Navbar */}

@@ -57,6 +57,7 @@ export interface CheckoutVendorOrder {
   selectedFulfillment: Fulfillment;
   products: CheckoutProductPayload[];
   address: CheckoutDeliveryAddressPayload | CheckoutPickupAddressPayload;
+  coupon_code?: string | null;
 }
 
 const buildVendorOrders = (

@@ -6,6 +6,7 @@ export interface VendorPricing {
   shipping_amount: number;
   delivery_amount: number;
   total_amount: number;
+  coupon_code?: string | null;
 }
 
 export interface MasterPricing {

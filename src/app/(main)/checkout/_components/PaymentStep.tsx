@@ -31,7 +31,6 @@ const PaymentStep = () => {
       payment_method: "paypal",
       terms_and_condition: true, // TODO: wire to a real checkbox before this ships
       subscribe_website: false,
-      coupon_code: null,
     });
 
     try {

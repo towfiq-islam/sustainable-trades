@@ -1,64 +1,56 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
-import { useAppSelector } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { buildCheckoutPayload, VendorFormValues } from "@/lib/checkout";
 import toast from "react-hot-toast";
-import { useCreateCheckoutMutation } from "@/redux/api/ordersApi";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { apiSlice } from "@/redux/api/apiSlice";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { clearCart } from "@/redux/slices/cartSlice";
 
 const PaymentStep = () => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const { items } = useAppSelector(state => state.cart);
+  const initialOptions = {
+    "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+    currency: "USD",
+    components: "buttons",
+    "enable-funding": "venmo",
+    // "buyer-country": "US",
+    "disable-funding": "",
+    "data-page-type": "product-details",
+    "data-sdk-integration-source": "developer-studio",
+  };
+
   const {
-    master,
-    vendor_orders: pricingByVendor,
     subscribe_website,
     terms_and_condition,
     vendors: vendorExtras,
   } = useAppSelector(state => state.checkout);
   const { getValues } = useFormContext();
-  const [createCheckout, { isLoading }] = useCreateCheckoutMutation();
 
-  const vendorTotals = items.map(vendor => {
-    const pricing = pricingByVendor.find(p => p.vendor_id === vendor.vendor_id);
-    const discount = vendorExtras[vendor.vendor_id]?.discount_amount ?? 0;
-    const baseTotal = pricing?.total_amount ?? 0;
-    return { vendor, discount, total: Math.max(baseTotal - discount, 0) };
-  });
-
-  const totalDiscount = Object.values(vendorExtras).reduce(
-    (sum, v) => sum + (v?.discount_amount ?? 0),
-    0,
-  );
-  const grandTotal = Math.max((master?.total_amount ?? 0) - totalDiscount, 0);
-
-  const handlePaypalCheckout = async () => {
-    if (!terms_and_condition) {
-      toast.error("Please accept the terms and conditions to continue");
-      return;
-    }
-
-    const { vendors: formValues } = getValues() as {
-      vendors: VendorFormValues;
-    };
-
-    const payload = buildCheckoutPayload(items, formValues, vendorExtras, {
-      payment_method: "paypal",
-      terms_and_condition,
-      subscribe_website,
-    });
-
-    try {
-      const res = await createCheckout(payload).unwrap();
-      toast.success(res?.message);
-      // router.push(`/order-confirmation/${res.order_group_id}`);
-    } catch (err: any) {
-      toast.error(err?.data?.message);
-    }
+  const { vendors: formValues } = getValues() as {
+    vendors: VendorFormValues;
   };
 
+  const payload = buildCheckoutPayload(items, formValues, vendorExtras, {
+    payment_method: "paypal",
+    terms_and_condition,
+    subscribe_website,
+  });
+
   return (
-    <div className="border border-gray-300 rounded-lg p-6 bg-white text-center">
+    <div className="border border-gray-300 rounded-lg p-6 bg-white text-center relative">
+      <button
+        type="button"
+        onClick={() => router.push("/checkout?step=review-order")}
+        className="w-fit mt-3 group rounded-lg px-3 py-2 duration-300 transition-all cursor-pointer hover:bg-gray-100 absolute top-0 left-3"
+      >
+        <FaArrowLeftLong />
+      </button>
+
       <h3 className="text-xl font-semibold text-secondary-black mb-1">
         Confirm and pay
       </h3>
@@ -67,50 +59,67 @@ const PaymentStep = () => {
         per seller
       </p>
 
-      <div className="border border-gray-200 rounded-lg p-4 mb-6 text-left space-y-2">
-        {vendorTotals.map(({ vendor, discount, total }) => (
-          <div key={vendor.vendor_id}>
-            <div className="flex justify-between text-sm text-secondary-black">
-              <span>{vendor.shop_name}</span>
-              <span>${total.toFixed(2)}</span>
-            </div>
-            {discount > 0 && (
-              <div className="flex justify-between text-xs text-primary-green">
-                <span>Discount applied</span>
-                <span>-${discount.toFixed(2)}</span>
-              </div>
-            )}
-          </div>
-        ))}
-        <hr />
-        {totalDiscount > 0 && (
-          <div className="flex justify-between text-sm text-primary-green">
-            <span>Total discount</span>
-            <span>-${totalDiscount.toFixed(2)}</span>
-          </div>
-        )}
-        <div className="flex justify-between font-bold text-secondary-black">
-          <span>Total</span>
-          <span>${grandTotal.toFixed(2)}</span>
-        </div>
-      </div>
+      <PayPalScriptProvider options={initialOptions as any}>
+        <PayPalButtons
+          style={{
+            shape: "rect",
+            layout: "vertical",
+            color: "gold",
+            label: "paypal",
+          }}
+          createOrder={async () => {
+            try {
+              const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SITE_URL}/api/multi-vendor-checkout`,
+                {
+                  method: "POST",
+                  credentials: "include",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(payload),
+                },
+              );
 
-      <button
-        type="button"
-        onClick={handlePaypalCheckout}
-        disabled={isLoading || !terms_and_condition}
-        className="w-full py-3 rounded-full bg-[#FFC439] text-[#003087] font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300"
-      >
-        {isLoading ? "Processing..." : "PayPal checkout"}
-      </button>
+              const orderData = await response.json();
+              if (orderData?.paypal_order_id) {
+                return orderData?.paypal_order_id;
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          }}
+          onApprove={async data => {
+            try {
+              const response = await fetch(
+                `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture`,
+                {
+                  method: "POST",
+                  credentials: "include",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    paypal_order_id: data?.orderID,
+                  }),
+                },
+              );
 
-      <button
-        type="button"
-        onClick={() => router.push("/checkout?step=review-order")}
-        className="w-full mt-3 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
-      >
-        Back
-      </button>
+              const orderData = await response.json();
+              if (orderData?.success) {
+                toast.success(orderData?.message);
+                dispatch(apiSlice.util.invalidateTags(["user"]));
+                dispatch(clearCart());
+                router.push(
+                  `/order-success?order_id=${orderData?.data?.id}&shop_id=${orderData?.data?.shop_id}`,
+                );
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          }}
+        />
+      </PayPalScriptProvider>
     </div>
   );
 };

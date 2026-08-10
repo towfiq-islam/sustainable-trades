@@ -28,7 +28,7 @@ const Navbar = ({ dynamicPage }: any) => {
         </Container>
       </div> */}
 
-      <nav className="sticky top-0 z-50">
+      <nav className="sticky top-0 z-999">
         {/* Upper Navbar */}
         {user &&
         (user?.role === "customer" ||

@@ -49,7 +49,7 @@ const Footer = async ({ dynamicPage }: any) => {
                   <Link
                     key={item?.id}
                     href={`/about/${item?.page_slug}`}
-                    className="text-accent-white text-sm md:text-base tracking-[0.16px]"
+                    className="text-accent-white text-sm md:text-base tracking-[0.16px] hover:underline"
                   >
                     {item?.page_title}
                   </Link>
@@ -82,7 +82,7 @@ const Footer = async ({ dynamicPage }: any) => {
                   <Link
                     key={item?.id}
                     href={item?.path}
-                    className="text-accent-white text-sm md:text-base tracking-[0.16px]"
+                    className="text-accent-white text-sm md:text-base tracking-[0.16px] hover:underline"
                   >
                     {item?.label}
                   </Link>
@@ -98,7 +98,7 @@ const Footer = async ({ dynamicPage }: any) => {
                   <Link
                     key={item?.id}
                     href={item?.profile_link}
-                    className="text-accent-white text-sm md:text-base tracking-[0.16px] flex gap-2 items-center"
+                    className="text-accent-white text-sm md:text-base tracking-[0.16px] flex gap-2 items-center hover:underline"
                   >
                     {item?.social_media === "facebook" && <FacebookSvg />}
                     {item?.social_media === "instagram" && <InstagramSvg />}
@@ -127,7 +127,9 @@ const Footer = async ({ dynamicPage }: any) => {
           <div className="flex flex-col md:flex-row gap-2.5 sm:gap-4 md:gap-10 md:items-center md:text-base text-sm">
             {/* <Link href="/">Acceptable Use Policy</Link>
             <Link href="/">Privacy Policy</Link> */}
-            <Link href="/help/terms-and-conditions">Terms and Conditions</Link>
+            <Link href="/help/terms-and-conditions" className="hover:underline">
+              Terms and Conditions
+            </Link>
           </div>
         </div>
 

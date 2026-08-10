@@ -23,31 +23,31 @@ export default function Page({ searchParams }: Props) {
   const { order_id, shop_id } = use(searchParams);
   const { data: myFavorites, isLoading: isFavoriteLoading } =
     useGetMyFavoriteQuery(undefined, { skip: !user });
-  const { data: singleOrder, isLoading } = useGetOrderDetailsQuery(order_id);
-  const { data: products, isLoading: isShopLoading } =
-    useGetAllProductsUnderShopQuery({
-      id: shop_id,
-    });
+  // const { data: singleOrder, isLoading } = useGetOrderDetailsQuery(order_id);
+  // const { data: products, isLoading: isShopLoading } =
+  //   useGetAllProductsUnderShopQuery({
+  //     id: shop_id,
+  //   });
 
-  const mapShops = singleOrder?.data?.shop
-    ? [
-        {
-          id: singleOrder.data.shop.id,
-          first_name: singleOrder.data.shop.user.first_name,
-          last_name: singleOrder.data.shop.user.last_name,
-          role: "vendor",
-          shop_info: {
-            id: singleOrder.data.shop.id,
-            user_id: singleOrder.data.shop.user_id,
-            shop_name: singleOrder.data.shop.shop_name,
-            shop_image: singleOrder.data.shop.shop_image,
-            address: {
-              ...singleOrder.data.shop.address,
-            },
-          },
-        },
-      ]
-    : [];
+  // const mapShops = singleOrder?.data?.shop
+  //   ? [
+  //       {
+  //         id: singleOrder.data.shop.id,
+  //         first_name: singleOrder.data.shop.user.first_name,
+  //         last_name: singleOrder.data.shop.user.last_name,
+  //         role: "vendor",
+  //         shop_info: {
+  //           id: singleOrder.data.shop.id,
+  //           user_id: singleOrder.data.shop.user_id,
+  //           shop_name: singleOrder.data.shop.shop_name,
+  //           shop_image: singleOrder.data.shop.shop_image,
+  //           address: {
+  //             ...singleOrder.data.shop.address,
+  //           },
+  //         },
+  //       },
+  //     ]
+  //   : [];
 
   return (
     <section className="py-12">
@@ -80,11 +80,11 @@ export default function Page({ searchParams }: Props) {
                   href={`${user?.role === "vendor" ? `/dashboard/${user?.membership?.membership_type}/orders/details/${order_id}` : `/dashboard/customer/orders/${order_id}`}`}
                   className="mb-5 text-sm font-medium text-secondary-black/60 block hover:underline"
                 >
-                  {singleOrder?.data?.order_number}
+                  {order_id}
                 </Link>
               ) : (
                 <button className="mb-5 text-sm font-medium text-secondary-black/60 block">
-                  {singleOrder?.data?.order_number}
+                  {order_id}
                 </button>
               )}
 
@@ -168,7 +168,7 @@ export default function Page({ searchParams }: Props) {
 
             {/* Right */}
             <div>
-              <div className="overflow-hidden rounded-lg h-[300px] w-full">
+              {/* <div className="overflow-hidden rounded-lg h-[300px] w-full">
                 {mapShops.length > 0 && (
                   <ShopsMap
                     height="300px"
@@ -179,7 +179,7 @@ export default function Page({ searchParams }: Props) {
                     }
                   />
                 )}
-              </div>
+              </div> */}
 
               {/* Progress */}
               <div className="mt-5 flex items-center justify-center">
@@ -263,57 +263,8 @@ export default function Page({ searchParams }: Props) {
                 </p>
               )}
             </div>
-
-            {/* <div className="mt-6 flex justify-end">
-            <button className="flex items-center gap-1 text-sm font-medium">
-              View all
-              <ChevronDown size={16} />
-            </button>
-          </div> */}
           </div>
         )}
-
-        {/* More From Shop */}
-        <div className="mt-14">
-          <h2 className="text-xl font-semibold">More From This Shop</h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-5">
-            {isShopLoading ? (
-              [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
-            ) : products?.data?.data?.length > 0 ? (
-              products?.data?.data?.map((item: any) => (
-                <Product
-                  key={item?.id}
-                  is_feathered={false}
-                  product={
-                    {
-                      id: item?.id,
-                      product_name: item?.product_name,
-                      product_quantity: item?.product_quantity,
-                      product_price: item?.product_price,
-                      out_of_stock: item?.out_of_stock,
-                      unlimited_stock: item?.unlimited_stock,
-                      is_favorite: item?.is_favorite,
-                      selling_option: item?.selling_option,
-                      images: item?.images || [],
-                    } as any
-                  }
-                />
-              ))
-            ) : (
-              <p className="text-gray-500 text-center col-span-full">
-                No products found.
-              </p>
-            )}
-          </div>
-
-          {/* <div className="mt-6 flex justify-end">
-            <button className="flex items-center gap-1 text-sm font-medium">
-              View all
-              <ChevronDown size={16} />
-            </button>
-          </div> */}
-        </div>
       </Container>
     </section>
   );

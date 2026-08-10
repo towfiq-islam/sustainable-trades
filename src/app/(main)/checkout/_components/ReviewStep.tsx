@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
-import { VendorFormFields } from "@/lib/checkout";
+import { formatDiscountLabel, VendorFormFields } from "@/lib/checkout";
 import { useState } from "react";
 import { useApplyCouponMutation } from "@/redux/api/discountApi";
 import { LuLoaderPinwheel } from "react-icons/lu";
@@ -36,7 +36,8 @@ const ReviewStep = () => {
     const pricing = pricingByVendor.find(p => p.vendor_id === vendor.vendor_id);
     const formFields: VendorFormFields =
       getValues(`vendors.${vendor.vendor_id}`) ?? {};
-    const discount = vendorExtras[vendor.vendor_id]?.discount_amount ?? 0;
+    const extras = vendorExtras[vendor.vendor_id];
+    const discount = extras?.discount_amount ?? 0;
     const baseTotal = pricing?.total_amount ?? 0;
 
     return {
@@ -45,6 +46,8 @@ const ReviewStep = () => {
       shipping: pricing?.shipping_amount ?? 0,
       delivery: pricing?.delivery_amount ?? 0,
       discount,
+      discountType: extras?.discount_type,
+      discountValue: extras?.discount_value,
       total: Math.max(baseTotal - discount, 0),
       formFields,
     };
@@ -81,6 +84,10 @@ const ReviewStep = () => {
             vendor_id,
             coupon_code: res?.data?.coupon_code ?? code,
             discount_amount: res?.data?.discount_amount ?? 0,
+            discount_type: res?.data?.discount_type ?? null,
+            discount_value: res?.data?.discount_value
+              ? Number(res.data.discount_value)
+              : null,
           }),
         );
         setCouponInputs(prev => ({ ...prev, [vendor_id]: "" }));
@@ -136,6 +143,8 @@ const ReviewStep = () => {
             total,
             formFields,
             discount,
+            discountType,
+            discountValue,
           } = vendorTotal;
           const appliedCoupon = vendorExtras[vendor.vendor_id]?.coupon_code;
           const isSubscribed =
@@ -270,8 +279,10 @@ const ReviewStep = () => {
                 )}
 
                 {discount > 0 && (
-                  <div className="flex justify-between text-sm text-primary-green font-semibold">
-                    <span>Discount</span>
+                  <div className="flex justify-between text-sm text-primary-green">
+                    <span>
+                      {formatDiscountLabel(discountType, discountValue)}
+                    </span>
                     <span>-${discount.toFixed(2)}</span>
                   </div>
                 )}

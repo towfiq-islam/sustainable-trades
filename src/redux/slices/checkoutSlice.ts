@@ -32,6 +32,8 @@ export interface VendorExtras {
   coupon_code: string | null;
   subscribe_shop: boolean;
   discount_amount: number;
+  discount_type?: "percentage" | "fixed" | null;
+  discount_value?: number | null;
   pickup_location?: PickupLocationSelection | null;
 }
 
@@ -77,17 +79,23 @@ const checkoutSlice = createSlice({
         vendor_id: number;
         coupon_code: string | null;
         discount_amount?: number;
+        discount_type?: "percentage" | "fixed" | null;
+        discount_value?: number | null;
       }>,
     ) => {
       const existing = state.vendors[action.payload.vendor_id] ?? {
         coupon_code: null,
         subscribe_shop: false,
         discount_amount: 0,
+        discount_type: null,
+        discount_value: null,
       };
       state.vendors[action.payload.vendor_id] = {
         ...existing,
         coupon_code: action.payload.coupon_code,
         discount_amount: action.payload.discount_amount ?? 0,
+        discount_type: action.payload.discount_type ?? null,
+        discount_value: action.payload.discount_value ?? null,
       };
     },
     setVendorSubscribeShop: (

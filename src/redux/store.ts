@@ -28,6 +28,16 @@ const cartPersistConfig = {
   storage: localStorage,
 };
 
+const checkoutPersistConfig = {
+  key: "checkout",
+  storage: localStorage,
+};
+
+const persistedCheckoutReducer = persistReducer(
+  checkoutPersistConfig,
+  checkoutReducer,
+);
+
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 const persistedCartReducer = persistReducer(cartPersistConfig, cartReducer);
 
@@ -36,6 +46,7 @@ export const store = configureStore({
     auth: persistedAuthReducer,
     cart: persistedCartReducer,
     checkout: checkoutReducer,
+    // checkout: persistedCheckoutReducer,
 
     [apiSlice.reducerPath]: apiSlice.reducer,
   },

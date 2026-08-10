@@ -13,6 +13,7 @@ const PaymentStep = () => {
     master,
     vendor_orders: pricingByVendor,
     subscribe_website,
+    terms_and_condition,
     vendors: vendorExtras,
   } = useAppSelector(state => state.checkout);
   const { getValues } = useFormContext();
@@ -20,19 +21,30 @@ const PaymentStep = () => {
 
   const vendorTotals = items.map(vendor => {
     const pricing = pricingByVendor.find(p => p.vendor_id === vendor.vendor_id);
-    return { vendor, total: pricing?.total_amount ?? 0 };
+    const discount = vendorExtras[vendor.vendor_id]?.discount_amount ?? 0;
+    const baseTotal = pricing?.total_amount ?? 0;
+    return { vendor, discount, total: Math.max(baseTotal - discount, 0) };
   });
 
-  const grandTotal = master?.total_amount ?? 0;
+  const totalDiscount = Object.values(vendorExtras).reduce(
+    (sum, v) => sum + (v?.discount_amount ?? 0),
+    0,
+  );
+  const grandTotal = Math.max((master?.total_amount ?? 0) - totalDiscount, 0);
 
   const handlePaypalCheckout = async () => {
+    if (!terms_and_condition) {
+      toast.error("Please accept the terms and conditions to continue");
+      return;
+    }
+
     const { vendors: formValues } = getValues() as {
       vendors: VendorFormValues;
     };
 
     const payload = buildCheckoutPayload(items, formValues, vendorExtras, {
       payment_method: "paypal",
-      terms_and_condition: true, // TODO: wire to a real checkbox before this ships
+      terms_and_condition,
       subscribe_website,
     });
 
@@ -56,16 +68,27 @@ const PaymentStep = () => {
       </p>
 
       <div className="border border-gray-200 rounded-lg p-4 mb-6 text-left space-y-2">
-        {vendorTotals.map(({ vendor, total }) => (
-          <div
-            key={vendor.vendor_id}
-            className="flex justify-between text-sm text-secondary-black"
-          >
-            <span>{vendor.shop_name}</span>
-            <span>${total.toFixed(2)}</span>
+        {vendorTotals.map(({ vendor, discount, total }) => (
+          <div key={vendor.vendor_id}>
+            <div className="flex justify-between text-sm text-secondary-black">
+              <span>{vendor.shop_name}</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
+            {discount > 0 && (
+              <div className="flex justify-between text-xs text-primary-green">
+                <span>Discount applied</span>
+                <span>-${discount.toFixed(2)}</span>
+              </div>
+            )}
           </div>
         ))}
         <hr />
+        {totalDiscount > 0 && (
+          <div className="flex justify-between text-sm text-primary-green">
+            <span>Total discount</span>
+            <span>-${totalDiscount.toFixed(2)}</span>
+          </div>
+        )}
         <div className="flex justify-between font-bold text-secondary-black">
           <span>Total</span>
           <span>${grandTotal.toFixed(2)}</span>
@@ -75,7 +98,7 @@ const PaymentStep = () => {
       <button
         type="button"
         onClick={handlePaypalCheckout}
-        disabled={isLoading}
+        disabled={isLoading || !terms_and_condition}
         className="w-full py-3 rounded-full bg-[#FFC439] text-[#003087] font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300"
       >
         {isLoading ? "Processing..." : "PayPal checkout"}

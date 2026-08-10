@@ -57,6 +57,16 @@ export interface CheckoutVendorOrder {
   address: CheckoutDeliveryAddressPayload | CheckoutPickupAddressPayload;
 }
 
+export const formatDiscountLabel = (
+  type?: "percentage" | "fixed" | null,
+  value?: number | null,
+) => {
+  if (!type || value == null) return "Discount";
+  return type === "percentage"
+    ? `Discount (${value}%)`
+    : `Discount ($${value})`;
+};
+
 // Per-vendor extras that live outside the RHF delivery-details form
 // (set later, on ReviewStep) - coupon code + shop newsletter opt-in.
 export type VendorExtrasMap = Record<

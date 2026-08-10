@@ -65,12 +65,15 @@ const CartItem = ({ item }: any) => {
           </figure>
 
           {/* Shop Name */}
-          <Link
-            href={`/shop-details?view=${"customer"}&id=${item?.vendor_id}&listing_id=${item?.shop_id}`}
-            className="font-semibold text-primary-green block hover:underline"
-          >
-            Sold by {item?.shop_name}
-          </Link>
+          <p className="font-semibold text-primary-green block">
+            Sold by{" "}
+            <Link
+              href={`/shop-details?view=${"customer"}&id=${item?.vendor_id}&listing_id=${item?.shop_id}`}
+              className="hover:underline"
+            >
+              {item?.shop_name}
+            </Link>
+          </p>
         </div>
       </div>
 
@@ -147,7 +150,7 @@ const CartItem = ({ item }: any) => {
                 onClick={() =>
                   handleRemoveFromCart(product?.id, item?.vendor_id)
                 }
-                className="cursor-pointer text-primary-green font-medium text-sm flex gap-1.5 items-center"
+                className="cursor-pointer text-primary-green font-medium text-sm flex gap-1.5 items-center hover:underline"
               >
                 Remove
               </button>

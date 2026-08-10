@@ -3,7 +3,9 @@ import { CartItem } from "@/redux/slices/cartSlice";
 import { useAppSelector } from "@/redux/store";
 
 const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
-  const { master } = useAppSelector(state => state.checkout);
+  const { master, vendors: vendorExtras } = useAppSelector(
+    state => state.checkout,
+  );
 
   const subtotal = items.reduce(
     (sum, vendor) =>
@@ -16,7 +18,15 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
   );
 
   const hasPricing = !!master;
-  const total = master?.total_amount ?? subtotal;
+
+  // Coupon discounts come from the separate /apply-coupon endpoint per
+  // vendor, not from master.discount_amount - sum them here.
+  const totalDiscount = Object.values(vendorExtras).reduce(
+    (sum, v) => sum + (v?.discount_amount ?? 0),
+    0,
+  );
+
+  const total = Math.max((master?.total_amount ?? subtotal) - totalDiscount, 0);
 
   return (
     <aside className="border border-gray-300 rounded-xl p-5 space-y-4 h-fit">
@@ -93,10 +103,10 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
               <span>${master.delivery_amount.toFixed(2)}</span>
             </div>
           )}
-          {master.discount_amount > 0 && (
-            <div className="flex justify-between text-sm text-secondary-gray -mt-2">
+          {totalDiscount > 0 && (
+            <div className="flex justify-between text-sm text-primary-green -mt-2">
               <span>Discount</span>
-              <span>-${master.discount_amount.toFixed(2)}</span>
+              <span>-${totalDiscount.toFixed(2)}</span>
             </div>
           )}
         </>

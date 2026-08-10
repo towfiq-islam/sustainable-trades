@@ -26,7 +26,9 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import toast from "react-hot-toast";
 
 const BasicNavbar = ({ dynamicPage }: any) => {
-  const { items } = useAppSelector(state => state.cart);
+  const { items, totalQuantity } = useAppSelector(
+    state => state.cart,
+  );
   const navLins = [
     { id: 1, label: "Home", path: "/" },
     { id: 2, label: "Shop", path: "/shop" },
@@ -310,7 +312,7 @@ const BasicNavbar = ({ dynamicPage }: any) => {
             {/* Cart */}
             <Link href="/cart" className="cursor-pointer relative">
               <button className="absolute -top-4 -right-4 size-5 font-semibold text-xs grid place-items-center rounded-full bg-accent-red text-white cursor-pointer">
-                {items?.length ? items?.length : 0}
+                {totalQuantity ? totalQuantity : 0}
               </button>
               <CartSvg2 />
             </Link>

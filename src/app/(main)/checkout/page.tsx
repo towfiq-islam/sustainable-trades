@@ -1,6 +1,6 @@
 "use client";
-import { Suspense, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import Container from "@/Components/Common/Container";
 import { useAppSelector } from "@/redux/store";
@@ -12,9 +12,24 @@ import DeliveryOptions from "./_components/DeliveryOptions";
 import DeliveryDetails from "./_components/DeliveryDetails";
 
 const CheckoutContent = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const step = (searchParams.get("step") as CheckoutStep) || "delivery-options";
   const { items } = useAppSelector(state => state.cart);
+  const hasMountedRef = useRef(false);
+  const [isResetting, setIsResetting] = useState(true);
+
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+
+      if (step !== "delivery-options") {
+        router.replace("/checkout?step=delivery-options");
+        return;
+      }
+    }
+    setIsResetting(false);
+  }, [step, router]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -30,6 +45,10 @@ const CheckoutContent = () => {
         </p>
       </Container>
     );
+  }
+
+  if (isResetting && step !== "delivery-options") {
+    return null;
   }
 
   return (

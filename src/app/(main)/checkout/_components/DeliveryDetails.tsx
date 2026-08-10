@@ -34,6 +34,7 @@ const DeliveryDetails = () => {
   const dispatch = useAppDispatch();
   const { latitude, longitude } = useAuth();
   const { items } = useAppSelector(state => state.cart);
+  const [isGeocoding, setIsGeocoding] = useState(false);
   const {
     register,
     watch,
@@ -121,12 +122,14 @@ const DeliveryDetails = () => {
   };
 
   const handleNext = async () => {
+    if (isGeocoding || isLoading) return;
     syncFromDom(fieldsForFulfillment);
     const valid = await trigger(fieldsForFulfillment);
     if (!valid) return;
     const values = getValues(base);
 
     if (isLastVendor) {
+      setIsGeocoding(true);
       // Geocode every vendor that needs a physical address (delivery/shipping)
       // before building the payload, so lat/lng travel with the address instead
       // of being left null. Pickup vendors don't need this - they resolve to a
@@ -369,7 +372,7 @@ const DeliveryDetails = () => {
         <button
           type="button"
           onClick={handleNext}
-          disabled={isLoading}
+          disabled={isLoading || isGeocoding}
           className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-60"
         >
           {isLastVendor ? "Review order" : "Next vendor"}

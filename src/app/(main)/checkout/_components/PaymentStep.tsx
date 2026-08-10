@@ -8,6 +8,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { apiSlice } from "@/redux/api/apiSlice";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { clearCart } from "@/redux/slices/cartSlice";
+import { clearCheckout } from "@/redux/slices/checkoutSlice";
 
 const PaymentStep = () => {
   const dispatch = useAppDispatch();
@@ -111,8 +112,9 @@ const PaymentStep = () => {
                 toast.success(orderData?.message);
                 dispatch(apiSlice.util.invalidateTags(["user"]));
                 dispatch(clearCart());
+                dispatch(clearCheckout());
                 router.push(
-                  `/order-success?order_id=${orderData?.data?.id}&shop_id=${orderData?.data?.shop_id}`,
+                  `/order-success?order_id=${orderData?.data?.order_id}`,
                 );
               }
             } catch (error) {

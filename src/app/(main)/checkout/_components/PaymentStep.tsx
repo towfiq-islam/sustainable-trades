@@ -76,6 +76,8 @@ const PaymentStep = () => {
                   credentials: "include",
                   headers: {
                     "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
                   },
                   body: JSON.stringify(payload),
                 },
@@ -104,7 +106,6 @@ const PaymentStep = () => {
                   }),
                 },
               );
-
               const orderData = await response.json();
               if (orderData?.success) {
                 toast.success(orderData?.message);

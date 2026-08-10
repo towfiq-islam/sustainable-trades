@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useState } from "react";
-import { LocationTwoSvg, MinSvg } from "@/Components/Svg/SvgContainer";
+import { MinSvg } from "@/Components/Svg/SvgContainer";
 import Modal from "@/Components/Common/Modal";
 import SuccessModal from "@/Components/Modals/SuccessModal";
 import ShippingAddress from "@/Components/Modals/ShippingAddress";

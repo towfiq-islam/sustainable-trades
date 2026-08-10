@@ -13,6 +13,7 @@ import {
 import { FaLeaf } from "react-icons/fa";
 import { HiOutlineArrowPath } from "react-icons/hi2";
 import Link from "next/link";
+
 type TradeOfferModalProps = {
   id: number | null;
   productId: number | null;

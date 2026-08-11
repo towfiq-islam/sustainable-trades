@@ -1,27 +1,26 @@
-"use client";
 import CombinedNavbar from "./CombinedNavbar";
 import LowerNavbar from "./LowerNavbar";
-import ScrollToTop from "react-scroll-to-top";
-import { UpArrowSvg } from "@/Components/Svg/SvgContainer";
-import { useGetDynamicPagesQuery } from "@/redux/api/shopApi";
+import { getDynamicPages } from "@/lib/cms.api";
+import { ScrollTop } from "../Components/Common/ScrollTop";
+import { getUser } from "@/lib/getUser";
 
-const Navbar = () => {
-  const { data: dynamicPages } = useGetDynamicPagesQuery({});
+const Navbar = async () => {
+  const [initialUser, dynamicPages] = await Promise.all([
+    getUser(),
+    getDynamicPages(),
+  ]);
 
   return (
     <>
       <nav className="sticky top-0 z-999">
-        <CombinedNavbar dynamicPages={dynamicPages?.data} />
+        <CombinedNavbar
+          dynamicPages={dynamicPages?.data}
+          initialUser={initialUser}
+        />
         <LowerNavbar />
       </nav>
 
-      {/* Scroll to top */}
-      <ScrollToTop
-        smooth={true}
-        top={50}
-        component={<UpArrowSvg />}
-        className="!bg-gray-300 grid place-items-center !size-10 !text-accent-white"
-      />
+      <ScrollTop />
     </>
   );
 };

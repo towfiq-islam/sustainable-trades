@@ -8,7 +8,11 @@ import {
   LinkedinSvg,
   PinterestSvg,
 } from "@/Components/Svg/SvgContainer";
-import { getSiteSettings, getSocialLinks } from "@/lib/cms.api";
+import {
+  getDynamicPages,
+  getSiteSettings,
+  getSocialLinks,
+} from "@/lib/cms.api";
 
 const helpUsLinks = [
   { id: 1, label: "How-To Tutorials", path: "/help/how-to-tutorials" },
@@ -16,11 +20,12 @@ const helpUsLinks = [
   { id: 3, label: "Contacts", path: "/help/contact" },
 ];
 
-const Footer = async ({ dynamicPage }: any) => {
+const Footer = async () => {
   const footer_title_class =
     "text-xl font-bold text-accent-white leading-[ 140%] tracking-[0.2px] mb-3";
   const socialLinks = await getSocialLinks();
   const siteSettings = await getSiteSettings();
+  const dynamicPages = await getDynamicPages();
 
   return (
     <footer className="bg-primary-green pt-10 pb-5">
@@ -45,7 +50,7 @@ const Footer = async ({ dynamicPage }: any) => {
             <div>
               <h3 className={footer_title_class}>About</h3>
               <ul className="flex flex-col gap-3">
-                {dynamicPage?.map((item: any) => (
+                {dynamicPages?.data?.map((item: any) => (
                   <Link
                     key={item?.id}
                     href={`/about/${item?.page_slug}`}

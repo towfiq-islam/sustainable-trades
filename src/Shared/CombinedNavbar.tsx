@@ -23,21 +23,21 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import toast from "react-hot-toast";
 
 interface CombinedNavbarProps {
-  dynamicPage?: any;
+  dynamicPages?: any;
   variant?: "public" | "dashboard";
   initialUser?: any;
   setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 const CombinedNavbar = ({
-  dynamicPage,
+  dynamicPages,
   variant = "public",
   initialUser,
   setOpen,
 }: CombinedNavbarProps) => {
   const isDashboard = variant === "dashboard";
   const { totalQuantity } = useAppSelector(state => state.cart);
-  const navLins = getNavLinks(dynamicPage);
+  const navLins = getNavLinks(dynamicPages);
   const { user: liveUser, clearAuthorization } = useAuth();
   const user = liveUser ?? initialUser;
   const router = useRouter();
@@ -162,7 +162,7 @@ const CombinedNavbar = ({
 
           {!isDashboard && (
             <Sidebar
-              dynamicPage={dynamicPage}
+              dynamicPages={dynamicPages}
               open={internalSidebarOpen}
               setOpen={setInternalSidebarOpen}
             />

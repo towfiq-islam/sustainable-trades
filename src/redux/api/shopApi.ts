@@ -48,6 +48,12 @@ export const shopApi = apiSlice.injectEndpoints({
       providesTags: ["shop"],
     }),
 
+    // Dynamic Page
+    getDynamicPages: builder.query({
+      query: () => "/api/dynamic-pages",
+      providesTags: ["dynamic-pages"],
+    }),
+
     // Apply Membership Spotlight
     applySpotlight: builder.mutation({
       query: body => ({
@@ -209,4 +215,5 @@ export const {
   useFollowShopMutation,
   useGetTutorialsQuery,
   useSubscribeNewsletterMutation,
+  useGetDynamicPagesQuery,
 } = shopApi;

@@ -3,12 +3,15 @@ import CombinedNavbar from "./CombinedNavbar";
 import LowerNavbar from "./LowerNavbar";
 import ScrollToTop from "react-scroll-to-top";
 import { UpArrowSvg } from "@/Components/Svg/SvgContainer";
+import { useGetDynamicPagesQuery } from "@/redux/api/shopApi";
 
-const Navbar = ({ dynamicPage }: any) => {
+const Navbar = () => {
+  const { data: dynamicPages } = useGetDynamicPagesQuery({});
+
   return (
     <>
       <nav className="sticky top-0 z-999">
-        <CombinedNavbar dynamicPage={dynamicPage} />
+        <CombinedNavbar dynamicPages={dynamicPages?.data} />
         <LowerNavbar />
       </nav>
 

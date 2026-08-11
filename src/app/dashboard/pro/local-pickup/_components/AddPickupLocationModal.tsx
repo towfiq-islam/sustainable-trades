@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { Country, State } from "country-state-city";
+import { State } from "country-state-city";
 import { useEffect, useState } from "react";
 import {
   useAddPickupLocationMutation,
@@ -8,9 +8,8 @@ import {
 } from "@/redux/api/vendorApi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
-const allowedCountries = Country.getAllCountries().filter(
-  country => country.isoCode === "US" || country.isoCode === "CA",
-);
+const US_COUNTRY_CODE = "US";
+const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
 
 export type PickupLocationFormValues = {
   location_name: string;
@@ -30,7 +29,7 @@ const DEFAULT_VALUES: PickupLocationFormValues = {
   city: "",
   state: "",
   zip_code: "",
-  country: "",
+  country: US_COUNTRY_CODE,
   is_active: true,
 };
 
@@ -46,8 +45,7 @@ const AddPickupLocationModal = ({
   editingLocation,
 }: Props) => {
   const [isGeocoding, setIsGeocoding] = useState(false);
-  const [country, setCountry] = useState<any>(defaultValues?.country || null);
-  const [state, setState] = useState<any>(defaultValues?.state || null);
+  const [state, setState] = useState<any>(defaultValues?.state || "");
 
   const [addPickupLocation, { isLoading: isAdding }] =
     useAddPickupLocationMutation();
@@ -66,13 +64,9 @@ const AddPickupLocationModal = ({
 
   const onSubmit = async (values: PickupLocationFormValues) => {
     setIsGeocoding(true);
-    const countryName =
-      allowedCountries.find(c => c.isoCode === values.country)?.name ??
-      values.country;
+
     const stateName =
-      State.getStatesOfCountry(values.country).find(
-        s => s.isoCode === values.state,
-      )?.name ?? values.state;
+      usStates.find(s => s.isoCode === values.state)?.name ?? values.state;
 
     const fullAddress = [
       values?.address,
@@ -80,7 +74,7 @@ const AddPickupLocationModal = ({
       values?.city,
       stateName,
       values?.zip_code,
-      countryName,
+      "United States",
     ]
       .filter(Boolean)
       .join(", ");
@@ -103,7 +97,7 @@ const AddPickupLocationModal = ({
     formData.append("city", values.city);
     formData.append("zip_code", values.zip_code);
     formData.append("state", values.state);
-    formData.append("country", values.country);
+    formData.append("country", US_COUNTRY_CODE);
     formData.append("is_active", values?.is_active ? "1" : "0");
 
     try {
@@ -127,6 +121,7 @@ const AddPickupLocationModal = ({
   useEffect(() => {
     reset({
       ...(defaultValues ?? DEFAULT_VALUES),
+      country: US_COUNTRY_CODE,
       is_active: Boolean(
         typeof defaultValues?.is_active === "string"
           ? defaultValues.is_active === "1" ||
@@ -134,8 +129,7 @@ const AddPickupLocationModal = ({
           : (defaultValues?.is_active ?? true),
       ),
     });
-    setCountry(defaultValues?.country || null);
-    setState(defaultValues?.state || null);
+    setState(defaultValues?.state || "");
   }, [defaultValues, reset]);
 
   return (
@@ -196,34 +190,19 @@ const AddPickupLocationModal = ({
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-secondary-black mb-1.5">
-              Country <span className="text-red-500">*</span>
+              City <span className="text-red-500">*</span>
             </label>
 
-            <select
-              className={`w-full border rounded-lg px-3.5 py-2.5 text-sm outline-none bg-white ${
-                errors.country
+            <input
+              type="text"
+              placeholder="e.g. Austin"
+              className={`w-full border rounded-lg px-3.5 py-2.5 text-sm outline-none ${
+                errors.city
                   ? "border-red-500 placeholder:text-red-500"
                   : "border-gray-300"
               }`}
-              value={country || ""}
-              {...register("country", { required: true })}
-              onChange={e => {
-                const selectedCountry = e.target.value;
-                setCountry(selectedCountry);
-                setState("");
-                setValue("country", selectedCountry, {
-                  shouldValidate: true,
-                });
-                setValue("state", "");
-              }}
-            >
-              <option value="">Select Country</option>
-              {allowedCountries.map(country => (
-                <option key={country.isoCode} value={country.isoCode}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
+              {...register("city", { required: true })}
+            />
           </div>
 
           <div>
@@ -247,8 +226,8 @@ const AddPickupLocationModal = ({
                 });
               }}
             >
-              <option value="">Select State / Province</option>
-              {State.getStatesOfCountry(country).map(item => (
+              <option value="">Select State</option>
+              {usStates.map(item => (
                 <option key={item.isoCode} value={item.isoCode}>
                   {item.name} ({item.isoCode})
                 </option>
@@ -258,23 +237,6 @@ const AddPickupLocationModal = ({
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-secondary-black mb-1.5">
-              City <span className="text-red-500">*</span>
-            </label>
-
-            <input
-              type="text"
-              placeholder="e.g. Austin"
-              className={`w-full border rounded-lg px-3.5 py-2.5 text-sm outline-none ${
-                errors.city
-                  ? "border-red-500 placeholder:text-red-500"
-                  : "border-gray-300"
-              }`}
-              {...register("city", { required: true })}
-            />
-          </div>
-
           <div>
             <label className="block text-sm font-medium text-secondary-black mb-1.5">
               Zip Code <span className="text-red-500">*</span>
@@ -289,6 +251,25 @@ const AddPickupLocationModal = ({
                   : "border-gray-300"
               }`}
               {...register("zip_code", { required: true })}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-secondary-black mb-1.5">
+              Country
+            </label>
+
+            <input
+              type="text"
+              value="United States"
+              disabled
+              readOnly
+              className="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm outline-none bg-gray-100 text-gray-500 cursor-not-allowed"
+            />
+            <input
+              type="hidden"
+              {...register("country")}
+              value={US_COUNTRY_CODE}
             />
           </div>
         </div>

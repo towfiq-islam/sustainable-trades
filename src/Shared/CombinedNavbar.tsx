@@ -26,7 +26,6 @@ interface CombinedNavbarProps {
   dynamicPage?: any;
   variant?: "public" | "dashboard";
   initialUser?: any;
-  /** Dashboard mode only: lets the parent layout control its own DashboardSidebar */
   setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -37,7 +36,6 @@ const CombinedNavbar = ({
   setOpen,
 }: CombinedNavbarProps) => {
   const isDashboard = variant === "dashboard";
-
   const { totalQuantity } = useAppSelector(state => state.cart);
   const navLins = getNavLinks(dynamicPage);
   const { user: liveUser, clearAuthorization } = useAuth();
@@ -93,9 +91,9 @@ const CombinedNavbar = ({
 
   const handleOpenSidebar = () => {
     if (setOpen) {
-      setOpen(true); // dashboard: parent owns the sidebar
+      setOpen(true);
     } else {
-      setInternalSidebarOpen(true); // public: this component owns it
+      setInternalSidebarOpen(true);
     }
   };
 
@@ -349,7 +347,7 @@ const CombinedNavbar = ({
           aria-label={`Cart, ${totalQuantity ?? 0} items`}
           className="cursor-pointer relative hover:opacity-80 transition-opacity duration-200"
         >
-          <span className="absolute -top-3 -right-3 min-w-5 h-5 px-1 font-semibold text-[11px] grid place-items-center rounded-full bg-accent-red text-white">
+          <span className="absolute -top-4 -right-4 min-w-5 h-5 px-1 font-semibold text-[11px] grid place-items-center rounded-full bg-accent-red text-white">
             {totalQuantity ?? 0}
           </span>
           <CartSvg2 />

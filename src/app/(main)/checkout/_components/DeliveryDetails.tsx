@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
 import VendorProgressBar from "./VendorProgressBar";
-import { Country, State } from "country-state-city";
+import { State } from "country-state-city";
 import { useGetAllPickupLocationsQuery } from "@/redux/api/vendorApi";
 import useAuth from "@/Hooks/useAuth";
 import PickupLocationSelect from "./PickupLocationSelect";
@@ -18,9 +18,8 @@ import {
   setVendorPickupLocation,
 } from "@/redux/slices/checkoutSlice";
 
-const allowedCountries = Country.getAllCountries().filter(
-  country => country.isoCode === "US" || country.isoCode === "CA",
-);
+const US_COUNTRY_CODE = "US";
+const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
 
 const fieldClass = (hasError: boolean) =>
   `flex-1 w-full border rounded-lg px-4 py-3 outline-none focus:border-primary-green ${
@@ -77,43 +76,30 @@ const DeliveryDetails = () => {
           `${base}.city`,
           `${base}.postal_code`,
           `${base}.state`,
-          `${base}.country`,
         ]
       : []),
 
     ...(isPickup ? [`${base}.pickup_id`] : []),
   ];
 
-  const selectedCountry = watch(`${base}.country`);
   const selectedState = watch(`${base}.state`);
-  // Namespaced per vendor so vendor A's errors never light up vendor B's fields.
   const vendorErrors = (errors as any)?.vendors?.[vendor.vendor_id] ?? {};
-
-  // Browser autofill (Google saved data / autosuggest) writes values straight
-  // into the DOM and does not always fire the events react-hook-form listens
-  // to, so RHF's internal state stays empty and validation keeps failing.
-  // Pull the live DOM values back into the form before validating.
   const syncFromDom = (fields: string[]) => {
     fields.forEach(field => {
       const el = document.querySelector<
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
       >(`[name="${field}"]`);
-      // Only pull non-empty DOM values back into the form. When the form
-      // re-mounts (e.g. after visiting delivery options again) the fresh
-      // inputs are empty while react-hook-form still holds the saved values
-      // - those must win instead of being wiped by the empty DOM.
       if (el && !el.disabled && el.value && el.value !== getValues(field)) {
         setValue(field, el.value);
       }
     });
   };
 
-  // Chrome may autofill right after mount or right after a dropdown pick, so
-  // keep the form state in sync (this also unlocks the state/province select
-  // when the browser autofills the country).
   useEffect(() => {
     syncFromDom(fieldsForFulfillment);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (needsAddress && !getValues(`${base}.country`)) {
+      setValue(`${base}.country`, US_COUNTRY_CODE);
+    }
   }, [base, needsAddress, isPickup]);
 
   const handleBack = () => {
@@ -130,10 +116,6 @@ const DeliveryDetails = () => {
 
     if (isLastVendor) {
       setIsGeocoding(true);
-      // Geocode every vendor that needs a physical address (delivery/shipping)
-      // before building the payload, so lat/lng travel with the address instead
-      // of being left null. Pickup vendors don't need this - they resolve to a
-      // fixed pickup_id instead.
       await Promise.all(
         items.map(async v => {
           const vendorNeedsAddress =
@@ -143,9 +125,6 @@ const DeliveryDetails = () => {
 
           const vBase = `vendors.${v.vendor_id}`;
           const vValues = getValues(vBase);
-
-          // Skip re-geocoding if this vendor already has coordinates
-          // (e.g. buyer went Back and forward again without changing address).
           if (vValues?.latitude && vValues?.longitude) return;
 
           const fullAddress = [
@@ -154,7 +133,7 @@ const DeliveryDetails = () => {
             vValues?.city,
             vValues?.state,
             vValues?.postal_code,
-            vValues?.country,
+            "United States",
           ]
             .filter(Boolean)
             .join(", ");
@@ -233,9 +212,6 @@ const DeliveryDetails = () => {
         everything before your order is placed.
       </p>
 
-      {/* key forces a full remount per vendor - without this, React reuses
-        the same DOM <input> nodes across vendors, and their stale typed
-        values leak into whichever vendor's fields are currently named. */}
       <div key={vendor.vendor_id} className="space-y-4 mb-6">
         <div className="flex gap-4 items-center">
           <input
@@ -293,46 +269,45 @@ const DeliveryDetails = () => {
                 placeholder="City"
                 className={fieldClass(!!vendorErrors.city)}
               />
+              <select
+                {...register(`${base}.state`, { required: true })}
+                value={selectedState ?? ""}
+                autoComplete="address-level1"
+                className={fieldClass(!!vendorErrors.state)}
+              >
+                <option value="">Select State</option>
+                {usStates.map(item => (
+                  <option key={item.isoCode} value={item.isoCode}>
+                    {item.name} ({item.isoCode})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex gap-4 items-center">
               <input
                 {...register(`${base}.postal_code`, { required: true })}
                 autoComplete="postal-code"
                 placeholder="Zip Code"
                 className={fieldClass(!!vendorErrors.postal_code)}
               />
-            </div>
 
-            <div className="flex gap-4 items-center">
-              <select
-                {...register(`${base}.country`, {
-                  required: true,
-                  onChange: () => setValue(`${base}.state`, ""),
-                })}
-                value={selectedCountry ?? ""}
+              <input
+                type="text"
+                value="United States"
+                disabled
+                readOnly
                 autoComplete="country"
-                className={fieldClass(!!vendorErrors.country)}
-              >
-                <option value="">Select Country</option>
-                {allowedCountries.map(c => (
-                  <option key={c.isoCode} value={c.isoCode}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                {...register(`${base}.state`, { required: true })}
-                value={selectedState ?? ""}
-                autoComplete="address-level1"
-                className={fieldClass(!!vendorErrors.state)}
-                disabled={!selectedCountry}
-              >
-                <option value="">Select State / Province</option>
-                {State.getStatesOfCountry(selectedCountry).map(item => (
-                  <option key={item.isoCode} value={item.isoCode}>
-                    {item.name} ({item.isoCode})
-                  </option>
-                ))}
-              </select>
+                className={
+                  fieldClass(false) +
+                  " bg-gray-100 text-gray-500 cursor-not-allowed"
+                }
+              />
+              <input
+                type="hidden"
+                {...register(`${base}.country`)}
+                value={US_COUNTRY_CODE}
+              />
             </div>
           </div>
         )}

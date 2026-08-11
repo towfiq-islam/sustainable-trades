@@ -22,8 +22,9 @@ import {
   PTwelveSvg,
   PTwoSvg,
 } from "@/Components/Svg/SvgContainer";
-import { MdOutlineWheelchairPickup } from "react-icons/md";
 import { FaTruck } from "react-icons/fa";
+import { LuMapPinned } from "react-icons/lu";
+
 export const getNavLinks = (dynamicPage?: any) => [
   { id: 1, label: "Home", path: "/" },
   { id: 2, label: "Shop", path: "/shop" },
@@ -119,7 +120,7 @@ export const proNavLinks = [
     id: 8,
     label: "Local Pickup",
     path: "/dashboard/pro/local-pickup",
-    icon: <MdOutlineWheelchairPickup className="text-xl" />,
+    icon: <LuMapPinned className="text-xl" />,
   },
   {
     id: 8,
@@ -128,16 +129,16 @@ export const proNavLinks = [
     icon: <FaTruck className="text-xl" />,
   },
   {
-    id: 9,
-    label: "Shipping",
-    path: "/dashboard/pro/shipping",
-    icon: <PNineSvg />,
-  },
-  {
     id: 10,
     label: "Favorites",
     path: "/dashboard/pro/favorites",
     icon: <PTenSvg />,
+  },
+  {
+    id: 9,
+    label: "Shipping",
+    path: "/dashboard/pro/shipping",
+    icon: <PNineSvg />,
   },
   {
     id: 11,

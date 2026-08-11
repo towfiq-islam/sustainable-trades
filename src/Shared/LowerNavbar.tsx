@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import Container from "@/Components/Common/Container";
-import { SearchSvg } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 import Link from "next/link";
 import { FaSearch } from "react-icons/fa";

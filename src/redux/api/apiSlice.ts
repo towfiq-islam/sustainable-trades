@@ -55,6 +55,7 @@ export const apiSlice = createApi({
     "rate",
     "cart",
     "pickup-locations",
+    "dynamic-pages",
   ],
 
   endpoints: () => ({}),

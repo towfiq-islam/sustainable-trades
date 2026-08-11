@@ -18,6 +18,7 @@ import {
   useGetSingleProductQuery,
   useUpdateProductMutation,
 } from "@/redux/api/productApi";
+import { GoBackSvg } from "@/Components/Svg/SvgContainer";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -87,8 +88,8 @@ const VARIANT_CONFIG = {
     shippingGuard: false,
   },
   pro: {
-    listingHref: "/dashboard/pro/view-listing",
-    successRedirect: "/dashboard/pro/view-listing",
+    listingHref: "/dashboard/pro/listing",
+    successRedirect: "/dashboard/pro/listing",
     fulfillmentLocked: false,
     proFeaturesEnabled: true,
     shippingGuard: true,
@@ -495,23 +496,24 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
 
   return (
     <>
+      <button
+        onClick={() => router.back()}
+        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-1 group"
+      >
+        <span className="group-hover:-translate-x-1 duration-300 transition-transform">
+          <GoBackSvg />
+        </span>
+        <span>Back</span>
+      </button>
+
       {/* Header */}
       <div className="flex justify-between items-center gap-3">
-        <div>
-          <h3 className="text-[30px] md:text-[40px] font-semibold text-secondary-black">
-            Edit Listing
-          </h3>
-          <div className="flex gap-x-2 items-center pt-2">
-            <span className="text-[16px] text-secondary-black">Listings</span>
-            <FaAngleRight className="mt-1" />
-            <span className="text-[16px] text-secondary-black">
-              Edit Listing
-            </span>
-          </div>
-        </div>
+        <h3 className="text-3xl font-semibold text-secondary-black">
+          Edit Listing
+        </h3>
 
         <Link href={config.listingHref} className="shrink-0">
-          <button className="text-secondary-black font-semibold flex gap-x-1 items-center border-2 border-secondary-black rounded-lg py-1.5 md:py-3 px-6 hover:bg-accent-red hover:text-white duration-300 cursor-pointer">
+          <button className="text-accent-red font-semibold flex gap-x-1 items-center border-2 border-accent-red rounded-lg py-1.5 md:py-3 px-6 hover:bg-accent-red hover:text-white duration-300 cursor-pointer">
             <MdArrowOutward />
             View Listings
           </button>
@@ -519,7 +521,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 md:gap-8 mt-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 md:gap-8 mt-5">
           {/* ── LEFT ── */}
           <div className="flex flex-col gap-3 md:gap-6">
             {/* Product Name */}

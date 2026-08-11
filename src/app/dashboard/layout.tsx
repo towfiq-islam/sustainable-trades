@@ -1,5 +1,5 @@
-import DashboardLayoutClient from "@/Shared/DashboardLayoutClient";
 import { getUser } from "@/lib/getUser";
+import DashboardLayoutClient from "@/Shared/DashboardLayoutClient";
 
 export default async function DashboardLayout({
   children,

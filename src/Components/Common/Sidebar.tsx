@@ -8,8 +8,8 @@ import { FiChevronDown } from "react-icons/fi";
 import logo from "@/Assets/logo.svg";
 import { getNavLinks } from "@/Components/Data/navLinks";
 
-const Sidebar = ({ open, setOpen, dynamicPage }: any) => {
-  const navLinks = getNavLinks(dynamicPage);
+const Sidebar = ({ open, setOpen, dynamicPages }: any) => {
+  const navLinks = getNavLinks(dynamicPages);
 
   const pathname = usePathname();
   const [activeSubMenu, setActiveSubMenu] = useState<number | null>(null);

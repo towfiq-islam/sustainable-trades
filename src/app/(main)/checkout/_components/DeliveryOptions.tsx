@@ -1,8 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { removeFromCart, setVendorFulfillment } from "@/redux/slices/cartSlice";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAppDispatch } from "@/redux/store";
+import {
+  CartItem,
+  removeFromCart,
+  setVendorFulfillment,
+} from "@/redux/slices/cartSlice";
 import {
   Fulfillment,
   fulfillmentDescription,
@@ -12,16 +16,16 @@ import {
 } from "@/lib/fulfillment";
 import Image from "next/image";
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import { setBuyNowFulfillment } from "@/redux/slices/checkoutSlice";
 
-const DeliveryOptions = () => {
+const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { items } = useAppSelector(state => state.cart);
   const [selections, setSelections] = useState<Record<number, Fulfillment>>({});
+  const searchParams = useSearchParams();
+  const mode = searchParams.get("mode");
+  const isBuyNow = mode === "buy-now";
 
-  // Keep selections in sync whenever the cart changes (e.g. a product is
-  // removed from a blocked vendor, flipping it to "auto" or "choose").
-  // Preserves any choice the user already made; only fills in the gaps.
   useEffect(() => {
     setSelections(prev => {
       const next: Record<number, Fulfillment> = {};
@@ -39,10 +43,8 @@ const DeliveryOptions = () => {
               : vendor.selectedFulfillment &&
                   options.includes(vendor.selectedFulfillment)
                 ? vendor.selectedFulfillment
-                : (undefined as unknown as Fulfillment); // stays unresolved until user picks
+                : (undefined as unknown as Fulfillment);
         }
-        // status === "blocked" -> intentionally omitted from `next`,
-        // so a removed vendor or unresolved blocked vendor never counts as resolved
       });
 
       return next;
@@ -65,16 +67,27 @@ const DeliveryOptions = () => {
     vendor => selections[vendor.vendor_id] !== undefined,
   );
 
+  const buildStepUrl = (step: string) => {
+    const params = new URLSearchParams();
+    params.set("step", step);
+    if (mode) params.set("mode", mode);
+    return `/checkout?${params.toString()}`;
+  };
+
   const handleContinue = () => {
     items.forEach(vendor => {
       const fulfillment = selections[vendor.vendor_id];
-      if (fulfillment) {
+      if (!fulfillment) return;
+
+      if (isBuyNow) {
+        dispatch(setBuyNowFulfillment({ fulfillment }));
+      } else {
         dispatch(
           setVendorFulfillment({ vendor_id: vendor.vendor_id, fulfillment }),
         );
       }
     });
-    router.push("/checkout?step=delivery-details");
+    router.push(buildStepUrl("delivery-details"));
   };
 
   return (
@@ -276,7 +289,7 @@ const DeliveryOptions = () => {
       <div className="flex gap-3 justify-between">
         <button
           type="button"
-          onClick={() => router.push("/cart")}
+          onClick={() => router.push(mode === "buy-now" ? "/" : "/cart")}
           className="px-6 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
         >
           Back

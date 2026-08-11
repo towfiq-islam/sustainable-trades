@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFormContext } from "react-hook-form";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { useAppDispatch } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
 import VendorProgressBar from "./VendorProgressBar";
 import { State } from "country-state-city";
@@ -17,6 +17,7 @@ import {
   setCheckoutPricing,
   setVendorPickupLocation,
 } from "@/redux/slices/checkoutSlice";
+import { CartItem } from "@/redux/slices/cartSlice";
 
 const US_COUNTRY_CODE = "US";
 const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
@@ -28,11 +29,12 @@ const fieldClass = (hasError: boolean) =>
       : "border-gray-300 placeholder:text-gray-400"
   }`;
 
-const DeliveryDetails = () => {
+const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const mode = searchParams.get("mode");
   const { latitude, longitude } = useAuth();
-  const { items } = useAppSelector(state => state.cart);
   const [isGeocoding, setIsGeocoding] = useState(false);
   const {
     register,
@@ -102,11 +104,17 @@ const DeliveryDetails = () => {
     }
   }, [base, needsAddress, isPickup]);
 
-  const handleBack = () => {
-    if (isFirstVendor) router.push("/checkout?step=delivery-options");
-    else setVendorIndex(i => i - 1);
+  const buildStepUrl = (step: string) => {
+    const params = new URLSearchParams();
+    params.set("step", step);
+    if (mode) params.set("mode", mode);
+    return `/checkout?${params.toString()}`;
   };
 
+  const handleBack = () => {
+    if (isFirstVendor) router.push(buildStepUrl("delivery-options"));
+    else setVendorIndex(i => i - 1);
+  };
   const handleNext = async () => {
     if (isGeocoding || isLoading) return;
     syncFromDom(fieldsForFulfillment);
@@ -156,7 +164,7 @@ const DeliveryDetails = () => {
           if (res?.success) {
             dispatch(setCheckoutPricing(res.data));
             toast.success(res?.message);
-            router.push("/checkout?step=review-order");
+            router.push(buildStepUrl("review-order"));
           }
         })
         .catch(err => {

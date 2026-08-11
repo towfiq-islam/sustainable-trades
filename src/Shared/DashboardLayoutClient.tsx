@@ -2,12 +2,12 @@
 import { ReactNode, useState } from "react";
 import DashboardSidebar from "@/Shared/DashboardSidebar";
 import useAuth from "@/Hooks/useAuth";
-import DashboardHeader from "@/Shared/DashboardHeader";
 import {
   basicNavLinks,
   customerNavLinks,
   proNavLinks,
 } from "@/Components/Data/navLinks";
+import CombinedNavbar from "./CombinedNavbar";
 
 type Props = {
   children: ReactNode;
@@ -24,7 +24,11 @@ export default function DashboardLayoutClient({
 
   return (
     <section className=" flex flex-col">
-      <DashboardHeader setOpen={setOpen} user={user} />
+      <CombinedNavbar
+        variant="dashboard"
+        initialUser={initialUser}
+        setOpen={setOpen}
+      />
 
       <main className="flex overflow-x-hidden grow">
         {/* Left - Sidebar */}

@@ -71,9 +71,14 @@ export const proNavLinks = [
   {
     id: 4,
     label: "Listings & Inventory",
-    path: "/dashboard/pro/listing",
+    path: "",
     icon: <PFourSvg />,
     subMenus: [
+      {
+        label: "Listings",
+        path: "/dashboard/pro/listing",
+        icon: <PFourSvg />,
+      },
       {
         label: "Listings",
         path: "/dashboard/pro/view-listing",
@@ -84,9 +89,14 @@ export const proNavLinks = [
   {
     id: 5,
     label: "Payments",
-    path: "/dashboard/pro/payments",
+    path: "",
     icon: <PFiveSvg />,
     subMenus: [
+      {
+        label: "Payment List",
+        path: "/dashboard/pro/payments",
+        icon: <PFiveSvg />,
+      },
       {
         label: "Payment Integration",
         path: "/dashboard/pro/payment-method",

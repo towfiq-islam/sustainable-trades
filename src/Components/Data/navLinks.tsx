@@ -71,20 +71,8 @@ export const proNavLinks = [
   {
     id: 4,
     label: "Listings & Inventory",
-    path: "",
+    path: "/dashboard/pro/listing",
     icon: <PFourSvg />,
-    subMenus: [
-      {
-        label: "Listings",
-        path: "/dashboard/pro/listing",
-        icon: <PFourSvg />,
-      },
-      {
-        label: "Listings",
-        path: "/dashboard/pro/view-listing",
-        icon: <PFourSvg />,
-      },
-    ],
   },
   {
     id: 5,

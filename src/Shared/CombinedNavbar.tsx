@@ -34,7 +34,6 @@ const CombinedNavbar = ({ dynamicPage }: any) => {
   const [activeSubMenu, setActiveSubMenu] = useState<number | null>(null);
   const [logout, { isLoading }] = useLogoutMutation();
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const isLoggedIn = !!user;
 
   const openSubMenu = (id: number) => {

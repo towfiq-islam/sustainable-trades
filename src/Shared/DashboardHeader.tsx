@@ -13,18 +13,10 @@ import {
 import { FaUser } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { useLogoutMutation } from "@/redux/api/authApi";
-import { useAppDispatch } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import toast from "react-hot-toast";
-
-const navLins = [
-  { id: 1, label: "Home", path: "/" },
-  { id: 2, label: "Shop", path: "/shop" },
-  {
-    id: 3,
-    label: "Community Member Spotlight",
-    path: "/community-member-spotlight",
-  },
-];
+import { getNavLinks } from "@/Components/Data/navLinks";
+const navLins = getNavLinks();
 
 interface DashboardHeaderProps {
   user: any;
@@ -32,6 +24,7 @@ interface DashboardHeaderProps {
 }
 
 const DashboardHeader = ({ user, setOpen }: DashboardHeaderProps) => {
+  const { totalQuantity } = useAppSelector(state => state.cart);
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -77,10 +70,10 @@ const DashboardHeader = ({ user, setOpen }: DashboardHeaderProps) => {
 
           {/* NavLinks */}
           <div
-            className={` hidden 1xl:flex static top-0 left-0 h-auto w-auto bg-transparent transform transition-transform duration-300 ease-in-out z-40  flex-row gap-6 2xl:gap-10 items-center p-0 `}
+            className={` hidden 2xl:flex static top-0 left-0 h-auto w-auto bg-transparent transform transition-transform duration-300 ease-in-out z-40  flex-row gap-6 2xl:gap-10 items-center p-0 `}
             onClick={e => e.stopPropagation()}
           >
-            {navLins?.map(item => {
+            {navLins?.slice(0, 3)?.map(item => {
               const isActive = pathname === item?.path;
               return (
                 <Link
@@ -138,9 +131,7 @@ const DashboardHeader = ({ user, setOpen }: DashboardHeaderProps) => {
           {/* Cart */}
           <Link href="/cart" className="cursor-pointer relative">
             <button className="absolute -top-4 -right-4 size-5 font-semibold text-xs grid place-items-center rounded-full bg-accent-red text-white cursor-pointer">
-              {user?.cart?.cart_items?.length > 0
-                ? user?.cart?.cart_items?.length
-                : 0}
+              {totalQuantity ?? 0}
             </button>
             <CartSvg2 />
           </Link>

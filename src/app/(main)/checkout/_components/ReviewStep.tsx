@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
@@ -15,14 +15,16 @@ import {
   setVendorCoupon,
   setVendorSubscribeShop,
 } from "@/redux/slices/checkoutSlice";
+import { CartItem } from "@/redux/slices/cartSlice";
 
-const ReviewStep = () => {
+const ReviewStep = ({ items }: { items: CartItem[] }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const mode = searchParams.get("mode");
   const { getValues } = useFormContext();
   const [couponInputs, setCouponInputs] = useState<Record<number, string>>({});
   const [applyingVendorId, setApplyingVendorId] = useState<number | null>(null);
-  const { items } = useAppSelector(state => state.cart);
   const [applyCoupon, { isLoading }] = useApplyCouponMutation();
   const {
     master,
@@ -96,6 +98,13 @@ const ReviewStep = () => {
         toast.error(err?.data?.message);
       })
       .finally(() => setApplyingVendorId(null));
+  };
+
+  const buildStepUrl = (step: string) => {
+    const params = new URLSearchParams();
+    params.set("step", step);
+    if (mode) params.set("mode", mode);
+    return `/checkout?${params.toString()}`;
   };
 
   return (
@@ -322,7 +331,7 @@ const ReviewStep = () => {
       <div className="flex gap-3 justify-between">
         <button
           type="button"
-          onClick={() => router.push("/checkout?step=delivery-details")}
+          onClick={() => router.push(buildStepUrl("delivery-details"))}
           className="px-6 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
         >
           Back
@@ -330,7 +339,7 @@ const ReviewStep = () => {
         <button
           type="button"
           disabled={!terms_and_condition}
-          onClick={() => router.push("/checkout?step=payment")}
+          onClick={() => router.push(buildStepUrl("payment"))}
           className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           Confirm and pay

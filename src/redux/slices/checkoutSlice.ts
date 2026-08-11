@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CartItem } from "./cartSlice";
+import { Fulfillment } from "@/lib/fulfillment";
 
 export interface PickupLocationSelection {
   id: number;
@@ -43,6 +45,7 @@ interface CheckoutState {
   subscribe_website: boolean;
   terms_and_condition: boolean;
   vendors: Record<number, VendorExtras>;
+  buyNowItem: CartItem | null;
 }
 
 const initialState: CheckoutState = {
@@ -51,6 +54,7 @@ const initialState: CheckoutState = {
   subscribe_website: false,
   terms_and_condition: false,
   vendors: {},
+  buyNowItem: null,
 };
 
 const checkoutSlice = createSlice({
@@ -128,7 +132,17 @@ const checkoutSlice = createSlice({
         pickup_location: action.payload.location,
       };
     },
-
+    setBuyNowItem: (state, action: PayloadAction<CartItem | null>) => {
+      state.buyNowItem = action.payload;
+    },
+    setBuyNowFulfillment: (
+      state,
+      action: PayloadAction<{ fulfillment: Fulfillment }>,
+    ) => {
+      if (state.buyNowItem) {
+        state.buyNowItem.selectedFulfillment = action.payload.fulfillment;
+      }
+    },
     clearCheckout: () => initialState,
   },
 });
@@ -141,5 +155,7 @@ export const {
   setVendorSubscribeShop,
   setVendorPickupLocation,
   clearCheckout,
+  setBuyNowItem,
+  setBuyNowFulfillment
 } = checkoutSlice.actions;
 export default checkoutSlice.reducer;

@@ -10,20 +10,18 @@ import {
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { useState } from "react";
-import { CgSpinnerTwo } from "react-icons/cg";
 import Modal from "@/Components/Common/Modal";
 import { FaHeart, FaStar } from "react-icons/fa";
 import { LuLoaderPinwheel } from "react-icons/lu";
 import TradeOfferModal from "@/Components/Modals/TradeOfferModal";
 import MessageToSellerModal from "@/Components/Modals/MessageToSellerModal";
 import Link from "next/link";
-import GuestModal from "@/Components/Modals/GuestModal";
 import { useAddFavoriteMutation } from "@/redux/api/productApi";
-import ShippingAddress from "@/Components/Modals/ShippingAddress";
-import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
-import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
-import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/redux/store";
+import { normalizeFulfillment } from "@/lib/fulfillment";
+import { setBuyNowItem } from "@/redux/slices/checkoutSlice";
+import { addToCart } from "@/redux/slices/cartSlice";
 
 type descriptionItem = {
   id: number;
@@ -39,10 +37,12 @@ type descriptionItem = {
   unlimited_stock: boolean;
   out_of_stock: boolean;
   product_quantity: number;
+  images: { image: string }[];
   shop: {
     id: number;
     user_id: number;
     shop_name: string;
+    shop_image: string;
     user: {
       id: number;
       onboarded: boolean;
@@ -68,27 +68,15 @@ interface descriptionProps {
 }
 
 const ProductDescription = ({ data }: descriptionProps) => {
-  // Hook
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { user } = useAuth();
-  const [orderReviewModal, setOrderReviewModal] = useState<boolean>(false);
-  const [shippingAddressOpen, setShippingAddressOpen] =
-    useState<boolean>(false);
-  const [shippingOptionsOpen, setShippingOptionsOpen] =
-    useState<boolean>(false);
-  const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
-  const [formData, setFormData] = useState<any>({});
-  const [shippingMethod, setShippingMethod] = useState("");
-  const [taxData, setTaxData] = useState({});
-  const [successOpen, setSuccessOpen] = useState<boolean>(false);
-  const [fulfillmentType, setFulfillmentType] = useState<string>("");
   const [sellingOption, setSellingOption] = useState<boolean>(Boolean);
 
   // States
   const [id, setId] = useState<number | null>(null);
   const [productId, setProductId] = useState<number | null>(null);
   const [tradeOpen, setTradeOpen] = useState<boolean>(false);
-  const [guestOpen, setGuestOpen] = useState<boolean>(false);
   const [msgOpen, setMsgOpen] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(1);
 
@@ -116,23 +104,50 @@ const ProductDescription = ({ data }: descriptionProps) => {
       });
   };
 
-  // Func for add to cart
-  // const handleAddToCart = (id: number) => {
-  //   if (!user) {
-  //     return toast.error(
-  //       "To continue as a guest, use the 'Buy It Now' button below, or create a free Sustainable Shopper account to use the shopping cart.",
-  //     );
-  //   }
+  const handleAddToCart = () => {
+    const payload = {
+      vendor_id: data?.shop?.user?.id,
+      shop_id: data?.shop?.id,
+      shop_name: data?.shop?.shop_name,
+      shop_image: data?.shop?.shop_image,
 
-  //   addToCartMutation({ productId: id, data: { quantity } })
-  //     .unwrap()
-  //     .then(res => {
-  //       toast.success(res?.message);
-  //     })
-  //     .catch(err => {
-  //       toast.error(err?.data?.message);
-  //     });
-  // };
+      products: [
+        {
+          id: data?.id,
+          name: data?.product_name,
+          image: data?.images?.[0]?.image,
+          price: Number(data?.product_price),
+          quantity: 1,
+          fulfillment: normalizeFulfillment(data.fulfillment),
+        },
+      ],
+    };
+
+    dispatch(addToCart(payload));
+    toast.success("Added to cart");
+  };
+
+  const handleBuyNow = () => {
+    const buyNowItem = {
+      vendor_id: data?.shop?.user?.id,
+      shop_id: data?.shop?.id,
+      shop_name: data?.shop?.shop_name,
+      shop_image: data?.shop?.shop_image,
+      products: [
+        {
+          id: data?.id,
+          name: data?.product_name,
+          image: data?.images?.[0]?.image,
+          price: Number(data?.product_price),
+          quantity: 1,
+          fulfillment: normalizeFulfillment(data.fulfillment),
+        },
+      ],
+    };
+
+    dispatch(setBuyNowItem(buyNowItem));
+    router.push("/checkout?mode=buy-now&step=delivery-options");
+  };
 
   return (
     <>
@@ -160,7 +175,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
       </div>
       <div className="flex gap-5 justify-between items-start mb-5">
         {/* Product Name */}
-        <h3 className="text-lg md:text-xl md:text-2xl font-semibold text-secondary-black">
+        <h3 className="text-lg md:text-xl font-semibold text-secondary-black">
           {data?.product_name}
         </h3>
 
@@ -171,7 +186,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
             (!data?.unlimited_stock && data?.product_quantity === 0) ||
             data?.selling_option === "trade/barter"
           }
-          // onClick={() => handleAddToCart(data?.id)}
+          onClick={() => handleAddToCart()}
           className={`border border-primary-green rounded-lg px-4 py-2 enabled:hover:bg-primary-green enabled:hover:text-accent-white duration-500 transition-all shrink-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:border-gray-300 disabled:bg-gray-100 cursor-pointer`}
         >
           <p className="flex gap-2 items-center">
@@ -280,18 +295,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
       {/* Buy btn */}
       <button
         disabled={!!user || data?.selling_option === "trade/barter"}
-        onClick={() => {
-          setFulfillmentType(data?.fulfillment);
-          setShippingMethod(
-            data?.shop?.user?.onboarded &&
-              (data?.fulfillment === "shipping" ||
-                data?.fulfillment === "both_local_pickup_and_shipping" ||
-                data?.fulfillment === "both_shipping")
-              ? "proceed"
-              : "local",
-          );
-          setShippingOptionsOpen(true);
-        }}
+        onClick={() => handleBuyNow()}
         className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-medium border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
       >
         Buy it now
@@ -359,85 +363,6 @@ const ProductDescription = ({ data }: descriptionProps) => {
       <Modal open={msgOpen} onClose={() => setMsgOpen(false)}>
         <MessageToSellerModal id={id} shopInfo={data} setMsgOpen={setMsgOpen} />
       </Modal>
-
-      <Modal
-        open={shippingOptionsOpen}
-        onClose={() => setShippingOptionsOpen(false)}
-      >
-        <ShippingOptionsModal
-          cart_id={data?.id}
-          userId={data?.shop?.user?.id}
-          membershipType={data?.shop?.user?.membership?.membership_type}
-          fulfillmentType={fulfillmentType}
-          isConnected={data?.shop?.user?.onboarded}
-          shippingMethod={shippingMethod}
-          setShippingMethod={setShippingMethod}
-          setSuccessOpen={setSuccessOpen}
-          onProceed={() => {
-            setShippingOptionsOpen(false);
-            setShippingAddressOpen(true);
-          }}
-          onSuccess={() => {
-            setShippingOptionsOpen(false);
-          }}
-          onClose={() => setShippingOptionsOpen(false)}
-        />
-      </Modal>
-
-      <Modal
-        open={shippingAddressOpen}
-        onClose={() => setShippingAddressOpen(false)}
-      >
-        <ShippingAddress
-          shippingMethod={shippingMethod}
-          setFormData={setFormData}
-          formData={formData}
-          setTaxData={setTaxData}
-          cart_id={data?.id}
-          onNext={() => {
-            setShippingAddressOpen(false);
-            setOrderReviewModal(true);
-          }}
-        />
-      </Modal>
-
-      <Modal open={orderReviewModal} onClose={() => setOrderReviewModal(false)}>
-        <OrderReviewModal
-          setFormData={setFormData}
-          formData={formData}
-          cartItems={[
-            {
-              title: data?.product_name,
-              vendor: data?.shop?.shop_name,
-              price: data?.product_price,
-            },
-          ]}
-          subTotal={+data?.product_price}
-          cart_id={data?.id}
-          taxData={taxData}
-          shop_name={data?.shop?.shop_name}
-          onClose={() => {
-            setOrderReviewModal(false);
-            setShippingAddressOpen(true);
-          }}
-          onProceed={() => {
-            setOrderReviewModal(false);
-            setPaypalOpen(true);
-          }}
-        />
-      </Modal>
-
-      <Modal open={paypalOpen} onClose={() => setPaypalOpen(false)}>
-        <CheckoutPaypalModal
-          cart_id={data?.id}
-          formData={formData}
-          isGuest={true}
-        />
-      </Modal>
-
-      {/* <Modal open={guestOpen} onClose={() => setGuestOpen(false)}>
-        <GuestModal id={data?.id} onClose={() => setGuestOpen(false)} />
-      </Modal> */}
     </>
   );
 };

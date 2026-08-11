@@ -18,7 +18,7 @@ import {
 import { useAddFavoriteMutation } from "@/redux/api/productApi";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/store";
-import { addToCart, CartItem } from "@/redux/slices/cartSlice";
+import { addToCart } from "@/redux/slices/cartSlice";
 import { Fulfillment, normalizeFulfillment } from "@/lib/fulfillment";
 
 type ProductItem = {
@@ -26,7 +26,6 @@ type ProductItem = {
   product_name?: string;
   product_price?: string;
   fulfillment?: Fulfillment[];
-  // fulfillment?: string;
   product_quantity?: number;
   shop?: {
     id: number;

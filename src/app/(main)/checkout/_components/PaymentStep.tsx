@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { buildCheckoutPayload, VendorFormValues } from "@/lib/checkout";
@@ -7,13 +7,26 @@ import toast from "react-hot-toast";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { apiSlice } from "@/redux/api/apiSlice";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { clearCart } from "@/redux/slices/cartSlice";
-import { clearCheckout } from "@/redux/slices/checkoutSlice";
+import { CartItem, clearCart } from "@/redux/slices/cartSlice";
+import { clearCheckout, setBuyNowItem } from "@/redux/slices/checkoutSlice";
 
-const PaymentStep = () => {
+type Props = {
+  items: CartItem[];
+  isBuyNow: boolean;
+};
+
+const PaymentStep = ({ items, isBuyNow }: Props) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { items } = useAppSelector(state => state.cart);
+  const searchParams = useSearchParams();
+  const mode = searchParams.get("mode");
+
+  const buildStepUrl = (step: string) => {
+    const params = new URLSearchParams();
+    params.set("step", step);
+    if (mode) params.set("mode", mode);
+    return `/checkout?${params.toString()}`;
+  };
   const initialOptions = {
     "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
     currency: "USD",
@@ -46,7 +59,7 @@ const PaymentStep = () => {
     <div className="border border-gray-300 rounded-lg p-6 bg-white text-center relative">
       <button
         type="button"
-        onClick={() => router.push("/checkout?step=review-order")}
+        onClick={() => router.push(buildStepUrl("review-order"))}
         className="w-fit mt-3 group rounded-lg px-3 py-2 duration-300 transition-all cursor-pointer hover:bg-gray-100 absolute top-0 left-3"
       >
         <FaArrowLeftLong />
@@ -111,7 +124,11 @@ const PaymentStep = () => {
               if (orderData?.success) {
                 toast.success(orderData?.message);
                 dispatch(apiSlice.util.invalidateTags(["user"]));
-                dispatch(clearCart());
+                if (isBuyNow) {
+                  dispatch(setBuyNowItem(null));
+                } else {
+                  dispatch(clearCart());
+                }
                 dispatch(clearCheckout());
                 router.push(
                   `/order-success?order_id=${orderData?.data?.order_id}`,

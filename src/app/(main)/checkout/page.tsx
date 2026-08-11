@@ -3,7 +3,8 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import Container from "@/Components/Common/Container";
-import { useAppSelector } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { clearCheckout, setBuyNowItem } from "@/redux/slices/checkoutSlice";
 import CheckoutStepper, { CheckoutStep } from "./_components/CheckoutStepper";
 import OrderSummarySidebar from "./_components/OrderSummarySidebar";
 import ReviewStep from "./_components/ReviewStep";
@@ -13,9 +14,13 @@ import DeliveryDetails from "./_components/DeliveryDetails";
 
 const CheckoutContent = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const step = (searchParams.get("step") as CheckoutStep) || "delivery-options";
-  const { items } = useAppSelector(state => state.cart);
+  const isBuyNow = searchParams.get("mode") === "buy-now";
+  const { items: cartItems } = useAppSelector(state => state.cart);
+  const { buyNowItem } = useAppSelector(state => state.checkout);
+  const items = isBuyNow ? (buyNowItem ? [buyNowItem] : []) : cartItems;
   const hasMountedRef = useRef(false);
   const [isResetting, setIsResetting] = useState(true);
 
@@ -24,12 +29,18 @@ const CheckoutContent = () => {
       hasMountedRef.current = true;
 
       if (step !== "delivery-options") {
-        router.replace("/checkout?step=delivery-options");
+        dispatch(clearCheckout());
+        if (isBuyNow) dispatch(setBuyNowItem(null));
+
+        const params = new URLSearchParams();
+        params.set("step", "delivery-options");
+        if (isBuyNow) params.set("mode", "buy-now");
+        router.replace(`/checkout?${params.toString()}`);
         return;
       }
     }
     setIsResetting(false);
-  }, [step, router]);
+  }, [step, router, dispatch, isBuyNow]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -40,9 +51,22 @@ const CheckoutContent = () => {
   if (!items.length) {
     return (
       <Container>
-        <p className="text-center text-secondary-gray text-lg py-20">
-          Your cart is empty.
+        <p className="text-center text-secondary-gray text-lg py-16">
+          {isBuyNow
+            ? "This quick checkout has expired. Please go back and try again."
+            : "Your cart is empty."}
         </p>
+        {isBuyNow && (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer hover:scale-95 transition-all duration-300"
+            >
+              Continue shopping
+            </button>
+          </div>
+        )}
       </Container>
     );
   }
@@ -58,10 +82,12 @@ const CheckoutContent = () => {
       <FormProvider {...methods}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <div className="lg:col-span-8">
-            {step === "delivery-options" && <DeliveryOptions />}
-            {step === "delivery-details" && <DeliveryDetails />}
-            {step === "review-order" && <ReviewStep />}
-            {step === "payment" && <PaymentStep />}
+            {step === "delivery-options" && <DeliveryOptions items={items} />}
+            {step === "delivery-details" && <DeliveryDetails items={items} />}
+            {step === "review-order" && <ReviewStep items={items} />}
+            {step === "payment" && (
+              <PaymentStep items={items} isBuyNow={isBuyNow} />
+            )}
           </div>
 
           <div className="lg:col-span-4 sticky top-40">

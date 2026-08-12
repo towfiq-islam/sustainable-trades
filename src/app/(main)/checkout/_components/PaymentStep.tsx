@@ -9,6 +9,7 @@ import { apiSlice } from "@/redux/api/apiSlice";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { CartItem, clearCart } from "@/redux/slices/cartSlice";
 import { clearCheckout, setBuyNowItem } from "@/redux/slices/checkoutSlice";
+import { PayPalButtonWithSkeleton } from "./PayPalButtonWithSkeleton";
 
 type Props = {
   items: CartItem[];
@@ -56,7 +57,7 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
   });
 
   return (
-    <div className="border border-gray-300 rounded-lg p-6 bg-white text-center relative">
+    <div className="border border-gray-300 rounded-xl p-6 bg-white text-center relative">
       <button
         type="button"
         onClick={() => router.push(buildStepUrl("review-order"))}
@@ -74,13 +75,7 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
       </p>
 
       <PayPalScriptProvider options={initialOptions as any}>
-        <PayPalButtons
-          style={{
-            shape: "rect",
-            layout: "vertical",
-            color: "gold",
-            label: "paypal",
-          }}
+        <PayPalButtonWithSkeleton
           createOrder={async () => {
             try {
               const response = await fetch(
@@ -98,11 +93,16 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
               );
 
               const orderData = await response.json();
+
               if (orderData?.paypal_order_id) {
-                return orderData?.paypal_order_id;
+                return orderData.paypal_order_id;
               }
+
+              throw new Error("Unable to create PayPal order");
             } catch (error) {
-              console.log(error);
+              console.error(error);
+              toast.error("Unable to initialize payment");
+              return undefined;
             }
           }}
           onApprove={async data => {
@@ -120,22 +120,27 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
                   }),
                 },
               );
+
               const orderData = await response.json();
+
               if (orderData?.success) {
                 toast.success(orderData?.message);
                 dispatch(apiSlice.util.invalidateTags(["user"]));
+
                 if (isBuyNow) {
                   dispatch(setBuyNowItem(null));
                 } else {
                   dispatch(clearCart());
                 }
+
                 dispatch(clearCheckout());
-                router.push(
-                  `/order-success?order_id=${orderData?.data?.order_id}`,
+                router.replace(
+                  `/order-success?order_id=${orderData?.data?.id}`,
                 );
               }
             } catch (error) {
               console.error(error);
+              toast.error("Payment capture failed");
             }
           }}
         />

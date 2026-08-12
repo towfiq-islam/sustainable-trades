@@ -1,270 +1,331 @@
 "use client";
-import Link from "next/link";
-import { FaHeart } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa";
-import Container from "@/Components/Common/Container";
-import Product from "@/Components/Common/Product";
-import { ProductSkeleton } from "@/Components/Loader/Loader";
-import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
-import useAuth from "@/Hooks/useAuth";
-import {
-  useGetAllProductsUnderShopQuery,
-  useGetMyFavoriteQuery,
-} from "@/redux/api/productApi";
-import { useGetOrderDetailsQuery } from "@/redux/api/ordersApi";
 import { use } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { IoCheckmarkCircle, IoLocationOutline } from "react-icons/io5";
+import Container from "@/Components/Common/Container";
+import { useGetOrderDetailsQuery } from "@/redux/api/ordersApi";
+import { fulfillmentLabel } from "@/lib/fulfillment";
+import { OrderSuccessSkeleton } from "@/Components/Loader/Loader";
+
+type VendorItem = {
+  id: number;
+  fulfillment_type: string;
+  discount_amount: number;
+  sub_total: number;
+  delivery_amount: number;
+  shipping_amount: number;
+  total_amount: number;
+  tax_amount: number;
+  items: {
+    id: number;
+    product_name: string;
+    quantity: number;
+    total_price: number;
+  }[];
+  shop: {
+    name: string;
+    image: string;
+  };
+  shipping_address: {
+    apt: string;
+    street_address: string;
+    city: string;
+    state: string;
+    postal_code: string;
+  };
+  delivery: {
+    delivery_address: {
+      apt: string;
+      street_address: string;
+      postal_code: string;
+      state: string;
+      city: string;
+    };
+  };
+  pickup: {
+    address: string;
+  };
+};
 
 type Props = {
   searchParams: Promise<{ order_id: number; shop_id: number }>;
 };
 
-export default function Page({ searchParams }: Props) {
-  const { user } = useAuth();
-  const { order_id, shop_id } = use(searchParams);
-  const { data: myFavorites, isLoading: isFavoriteLoading } =
-    useGetMyFavoriteQuery(undefined, { skip: !user });
-  // const { data: singleOrder, isLoading } = useGetOrderDetailsQuery(order_id);
-  // const { data: products, isLoading: isShopLoading } =
-  //   useGetAllProductsUnderShopQuery({
-  //     id: shop_id,
-  //   });
+const getInitials = (name: string) =>
+  name
+    ?.split(" ")
+    .map(w => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase() ?? "";
 
-  // const mapShops = singleOrder?.data?.shop
-  //   ? [
-  //       {
-  //         id: singleOrder.data.shop.id,
-  //         first_name: singleOrder.data.shop.user.first_name,
-  //         last_name: singleOrder.data.shop.user.last_name,
-  //         role: "vendor",
-  //         shop_info: {
-  //           id: singleOrder.data.shop.id,
-  //           user_id: singleOrder.data.shop.user_id,
-  //           shop_name: singleOrder.data.shop.shop_name,
-  //           shop_image: singleOrder.data.shop.shop_image,
-  //           address: {
-  //             ...singleOrder.data.shop.address,
-  //           },
-  //         },
-  //       },
-  //     ]
-  //   : [];
+const STATUS_STEPS = [
+  { key: "pending", label: "Purchase" },
+  { key: "confirmed", label: "Processed" },
+  { key: "completed", label: "Ready" },
+] as const;
+
+const StatusTrail = ({ status }: { status: string }) => {
+  const currentIndex = STATUS_STEPS.findIndex(s => s.key === status);
+  const idx = currentIndex === -1 ? 0 : currentIndex;
+
+  return (
+    <div className="flex items-center gap-1.5 shrink-0">
+      {STATUS_STEPS.map((step, i) => (
+        <div key={step.key} className="flex items-center gap-1.5">
+          <span
+            className={`text-[11px] ${
+              i <= idx ? "text-secondary-gray font-medium" : "text-gray-400"
+            }`}
+          >
+            {step.label}
+          </span>
+          {i < STATUS_STEPS.length - 1 && (
+            <div
+              className={`w-5 h-0.5 rounded-full ${
+                i < idx ? "bg-primary-green" : "bg-gray-200"
+              }`}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default function Page({ searchParams }: Props) {
+  const { order_id } = use(searchParams);
+  const { data: res, isLoading } = useGetOrderDetailsQuery(order_id, {
+    skip: !order_id,
+  });
+  const order = res?.data;
+
+  if (isLoading) {
+    return (
+      <section className="py-12">
+        <Container>
+          <OrderSuccessSkeleton />
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <section className="py-12">
       <Container>
-        {/* Header */}
-        <div className="mb-6 flex gap-3 items-center justify-between">
-          <h1 className="text-3xl font-semibold text-[#222]">
-            Thank You For Your Purchase.
-          </h1>
+        <div className="max-w-3xl mx-auto">
+          {/* Header */}
+          <div className="flex items-start justify-between gap-3 flex-wrap mb-4">
+            <div className="flex items-center gap-2.5">
+              <IoCheckmarkCircle className="text-primary-green text-2xl shrink-0" />
+              <div>
+                <h1 className="text-xl font-semibold text-secondary-black">
+                  Thank you for your purchase
+                </h1>
+                <p className="text-sm text-secondary-gray mt-0.5">
+                  Order {order.order_number} · {order.vendor_count} seller
+                  {order.vendor_count > 1 ? "s" : ""}
+                </p>
+              </div>
+            </div>
 
-          <Link
-            href="/shop"
-            className="rounded-md bg-primary-green cursor-pointer px-5 py-3 font-medium text-white hover:scale-105 duration-300 transition-transform"
-          >
-            Continue Shopping
-          </Link>
-        </div>
+            <Link
+              href="/shop"
+              className="px-4 py-2.5 rounded-lg bg-primary-green text-white text-sm font-medium hover:scale-95 transition-all duration-300 shrink-0"
+            >
+              Continue shopping
+            </Link>
+          </div>
 
-        {/* Order Summary */}
-        <div className="rounded-lg bg-[#F5F5F5] px-6 py-5 shadow-sm">
-          <div className="grid gap-12 lg:grid-cols-2">
-            {/* Left */}
-            <div>
-              <h3 className="mb-1 text-lg font-bold text-secondary-black">
-                Order No.
-              </h3>
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+            <p className="text-[13px] text-secondary-gray leading-relaxed">
+              Your order has been placed and payment confirmed. Each seller will
+              fulfill their part separately — check back here for status updates
+              on every shipment.
+            </p>
+          </div>
 
-              {user ? (
-                <Link
-                  href={`${user?.role === "vendor" ? `/dashboard/${user?.membership?.membership_type}/orders/details/${order_id}` : `/dashboard/customer/orders/${order_id}`}`}
-                  className="mb-5 text-sm font-medium text-secondary-black/60 block hover:underline"
+          {/* Vendor cards */}
+          <div className="space-y-3.5 mb-6">
+            {order.vendor_orders.map((vendorOrder: VendorItem) => {
+              const fulfillment = vendorOrder.fulfillment_type as
+                | "pickup"
+                | "delivery"
+                | "shipping";
+
+              return (
+                <div
+                  key={vendorOrder.id}
+                  className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5"
                 >
-                  {order_id}
-                </Link>
-              ) : (
-                <button className="mb-5 text-sm font-medium text-secondary-black/60 block">
-                  {order_id}
-                </button>
-              )}
-
-              <div className="flex items-center gap-3 mb-5 pb-5 border-b border-gray-300">
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-green text-white">
-                  <FaCheck size={18} />
-                </div>
-                <p className="text-lg font-bold text-primary-green">
-                  Your order has been processed!
-                </p>
-              </div>
-
-              {/* Account holder */}
-              <div className="flex gap-4 items-start mb-4 pb-4 border-b border-gray-300">
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
-                  {/* person icon */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="size-5"
-                  >
-                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-semibold text-[#325b47] mb-1">
-                    If you have a Sustainable Shopper account:
-                  </p>
-                  <p className="text-sm text-gray-600 leading-6">
-                    Go to the Orders tab on your dashboard and find the order
-                    and click View Details. You can track the status of your
-                    order from there.
-                  </p>
-                </div>
-              </div>
-
-              {/* Guest shopper */}
-              <div className="flex gap-4 items-start mb-6 pb-5 border-b border-gray-300">
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
-                  {/* email icon */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="size-5"
-                  >
-                    <rect x="2" y="4" width="20" height="16" rx="2" />
-                    <path d="m2 7 10 7 10-7" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-semibold text-[#325b47] mb-1">
-                    If you were a guest shopper:
-                  </p>
-                  <p className="text-sm text-gray-600 leading-6">
-                    Consider creating a free Sustainable Shopper account{" "}
-                    <Link
-                      href="/auth/register?role=customer"
-                      className="underline font-medium"
-                    >
-                      here.
-                    </Link>{" "}
-                    If not, check your email for order details and updates.
-                  </p>
-                </div>
-              </div>
-
-              {/* Footer message */}
-              <p className="text-gray-700 leading-7">
-                Thank you for choosing to shop local.
-                <br />
-                <span className="flex gap-2 items-center">
-                  Together we rise, together we thrive!
-                  <FaHeart className="text-primary-green" />
-                </span>
-              </p>
-            </div>
-
-            {/* Right */}
-            <div>
-              {/* <div className="overflow-hidden rounded-lg h-[300px] w-full">
-                {mapShops.length > 0 && (
-                  <ShopsMap
-                    height="300px"
-                    shops={mapShops}
-                    shopLoading={isLoading}
-                    shippingDistanceMiles={
-                      singleOrder?.data?.shipping_distance_miles ?? null
-                    }
-                  />
-                )}
-              </div> */}
-
-              {/* Progress */}
-              <div className="mt-5 flex items-center justify-center">
-                <div className="flex w-full max-w-sm items-center justify-between relative">
-                  {/* Connector left */}
-                  <div className="absolute top-5 left-[10%] w-[37%] border-t-2 border-dashed border-[#325b47]" />
-                  {/* Connector right */}
-                  <div className="absolute top-5 left-[53%] w-[37%] border-t-2 border-dashed border-gray-300" />
-
-                  {/* Step 1 — Purchased */}
-                  <div className="flex flex-col items-center z-10">
-                    <div className="flex size-10 items-center justify-center rounded-full bg-[#325b47] text-white">
-                      <FaCheck />
+                  <div className="flex justify-between items-start flex-wrap gap-3 mb-3">
+                    <div className="flex items-center gap-2.5">
+                      {vendorOrder.shop?.image ? (
+                        <figure className="size-9 rounded-full border border-gray-100 relative shrink-0 bg-gray-100 overflow-hidden">
+                          <Image
+                            src={`${process.env.NEXT_PUBLIC_SITE_URL}/${vendorOrder.shop.image}`}
+                            alt={vendorOrder.shop.name}
+                            fill
+                            unoptimized
+                            className="object-cover"
+                          />
+                        </figure>
+                      ) : (
+                        <div className="size-9 rounded-full bg-primary-green/10 flex items-center justify-center font-semibold text-[13px] text-primary-green shrink-0">
+                          {getInitials(vendorOrder.shop?.name)}
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-semibold text-[14px] text-secondary-black">
+                          {vendorOrder.shop?.name}
+                        </p>
+                        <p className="text-xs text-secondary-gray">
+                          {fulfillmentLabel[fulfillment] ?? fulfillment}
+                        </p>
+                      </div>
                     </div>
-                    <span className="mt-2 text-xs text-gray-500">
-                      Purchased
-                    </span>
+
+                    {/* <StatusTrail status={vendorOrder.status} /> */}
                   </div>
 
-                  {/* Step 2 — Shipped */}
-                  <div className="flex flex-col items-center z-10">
-                    <div className="flex size-10 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="size-5"
+                  {/* Delivery / pickup detail */}
+                  {fulfillment === "delivery" &&
+                    vendorOrder.delivery?.delivery_address && (
+                      <p className="flex items-start gap-1.5 text-[13px] text-secondary-gray mb-3">
+                        <IoLocationOutline className="text-primary-green shrink-0 mt-0.5" />
+                        <span>
+                          {vendorOrder.delivery.delivery_address.street_address}
+                          {vendorOrder.delivery.delivery_address.apt
+                            ? `, ${vendorOrder.delivery.delivery_address.apt}`
+                            : ""}
+                          , {vendorOrder.delivery.delivery_address.city},{" "}
+                          {vendorOrder.delivery.delivery_address.state}{" "}
+                          {vendorOrder.delivery.delivery_address.postal_code}
+                        </span>
+                      </p>
+                    )}
+
+                  {fulfillment === "shipping" &&
+                    vendorOrder.shipping_address && (
+                      <p className="flex items-start gap-1.5 text-[13px] text-secondary-gray mb-3">
+                        <IoLocationOutline className="text-primary-green shrink-0 mt-0.5" />
+                        <span>
+                          {vendorOrder.shipping_address.street_address}
+                          {vendorOrder.shipping_address.apt
+                            ? `, ${vendorOrder.shipping_address.apt}`
+                            : ""}
+                          , {vendorOrder.shipping_address.city},{" "}
+                          {vendorOrder.shipping_address.state}{" "}
+                          {vendorOrder.shipping_address.postal_code}
+                        </span>
+                      </p>
+                    )}
+
+                  {fulfillment === "pickup" && vendorOrder.pickup?.address && (
+                    <p className="flex items-start gap-1.5 text-[13px] text-secondary-gray mb-3">
+                      <IoLocationOutline className="text-primary-green shrink-0 mt-0.5" />
+                      <span>{vendorOrder.pickup.address}</span>
+                    </p>
+                  )}
+
+                  {/* Line items */}
+                  <div className="space-y-1 mb-3">
+                    {vendorOrder.items.map(item => (
+                      <div
+                        key={item.id}
+                        className="flex justify-between text-[13px] text-secondary-black"
                       >
-                        <path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" />
-                        <circle cx="5.5" cy="18.5" r="1.5" />
-                        <circle cx="18.5" cy="18.5" r="1.5" />
-                      </svg>
-                    </div>
-                    <span className="mt-2 text-xs text-gray-500">Shipped</span>
+                        <span>
+                          {item.product_name} x{item.quantity}
+                        </span>
+                        <span>${item.total_price.toFixed(2)}</span>
+                      </div>
+                    ))}
                   </div>
 
-                  {/* Step 3 — Delivered */}
-                  <div className="flex flex-col items-center z-10">
-                    <div className="size-10 rounded-full bg-off-green/70" />
-                    <span className="mt-2 text-xs text-gray-500">
-                      Delivered
+                  {/* Vendor pricing breakdown */}
+                  <div className="space-y-1 pt-2 border-t border-gray-100">
+                    <div className="flex justify-between text-xs text-secondary-gray">
+                      <span>Subtotal</span>
+                      <span>${vendorOrder.sub_total.toFixed(2)}</span>
+                    </div>
+                    {vendorOrder.discount_amount > 0 && (
+                      <div className="flex justify-between text-xs text-primary-green">
+                        <span>Discount</span>
+                        <span>-${vendorOrder.discount_amount.toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-xs text-secondary-gray">
+                      <span>Tax</span>
+                      <span>${vendorOrder.tax_amount.toFixed(2)}</span>
+                    </div>
+                    {vendorOrder.shipping_amount > 0 && (
+                      <div className="flex justify-between text-xs text-secondary-gray">
+                        <span>Shipping</span>
+                        <span>${vendorOrder.shipping_amount.toFixed(2)}</span>
+                      </div>
+                    )}
+                    {vendorOrder.delivery_amount > 0 && (
+                      <div className="flex justify-between text-xs text-secondary-gray">
+                        <span>Delivery</span>
+                        <span>${vendorOrder.delivery_amount.toFixed(2)}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex justify-between items-center border-t border-gray-100 pt-2.5 mt-2">
+                    <span className="text-[13px] font-medium text-secondary-gray">
+                      Order total
+                    </span>
+                    <span className="font-semibold text-secondary-black">
+                      ${vendorOrder.total_amount.toFixed(2)}
                     </span>
                   </div>
                 </div>
+              );
+            })}
+          </div>
+
+          {/* Overall totals */}
+          <div className="border-t border-gray-200 pt-4 space-y-1.5">
+            <div className="flex justify-between text-sm text-secondary-gray">
+              <span>Subtotal</span>
+              <span>${order.sub_total.toFixed(2)}</span>
+            </div>
+            {order.discount_amount > 0 && (
+              <div className="flex justify-between text-sm text-primary-green">
+                <span>Discount</span>
+                <span>-${order.discount_amount.toFixed(2)}</span>
               </div>
+            )}
+            <div className="flex justify-between text-sm text-secondary-gray">
+              <span>Tax</span>
+              <span>${order.tax_amount.toFixed(2)}</span>
+            </div>
+            {order.shipping_amount > 0 && (
+              <div className="flex justify-between text-sm text-secondary-gray">
+                <span>Shipping</span>
+                <span>${order.shipping_amount.toFixed(2)}</span>
+              </div>
+            )}
+            {order.delivery_amount > 0 && (
+              <div className="flex justify-between text-sm text-secondary-gray">
+                <span>Delivery</span>
+                <span>${order.delivery_amount.toFixed(2)}</span>
+              </div>
+            )}
+
+            <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+              <span className="text-primary-green font-semibold">
+                Total paid
+              </span>
+              <span className="text-lg font-semibold text-secondary-black">
+                ${order.total_amount.toFixed(2)}
+              </span>
             </div>
           </div>
         </div>
-
-        {/* Saved Items */}
-        {user && (
-          <div className="mt-10">
-            <h2 className="text-xl font-semibold">Your Saved Items</h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-5">
-              {isFavoriteLoading ? (
-                [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
-              ) : myFavorites?.data?.length > 0 ? (
-                myFavorites?.data?.slice(0, 4)?.map((item: any) => (
-                  <Product
-                    key={item?.id}
-                    is_feathered={false}
-                    product={
-                      {
-                        id: item?.product?.id,
-                        product_name: item?.product?.product_name,
-                        product_quantity: item?.product?.product_quantity,
-                        product_price: item?.product?.product_price,
-                        out_of_stock: item?.product?.out_of_stock,
-                        unlimited_stock: item?.product?.unlimited_stock,
-                        is_favorite: item?.product?.is_favorite,
-                        selling_option: item?.product?.selling_option,
-                        images: item?.product?.images || [],
-                      } as any
-                    }
-                  />
-                ))
-              ) : (
-                <p className="text-gray-500 text-center col-span-full">
-                  No products found in your wishlist.
-                </p>
-              )}
-            </div>
-          </div>
-        )}
       </Container>
     </section>
   );

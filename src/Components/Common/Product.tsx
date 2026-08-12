@@ -46,7 +46,6 @@ type ProductItem = {
 type Props = {
   product: ProductItem;
   is_feathered?: boolean;
-  has_wishlist?: boolean;
   has_cart?: boolean;
   has_slider?: boolean;
   isMiles?: boolean;
@@ -55,7 +54,6 @@ type Props = {
 const Product = ({
   product,
   is_feathered = false,
-  has_wishlist = true,
   has_cart = true,
   isMiles = false,
 }: Props) => {
@@ -109,23 +107,21 @@ const Product = ({
   return (
     <div className="rounded-t-lg relative">
       {/* Wishlist btn */}
-      {has_wishlist && (
-        <button
-          onClick={() => handleAddFavorite(product?.id)}
-          className="absolute z-40 top-4 right-5 size-9 rounded-full border border-gray-300 grid place-items-center bg-primary-green cursor-pointer"
-        >
-          {isPending ? (
-            <LuLoaderPinwheel className="animate-spin text-white" />
-          ) : (
-            <FaHeart
-              className={`${
-                product?.is_favorite ? "text-accent-red" : "text-accent-white"
-              }`}
-            />
-          )}
-        </button>
-      )}
-
+      <button
+        onClick={() => handleAddFavorite(product?.id)}
+        className="absolute z-40 top-4 right-5 size-9 rounded-full grid place-items-center bg-primary-green cursor-pointer"
+      >
+        {isPending ? (
+          <LuLoaderPinwheel className="animate-spin text-white" />
+        ) : (
+          <FaHeart
+            className={`${
+              product?.is_favorite ? "text-accent-red" : "text-accent-white"
+            }`}
+          />
+        )}
+      </button>
+      
       {/* Stock Info */}
       {product?.unlimited_stock ? (
         <button className="absolute top-3 left-3 shadow-lg font-medium px-3 py-1 rounded-full bg-primary-green text-white z-10 text-sm">

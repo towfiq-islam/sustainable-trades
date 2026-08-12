@@ -919,3 +919,97 @@ export const LocationRowSkeleton = () => (
     </div>
   </div>
 );
+
+const Bar = ({ className = "" }: { className?: string }) => (
+  <div className={`bg-gray-200 rounded animate-pulse ${className}`} />
+);
+
+const VendorCardSkeleton = () => (
+  <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5">
+    <div className="flex justify-between items-start flex-wrap gap-3 mb-3">
+      <div className="flex items-center gap-2.5">
+        <div className="size-9 rounded-full bg-gray-200 animate-pulse shrink-0" />
+        <div className="space-y-1.5">
+          <Bar className="h-3.5 w-32" />
+          <Bar className="h-3 w-20" />
+        </div>
+      </div>
+      <Bar className="h-3 w-28" />
+    </div>
+
+    <Bar className="h-3 w-3/5 mb-3" />
+
+    <div className="space-y-2 mb-3">
+      <div className="flex justify-between">
+        <Bar className="h-3 w-40" />
+        <Bar className="h-3 w-10" />
+      </div>
+      <div className="flex justify-between">
+        <Bar className="h-3 w-32" />
+        <Bar className="h-3 w-10" />
+      </div>
+    </div>
+
+    <div className="space-y-2 pt-2 border-t border-gray-100">
+      <div className="flex justify-between">
+        <Bar className="h-3 w-16" />
+        <Bar className="h-3 w-10" />
+      </div>
+      <div className="flex justify-between">
+        <Bar className="h-3 w-10" />
+        <Bar className="h-3 w-10" />
+      </div>
+    </div>
+
+    <div className="flex justify-between items-center border-t border-gray-100 pt-2.5 mt-2">
+      <Bar className="h-3.5 w-20" />
+      <Bar className="h-4 w-14" />
+    </div>
+  </div>
+);
+
+export const OrderSuccessSkeleton = () => {
+  return (
+    <div className="max-w-3xl mx-auto">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 flex-wrap mb-4">
+        <div className="flex items-center gap-2.5">
+          <div className="size-6 rounded-full bg-gray-200 animate-pulse shrink-0" />
+          <div className="space-y-1.5">
+            <Bar className="h-5 w-56" />
+            <Bar className="h-3 w-40" />
+          </div>
+        </div>
+        <Bar className="h-10 w-36 rounded-lg" />
+      </div>
+
+      {/* Info banner */}
+      <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-2">
+        <Bar className="h-3 w-full" />
+        <Bar className="h-3 w-4/5" />
+      </div>
+
+      {/* Vendor cards */}
+      <div className="mb-6">
+        <VendorCardSkeleton />
+      </div>
+
+      {/* Overall totals */}
+      <div className="border-t border-gray-200 pt-4 space-y-2.5">
+        <div className="flex justify-between">
+          <Bar className="h-3.5 w-16" />
+          <Bar className="h-3.5 w-12" />
+        </div>
+        <div className="flex justify-between">
+          <Bar className="h-3.5 w-10" />
+          <Bar className="h-3.5 w-12" />
+        </div>
+        <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+          <Bar className="h-4 w-20" />
+          <Bar className="h-7 w-24" />
+        </div>
+      </div>
+    </div>
+  );
+};
+

@@ -31,7 +31,6 @@ const MoreProduct = ({ data }: moreProductProps) => {
             <Product
               key={product?.id}
               product={product}
-              has_wishlist={false}
               has_cart={false}
             />
           ))}

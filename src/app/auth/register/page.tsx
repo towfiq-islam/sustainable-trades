@@ -27,12 +27,18 @@ type formData = {
 };
 
 type Props = {
-  searchParams: Promise<{ role: string }>;
+  searchParams: Promise<{ role: string; redirect?: string }>;
 };
 
 export default function page({ searchParams }: Props) {
   const router = useRouter();
-  const { role: selected_role } = use(searchParams);
+  const { role: selected_role, redirect: rawRedirect } = use(searchParams);
+  const redirectTo = rawRedirect
+    ? rawRedirect.startsWith("/")
+      ? rawRedirect
+      : `/${rawRedirect}`
+    : null;
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
@@ -58,7 +64,11 @@ export default function page({ searchParams }: Props) {
       const res = await registrationMutation(payload).unwrap();
       if (res?.success) {
         toast.success(res?.message);
-        router.push("/auth/login");
+        router.push(
+          redirectTo
+            ? `/auth/login?redirect=${encodeURIComponent(redirectTo)}`
+            : "/auth/login",
+        );
       }
     } catch (err: any) {
       toast.error(err?.data?.message);
@@ -219,7 +229,7 @@ export default function page({ searchParams }: Props) {
                   htmlFor="terms"
                   className="text-secondary-black text-sm md:text-base  max-w-[550px]"
                 >
-                  By continuing you agree to Sustainable Trade’s Terms of Use
+                  By continuing you agree to Sustainable Trade's Terms of Use
                   and Privacy Policy.
                   <Link
                     href="/help/terms-and-conditions"
@@ -263,7 +273,11 @@ export default function page({ searchParams }: Props) {
             <p>Already have an account?</p>
             <Link
               className="text-primary-green font-semibold underline"
-              href="/auth/login"
+              href={
+                redirectTo
+                  ? `/auth/login?redirect=${encodeURIComponent(redirectTo)}`
+                  : "/auth/login"
+              }
             >
               Sign In
             </Link>

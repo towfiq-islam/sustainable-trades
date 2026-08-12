@@ -5,6 +5,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import Container from "@/Components/Common/Container";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { clearCheckout, setBuyNowItem } from "@/redux/slices/checkoutSlice";
+import useAuth from "@/Hooks/useAuth";
 import CheckoutStepper, { CheckoutStep } from "./_components/CheckoutStepper";
 import OrderSummarySidebar from "./_components/OrderSummarySidebar";
 import ReviewStep from "./_components/ReviewStep";
@@ -18,11 +19,29 @@ const CheckoutContent = () => {
   const searchParams = useSearchParams();
   const step = (searchParams.get("step") as CheckoutStep) || "delivery-options";
   const isBuyNow = searchParams.get("mode") === "buy-now";
+  const { isAuthenticated } = useAuth();
   const { items: cartItems } = useAppSelector(state => state.cart);
   const { buyNowItem } = useAppSelector(state => state.checkout);
   const items = isBuyNow ? (buyNowItem ? [buyNowItem] : []) : cartItems;
   const hasMountedRef = useRef(false);
   const [isResetting, setIsResetting] = useState(true);
+  const [checkoutMode, setCheckoutMode] = useState<
+    "guest" | "authenticated" | null
+  >(isAuthenticated ? "authenticated" : null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setCheckoutMode("authenticated");
+      return;
+    }
+    const saved = sessionStorage.getItem("checkout_guest_mode");
+    if (saved === "guest") setCheckoutMode("guest");
+  }, [isAuthenticated]);
+
+  const handleContinueAsGuest = () => {
+    sessionStorage.setItem("checkout_guest_mode", "guest");
+    setCheckoutMode("guest");
+  };
 
   useEffect(() => {
     if (!hasMountedRef.current) {
@@ -56,6 +75,7 @@ const CheckoutContent = () => {
             ? "This quick checkout has expired. Please go back and try again."
             : "Your cart is empty."}
         </p>
+
         {isBuyNow && (
           <div className="text-center">
             <button
@@ -67,6 +87,46 @@ const CheckoutContent = () => {
             </button>
           </div>
         )}
+      </Container>
+    );
+  }
+
+  if (!checkoutMode) {
+    return (
+      <Container>
+        <div className="max-w-md mx-auto text-center py-16">
+          <h2 className="text-xl font-semibold text-secondary-black mb-2">
+            How would you like to check out?
+          </h2>
+          <p className="text-secondary-gray text-sm mb-8">
+            You can check out as a guest, or sign in for faster checkout and
+            order tracking.
+          </p>
+
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={handleContinueAsGuest}
+              className="w-full py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer hover:scale-95 transition-all duration-300"
+            >
+              Continue as guest
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                router.push(
+                  `/auth/login?redirect=${encodeURIComponent(
+                    `/checkout${isBuyNow ? "?mode=buy-now" : ""}`,
+                  )}`,
+                )
+              }
+              className="w-full py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
+            >
+              Sign in to your account
+            </button>
+          </div>
+        </div>
       </Container>
     );
   }

@@ -3,10 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import magic from "@/Assets/magic.png";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import welcomeBg from "@/Assets/welcome.jpg";
 import { IoArrowBackOutline } from "react-icons/io5";
+
 const data = [
   {
     id: 1,
@@ -34,19 +35,31 @@ const data = [
 
 const Page = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const rawRedirect = searchParams.get("redirect");
+  const redirectTo = rawRedirect
+    ? rawRedirect.startsWith("/")
+      ? rawRedirect
+      : `/${rawRedirect}`
+    : null;
+
   const [selectedRole, setSelectedRole] = useState<null | string>(null);
+
   const handleStartedBtnClicked = () => {
     if (!selectedRole) {
       return toast.error("Please select a package");
-    } else {
-      router.push(
-        `${
-          selectedRole === "magic_maker"
-            ? "/auth/create-shop"
-            : `/auth/register?role=${selectedRole}`
-        }`,
-      );
     }
+
+    if (selectedRole === "magic_maker") {
+      router.push("/auth/create-shop");
+      return;
+    }
+
+    router.push(
+      redirectTo
+        ? `/auth/register?role=${selectedRole}&redirect=${encodeURIComponent(redirectTo)}`
+        : `/auth/register?role=${selectedRole}`,
+    );
   };
 
   return (
@@ -147,7 +160,11 @@ const Page = () => {
             <p className="">Already have an account?</p>
             <Link
               className="text-primary-green font-semibold underline"
-              href="/auth/login"
+              href={
+                redirectTo
+                  ? `/auth/login?redirect=${encodeURIComponent(redirectTo)}`
+                  : "/auth/login"
+              }
             >
               Sign In
             </Link>

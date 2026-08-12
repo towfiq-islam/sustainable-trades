@@ -134,7 +134,9 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
                 }
 
                 dispatch(clearCheckout());
-                router.push(`/order-success?order_id=${orderData?.data?.id}`);
+                router.replace(
+                  `/order-success?order_id=${orderData?.data?.id}`,
+                );
               }
             } catch (error) {
               console.error(error);

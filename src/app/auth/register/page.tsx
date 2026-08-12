@@ -80,8 +80,8 @@ export default function page({ searchParams }: Props) {
       {/* Left - Form */}
       <div className="flex-1 grid place-items-center side-scrollbar ">
         <div className="w-full 2xl:w-[750px] mx-auto p-5 xl:p-10">
-          <h2 className="text-xl md:text-2xl xl:text-4xl 2xl:text-5xl font-semibold text-secondary-black mb-7">
-            Welcome,
+          <h2 className="text-xl md:text-2xl xl:text-4xl font-medium text-secondary-black mb-7">
+            Welcome,{" "}
             <span className="text-primary-green">
               {selected_role === "magic_maker"
                 ? "Magic Maker!"
@@ -220,7 +220,7 @@ export default function page({ searchParams }: Props) {
                 <input
                   id="terms"
                   type="checkbox"
-                  className="mt-1 size-5"
+                  className="mt-1 size-4 cursor-pointer accent-primary-green"
                   {...register("agree_to_terms", {
                     required: "You must agree to the terms and conditions",
                   })}

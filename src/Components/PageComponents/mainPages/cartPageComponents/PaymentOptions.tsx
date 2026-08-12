@@ -49,8 +49,7 @@ const PaymentOptions = () => {
                   available delivery option for each seller. Available options
                   may include Local Pickup, Local Delivery, or Shipping.
                   Shipping or delivery fees and taxes will be calculated based
-                  on your selections. This prepares the shopper before they
-                  reach the next screen.
+                  on your selections.
                 </p>
               </div>
             </div>

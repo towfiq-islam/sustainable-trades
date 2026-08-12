@@ -87,8 +87,14 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
 
       {hasPricing ? (
         <>
+          {totalDiscount > 0 && (
+            <div className="flex justify-between text-sm text-primary-green -mt-2">
+              <span>Discount</span>
+              <span>-${totalDiscount.toFixed(2)}</span>
+            </div>
+          )}
           <div className="flex justify-between text-sm text-secondary-gray -mt-2">
-            <span>Tax</span>
+            <span>Sales Tax</span>
             <span>${master.tax_amount.toFixed(2)}</span>
           </div>
           {master.shipping_amount > 0 && (
@@ -99,14 +105,8 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
           )}
           {master.delivery_amount > 0 && (
             <div className="flex justify-between text-sm text-secondary-gray -mt-2">
-              <span>Delivery</span>
+              <span>Local Delivery Fee</span>
               <span>${master.delivery_amount.toFixed(2)}</span>
-            </div>
-          )}
-          {totalDiscount > 0 && (
-            <div className="flex justify-between text-sm text-primary-green -mt-2">
-              <span>Discount</span>
-              <span>-${totalDiscount.toFixed(2)}</span>
             </div>
           )}
         </>

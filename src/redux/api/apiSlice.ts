@@ -55,7 +55,9 @@ export const apiSlice = createApi({
     "rate",
     "cart",
     "pickup-locations",
+    "delivery-origin",
     "dynamic-pages",
+    "delivery-range",
   ],
 
   endpoints: () => ({}),

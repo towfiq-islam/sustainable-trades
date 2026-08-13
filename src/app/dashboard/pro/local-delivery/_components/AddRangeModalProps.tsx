@@ -3,6 +3,10 @@ import { useState } from "react";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { FiInfo } from "react-icons/fi";
 import { DeliveryRange } from "./LocalDelivery";
+import {
+  useAddDeliveryRangeMutation,
+  useEditDeliveryRangeMutation,
+} from "@/redux/api/vendorApi";
 
 interface AddRangeModalProps {
   initialRange: DeliveryRange | null;
@@ -47,6 +51,10 @@ export function AddRangeModal({
   onClose,
   onSave,
 }: AddRangeModalProps) {
+  const [addDeliveryRange, { isLoading: isAdding }] =
+    useAddDeliveryRangeMutation();
+  const [editDeliveryRange, { isLoading: isEditing }] =
+    useEditDeliveryRangeMutation();
   const [minMiles, setMinMiles] = useState(
     initialRange ? String(initialRange.minMiles) : "",
   );

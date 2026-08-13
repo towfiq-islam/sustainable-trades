@@ -18,6 +18,11 @@ import {
 import Link from "next/link";
 import { FaLightbulb } from "react-icons/fa";
 import Modal from "@/Components/Common/Modal";
+import {
+  useDeleteDeliveryRangeMutation,
+  useGetDeliveryOriginQuery,
+  useGetDeliveryRangesQuery,
+} from "@/redux/api/vendorApi";
 
 const INITIAL_ORIGIN: DeliveryOrigin = {
   street: "123 Craft Lane",
@@ -58,6 +63,13 @@ function InfoCard({
 }
 
 export default function LocalDeliverySettingsPage() {
+  const { data: deliveryOrigin, isLoading: isOriginLoading } =
+    useGetDeliveryOriginQuery({});
+  const { data: deliveryRanges, isLoading: isRangesLoading } =
+    useGetDeliveryRangesQuery({});
+  const [deleteDeliveryRange, { isLoading: isDeleting }] =
+    useDeleteDeliveryRangeMutation();
+
   const [origin, setOrigin] = useState<DeliveryOrigin>(INITIAL_ORIGIN);
   const [ranges, setRanges] = useState<DeliveryRange[]>(INITIAL_RANGES);
   const [isOriginModalOpen, setIsOriginModalOpen] = useState(false);

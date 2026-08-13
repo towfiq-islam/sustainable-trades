@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { FiInfo } from "react-icons/fi";
 import toast from "react-hot-toast";
-import { DeliveryRange } from "../../../../../Types/LocalDelivery";
+import { DeliveryRange } from "@/Types/LocalDelivery";
 import {
   useAddDeliveryRangeMutation,
   useEditDeliveryRangeMutation,
@@ -14,36 +15,26 @@ interface AddRangeModalProps {
   onClose: () => void;
 }
 
-export function Field({
-  label,
-  required,
-  error,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  error?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <label className="mb-1.5 block text-sm font-semibold text-neutral-900">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      {children}
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
-    </div>
-  );
-}
+export type DeliveryRangeFormValues = {
+  minMiles: string;
+  maxMiles: string;
+  fee: string;
+};
 
-export function inputClass(hasError: boolean) {
-  return [
-    "w-full rounded-lg border px-3 py-2.5 text-sm text-neutral-900",
-    "placeholder:text-neutral-400 focus:outline-none focus:ring-2",
-    hasError
-      ? "border-red-400 focus:ring-red-200"
-      : "border-neutral-300 focus:border-emerald-700 focus:ring-emerald-100",
-  ].join(" ");
+const DEFAULT_VALUES: DeliveryRangeFormValues = {
+  minMiles: "",
+  maxMiles: "",
+  fee: "",
+};
+
+function toFormValues(range?: DeliveryRange | null): DeliveryRangeFormValues {
+  if (!range) return DEFAULT_VALUES;
+
+  return {
+    minMiles: String(range.minMiles),
+    maxMiles: String(range.maxMiles),
+    fee: String(range.fee),
+  };
 }
 
 export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
@@ -52,41 +43,26 @@ export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
   const [editDeliveryRange, { isLoading: isEditing }] =
     useEditDeliveryRangeMutation();
 
-  const [minMiles, setMinMiles] = useState(
-    initialRange ? String(initialRange.minMiles) : "",
-  );
-  const [maxMiles, setMaxMiles] = useState(
-    initialRange ? String(initialRange.maxMiles) : "",
-  );
-  const [fee, setFee] = useState(initialRange ? String(initialRange.fee) : "");
-  const [error, setError] = useState<string | null>(null);
-
   const isSaving = isAdding || isEditing;
 
-  async function handleSubmit() {
-    const min = Number(minMiles);
-    const max = Number(maxMiles);
-    const feeValue = Number(fee || 0);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<DeliveryRangeFormValues>({
+    defaultValues: toFormValues(initialRange),
+  });
 
-    if (
-      minMiles === "" ||
-      maxMiles === "" ||
-      Number.isNaN(min) ||
-      Number.isNaN(max)
-    ) {
-      setError("Please enter both a minimum and maximum distance.");
-      return;
-    }
-    if (max <= min) {
-      setError("Max distance must be greater than min distance.");
-      return;
-    }
-    if (Number.isNaN(feeValue) || feeValue < 0) {
-      setError("Please enter a valid delivery fee.");
-      return;
-    }
+  useEffect(() => {
+    reset(toFormValues(initialRange));
+  }, [initialRange, reset]);
 
-    setError(null);
+  const onSubmit = async (values: DeliveryRangeFormValues) => {
+    const min = Number(values.minMiles);
+    const max = Number(values.maxMiles);
+    const feeValue = Number(values.fee || 0);
 
     const payload = {
       min_distance: min,
@@ -110,12 +86,12 @@ export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
     } catch (err: any) {
       toast.error(err?.data?.message ?? "Something went wrong");
     }
-  }
+  };
 
   return (
     <div>
-      <h2 className="text-xl font-extrabold tracking-wide text-neutral-900 mb-5 flex items-start justify-between border-b border-neutral-200 pb-4">
-        {initialRange ? "EDIT DELIVERY RANGE" : "ADD DELIVERY RANGE"}
+      <h2 className="text-2xl font-semibold tracking-wide text-secondary-black mb-3 flex items-start justify-between border-b border-neutral-200 pb-2">
+        {initialRange ? "Edit Delivery Range" : "Add Delivery Range"}
       </h2>
 
       <p className="text-[15px] leading-relaxed text-neutral-600">
@@ -123,11 +99,16 @@ export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
         origin. You can create as many ranges as you need.
       </p>
 
-      <div className="mt-5 space-y-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="mt-5 space-y-4"
+      >
         <div>
-          <span className="mb-2 block text-sm font-semibold text-neutral-900">
+          <label className="mb-2 block text-sm font-semibold text-neutral-900">
             Distance Range <span className="text-red-500">*</span>
-          </span>
+          </label>
+
           <div className="flex items-center gap-3">
             <div className="flex-1">
               <label className="mb-1 block text-xs font-medium text-neutral-500">
@@ -136,13 +117,18 @@ export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
               <input
                 type="number"
                 min={0}
-                placeholder="e.g., 0"
-                value={minMiles}
-                onChange={e => setMinMiles(e.target.value)}
-                className={inputClass(!!error)}
+                placeholder="e.g. 0"
+                className={`w-full border rounded-lg px-3.5 py-2.5 text-sm outline-none ${
+                  errors.minMiles
+                    ? "border-red-500 placeholder:text-red-500"
+                    : "border-gray-300"
+                }`}
+                {...register("minMiles", { required: true })}
               />
             </div>
+
             <span className="mt-5 text-neutral-400">–</span>
+
             <div className="flex-1">
               <label className="mb-1 block text-xs font-medium text-neutral-500">
                 Max Distance (miles)
@@ -150,18 +136,25 @@ export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
               <input
                 type="number"
                 min={0}
-                placeholder="e.g., 10"
-                value={maxMiles}
-                onChange={e => setMaxMiles(e.target.value)}
-                className={inputClass(!!error)}
+                placeholder="e.g. 10"
+                className={`w-full border rounded-lg px-3.5 py-2.5 text-sm outline-none ${
+                  errors.maxMiles
+                    ? "border-red-500 placeholder:text-red-500"
+                    : "border-gray-300"
+                }`}
+                {...register("maxMiles", { required: true })}
               />
             </div>
           </div>
         </div>
 
-        <Field label="Delivery Fee" required>
+        <div>
+          <label className="block text-sm font-medium text-secondary-black mb-1.5">
+            Delivery Fee <span className="text-red-500">*</span>
+          </label>
+
           <div className="relative">
-            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500">
+            <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500">
               $
             </span>
             <input
@@ -169,25 +162,26 @@ export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
               min={0}
               step="0.01"
               placeholder="0.00"
-              value={fee}
-              onChange={e => setFee(e.target.value)}
-              className={`${inputClass(false)} pl-7`}
+              className={`w-full border rounded-lg pl-7 pr-3.5 py-2.5 text-sm outline-none ${
+                errors.fee
+                  ? "border-red-500 placeholder:text-red-500"
+                  : "border-gray-300"
+              }`}
+              {...register("fee", { required: true })}
             />
           </div>
-        </Field>
-
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        </div>
 
         <button
-          onClick={handleSubmit}
+          type="submit"
           disabled={isSaving}
-          className="w-full rounded-lg bg-emerald-900 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+          className="w-full rounded-lg bg-primary-green py-3 text-sm font-semibold text-white transition-transform hover:scale-[0.98] duration-300 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
           {isSaving ? "Saving..." : "Save Range"}
         </button>
 
         <div className="flex items-start gap-3 rounded-xl bg-neutral-50 p-4">
-          <span className="mt-0.5 text-emerald-800">
+          <span className="mt-0.5 text-primary-green">
             <HiOutlineLightBulb className="h-4 w-4" />
           </span>
           <div>
@@ -203,7 +197,7 @@ export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
         </div>
 
         <div className="flex items-start gap-3 rounded-xl bg-neutral-50 p-4">
-          <span className="mt-0.5 text-emerald-800">
+          <span className="mt-0.5 text-primary-green">
             <FiInfo className="h-4 w-4" />
           </span>
           <div>
@@ -217,7 +211,7 @@ export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
             </p>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

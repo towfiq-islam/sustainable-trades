@@ -6,8 +6,7 @@ import { FiMapPin } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
 import { useAddDeliveryOriginMutation } from "@/redux/api/vendorApi";
-import { DeliveryOrigin } from "../../../../../Types/LocalDelivery";
-
+import { DeliveryOrigin } from "@/Types/LocalDelivery";
 const US_COUNTRY_CODE = "US";
 const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
 
@@ -246,11 +245,7 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
           disabled={isSaving || isGeocoding}
           className="w-full rounded-lg bg-primary-green py-3 text-sm font-semibold text-white transition-transform hover:scale-[0.98] duration-300 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
-          {isGeocoding
-            ? "Verifying address..."
-            : isSaving
-              ? "Saving..."
-              : "Save Address"}
+          {isGeocoding || isSaving ? "Saving..." : "Save Address"}
         </button>
 
         <div className="flex items-start gap-3 border border-off-green/30 bg-off-green/30 rounded-lg px-3 py-3.5">

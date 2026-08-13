@@ -16,7 +16,7 @@ import {
   formatFee,
   mapApiOriginToOrigin,
   mapApiRangeToRange,
-} from "../../../../Types/LocalDelivery";
+} from "@/Types/LocalDelivery";
 import Link from "next/link";
 import { FaLightbulb } from "react-icons/fa";
 import Modal from "@/Components/Common/Modal";
@@ -160,7 +160,15 @@ export default function LocalDeliverySettingsPage() {
             </div>
 
             {isOriginLoading ? (
-              <div className="mt-4 h-12 w-full animate-pulse rounded-lg bg-neutral-100" />
+              <div className="mt-4 flex items-start gap-3">
+                <div className="mt-0.5 size-10 shrink-0 animate-pulse rounded-full bg-neutral-200" />
+
+                <div className="flex-1 space-y-2 pt-1">
+                  <div className="h-3.5 w-52 animate-pulse rounded bg-neutral-200" />
+                  <div className="h-3.5 w-40 animate-pulse rounded bg-neutral-200" />
+                  <div className="h-3.5 w-20 animate-pulse rounded bg-neutral-200" />
+                </div>
+              </div>
             ) : origin ? (
               <div className="mt-4 flex items-start gap-3">
                 <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
@@ -219,10 +227,24 @@ export default function LocalDeliverySettingsPage() {
                 </thead>
                 <tbody>
                   {isRangesLoading ? (
-                    Array.from({ length: 3 }).map((_, i) => (
-                      <tr key={i} className="border-b border-neutral-100">
-                        <td className="px-4 py-3.5" colSpan={3}>
-                          <div className="h-4 w-full animate-pulse rounded bg-neutral-100" />
+                    Array.from({ length: 3 }).map((_, index) => (
+                      <tr
+                        key={index}
+                        className="animate-pulse border-b border-neutral-100"
+                      >
+                        <td className="px-4 py-3.5">
+                          <div className="h-4 w-36 rounded bg-neutral-200" />
+                        </td>
+
+                        <td className="px-4 py-3.5">
+                          <div className="h-4 w-20 rounded bg-neutral-200" />
+                        </td>
+
+                        <td className="px-4 py-3.5">
+                          <div className="flex items-center justify-end gap-4">
+                            <div className="h-4 w-4 rounded bg-neutral-200" />
+                            <div className="h-4 w-4 rounded bg-neutral-200" />
+                          </div>
                         </td>
                       </tr>
                     ))

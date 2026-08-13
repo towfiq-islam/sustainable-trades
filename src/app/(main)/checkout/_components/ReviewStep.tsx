@@ -205,6 +205,7 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
                       <IoLocationOutline className="text-primary-green shrink-0 mt-0.5" />
                       <span>
                         {formFields.street_address}
+                        {formFields.apt ? `, ${formFields.apt}` : ""}
                         {formFields.city ? `, ${formFields.city}` : ""}
                         {formFields.state ? `, ${formFields.state}` : ""}
                         {formFields.postal_code

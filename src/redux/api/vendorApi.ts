@@ -233,6 +233,51 @@ export const vendorApi = apiSlice.injectEndpoints({
       }),
       providesTags: ["pickup-locations"],
     }),
+
+    addDeliveryOrigin: builder.mutation({
+      query: data => ({
+        url: "/api/delivery-origins",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["delivery-origin"],
+    }),
+
+    getDeliveryOrigin: builder.query({
+      query: () => "/api/delivery-origin",
+      providesTags: ["delivery-origin"],
+    }),
+
+    addDeliveryRange: builder.mutation({
+      query: data => ({
+        url: "/api/delivery-ranges",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["delivery-range"],
+    }),
+
+    editDeliveryRange: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/api/delivery-range/${id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["delivery-range"],
+    }),
+
+    getDeliveryRanges: builder.query({
+      query: () => "/api/delivery-ranges",
+      providesTags: ["delivery-range"],
+    }),
+
+    deleteDeliveryRange: builder.mutation({
+      query: id => ({
+        url: `/api/delivery-range/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["delivery-range"],
+    }),
   }),
 });
 
@@ -271,4 +316,11 @@ export const {
   useDeletePickupLocationMutation,
   useEditPickupLocationMutation,
   useGetAllPickupLocationsQuery,
+
+  useGetDeliveryOriginQuery,
+  useAddDeliveryOriginMutation,
+  useGetDeliveryRangesQuery,
+  useDeleteDeliveryRangeMutation,
+  useEditDeliveryRangeMutation,
+  useAddDeliveryRangeMutation,
 } = vendorApi;

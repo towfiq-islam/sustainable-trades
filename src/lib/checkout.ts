@@ -2,13 +2,13 @@ import { CartItem } from "@/redux/slices/cartSlice";
 import { Fulfillment } from "@/lib/fulfillment";
 
 // ---- Checkout payload builder ----
-
 export interface VendorFormFields {
   first_name?: string;
   last_name?: string;
   email?: string;
   phone?: string;
   street_address?: string;
+  apt?: string;
   city?: string;
   state?: string;
   postal_code?: string;
@@ -31,6 +31,7 @@ export interface CheckoutDeliveryAddressPayload {
   email: string;
   phone: string;
   street_address: string;
+  apt: string | null;
   city: string;
   state: string;
   postal_code: string;
@@ -99,6 +100,7 @@ const buildVendorOrders = (
           email: fields.email ?? "",
           phone: fields.phone ?? "",
           street_address: fields.street_address ?? "",
+          apt: fields.apt ?? null,
           city: fields.city ?? "",
           state: fields.state ?? "",
           postal_code: fields.postal_code ?? "",

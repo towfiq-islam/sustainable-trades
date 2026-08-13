@@ -130,12 +130,21 @@ export default function Page({ searchParams }: Props) {
               </div>
             </div>
 
-            <Link
-              href="/shop"
-              className="px-4 py-2.5 rounded-lg bg-primary-green text-white text-sm font-medium hover:scale-95 transition-all duration-300 shrink-0"
-            >
-              Continue shopping
-            </Link>
+            <div className="flex gap-2 shrink-0">
+              <Link
+                href="/dashboard/customer/orders"
+                className="px-4 py-2.5 rounded-lg border border-gray-300 text-secondary-black text-sm font-medium hover:bg-gray-50 transition-all duration-300"
+              >
+                View order
+              </Link>
+              
+              <Link
+                href="/shop"
+                className="px-4 py-2.5 rounded-lg bg-primary-green text-white text-sm font-medium hover:scale-95 transition-all duration-300"
+              >
+                Continue shopping
+              </Link>
+            </div>
           </div>
 
           <div className="bg-gray-50 rounded-lg p-4 mb-6">

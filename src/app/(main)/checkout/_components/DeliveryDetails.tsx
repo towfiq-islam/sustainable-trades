@@ -18,6 +18,8 @@ import {
   setVendorPickupLocation,
 } from "@/redux/slices/checkoutSlice";
 import { CartItem } from "@/redux/slices/cartSlice";
+import Modal from "@/Components/Common/Modal";
+import { IoIosInformationCircle } from "react-icons/io";
 
 const US_COUNTRY_CODE = "US";
 const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
@@ -36,6 +38,8 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
   const mode = searchParams.get("mode");
   const { latitude, longitude } = useAuth();
   const [isGeocoding, setIsGeocoding] = useState(false);
+  const [deliveryUnavailableOpen, setDeliveryUnavailableOpen] = useState(false);
+
   const {
     register,
     watch,
@@ -124,52 +128,62 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
 
     if (isLastVendor) {
       setIsGeocoding(true);
-      await Promise.all(
-        items.map(async v => {
-          const vendorNeedsAddress =
-            v.selectedFulfillment === "delivery" ||
-            v.selectedFulfillment === "shipping";
-          if (!vendorNeedsAddress) return;
+      try {
+        await Promise.all(
+          items.map(async v => {
+            const vendorNeedsAddress =
+              v.selectedFulfillment === "delivery" ||
+              v.selectedFulfillment === "shipping";
+            if (!vendorNeedsAddress) return;
 
-          const vBase = `vendors.${v.vendor_id}`;
-          const vValues = getValues(vBase);
-          if (vValues?.latitude && vValues?.longitude) return;
+            const vBase = `vendors.${v.vendor_id}`;
+            const vValues = getValues(vBase);
+            if (vValues?.latitude && vValues?.longitude) return;
 
-          const fullAddress = [
-            vValues?.street_address,
-            vValues?.apt,
-            vValues?.city,
-            vValues?.state,
-            vValues?.postal_code,
-            "United States",
-          ]
-            .filter(Boolean)
-            .join(", ");
+            const fullAddress = [
+              vValues?.street_address,
+              vValues?.apt,
+              vValues?.city,
+              vValues?.state,
+              vValues?.postal_code,
+              "United States",
+            ]
+              .filter(Boolean)
+              .join(", ");
 
-          if (!fullAddress) return;
+            if (!fullAddress) return;
 
-          const { lat, lng } = await getLatLng(fullAddress);
-          if (lat !== null) setValue(`${vBase}.latitude`, lat);
-          if (lng !== null) setValue(`${vBase}.longitude`, lng);
-        }),
-      );
+            const { lat, lng } = await getLatLng(fullAddress);
+            if (lat !== null) setValue(`${vBase}.latitude`, lat);
+            if (lng !== null) setValue(`${vBase}.longitude`, lng);
+          }),
+        );
 
-      const { vendors: formValues } = getValues() as {
-        vendors: VendorFormValues;
-      };
-      const payload = buildVendorOrdersPayload(items, formValues);
-      calculateTaxAndShippingCost(payload)
-        .unwrap()
-        .then(res => {
-          if (res?.success) {
-            dispatch(setCheckoutPricing(res.data));
-            toast.success(res?.message);
-            router.push(buildStepUrl("review-order"));
-          }
-        })
-        .catch(err => {
-          toast.error(err?.data?.message);
-        });
+        const { vendors: formValues } = getValues() as {
+          vendors: VendorFormValues;
+        };
+        const payload = buildVendorOrdersPayload(items, formValues);
+        const res = await calculateTaxAndShippingCost(payload).unwrap();
+
+        if (res?.success) {
+          dispatch(setCheckoutPricing(res.data));
+          toast.success(res?.message);
+          router.push(buildStepUrl("review-order"));
+        }
+      } catch (err: any) {
+        if (
+          err?.data?.message ===
+          "Local delivery is not available for this address."
+        ) {
+          setDeliveryUnavailableOpen(true);
+        } else {
+          toast.error(
+            err?.data?.message ?? "Something went wrong. Please try again.",
+          );
+        }
+      } finally {
+        setIsGeocoding(false);
+      }
     } else {
       const nextVendor = items[vendorIndex + 1];
       const nextBase = `vendors.${nextVendor.vendor_id}`;
@@ -359,11 +373,40 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           type="button"
           onClick={handleNext}
           disabled={isLoading || isGeocoding}
-          className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-60"
+          className="px-6 py-3 rounded-lg bg-primary-green text-white font-medium cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-60"
         >
           {isLastVendor ? "Review order" : "Next vendor"}
         </button>
       </div>
+
+      <Modal
+        open={deliveryUnavailableOpen}
+        onClose={() => setDeliveryUnavailableOpen(false)}
+        className="max-w-sm text-center"
+      >
+        <div className="size-16 rounded-full bg-accent-red/10 grid place-items-center mx-auto mb-4">
+          <IoIosInformationCircle className="text-accent-red text-4xl" />
+        </div>
+
+        <h3 className="text-xl font-semibold text-secondary-black mb-2">
+          We can't deliver to this address
+        </h3>
+        <p className="text-secondary-gray text-sm mb-6">
+          Your address falls outside the range of this shop's local delivery
+          service.
+        </p>
+
+        <button
+          type="button"
+          onClick={() => {
+            setDeliveryUnavailableOpen(false);
+            router.push(buildStepUrl("delivery-options"));
+          }}
+          className="w-full py-3 rounded-lg bg-primary-green text-white font-medium cursor-pointer hover:scale-95 transition-all duration-300"
+        >
+          Go back to shipping options
+        </button>
+      </Modal>
     </div>
   );
 };

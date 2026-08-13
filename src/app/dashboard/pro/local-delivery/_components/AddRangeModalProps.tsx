@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { FiInfo } from "react-icons/fi";
-import { DeliveryRange } from "./LocalDelivery";
+import toast from "react-hot-toast";
+import { DeliveryRange } from "../../../../../Types/LocalDelivery";
 import {
   useAddDeliveryRangeMutation,
   useEditDeliveryRangeMutation,
@@ -11,7 +12,6 @@ import {
 interface AddRangeModalProps {
   initialRange: DeliveryRange | null;
   onClose: () => void;
-  onSave: (range: Omit<DeliveryRange, "id">) => void;
 }
 
 export function Field({
@@ -46,15 +46,12 @@ export function inputClass(hasError: boolean) {
   ].join(" ");
 }
 
-export function AddRangeModal({
-  initialRange,
-  onClose,
-  onSave,
-}: AddRangeModalProps) {
+export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
   const [addDeliveryRange, { isLoading: isAdding }] =
     useAddDeliveryRangeMutation();
   const [editDeliveryRange, { isLoading: isEditing }] =
     useEditDeliveryRangeMutation();
+
   const [minMiles, setMinMiles] = useState(
     initialRange ? String(initialRange.minMiles) : "",
   );
@@ -64,7 +61,9 @@ export function AddRangeModal({
   const [fee, setFee] = useState(initialRange ? String(initialRange.fee) : "");
   const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit() {
+  const isSaving = isAdding || isEditing;
+
+  async function handleSubmit() {
     const min = Number(minMiles);
     const max = Number(maxMiles);
     const feeValue = Number(fee || 0);
@@ -88,13 +87,35 @@ export function AddRangeModal({
     }
 
     setError(null);
-    onSave({ minMiles: min, maxMiles: max, fee: feeValue });
+
+    const payload = {
+      min_distance: min,
+      max_distance: max,
+      delivery_fee: feeValue.toFixed(2),
+    };
+
+    try {
+      const res = initialRange
+        ? await editDeliveryRange({
+            id: initialRange.id,
+            data: payload,
+          }).unwrap()
+        : await addDeliveryRange(payload).unwrap();
+
+      toast.success(
+        res?.message ??
+          (initialRange ? "Delivery range updated" : "Delivery range added"),
+      );
+      onClose();
+    } catch (err: any) {
+      toast.error(err?.data?.message ?? "Something went wrong");
+    }
   }
 
   return (
     <div>
       <h2 className="text-xl font-extrabold tracking-wide text-neutral-900 mb-5 flex items-start justify-between border-b border-neutral-200 pb-4">
-        ADD DELIVERY RANGE
+        {initialRange ? "EDIT DELIVERY RANGE" : "ADD DELIVERY RANGE"}
       </h2>
 
       <p className="text-[15px] leading-relaxed text-neutral-600">
@@ -159,9 +180,10 @@ export function AddRangeModal({
 
         <button
           onClick={handleSubmit}
-          className="w-full rounded-lg bg-emerald-900 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
+          disabled={isSaving}
+          className="w-full rounded-lg bg-emerald-900 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
-          Save Range
+          {isSaving ? "Saving..." : "Save Range"}
         </button>
 
         <div className="flex items-start gap-3 rounded-xl bg-neutral-50 p-4">

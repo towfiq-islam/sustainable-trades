@@ -6,7 +6,8 @@ import { FiMapPin } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
 import { useAddDeliveryOriginMutation } from "@/redux/api/vendorApi";
-import { DeliveryOrigin } from "./LocalDelivery";
+import { DeliveryOrigin } from "../../../../../Types/LocalDelivery";
+
 const US_COUNTRY_CODE = "US";
 const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
 
@@ -29,12 +30,13 @@ const DEFAULT_VALUES: DeliveryOriginFormValues = {
 };
 
 interface EditOriginModalProps {
-  origin: DeliveryOrigin;
+  origin: DeliveryOrigin | null;
   onClose: () => void;
-  onSave: (origin: DeliveryOrigin) => void;
 }
 
-function toFormValues(origin?: DeliveryOrigin): DeliveryOriginFormValues {
+function toFormValues(
+  origin?: DeliveryOrigin | null,
+): DeliveryOriginFormValues {
   if (!origin) return DEFAULT_VALUES;
 
   return {
@@ -106,7 +108,7 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
 
     try {
       const res = await addDeliveryOrigin(formData).unwrap();
-      toast.success(res?.message ?? "Delivery origin updated");
+      toast.success(res?.message ?? "Delivery origin saved");
       onClose();
     } catch (err: any) {
       toast.error(err?.data?.message ?? "Something went wrong");
@@ -119,7 +121,7 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
         id="delivery-origin-modal-title"
         className="text-2xl font-semibold text-secondary-black mb-1"
       >
-        Edit Delivery Origin
+        {origin ? "Edit Delivery Origin" : "Add Delivery Origin"}
       </h2>
 
       <p className="text-sm text-secondary-gray mb-5">
@@ -244,7 +246,11 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
           disabled={isSaving || isGeocoding}
           className="w-full rounded-lg bg-primary-green py-3 text-sm font-semibold text-white transition-transform hover:scale-[0.98] duration-300 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
-          {isSaving || isGeocoding ? "Saving..." : "Save Address"}
+          {isGeocoding
+            ? "Verifying address..."
+            : isSaving
+              ? "Saving..."
+              : "Save Address"}
         </button>
 
         <div className="flex items-start gap-3 border border-off-green/30 bg-off-green/30 rounded-lg px-3 py-3.5">

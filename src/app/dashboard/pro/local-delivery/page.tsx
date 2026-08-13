@@ -11,33 +11,21 @@ import {
 import { AddRangeModal } from "./_components/AddRangeModalProps";
 import { EditOriginModal } from "./_components/EditOriginModal";
 import {
-  DeliveryOrigin,
-  DeliveryRange,
+  ApiDeliveryOrigin,
+  ApiDeliveryRange,
   formatFee,
-} from "./_components/LocalDelivery";
+  mapApiOriginToOrigin,
+  mapApiRangeToRange,
+} from "../../../../Types/LocalDelivery";
 import Link from "next/link";
 import { FaLightbulb } from "react-icons/fa";
 import Modal from "@/Components/Common/Modal";
+import toast from "react-hot-toast";
 import {
   useDeleteDeliveryRangeMutation,
   useGetDeliveryOriginQuery,
   useGetDeliveryRangesQuery,
 } from "@/redux/api/vendorApi";
-
-const INITIAL_ORIGIN: DeliveryOrigin = {
-  street: "123 Craft Lane",
-  city: "Austin",
-  state: "TX",
-  zip: "78701",
-  country: "United States",
-};
-
-const INITIAL_RANGES: DeliveryRange[] = [
-  { id: "r1", minMiles: 0, maxMiles: 10, fee: 0 },
-  { id: "r2", minMiles: 10, maxMiles: 20, fee: 10 },
-  { id: "r3", minMiles: 20, maxMiles: 30, fee: 20 },
-  { id: "r4", minMiles: 30, maxMiles: 50, fee: 30 },
-];
 
 function InfoCard({
   icon,
@@ -63,21 +51,34 @@ function InfoCard({
 }
 
 export default function LocalDeliverySettingsPage() {
-  const { data: deliveryOrigin, isLoading: isOriginLoading } =
+  const { data: originRes, isLoading: isOriginLoading } =
     useGetDeliveryOriginQuery({});
-  const { data: deliveryRanges, isLoading: isRangesLoading } =
+  const { data: rangesRes, isLoading: isRangesLoading } =
     useGetDeliveryRangesQuery({});
-  const [deleteDeliveryRange, { isLoading: isDeleting }] =
-    useDeleteDeliveryRangeMutation();
-
-  const [origin, setOrigin] = useState<DeliveryOrigin>(INITIAL_ORIGIN);
-  const [ranges, setRanges] = useState<DeliveryRange[]>(INITIAL_RANGES);
+  const [deleteDeliveryRange] = useDeleteDeliveryRangeMutation();
   const [isOriginModalOpen, setIsOriginModalOpen] = useState(false);
   const [isRangeModalOpen, setIsRangeModalOpen] = useState(false);
-  const [editingRangeId, setEditingRangeId] = useState<string | null>(null);
+  const [editingRangeId, setEditingRangeId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  function handleDeleteRange(id: string) {
-    setRanges(prev => prev.filter(r => r.id !== id));
+  const origin = originRes?.data
+    ? mapApiOriginToOrigin(originRes.data as ApiDeliveryOrigin)
+    : null;
+
+  const ranges = ((rangesRes?.data as ApiDeliveryRange[]) ?? []).map(
+    mapApiRangeToRange,
+  );
+
+  async function handleDeleteRange(id: number) {
+    setDeletingId(id);
+    try {
+      const res = await deleteDeliveryRange(id).unwrap();
+      toast.success(res?.message ?? "Delivery range removed");
+    } catch (err: any) {
+      toast.error(err?.data?.message ?? "Couldn't delete this range");
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   function openAddRange() {
@@ -85,26 +86,9 @@ export default function LocalDeliverySettingsPage() {
     setIsRangeModalOpen(true);
   }
 
-  function openEditRange(id: string) {
+  function openEditRange(id: number) {
     setEditingRangeId(id);
     setIsRangeModalOpen(true);
-  }
-
-  function handleSaveRange(range: Omit<DeliveryRange, "id">) {
-    if (editingRangeId) {
-      setRanges(prev =>
-        prev.map(r => (r.id === editingRangeId ? { ...r, ...range } : r)),
-      );
-    } else {
-      setRanges(prev => [...prev, { ...range, id: crypto.randomUUID() }]);
-    }
-    setIsRangeModalOpen(false);
-    setEditingRangeId(null);
-  }
-
-  function handleSaveOrigin(next: DeliveryOrigin) {
-    setOrigin(next);
-    setIsOriginModalOpen(false);
   }
 
   const editingRange = ranges.find(r => r.id === editingRangeId) ?? null;
@@ -171,24 +155,33 @@ export default function LocalDeliverySettingsPage() {
                 onClick={() => setIsOriginModalOpen(true)}
                 className="shrink-0 rounded-lg border border-primary-green/70 px-4 py-2 text-sm font-semibold text-primary-green transition hover:bg-primary-green duration-300 cursor-pointer hover:text-white"
               >
-                Edit Address
+                {origin ? "Edit Address" : "Add Address"}
               </button>
             </div>
 
-            <div className="mt-4 flex items-start gap-3">
-              <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
-                <FiMapPin className="h-4 w-4" />
-              </span>
+            {isOriginLoading ? (
+              <div className="mt-4 h-12 w-full animate-pulse rounded-lg bg-neutral-100" />
+            ) : origin ? (
+              <div className="mt-4 flex items-start gap-3">
+                <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
+                  <FiMapPin className="h-4 w-4" />
+                </span>
 
-              <div className="text-sm leading-relaxed text-neutral-700">
-                {origin.street}
-                {origin.apartment ? `, ${origin.apartment}` : ""}
-                <br />
-                {origin.city}, {origin.state} {origin.zip}
-                <br />
-                {origin.country}
+                <div className="text-sm leading-relaxed text-neutral-700">
+                  {origin.street}
+                  {origin.apartment ? `, ${origin.apartment}` : ""}
+                  <br />
+                  {origin.city}, {origin.state} {origin.zip}
+                  <br />
+                  {origin.country}
+                </div>
               </div>
-            </div>
+            ) : (
+              <p className="mt-4 text-sm text-neutral-500">
+                No delivery origin set yet. Add your home base address to start
+                calculating delivery fees.
+              </p>
+            )}
           </div>
 
           {/* Delivery Ranges */}
@@ -225,48 +218,15 @@ export default function LocalDeliverySettingsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {ranges.map((range, index) => (
-                    <tr
-                      key={range.id}
-                      className={`hover:bg-off-green/20 ${
-                        index !== ranges.length - 1
-                          ? "border-b border-neutral-100"
-                          : ""
-                      }`}
-                    >
-                      <td className="px-4 py-3.5 text-neutral-800">
-                        {range.minMiles} to {range.maxMiles} miles
-                      </td>
-                      <td
-                        className={
-                          range.fee === 0
-                            ? "px-4 py-3.5 font-medium text-emerald-700"
-                            : "px-4 py-3.5 text-neutral-800"
-                        }
-                      >
-                        {formatFee(range.fee)}
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex items-center justify-end gap-4">
-                          <button
-                            aria-label="Edit range"
-                            onClick={() => openEditRange(range.id)}
-                            className="text-neutral-400 transition hover:text-primary-green cursor-pointer"
-                          >
-                            <FiEdit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            aria-label="Delete range"
-                            onClick={() => handleDeleteRange(range.id)}
-                            className="text-neutral-400 transition hover:text-red-600 cursor-pointer"
-                          >
-                            <FiTrash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {ranges.length === 0 && (
+                  {isRangesLoading ? (
+                    Array.from({ length: 3 }).map((_, i) => (
+                      <tr key={i} className="border-b border-neutral-100">
+                        <td className="px-4 py-3.5" colSpan={3}>
+                          <div className="h-4 w-full animate-pulse rounded bg-neutral-100" />
+                        </td>
+                      </tr>
+                    ))
+                  ) : ranges.length === 0 ? (
                     <tr>
                       <td
                         colSpan={3}
@@ -275,6 +235,50 @@ export default function LocalDeliverySettingsPage() {
                         No delivery ranges yet. Add one to get started.
                       </td>
                     </tr>
+                  ) : (
+                    ranges.map((range, index) => (
+                      <tr
+                        key={range.id}
+                        className={`hover:bg-off-green/20 ${
+                          index !== ranges.length - 1
+                            ? "border-b border-neutral-100"
+                            : ""
+                        }`}
+                      >
+                        <td className="px-4 py-3.5 text-neutral-800">
+                          {range.minMiles} to {range.maxMiles} miles
+                        </td>
+                        <td
+                          className={
+                            range.fee === 0
+                              ? "px-4 py-3.5 font-medium text-emerald-700"
+                              : "px-4 py-3.5 text-neutral-800"
+                          }
+                        >
+                          {formatFee(range.fee)}
+                        </td>
+                        <td className="px-4 py-3.5">
+                          <div className="flex items-center justify-end gap-4">
+                            <button
+                              aria-label="Edit range"
+                              onClick={() => openEditRange(range.id)}
+                              disabled={deletingId === range.id}
+                              className="text-neutral-400 transition hover:text-primary-green cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <FiEdit2 className="h-4 w-4" />
+                            </button>
+                            <button
+                              aria-label="Delete range"
+                              onClick={() => handleDeleteRange(range.id)}
+                              disabled={deletingId === range.id}
+                              className="text-neutral-400 transition hover:text-red-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <FiTrash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
                   )}
                 </tbody>
               </table>
@@ -359,7 +363,6 @@ export default function LocalDeliverySettingsPage() {
         <EditOriginModal
           origin={origin}
           onClose={() => setIsOriginModalOpen(false)}
-          onSave={handleSaveOrigin}
         />
       </Modal>
 
@@ -374,7 +377,6 @@ export default function LocalDeliverySettingsPage() {
             setIsRangeModalOpen(false);
             setEditingRangeId(null);
           }}
-          onSave={handleSaveRange}
         />
       </Modal>
     </>

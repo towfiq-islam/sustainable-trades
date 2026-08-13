@@ -101,6 +101,19 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
     });
   };
 
+  const watchedAddressFields = watch([
+    `${base}.street_address`,
+    `${base}.apt`,
+    `${base}.city`,
+    `${base}.state`,
+    `${base}.postal_code`,
+  ]);
+
+  useEffect(() => {
+    setValue(`${base}.latitude`, undefined);
+    setValue(`${base}.longitude`, undefined);
+  }, watchedAddressFields);
+
   useEffect(() => {
     syncFromDom(fieldsForFulfillment);
     if (needsAddress && !getValues(`${base}.country`)) {

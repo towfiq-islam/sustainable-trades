@@ -12,6 +12,7 @@ import ReviewStep from "./_components/ReviewStep";
 import PaymentStep from "./_components/PaymentStep";
 import DeliveryOptions from "./_components/DeliveryOptions";
 import DeliveryDetails from "./_components/DeliveryDetails";
+import Link from "next/link";
 
 const CheckoutContent = () => {
   const router = useRouter();
@@ -92,13 +93,15 @@ const CheckoutContent = () => {
   }
 
   if (!checkoutMode) {
+    const redirectTo = `/checkout${isBuyNow ? "?mode=buy-now" : ""}`;
+
     return (
       <Container>
         <div className="max-w-md mx-auto text-center py-16">
-          <h2 className="text-xl font-semibold text-secondary-black mb-2">
+          <h2 className="text-2xl font-semibold text-secondary-black mb-3">
             How would you like to check out?
           </h2>
-          <p className="text-secondary-gray text-sm mb-8">
+          <p className="text-secondary-gray text-[15px] mb-8">
             You can check out as a guest, or sign in for faster checkout and
             order tracking.
           </p>
@@ -116,15 +119,23 @@ const CheckoutContent = () => {
               type="button"
               onClick={() =>
                 router.push(
-                  `/auth/login?redirect=${encodeURIComponent(
-                    `/checkout${isBuyNow ? "?mode=buy-now" : ""}`,
-                  )}`,
+                  `/auth/login?redirect=${encodeURIComponent(redirectTo)}`,
                 )
               }
               className="w-full py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
             >
               Sign in to your account
             </button>
+          </div>
+
+          <div className="flex gap-1 justify-center items-center text-secondary-black mt-7">
+            <p>Don't have an account?</p>
+            <Link
+              className="text-primary-green text-[15px] font-semibold underline"
+              href={`/auth/choose-package?redirect=${encodeURIComponent(redirectTo)}`}
+            >
+              Create one for free
+            </Link>
           </div>
         </div>
       </Container>

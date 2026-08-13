@@ -78,7 +78,7 @@ const Page = () => {
               <p className="font-semibold text-secondary-black mb-1">
                 How it works
               </p>
-              <p className="text-sm text-secondary-gray">
+              <p className="text-sm text-secondary-gray mb-0.5">
                 Buyers will see the locations you add here as pickup options
                 during checkout.
               </p>

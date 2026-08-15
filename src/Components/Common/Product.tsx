@@ -20,6 +20,9 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/store";
 import { addToCart } from "@/redux/slices/cartSlice";
 import { Fulfillment, normalizeFulfillment } from "@/lib/fulfillment";
+import { useState } from "react";
+import Modal from "./Modal";
+import LocalPickupModal from "../Modals/LocalPickupModal";
 
 type ProductItem = {
   id: number;
@@ -30,12 +33,16 @@ type ProductItem = {
   shop?: {
     id: number;
     shop_name: string;
+    user: {
+      membership: {
+        membership_type: string;
+      };
+    };
   };
   images?: {
     id: number;
     image: string;
   }[];
-
   distance: number;
   is_favorite?: boolean;
   selling_option?: string;
@@ -60,6 +67,7 @@ const Product = ({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { user } = useAuth();
+  const [openMsg, setOpenMsg] = useState(false);
   const [addFavoriteMutation, { isLoading: isPending }] =
     useAddFavoriteMutation();
 
@@ -87,7 +95,6 @@ const Product = ({
       shop_id: product?.shop?.id,
       shop_name: product?.shop?.shop_name,
       shop_image: product?.shop?.shop_image,
-
       products: [
         {
           id: product?.id,
@@ -121,7 +128,7 @@ const Product = ({
           />
         )}
       </button>
-      
+
       {/* Stock Info */}
       {product?.unlimited_stock ? (
         <button className="absolute top-3 left-3 shadow-lg font-medium px-3 py-1 rounded-full bg-primary-green text-white z-10 text-sm">
@@ -212,22 +219,34 @@ const Product = ({
           ${product?.product_price}
         </p>
 
-        {/* Cart btn */}
-        {has_cart && (
+        {product?.shop?.user?.membership?.membership_type === "basic" ? (
           <button
-            onClick={() => handleAddToCart(product)}
-            disabled={
-              product?.selling_option === "trade/barter" ||
-              (!product?.unlimited_stock && product?.out_of_stock) ||
-              (!product?.unlimited_stock && product?.product_quantity === 0)
-            }
-            className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm disabled:cursor-not-allowed disabled:opacity-75 disabled:border-gray-400 cursor-pointer border-secondary-gray enabled:hover:bg-primary-green enabled:hover:text-accent-white enabled:hover:scale-95`}
+            onClick={() => setOpenMsg(true)}
+            className="px-3 py-1.5 rounded-[5px] bg-primary-green text-white font-medium sm:text-base text-sm cursor-pointer hover:scale-95 transition-all duration-300"
           >
-            <span>Add to Cart</span>
-            <AddToCartSvg />
+            Contact Seller
           </button>
+        ) : (
+          has_cart && (
+            <button
+              onClick={() => handleAddToCart(product)}
+              disabled={
+                product?.selling_option === "trade/barter" ||
+                (!product?.unlimited_stock && product?.out_of_stock) ||
+                (!product?.unlimited_stock && product?.product_quantity === 0)
+              }
+              className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm disabled:cursor-not-allowed disabled:opacity-75 disabled:border-gray-400 cursor-pointer border-secondary-gray enabled:hover:bg-primary-green enabled:hover:text-accent-white enabled:hover:scale-95`}
+            >
+              <span>Add to Cart</span>
+              <AddToCartSvg />
+            </button>
+          )
         )}
       </div>
+
+      <Modal open={openMsg} onClose={() => setOpenMsg(false)}>
+        <LocalPickupModal />
+      </Modal>
     </div>
   );
 };

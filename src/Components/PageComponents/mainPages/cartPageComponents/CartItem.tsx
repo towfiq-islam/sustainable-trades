@@ -1,34 +1,12 @@
 import Image from "next/image";
-import { useState } from "react";
 import { MinSvg } from "@/Components/Svg/SvgContainer";
-import Modal from "@/Components/Common/Modal";
-import SuccessModal from "@/Components/Modals/SuccessModal";
-import ShippingAddress from "@/Components/Modals/ShippingAddress";
-import ShippingOptionsModal from "@/Components/Modals/ShippingOptionsModal";
-import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
-import OrderReviewModal from "@/Components/Modals/OrderReviewModal";
 import Link from "next/link";
 import { useAppDispatch } from "@/redux/store";
 import { removeFromCart, updateCartQuantity } from "@/redux/slices/cartSlice";
 
 const CartItem = ({ item }: any) => {
-  // States
-
   const dispatch = useAppDispatch();
-  const [shippingOptionsOpen, setShippingOptionsOpen] =
-    useState<boolean>(false);
-  const [orderReviewModal, setOrderReviewModal] = useState<boolean>(false);
-  const [shippingAddressOpen, setShippingAddressOpen] =
-    useState<boolean>(false);
-  const [formData, setFormData] = useState<any>({});
-  const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
-  const [successOpen, setSuccessOpen] = useState<boolean>(false);
-  const [cartId, setCartId] = useState<number | null>(null);
-  const [fulfillmentType, setFulfillmentType] = useState<string>("");
-  const [shippingMethod, setShippingMethod] = useState("");
-  const [taxData, setTaxData] = useState({});
 
-  // Func for update cart quantity
   const handleUpdateCart = (
     quantity: number,
     type: string,
@@ -43,7 +21,6 @@ const CartItem = ({ item }: any) => {
     }
   };
 
-  // Func for remove from cart
   const handleRemoveFromCart = (product_id: number, vendor_id: number) => {
     dispatch(removeFromCart({ product_id, vendor_id }));
   };
@@ -158,77 +135,6 @@ const CartItem = ({ item }: any) => {
           </div>
         ))}
       </div>
-
-      {/* Modals */}
-      <Modal
-        open={shippingOptionsOpen}
-        onClose={() => setShippingOptionsOpen(false)}
-      >
-        <ShippingOptionsModal
-          cart_id={cartId}
-          userId={item?.shop?.user_id}
-          membershipType={item?.shop?.user?.membership?.membership_type}
-          fulfillmentType={fulfillmentType}
-          isConnected={item?.shop?.user?.onboarded}
-          shippingMethod={shippingMethod}
-          setShippingMethod={setShippingMethod}
-          setSuccessOpen={setSuccessOpen}
-          onProceed={() => {
-            setShippingOptionsOpen(false);
-            setShippingAddressOpen(true);
-          }}
-          onSuccess={() => {
-            setShippingOptionsOpen(false);
-          }}
-          onClose={() => setShippingOptionsOpen(false)}
-        />
-      </Modal>
-
-      <Modal
-        open={shippingAddressOpen}
-        onClose={() => setShippingAddressOpen(false)}
-      >
-        <ShippingAddress
-          shippingMethod={shippingMethod}
-          setFormData={setFormData}
-          formData={formData}
-          setTaxData={setTaxData}
-          cart_id={cartId}
-          onNext={() => {
-            setShippingAddressOpen(false);
-            setOrderReviewModal(true);
-          }}
-        />
-      </Modal>
-
-      <Modal open={orderReviewModal} onClose={() => setOrderReviewModal(false)}>
-        <OrderReviewModal
-          setFormData={setFormData}
-          formData={formData}
-          cartItems={item}
-          subTotal={0}
-          // subTotal={vendorSubtotal}
-          cart_id={cartId}
-          taxData={taxData}
-          shop_name={item?.shop?.shop_name}
-          onClose={() => {
-            setOrderReviewModal(false);
-            setShippingAddressOpen(true);
-          }}
-          onProceed={() => {
-            setOrderReviewModal(false);
-            setPaypalOpen(true);
-          }}
-        />
-      </Modal>
-
-      <Modal open={paypalOpen} onClose={() => setPaypalOpen(false)}>
-        <CheckoutPaypalModal cart_id={cartId} formData={formData} />
-      </Modal>
-
-      <Modal open={successOpen} onClose={() => setSuccessOpen(false)}>
-        <SuccessModal />
-      </Modal>
     </div>
   );
 };

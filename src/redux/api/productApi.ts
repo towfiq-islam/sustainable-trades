@@ -59,6 +59,7 @@ export const productApi = apiSlice.injectEndpoints({
           page,
           category_id,
           sub_category_id,
+          per_page: 4,
         },
       }),
 
@@ -174,6 +175,7 @@ export const productApi = apiSlice.injectEndpoints({
           lat,
           lng,
           page,
+          per_page: 8,
         },
       }),
       providesTags: (_result, _error, { id }) => [{ type: "product", id }],

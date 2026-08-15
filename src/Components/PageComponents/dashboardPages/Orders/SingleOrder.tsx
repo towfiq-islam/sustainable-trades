@@ -7,7 +7,6 @@ import { PuffLoader } from "react-spinners";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import { useState } from "react";
-import CheckoutPaypalModal from "@/Components/Modals/CheckoutPaypalModal";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 import {
   useDownloadInvoiceMutation,
@@ -17,7 +16,6 @@ import {
 const SingleOrder = ({ orderId }: { orderId: number }) => {
   const router = useRouter();
   const [open, isOpen] = useState<boolean>(false);
-  const [paypalOpen, setPaypalOpen] = useState<boolean>(false);
   const { data: getSingleOrder, isLoading } = useGetOrderDetailsQuery(orderId);
   const [downloadInvoicePdf, { isLoading: isPending }] =
     useDownloadInvoiceMutation();
@@ -246,18 +244,6 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                   ))}
                 </div>
               </div>
-
-              <div className="flex flex-col gap-4">
-                {/* {(getSingleOrder?.data?.status === "awaiting_payment" ||
-                  getSingleOrder?.data?.status === "pending") && (
-                  <button
-                    onClick={() => setPaypalOpen(true)}
-                    className="p-2 rounded-[8px] border border-[#BFBEBE] text-[14px] md:text-[16px]  font-normal cursor-pointer w-full md:w-[250px] hover:scale-105 duration-500 ease-in-out bg-primary-green text-white disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
-                  >
-                    Do payment
-                  </button>
-                )} */}
-              </div>
             </div>
           </div>
         </div>
@@ -308,14 +294,6 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
 
       <Modal open={open} onClose={() => isOpen(false)}>
         <TrackPackageModal order_id={orderId} />
-      </Modal>
-
-      <Modal open={paypalOpen} onClose={() => setPaypalOpen(false)}>
-        <CheckoutPaypalModal
-          isLocalPayment={true}
-          onClose={() => setPaypalOpen(false)}
-          cart_id={getSingleOrder?.data?.local_pickup_checkout_token}
-        />
       </Modal>
     </>
   );

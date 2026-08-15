@@ -22,6 +22,7 @@ import {
   useGetNearbyProductsQuery,
   useGetProductCategoriesQuery,
 } from "@/redux/api/productApi";
+import PaginationControl from "@/Components/Common/PaginationControl";
 
 type categoryItem = {
   id: number;
@@ -33,18 +34,21 @@ type categoryItem = {
 const page = () => {
   const { latitude, longitude } = useAuth();
   const [categoryId, setCategoryId] = useState<number | null>(null);
-  const [page, setPage] = useState<string>("");
-  const [nearbyPage, setNearbyPage] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [nearbyPage, setNearbyPage] = useState<number>(1);
   const { data: spotlightData } = useGetMembershipSpotlightQuery({});
   const { data: allCategory, isLoading: categoryLoading } =
     useGetProductCategoriesQuery({});
 
-  const { data: categoryDetails, isLoading } = useGetCategoryDetailsQuery({
-    id: categoryId,
-    lat: latitude,
-    lng: longitude,
-    page,
-  });
+  const { data: categoryDetails, isLoading } = useGetCategoryDetailsQuery(
+    {
+      id: categoryId,
+      lat: latitude,
+      lng: longitude,
+      page,
+    },
+    { skip: !categoryId },
+  );
 
   const { data: nearbyProducts, isLoading: nearbyProductsLoading } =
     useGetNearbyProductsQuery({
@@ -56,6 +60,11 @@ const page = () => {
   useEffect(() => {
     setCategoryId(allCategory?.data[0]?.id);
   }, [allCategory]);
+
+  // Reset to page 1 whenever the selected category changes
+  useEffect(() => {
+    setPage(1);
+  }, [categoryId]);
 
   return (
     <>
@@ -180,19 +189,13 @@ const page = () => {
           </div>
         )}
 
-        {!isLoading && (
-          <div className="py-8 flex justify-center items-center gap-2 flex-wrap">
-            {categoryDetails?.data?.products?.links?.map(
-              (item: any, idx: number) => (
-                <button
-                  key={idx}
-                  disabled={!item.url}
-                  dangerouslySetInnerHTML={{ __html: item.label }}
-                  onClick={() => item.url && setPage(item.url.split("=")[1])}
-                  className={`px-3 py-1 rounded border transition-all duration-200 ${item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"} ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                />
-              ),
-            )}
+        {!isLoading && categoryDetails?.data?.products && (
+          <div className="py-8">
+            <PaginationControl
+              currentPage={categoryDetails.data.products.current_page}
+              lastPage={categoryDetails.data.products.last_page}
+              onPageChange={setPage}
+            />
           </div>
         )}
       </Container>
@@ -224,19 +227,13 @@ const page = () => {
           </div>
         )}
 
-        {!nearbyProductsLoading && (
-          <div className="py-8 flex justify-center items-center gap-2 flex-wrap">
-            {nearbyProducts?.data?.links?.map((item: any, idx: number) => (
-              <button
-                key={idx}
-                disabled={!item.url}
-                dangerouslySetInnerHTML={{ __html: item.label }}
-                onClick={() =>
-                  item.url && setNearbyPage(item.url.split("=")[1])
-                }
-                className={`px-3 py-1 rounded border transition-all duration-200 ${item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"} ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-              />
-            ))}
+        {!nearbyProductsLoading && nearbyProducts?.data && (
+          <div className="py-8">
+            <PaginationControl
+              currentPage={nearbyProducts.data.current_page}
+              lastPage={nearbyProducts.data.last_page}
+              onPageChange={setNearbyPage}
+            />
           </div>
         )}
       </Container>

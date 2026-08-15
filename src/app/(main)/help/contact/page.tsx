@@ -25,7 +25,7 @@ const Page = async () => {
                 dangerouslySetInnerHTML={{
                   __html: contactData?.data?.description,
                 }}
-                className="text-secondary-gray leading-8 text-sm lg:text-base  xl:max-w-[900px] [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:pl-5 [&_ol]:list-decimal"
+                className="parsed_content"
               />
             </div>
           </div>

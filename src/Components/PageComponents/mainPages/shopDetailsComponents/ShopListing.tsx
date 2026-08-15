@@ -5,6 +5,7 @@ import { SearchSvg } from "@/Components/Svg/SvgContainer";
 import { AiOutlineFileUnknown } from "react-icons/ai";
 import { GrPowerReset } from "react-icons/gr";
 import { FilteringSkeleton, ProductSkeleton } from "@/Components/Loader/Loader";
+import PaginationControl from "@/Components/Common/PaginationControl";
 
 const ShopListing = ({
   featuredListings,
@@ -76,7 +77,7 @@ const ShopListing = ({
                       <option key={id} value={id}>
                         {name}
                       </option>
-                    )
+                    ),
                   )}
                 </select>
               </div>
@@ -101,7 +102,7 @@ const ShopListing = ({
                       <option key={id} value={id}>
                         {sub_category_name}
                       </option>
-                    )
+                    ),
                   )}
                 </select>
               </div>
@@ -174,21 +175,13 @@ const ShopListing = ({
         )}
 
         {/* Pagination */}
-        {!listingsLoading && (
-          <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">
-            {allListings?.links?.map((item: any, idx: number) => (
-              <button
-                key={idx}
-                onClick={() => item.url && setPage(item.url.split("=")[1])}
-                className={`px-3 py-1 rounded border transition-all duration-200 
-        ${
-          item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"
-        } 
-        ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                disabled={!item.url}
-                dangerouslySetInnerHTML={{ __html: item.label }}
-              />
-            ))}
+        {!listingsLoading && allListings?.data && (
+          <div className="py-8">
+            <PaginationControl
+              currentPage={allListings.current_page}
+              lastPage={allListings.last_page}
+              onPageChange={setPage}
+            />
           </div>
         )}
       </Container>

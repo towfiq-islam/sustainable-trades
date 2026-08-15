@@ -36,7 +36,7 @@ const page = async ({ params }: any) => {
             dangerouslySetInnerHTML={{
               __html: blogDetailsData?.data?.content,
             }}
-            className="text-primary-gray text-[15px] md:text-base leading-[150%] sm:leading-[170%]"
+            className="parsed_content"
           />
         </div>
       </Container>

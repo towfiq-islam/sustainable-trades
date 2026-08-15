@@ -274,7 +274,10 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
     if (!config.shippingGuard) return;
     const requiresShipping =
       fulfillment === "shipping" ||
-      fulfillment === "arrange_local_pickup_and_shipping";
+      fulfillment === "pickup_and_shipping" ||
+      fulfillment === "delivery_and_shipping" ||
+      fulfillment === "pickup_and_delivery_and_shipping";
+
     if (!requiresShipping) return;
 
     if (!hasPaymentProcessor) {

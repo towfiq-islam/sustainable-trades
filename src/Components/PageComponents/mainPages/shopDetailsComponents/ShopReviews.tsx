@@ -3,7 +3,7 @@ import "swiper/css";
 import Link from "next/link";
 import Image from "next/image";
 import "swiper/css/pagination";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa";
 import { Pagination } from "swiper/modules";
@@ -12,6 +12,7 @@ import Container from "@/Components/Common/Container";
 import { RightArrowSvg } from "@/Components/Svg/SvgContainer";
 import { AiOutlineFileUnknown } from "react-icons/ai";
 import { ShopReviewSkeleton } from "@/Components/Loader/Loader";
+import PaginationControl from "@/Components/Common/PaginationControl";
 
 type ImageItem = {
   image: string;
@@ -42,6 +43,8 @@ type ReviewItem = {
 interface ReviewProps {
   data: {
     links: any;
+    current_page: number;
+    last_page: number;
     data: ReviewItem[];
   };
   reviewLoading: any;
@@ -103,7 +106,7 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
                               key={index}
                               className="text-primary-green text-sm"
                             />
-                          )
+                          ),
                         )}
 
                         {Array.from({ length: 5 - item?.rating }).map(
@@ -112,7 +115,7 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
                               key={index}
                               className="text-primary-green text-xs md:text-sm"
                             />
-                          )
+                          ),
                         )}
                       </div>
 
@@ -201,6 +204,16 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
             </div>
           )}
         </div>
+
+        {!reviewLoading && data?.data && (
+          <div className="py-8">
+            <PaginationControl
+              currentPage={data.current_page}
+              lastPage={data.last_page}
+              onPageChange={setReviewPage}
+            />
+          </div>
+        )}
 
         {!reviewLoading && (
           <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">

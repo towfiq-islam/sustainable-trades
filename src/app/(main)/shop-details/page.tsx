@@ -65,6 +65,7 @@ const page = ({ searchParams }: Props) => {
         short_by,
         search,
         page,
+       
       },
       { skip: !listing_id },
     );

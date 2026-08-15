@@ -112,6 +112,10 @@ html {
   @apply text-primary-green;
 }
 
+.parsed_content {
+  @apply text-secondary-gray text-sm lg:text-base leading-8 max-w-[900px] [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:pl-5 [&_ol]:list-decimal [&_h1]:text-2xl [&_h2]:text-[22px] [&_h3]:text-xl [&_h4]:text-lg [&_h5]:text-[17px] [&_h6]:text-base;
+}
+
 /* For Custom Scrollbar */
 .side-scrollbar::-webkit-scrollbar {
   display: none;

@@ -40,7 +40,7 @@ html {
 }
 
 .primary_btn {
-  @apply block w-full py-1.5 md:py-3 bg-primary-green text-accent-white text-[14px] font-medium md:text-[17px] duration-300 transition-all enabled:hover:scale-[0.97] rounded-lg shadow cursor-pointer enabled:hover:bg-transparent enabled:hover:text-primary-green border-2 border-primary-green text-center disabled:cursor-not-allowed disabled:opacity-60;
+  @apply block w-full py-1.5 md:py-2.5 bg-primary-green text-accent-white text-[14px] font-medium md:text-base duration-300 transition-all enabled:hover:scale-[0.97] rounded-lg shadow cursor-pointer enabled:hover:bg-transparent enabled:hover:text-primary-green border-2 border-primary-green text-center disabled:cursor-not-allowed disabled:opacity-60;
 }
 
 .auth-secondary-btn {
@@ -64,7 +64,7 @@ html {
 }
 
 .form-label {
-  @apply text-secondary-black text-sm md:text-base block w-full font-semibold;
+  @apply text-secondary-black text-sm md:text-[15px] block w-full font-semibold;
 }
 
 .form-label span {
@@ -72,7 +72,7 @@ html {
 }
 
 .form-input {
-  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2 xl:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray;
+  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2 rounded-lg border border-gray-300;
 }
 
 .shipping_form .form-input {

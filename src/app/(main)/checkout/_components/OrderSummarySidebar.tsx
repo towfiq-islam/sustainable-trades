@@ -18,9 +18,7 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
   );
 
   const hasPricing = !!master;
-
-  // Coupon discounts come from the separate /apply-coupon endpoint per
-  // vendor, not from master.discount_amount - sum them here.
+  
   const totalDiscount = Object.values(vendorExtras).reduce(
     (sum, v) => sum + (v?.discount_amount ?? 0),
     0,
@@ -97,18 +95,14 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
             <span>Sales Tax</span>
             <span>${master.tax_amount.toFixed(2)}</span>
           </div>
-          {master.shipping_amount > 0 && (
-            <div className="flex justify-between text-sm text-secondary-gray -mt-2">
-              <span>Shipping</span>
-              <span>${master.shipping_amount.toFixed(2)}</span>
-            </div>
-          )}
-          {master.delivery_amount > 0 && (
-            <div className="flex justify-between text-sm text-secondary-gray -mt-2">
-              <span>Local Delivery Fee</span>
-              <span>${master.delivery_amount.toFixed(2)}</span>
-            </div>
-          )}
+          <div className="flex justify-between text-sm text-secondary-gray -mt-2">
+            <span>Shipping</span>
+            <span>${master.shipping_amount.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-sm text-secondary-gray -mt-2">
+            <span>Local Delivery Fee</span>
+            <span>${master.delivery_amount.toFixed(2)}</span>
+          </div>
         </>
       ) : (
         <div className="flex justify-between text-sm text-secondary-gray -mt-1">

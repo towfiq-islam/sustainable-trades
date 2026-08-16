@@ -117,6 +117,12 @@ export const proNavLinks = [
     icon: <PEightSvg />,
   },
   {
+    id: 9,
+    label: "Shipping",
+    path: "/dashboard/pro/shipping",
+    icon: <PNineSvg />,
+  },
+  {
     id: 8,
     label: "Local Pickup",
     path: "/dashboard/pro/local-pickup",
@@ -133,12 +139,6 @@ export const proNavLinks = [
     label: "Favorites",
     path: "/dashboard/pro/favorites",
     icon: <PTenSvg />,
-  },
-  {
-    id: 9,
-    label: "Shipping",
-    path: "/dashboard/pro/shipping",
-    icon: <PNineSvg />,
   },
   {
     id: 11,

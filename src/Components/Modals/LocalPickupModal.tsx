@@ -1,12 +1,20 @@
+import { useBasicVendorOrderMutation } from "@/redux/api/ordersApi";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 type formData = {
-  name: string;
-  email: string;
-  phone: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string;
   message: string;
 };
+type Props = {
+  onClose: () => void;
+  productId: number;
+};
 
-const LocalPickupModal = () => {
+const LocalPickupModal = ({ onClose, productId }: Props) => {
+  const [localPickup, { isLoading }] = useBasicVendorOrderMutation();
+
   const {
     register,
     handleSubmit,
@@ -14,7 +22,18 @@ const LocalPickupModal = () => {
   } = useForm<formData>();
 
   const onSubmit = async (data: formData) => {
-    console.log(data);
+    const payload = {
+      product_id: productId,
+      quantity: 1,
+      ...data,
+    };
+    try {
+      const res = await localPickup(payload).unwrap();
+      toast.success(res?.message);
+      onClose();
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    }
   };
 
   return (
@@ -22,9 +41,13 @@ const LocalPickupModal = () => {
       <h3 className="text-xl font-semibold text-secondary-black mb-1">
         Contact seller
       </h3>
-      <p className="text-sm text-secondary-gray mb-4">
-        This item is sold directly by the seller, not through online checkout.
-        Send a message to arrange purchase or pickup.
+      <h4 className="text-[15px] font-semibold text-primary-green mb-1">
+        Purchase directly from the seller
+      </h4>
+      <p className="text-sm text-secondary-gray mb-3">
+        This item is not available through online checkout. Contact the seller
+        to arrange payment and coordinate pickup, delivery, or shipping directly
+        with them (if applicable)
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -33,10 +56,10 @@ const LocalPickupModal = () => {
           <input
             className="form-input"
             placeholder="Your name"
-            {...register("name", { required: "Name is required" })}
+            {...register("customer_name", { required: "Name is required" })}
           />
-          {errors.name && (
-            <span className="form-error">{errors.name.message}</span>
+          {errors.customer_name && (
+            <span className="form-error">{errors.customer_name.message}</span>
           )}
         </div>
 
@@ -46,10 +69,10 @@ const LocalPickupModal = () => {
             type="email"
             className="form-input"
             placeholder="Your email"
-            {...register("email", { required: "Email is required" })}
+            {...register("customer_email", { required: "Email is required" })}
           />
-          {errors.email && (
-            <span className="form-error">{errors.email.message}</span>
+          {errors.customer_email && (
+            <span className="form-error">{errors.customer_email.message}</span>
           )}
         </div>
 
@@ -59,10 +82,12 @@ const LocalPickupModal = () => {
             type="number"
             className="form-input"
             placeholder="Your phone number"
-            {...register("phone", { required: "Phone number is required" })}
+            {...register("customer_phone", {
+              required: "Phone number is required",
+            })}
           />
-          {errors.phone && (
-            <span className="form-error">{errors.phone.message}</span>
+          {errors.customer_phone && (
+            <span className="form-error">{errors.customer_phone.message}</span>
           )}
         </div>
 
@@ -82,7 +107,9 @@ const LocalPickupModal = () => {
           )}
         </div>
 
-        <button className={`primary_btn`}>Send Message to Seller</button>
+        <button disabled={isLoading} className={`primary_btn`}>
+          Send Message to Seller
+        </button>
       </form>
     </div>
   );

@@ -39,6 +39,9 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
   const { latitude, longitude } = useAuth();
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [deliveryUnavailableOpen, setDeliveryUnavailableOpen] = useState(false);
+  const [unavailableVendorName, setUnavailableVendorName] = useState<
+    string | null
+  >(null);
 
   const {
     register,
@@ -188,6 +191,11 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           err?.data?.message ===
           "Local delivery is not available for this address."
         ) {
+          const failedVendorId = err?.data?.vendor_id;
+          const failedVendor = failedVendorId
+            ? items.find(v => v.vendor_id === failedVendorId)
+            : vendor;
+          setUnavailableVendorName(failedVendor?.shop_name ?? vendor.shop_name);
           setDeliveryUnavailableOpen(true);
         } else {
           toast.error(
@@ -402,7 +410,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
         </div>
 
         <h3 className="text-xl font-semibold text-secondary-black mb-2">
-          We can't deliver to this address
+          {unavailableVendorName ?? "This seller"} can't deliver to this address
         </h3>
         <p className="text-secondary-gray text-sm mb-6">
           Your address falls outside the range of this shop's local delivery
@@ -417,7 +425,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           }}
           className="w-full py-3 rounded-lg bg-primary-green text-white font-medium cursor-pointer hover:scale-95 transition-all duration-300"
         >
-          Go back to shipping options
+          Go back to delivery options
         </button>
       </Modal>
     </div>

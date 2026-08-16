@@ -244,8 +244,15 @@ const Product = ({
         )}
       </div>
 
-      <Modal open={openMsg} onClose={() => setOpenMsg(false)}>
-        <LocalPickupModal />
+      <Modal
+        open={openMsg}
+        onClose={() => setOpenMsg(false)}
+        className="max-w-xl"
+      >
+        <LocalPickupModal
+          productId={product?.id}
+          onClose={() => setOpenMsg(false)}
+        />
       </Modal>
     </div>
   );

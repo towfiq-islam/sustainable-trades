@@ -168,7 +168,6 @@ const ConversationPage = ({
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [sendMessageMutation, { isLoading: isPending }] =
     useSendMessageMutation();
-  console.log(chats);
 
   const { data: singleConversation, isLoading: chatLoading } =
     useGetSingleConversationQuery(
@@ -289,12 +288,10 @@ const ConversationPage = ({
 
     formData.append("receiver_id", String(receiverId));
     formData.append("conversation_id", String(conversationId));
-
+    formData.append("type", singleConversation?.data?.conversation?.type);
     if (message) {
       formData.append("message", message);
     }
-
-    formData.append("type", "order");
 
     selectedFiles.forEach(file => {
       formData.append("file[]", file);

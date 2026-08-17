@@ -69,6 +69,7 @@ const page = () => {
     date_to: filter === "custom_date_range" ? dateRange.to : undefined,
     year: filter === "specific_year" ? year : undefined,
   });
+  console.log(allOrders);
 
   const headers = [
     { label: "Order Number #", key: "order_number" },

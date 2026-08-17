@@ -237,12 +237,6 @@ export const customerNavLinks = [
     icon: <PTenSvg />,
   },
   {
-    id: 27,
-    label: "Cart",
-    path: "/dashboard/customer/cart",
-    icon: <PSeventeenSvg />,
-  },
-  {
     id: 28,
     label: "Messages",
     path: "/dashboard/customer/messages",

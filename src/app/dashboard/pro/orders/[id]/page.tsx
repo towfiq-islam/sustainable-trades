@@ -386,7 +386,6 @@ const Page = () => {
             <div className="h-[480px] flex flex-col p-3">
               <ConversationPage
                 receiverId={singleOrder?.data?.user_id}
-                type={singleOrder?.data?.is_guest ? "guest_order" : "private"}
                 compact={true}
               />
             </div>

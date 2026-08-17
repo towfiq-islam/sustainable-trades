@@ -36,22 +36,15 @@ type CartProduct = {
   images: CartProductImage[];
 };
 
-type CartItem = {
+type OrderItem = {
   id: number;
   cart_id: number;
+  order_id: number;
   product_id: number;
   quantity: number;
   product: CartProduct;
 };
 
-type OrderItem = CartItem & { order_id: number };
-
-type Cart = {
-  id: number;
-  user_id: number;
-  shop_id: number;
-  cart_items: CartItem[];
-};
 type Order = { id: number; order_items: OrderItem[] };
 
 export type MessageItem = {
@@ -63,7 +56,16 @@ export type MessageItem = {
   message_type: string;
   created_at: string;
   status?: string;
-  cart?: Cart | null;
+  cart?: {
+    id: number;
+    quantity: number;
+    product: {
+      id: number;
+      images: { image: string }[];
+      product_price: number;
+      product_name: string;
+    };
+  };
   order?: Order | null;
   attachments?: Attachment[];
   sender?: {
@@ -75,7 +77,7 @@ export type MessageItem = {
 
 interface ConversationPageProps {
   receiverId: number;
-  type: string;
+  conversationId: number;
   compact?: boolean;
 }
 // ---- Helpers ----
@@ -146,11 +148,9 @@ function AttachedItemCard({
   );
 }
 
-// ---- Main Component ----
-
 const ConversationPage = ({
   receiverId,
-  type,
+  conversationId,
   compact,
 }: ConversationPageProps) => {
   const { user } = useAuth();
@@ -168,15 +168,16 @@ const ConversationPage = ({
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [sendMessageMutation, { isLoading: isPending }] =
     useSendMessageMutation();
+  console.log(chats);
 
   const { data: singleConversation, isLoading: chatLoading } =
     useGetSingleConversationQuery(
       {
-        id: receiverId,
-        type,
+        receiver_id: receiverId,
+        conversation_id: conversationId,
       },
       {
-        skip: !receiverId,
+        skip: !receiverId || !conversationId,
       },
     );
 
@@ -293,9 +294,7 @@ const ConversationPage = ({
       formData.append("message", message);
     }
 
-    if (type === "order") {
-      formData.append("type", "order");
-    }
+    formData.append("type", "order");
 
     selectedFiles.forEach(file => {
       formData.append("file[]", file);
@@ -475,33 +474,31 @@ const ConversationPage = ({
                     </div>
                   )}
 
-                  {/* Cart message */}
+                  {/* Cart message for basic vendor's product */}
                   {msg.cart && (
                     <AttachedItemCard message={msg.message} time={time}>
-                      {msg.cart.cart_items.map(item => (
-                        <ProductCard
-                          key={item.id}
-                          href={`/product-details/${item.product.id}`}
-                          image={item.product.images?.[0]?.image}
-                          name={item.product.product_name}
-                          qty={item.quantity}
-                          price={item.product.product_price}
-                        />
-                      ))}
+                      <ProductCard
+                        key={msg?.cart?.id}
+                        href={`/product-details/${msg?.cart?.product?.id}`}
+                        image={msg?.cart?.product?.images?.[0]?.image}
+                        name={msg?.cart?.product.product_name}
+                        qty={msg?.cart?.quantity}
+                        price={msg?.cart?.product.product_price}
+                      />
                     </AttachedItemCard>
                   )}
 
-                  {/* Order message */}
+                  {/* Order message for guest user */}
                   {msg.order && (
                     <AttachedItemCard message={msg.message} time={time}>
                       {msg.order.order_items.map(item => (
                         <ProductCard
-                          key={item.id}
+                          key={item?.id}
                           href={`/dashboard/${dashboardSegment}/orders/${item.order_id}`}
-                          image={item.product.images?.[0]?.image}
-                          name={item.product.product_name}
-                          qty={item.quantity}
-                          price={item.product.product_price}
+                          image={item?.product?.images?.[0]?.image}
+                          name={item?.product?.product_name}
+                          qty={item?.quantity}
+                          price={item?.product?.product_price}
                         />
                       ))}
                     </AttachedItemCard>

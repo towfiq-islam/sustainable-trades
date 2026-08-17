@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
-import LocalPickupMessage from "@/Components/PageComponents/dashboardPages/messageComponents/LocalPickupMessage";
 import InboxMessage from "@/Components/PageComponents/dashboardPages/messageComponents/InboxMessage";
 
 const MessagePage = () => {
@@ -12,7 +11,6 @@ const MessagePage = () => {
     { id: 1, label: "Inbox", path: "" },
     { id: 2, label: "Sent", path: "sent" },
     { id: 3, label: "Unread", path: "unread" },
-    { id: 4, label: "Local Pickup", path: "local pickup" },
   ];
 
   return (
@@ -55,11 +53,7 @@ const MessagePage = () => {
       </div>
 
       {/* Message Body */}
-      {activeTab === "local pickup" ? (
-        <LocalPickupMessage />
-      ) : (
-        <InboxMessage search={search} activeTab={activeTab} />
-      )}
+      <InboxMessage search={search} activeTab={activeTab} />
     </>
   );
 };

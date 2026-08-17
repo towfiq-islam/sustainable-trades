@@ -3,15 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import moment from "moment";
 import { useState } from "react";
-import DashBoardHeader from "@/Components/Common/DashBoardHeader";
-import OrderCardSkeleton from "@/Components/Loader/Loader";
-import Modal from "@/Components/Common/Modal";
-import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import {
   useDownloadInvoiceMutation,
   useGetMyOrdersQuery,
 } from "@/redux/api/ordersApi";
 import { FiShoppingCart } from "react-icons/fi";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
+import OrderCardSkeleton from "@/Components/Loader/Loader";
+import Modal from "@/Components/Common/Modal";
+import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 
 type OrdersListProps = {
   role: "customer" | "pro";
@@ -59,7 +59,6 @@ type orderItem = {
 };
 
 const OrdersList = ({
-  role,
   showHeader,
   showTabs,
   reviewBasePath,

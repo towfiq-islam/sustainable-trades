@@ -260,8 +260,8 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
 
             <div className="h-[480px] flex flex-col p-3">
               <ConversationPage
-                receiverId={getSingleOrder?.data?.shop?.user_id}
-                type="private"
+                receiverId={getSingleOrder?.data?.vendor_id}
+                conversationId={getSingleOrder?.data?.conversation?.id}
                 compact={true}
               />
             </div>

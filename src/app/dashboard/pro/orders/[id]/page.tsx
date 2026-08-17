@@ -64,17 +64,6 @@ const Page = () => {
     ?.map((item: any) => normalizeStatus(item.content))
     .filter(Boolean);
 
-  // const customizedData =
-  //   `This message is sent from ${user?.shop_info?.shop_name} shop.\n` +
-  //   `Shop owner: ${user?.first_name} ${user?.last_name && user?.last_name}\n` +
-  //   `Order Number: ${singleOrder?.data?.order_number}\n` +
-  //   `Order Details: <a href="${
-  //     user?.role === "vendor"
-  //       ? `${window.location.origin}/dashboard/pro/orders/${order_id}`
-  //       : `${window.location.origin}/dashboard/customer/orders/${order_id}`
-  //   }"  target="_blank" style="text-decoration: underline color: blue">Click here</a>\n` +
-  //   `Message: ${data?.message}`;
-
   useEffect(() => {
     const newHeights = contentRefs.current.map((ref, idx) => {
       if (!ref) return "0px";
@@ -385,8 +374,8 @@ const Page = () => {
             </div>
             <div className="h-[480px] flex flex-col p-3">
               <ConversationPage
-                receiverId={singleOrder?.data?.user_id}
-                type={singleOrder?.data?.is_guest ? "guest_order" : "private"}
+                receiverId={singleOrder?.data?.vendor_id}
+                conversationId={singleOrder?.data?.conversation?.id}
                 compact={true}
               />
             </div>
@@ -394,7 +383,9 @@ const Page = () => {
 
           <Link
             className="primary_btn"
-            href={`/dashboard/pro/messages/inbox/${singleOrder?.data?.user_id}?type=${singleOrder?.data?.conversation?.type}`}
+            href={`/dashboard/pro/messages/inbox?receiver_id=${
+              singleOrder?.data?.vendor_id
+            }&conversation_id=${singleOrder?.data?.conversation?.id}`}
           >
             Go to Messages Board
           </Link>

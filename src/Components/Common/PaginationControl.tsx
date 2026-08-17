@@ -49,7 +49,7 @@ export default function PaginationControl({
   return (
     <div
       className={`flex items-center py-8 flex-wrap gap-4 ${
-        hasSummary ? "justify-between" : "justify-center"
+        hasSummary ? "justify-between" : "justify-end"
       } ${className}`}
     >
       {hasSummary && (

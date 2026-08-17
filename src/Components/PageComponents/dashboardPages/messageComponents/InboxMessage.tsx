@@ -18,6 +18,7 @@ type Props = {
 type Participant = {
   id: number;
   participant_id: number;
+  conversation_id: number;
   participant: {
     first_name: string;
     last_name: string;
@@ -79,9 +80,9 @@ const InboxMessage = ({ search, activeTab }: Props) => {
                       user?.membership?.membership_type === "basic"
                     ? "basic"
                     : "customer"
-              }/messages/inbox/${
+              }/messages/inbox?receiver_id=${
                 conversation?.participants[0]?.participant_id
-              }?type=${conversation?.type}`}
+              }&conversation_id=${conversation?.participants[0]?.conversation_id}`}
               className="border-b-2 border-gray-200 py-7 cursor-pointer duration-300 transition-all hover:bg-gray-100 px-5 flex justify-between items-center"
             >
               {/* Left */}

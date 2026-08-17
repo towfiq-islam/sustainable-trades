@@ -61,7 +61,6 @@ const page = () => {
     setCategoryId(allCategory?.data[0]?.id);
   }, [allCategory]);
 
-  // Reset to page 1 whenever the selected category changes
   useEffect(() => {
     setPage(1);
   }, [categoryId]);

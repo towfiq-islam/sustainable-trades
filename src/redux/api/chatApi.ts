@@ -25,14 +25,22 @@ export const chatApi = apiSlice.injectEndpoints({
 
     // Get Single Conversation
     getSingleConversation: builder.query({
-      query: ({ id, type }: { id: number; type: string }) => ({
+      query: ({
+        receiver_id,
+        conversation_id,
+      }: {
+        receiver_id: number;
+        conversation_id: number;
+      }) => ({
         url: "/api/message",
         params: {
-          receiver_id: id,
-          type,
+          receiver_id,
+          conversation_id,
         },
       }),
-      providesTags: (_result, _error, { id }) => [{ type: "conversation", id }],
+      providesTags: (_result, _error, { receiver_id }) => [
+        { type: "conversation", receiver_id },
+      ],
     }),
 
     // Send Message
@@ -48,12 +56,6 @@ export const chatApi = apiSlice.injectEndpoints({
         ,
       ],
     }),
-
-    // Local Pickup Conversations
-    getLocalPickupConversation: builder.query({
-      query: () => "/api/local-pickup/conversation",
-      providesTags: ["conversation"],
-    }),
   }),
 });
 
@@ -61,5 +63,4 @@ export const {
   useGetAllConversationQuery,
   useGetSingleConversationQuery,
   useSendMessageMutation,
-  useGetLocalPickupConversationQuery,
 } = chatApi;

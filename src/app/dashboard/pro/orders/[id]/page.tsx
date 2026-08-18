@@ -6,7 +6,6 @@ import { GoBackSvg, Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
 import { useEffect, useRef, useState } from "react";
 import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
-import Proorderproduct from "@/Components/Prodashboardcomponents/Proorderproduct";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import Link from "next/link";
@@ -17,6 +16,8 @@ import {
   useUpdateOrderStatusMutation,
 } from "@/redux/api/ordersApi";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
+import OrderedProducts from "@/Components/Prodashboardcomponents/OrderedProducts";
+const STATUS_STEPS = ["confirmed", "processing", "shipped", "delivered"];
 
 const Page = () => {
   const router = useRouter();
@@ -33,7 +34,6 @@ const Page = () => {
   const [heights, setHeights] = useState<Array<string>>([]);
   const [updateStatusMutation] = useUpdateOrderStatusMutation();
   const { data: singleOrder, isLoading } = useGetSingleOrderQuery(order_id);
-  const orderHistory = singleOrder?.data?.order_status_history ?? [];
   const [cancelOrder, { isLoading: isCancellingOrder }] =
     useCancelOrderMutation();
 
@@ -45,21 +45,11 @@ const Page = () => {
     { label: "Order Cancelled", key: "cancelled" },
   ];
 
-  const normalizeStatus = (content: string) => {
-    const text = content.toLowerCase();
-    if (text.includes("confirmed")) return "confirmed";
-    if (text.includes("processed") || text.includes("processing"))
-      return "processing";
-    if (text.includes("shipped")) return "shipped";
-    if (text.includes("delivered")) return "delivered";
-    if (text.includes("cancelled") || text.includes("canceled"))
-      return "cancelled";
-    return null;
-  };
-
-  const enabledSteps = orderHistory
-    ?.map((item: any) => normalizeStatus(item.content))
-    .filter(Boolean);
+  const currentStatus: string | undefined = singleOrder?.data?.status;
+  const isCancelled = currentStatus === "cancelled";
+  const currentStepIndex = currentStatus
+    ? STATUS_STEPS.indexOf(currentStatus)
+    : -1;
 
   useEffect(() => {
     const newHeights = contentRefs.current.map((ref, idx) => {
@@ -76,15 +66,14 @@ const Page = () => {
       content: (
         <div className="text-secondary-gray text-[14px] pb-2">
           <p>
-            <strong>Name:</strong>{" "}
-            {singleOrder?.data?.shipping_address?.first_name}{" "}
-            {singleOrder?.data?.shipping_address?.last_name}
+            <strong>Name:</strong> {singleOrder?.data?.customer?.first_name}{" "}
+            {singleOrder?.data?.customer?.last_name}
           </p>
           <p>
-            <strong>Email:</strong> {singleOrder?.data?.shipping_address?.email}
+            <strong>Email:</strong> {singleOrder?.data?.customer?.email}
           </p>
           <p>
-            <strong>Phone:</strong> {singleOrder?.data?.shipping_address?.phone}
+            <strong>Phone:</strong> {singleOrder?.data?.customer?.phone}
           </p>
         </div>
       ),
@@ -93,7 +82,7 @@ const Page = () => {
       title: "Shipping Address",
       content: (
         <div className="text-sm text-secondary-gray">
-          <p>{singleOrder?.data?.shipping_address?.address}</p>
+          <p>{singleOrder?.data?.shipping_address?.street_address}</p>
           {singleOrder?.data?.shipping_address?.apt && (
             <p>{singleOrder?.data?.shipping_address.apt}</p>
           )}
@@ -115,15 +104,6 @@ const Page = () => {
       content: <></>,
       isModal: true,
     },
-    ...(singleOrder?.data?.status === "local_pickup_requested"
-      ? [
-          {
-            title: "Arrange Local Pickup",
-            content: <></>,
-            isModal: true,
-          },
-        ]
-      : []),
   ];
 
   if (isLoading) {
@@ -133,8 +113,6 @@ const Page = () => {
       </div>
     );
   }
-
-  const currentStatus = enabledSteps?.[enabledSteps.length - 1];
 
   return (
     <>
@@ -191,13 +169,21 @@ const Page = () => {
                 className="min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-2 hover:border-primary-green transition-all duration-300 cursor-pointer"
               >
                 <div className="flex items-center gap-3">
-                  <div className="size-3 rounded-full bg-primary-green" />
+                  <div
+                    className={`size-3 rounded-full ${
+                      isCancelled ? "bg-primary-red" : "bg-primary-green"
+                    }`}
+                  />
 
                   <div className="text-left">
                     <p className="text-[12px] text-gray-500">Current Status</p>
 
-                    <h5 className="text-[15px] font-semibold text-primary-green capitalize">
-                      {currentStatus}
+                    <h5
+                      className={`text-[15px] font-semibold capitalize ${
+                        isCancelled ? "text-primary-red" : "text-primary-green"
+                      }`}
+                    >
+                      {currentStatus ?? "Unknown"}
                     </h5>
                   </div>
                 </div>
@@ -257,7 +243,11 @@ const Page = () => {
           {/* Progress Bar */}
           <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start mt-6">
             {steps.map((step, index) => {
-              const isCompleted = enabledSteps.includes(step.key);
+              const isCompleted =
+                step.key === "cancelled"
+                  ? isCancelled
+                  : !isCancelled &&
+                    STATUS_STEPS.indexOf(step.key) <= currentStepIndex;
 
               return (
                 <div
@@ -305,11 +295,11 @@ const Page = () => {
 
           {/* Products */}
           <div className="mt-6">
-            <Proorderproduct data={singleOrder?.data} order_id={order_id} />
+            <OrderedProducts data={singleOrder?.data} order_id={order_id} />
           </div>
 
           {/* Order Summary */}
-          <div className="hidden lg:block mt-20">
+          <div className="hidden lg:block mt-10">
             <OrderSummary data={singleOrder?.data} />
           </div>
         </div>
@@ -422,8 +412,7 @@ const Page = () => {
         </div>
       </div>
 
-      {/* Order Summary */}
-      <div className="block lg:hidden mt-20">
+      <div className="block lg:hidden mt-10">
         <OrderSummary data={singleOrder?.data} />
       </div>
 
@@ -442,6 +431,7 @@ const Page = () => {
         <h3 className="text-xl font-semibold text-primary-green mb-2">
           Order Note
         </h3>
+
         <p className="leading-[164%] text-gray-700">"{note}"</p>
       </Modal>
     </>

@@ -3,35 +3,31 @@ import Image from "next/image";
 import moment from "moment";
 import { useDownloadInvoiceMutation } from "@/redux/api/ordersApi";
 
-type OrderImage = {
-  image: string;
-};
-
-type orderItem = {
-  order_id: number;
+type OrderLineItem = {
+  id: number;
+  product_id: number;
+  product_name: string;
+  product_image: string;
   quantity: number;
-  total_price: string;
-  product: {
-    product_name: string;
-    product_price: number;
-    images: OrderImage[];
-  };
+  unit_price: number;
+  tax_amount: number;
+  discount_amount: number;
+  total_price: number;
 };
 
 type OrderProps = {
   data: {
-    order_number: number;
-    created_at: string;
-    order_items: orderItem[];
+    order_number: string;
+    order_date: string;
+    items: OrderLineItem[];
   };
   order_id: number;
 };
 
-const Proorderproduct = ({ data, order_id }: OrderProps) => {
+const OrderedProducts = ({ data, order_id }: OrderProps) => {
   const [downloadInvoicePdf, { isLoading: isPending }] =
     useDownloadInvoiceMutation();
 
-  // Func for download Invoice pdf
   const handleDownloadInvoice = (orderId: number) => {
     downloadInvoicePdf(orderId)
       .unwrap()
@@ -59,7 +55,7 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
         <div className="flex gap-x-1 items-center">
           <h5 className="text-[16px] font-bold text-[#67645F]">Date Ordered</h5>
           <p className="text-[14px] font-normal text-secondary-black">
-            {moment(data?.created_at).format("ll")}
+            {moment(data?.order_date).format("ll")}
           </p>
         </div>
         <div className="flex gap-x-1 items-center w-full md:w-fit mb-3.5 md:mb-0">
@@ -84,17 +80,17 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
         </div>
       </div>
 
-      <div className="mt-6 border border-[#CCCED0] rounded">
+      <div className="mt-6 border border-[#CCCED0] rounded-xl">
         <div className="flex flex-col">
-          {data?.order_items?.map(order => (
+          {data?.items?.map(item => (
             <div
-              key={order?.order_id}
-              className="flex flex-col md:flex-row gap-5 justify-between md:items-center border-b border-gray-300 px-6 py-4"
+              key={item?.id}
+              className="flex flex-col md:flex-row gap-5 justify-between md:items-center border-b border-gray-300 last:border-b-0 p-4"
             >
               <div className="flex flex-col md:flex-row gap-x-6 md:items-center">
-                <figure className="w-36 h-28 rounded border border-gray-100 relative shrink-0">
+                <figure className="w-30 h-24 rounded border border-gray-100 relative shrink-0">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${order?.product?.images?.[0]?.image}`}
+                    src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product_image}`}
                     alt="Thumbnail"
                     unoptimized
                     fill
@@ -102,17 +98,17 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
                   />
                 </figure>
 
-                <h3 className="text-[20px] font-semibold text-secondary-black">
-                  {order?.product?.product_name}
+                <h3 className="text-lg font-semibold text-secondary-black">
+                  {item?.product_name}
                 </h3>
               </div>
 
               <div className="shrink-0">
-                <h3 className="text-[20px] font-semibold text-secondary-black pb-1">
-                  ${order?.total_price}
+                <h3 className="text-xl font-semibold text-secondary-black pb-1">
+                  ${item?.total_price}
                 </h3>
-                <h4 className="text-[18px] font-semibold text-secondary-black">
-                  Qty: {order?.quantity}
+                <h4 className="text-lg font-semibold text-secondary-black">
+                  Qty: {item?.quantity}
                 </h4>
               </div>
             </div>
@@ -123,4 +119,4 @@ const Proorderproduct = ({ data, order_id }: OrderProps) => {
   );
 };
 
-export default Proorderproduct;
+export default OrderedProducts;

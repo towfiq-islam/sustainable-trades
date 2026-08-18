@@ -179,14 +179,6 @@ export const vendorApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    arrangeLocalPickupAddress: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/api/order/${id}/local-pickup/arrange`,
-        method: "POST",
-        body: data,
-      }),
-    }),
-
     localPickupPayment: builder.mutation({
       query: ({ id, data }) => ({
         url: `/api/local-pickup/checkout/${id}`,
@@ -308,7 +300,6 @@ export const {
   useChangeLabelTypeMutation,
   useSetShippingMutation,
   useLocalPickupProMutation,
-  useArrangeLocalPickupAddressMutation,
   useLocalPickupPaymentMutation,
 
   useAddPickupLocationMutation,

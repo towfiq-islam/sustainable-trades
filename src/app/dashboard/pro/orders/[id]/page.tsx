@@ -10,14 +10,13 @@ import Proorderproduct from "@/Components/Prodashboardcomponents/Proorderproduct
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import Link from "next/link";
-import ArrangeLocalPickupModal from "../_Components/ArrangeLocalPickupModal";
-import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
+import toast from "react-hot-toast";
 import {
   useCancelOrderMutation,
   useGetSingleOrderQuery,
   useUpdateOrderStatusMutation,
 } from "@/redux/api/ordersApi";
-import toast from "react-hot-toast";
+import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 
 const Page = () => {
   const router = useRouter();
@@ -48,7 +47,6 @@ const Page = () => {
 
   const normalizeStatus = (content: string) => {
     const text = content.toLowerCase();
-
     if (text.includes("confirmed")) return "confirmed";
     if (text.includes("processed") || text.includes("processing"))
       return "processing";
@@ -56,7 +54,6 @@ const Page = () => {
     if (text.includes("delivered")) return "delivered";
     if (text.includes("cancelled") || text.includes("canceled"))
       return "cancelled";
-
     return null;
   };
 
@@ -69,6 +66,7 @@ const Page = () => {
       if (!ref) return "0px";
       return openIndex === idx ? `${ref.scrollHeight}px` : "0px";
     });
+
     setHeights(newHeights);
   }, [openIndex]);
 
@@ -445,13 +443,6 @@ const Page = () => {
           Order Note
         </h3>
         <p className="leading-[164%] text-gray-700">"{note}"</p>
-      </Modal>
-
-      <Modal open={addressOpen} onClose={() => setAddressModalOpen(false)}>
-        <ArrangeLocalPickupModal
-          order_id={order_id}
-          onClose={() => setAddressModalOpen(false)}
-        />
       </Modal>
     </>
   );

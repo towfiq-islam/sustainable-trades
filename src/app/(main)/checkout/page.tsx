@@ -9,10 +9,12 @@ import useAuth from "@/Hooks/useAuth";
 import CheckoutStepper, { CheckoutStep } from "./_components/CheckoutStepper";
 import OrderSummarySidebar from "./_components/OrderSummarySidebar";
 import ReviewStep from "./_components/ReviewStep";
-import PaymentStep from "./_components/PaymentStep";
 import DeliveryOptions from "./_components/DeliveryOptions";
 import DeliveryDetails from "./_components/DeliveryDetails";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const PaymentStep = dynamic(() => import("./_components/PaymentStep"));
 
 const CheckoutContent = () => {
   const router = useRouter();

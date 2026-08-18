@@ -1,8 +1,12 @@
 "use client";
 import CartItem from "./CartItem";
-import emptyAnimation from "@/Assets/cart.json";
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
+
+const EmptyCartAnimation = dynamic(
+  () => import("./EmptyCartAnimation"),
+  { ssr: false },
+);
 import { TiDelete } from "react-icons/ti";
 import { clearCart } from "@/redux/slices/cartSlice";
 import { useRouter } from "next/navigation";
@@ -100,13 +104,7 @@ const PaymentOptions = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-2 md:gap-3 items-center">
-          <div className="w-40 md:w-48 lg:w-54 mx-auto">
-            <Lottie
-              animationData={emptyAnimation}
-              loop={true}
-              autoplay={true}
-            />
-          </div>
+          <EmptyCartAnimation />
           <h3 className="text-lg md:text-xl lg:text-2xl font-medium mb-1">
             Your Cart is Empty
           </h3>

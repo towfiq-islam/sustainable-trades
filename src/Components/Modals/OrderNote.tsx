@@ -25,11 +25,9 @@ const OrderNote: React.FC<OrderNoteProps> = ({ order_id, onClose }) => {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const res = await addNoteMutation(data).unwrap();
-      if (res?.success) {
-        toast.success(res?.message);
-        onClose();
-      }
+      const res = await addNoteMutation({ id: order_id, data }).unwrap();
+      toast.success(res?.message);
+      onClose();
     } catch (err: any) {
       toast.error(err?.data?.message);
     }

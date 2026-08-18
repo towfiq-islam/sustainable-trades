@@ -4,7 +4,7 @@ import { FaAngleDown, FaCheck } from "react-icons/fa";
 import { PuffLoader } from "react-spinners";
 import { GoBackSvg, Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
@@ -25,11 +25,21 @@ const Page = () => {
   const order_id = Number(params.id);
   const [open, isOpen] = useState<boolean>(false);
   const [note, setNote] = useState<string>("");
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openItems, setOpenItems] = useState<Set<number>>(
+    () => new Set([0, 1, 2]),
+  );
+
+  const toggleAccordion = (idx: number) => {
+    setOpenItems(prev => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
+  };
   const [openStatusPopover, setOpenStatusPopover] = useState(false);
   const [showNote, setShowNote] = useState<boolean>(false);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
-  const [addressOpen, setAddressModalOpen] = useState(false);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
   const [updateStatusMutation] = useUpdateOrderStatusMutation();
@@ -51,14 +61,92 @@ const Page = () => {
     ? STATUS_STEPS.indexOf(currentStatus)
     : -1;
 
-  useEffect(() => {
-    const newHeights = contentRefs.current.map((ref, idx) => {
-      if (!ref) return "0px";
-      return openIndex === idx ? `${ref.scrollHeight}px` : "0px";
-    });
+  useLayoutEffect(() => {
+    const measure = () => {
+      const newHeights = contentRefs.current.map((ref, idx) => {
+        if (!ref) return "0px";
+        return openItems.has(idx) ? `${ref.scrollHeight}px` : "0px";
+      });
 
-    setHeights(newHeights);
-  }, [openIndex]);
+      setHeights(newHeights);
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [openItems]);
+
+  const fulfillmentType = singleOrder?.data?.fulfillment_type;
+  const deliveryAddress = singleOrder?.data?.delivery?.delivery_address;
+  const pickup = singleOrder?.data?.pickup;
+
+  const getFulfillmentAccordionItem = () => {
+    if (fulfillmentType === "delivery") {
+      return {
+        title: "Delivery Address",
+        content: (
+          <div className="text-sm text-secondary-gray pb-3">
+            <p>{deliveryAddress?.street_address}</p>
+            {deliveryAddress?.apt && <p>{deliveryAddress.apt}</p>}
+            <p>
+              {deliveryAddress?.city}
+              {deliveryAddress?.state ? `, ${deliveryAddress.state}` : ""}
+              {deliveryAddress?.postal_code
+                ? ` ${deliveryAddress.postal_code}`
+                : ""}
+            </p>
+            <p>{deliveryAddress?.country}</p>
+          </div>
+        ),
+      };
+    }
+
+    if (fulfillmentType === "pickup") {
+      return {
+        title: "Pickup Location",
+        content: (
+          <div className="text-sm text-secondary-gray pb-3">
+            {pickup?.pickup_name && (
+              <p className="font-medium text-secondary-black">
+                {pickup.pickup_name}
+              </p>
+            )}
+            <p>{pickup?.address}</p>
+            {pickup?.unit && <p>{pickup.unit}</p>}
+            <p>
+              {pickup?.city}
+              {pickup?.state ? `, ${pickup.state}` : ""}
+              {pickup?.zip_code ? ` ${pickup.zip_code}` : ""}
+            </p>
+            <p>{pickup?.country}</p>
+          </div>
+        ),
+      };
+    }
+
+    // default: shipping
+    return {
+      title: "Shipping Address",
+      content: (
+        <div className="text-sm text-secondary-gray pb-3">
+          <p>{singleOrder?.data?.shipping_address?.street_address}</p>
+          {singleOrder?.data?.shipping_address?.apt && (
+            <p>{singleOrder?.data?.shipping_address.apt}</p>
+          )}
+          <p>
+            {singleOrder?.data?.shipping_address?.city}
+            {singleOrder?.data?.shipping_address?.state
+              ? `, ${singleOrder?.data?.shipping_address.state}`
+              : ""}
+            {singleOrder?.data?.shipping_address?.postal_code
+              ? ` ${singleOrder?.data?.shipping_address.postal_code}`
+              : ""}
+          </p>
+          <p>{singleOrder?.data?.shipping_address?.country}</p>
+        </div>
+      ),
+    };
+  };
 
   const accordionData = [
     {
@@ -78,27 +166,7 @@ const Page = () => {
         </div>
       ),
     },
-    {
-      title: "Shipping Address",
-      content: (
-        <div className="text-sm text-secondary-gray">
-          <p>{singleOrder?.data?.shipping_address?.street_address}</p>
-          {singleOrder?.data?.shipping_address?.apt && (
-            <p>{singleOrder?.data?.shipping_address.apt}</p>
-          )}
-          <p>
-            {singleOrder?.data?.shipping_address?.city}
-            {singleOrder?.data?.shipping_address?.state
-              ? `, ${singleOrder?.data?.shipping_address.state}`
-              : ""}
-            {singleOrder?.data?.shipping_address?.postal_code
-              ? ` ${singleOrder?.data?.shipping_address.postal_code}`
-              : ""}
-          </p>
-          <p>{singleOrder?.data?.shipping_address?.country}</p>
-        </div>
-      ),
-    },
+    getFulfillmentAccordionItem(),
     {
       title: "Add Note",
       content: <></>,
@@ -316,12 +384,7 @@ const Page = () => {
                 onClick={() => {
                   if (item.isModal && item.title === "Add Note")
                     setNoteModalOpen(true);
-                  else if (
-                    item.isModal &&
-                    item.title === "Arrange Local Pickup"
-                  )
-                    return setAddressModalOpen(true);
-                  else setOpenIndex(openIndex === idx ? null : idx);
+                  else toggleAccordion(idx);
                 }}
               >
                 <h4 className="text-secondary-black font-semibold">
@@ -333,7 +396,7 @@ const Page = () => {
                 ) : (
                   <FaAngleDown
                     className={`transition-transform duration-300 ${
-                      openIndex === idx ? "rotate-180" : "rotate-0"
+                      openItems.has(idx) ? "rotate-180" : "rotate-0"
                     }`}
                   />
                 )}
@@ -344,7 +407,7 @@ const Page = () => {
                   ref={(el: HTMLDivElement | null): void => {
                     contentRefs.current[idx] = el;
                   }}
-                  style={{ maxHeight: heights[idx] }}
+                  style={{ maxHeight: heights[idx] ?? "0px" }}
                   className="overflow-hidden transition-all duration-500 ease-in-out px-3"
                 >
                   {item?.content}

@@ -28,8 +28,13 @@ export const ordersApi = apiSlice.injectEndpoints({
       providesTags: ["order"],
     }),
 
-    getOrderHistory: builder.query({
+    getCustomerOrderHistory: builder.query({
       query: id => `/api/my-order/${id}/history`,
+      providesTags: (_r, _e, id) => [{ type: "order", id }],
+    }),
+
+    getVendorOrderHistory: builder.query({
+      query: id => `/api/vendor-order/${id}/history`,
       providesTags: (_r, _e, id) => [{ type: "order", id }],
     }),
 
@@ -89,10 +94,10 @@ export const ordersApi = apiSlice.injectEndpoints({
       invalidatesTags: ["review"],
     }),
 
-    downloadInvoice: builder.mutation<Blob, any>({
+    downloadVendorInvoice: builder.mutation<Blob, any>({
       query: orderId => ({
-        url: `/api/invoice-generate/${orderId}`,
-        method: "POST",
+        url: `/api/vendor/orders/${orderId}/invoice/download`,
+        method: "GET",
         responseHandler: response => response.blob(),
       }),
     }),
@@ -111,7 +116,6 @@ export const {
   useGetVendorOrdersQuery,
   useGetMyOrdersQuery,
   useGetSingleOrderQuery,
-  useGetOrderHistoryQuery,
   useGetOrderDetailsQuery,
   useUpdateOrderStatusMutation,
   useCancelOrderMutation,
@@ -119,7 +123,9 @@ export const {
   useGetCustomerReviewsQuery,
   useGetOrderStatisticsQuery,
   useGuestOrderMutation,
-  useDownloadInvoiceMutation,
+  useDownloadVendorInvoiceMutation,
   useAddProductReviewMutation,
   useBasicVendorOrderMutation,
+  useGetCustomerOrderHistoryQuery,
+  useGetVendorOrderHistoryQuery,
 } = ordersApi;

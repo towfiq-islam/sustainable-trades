@@ -4,7 +4,7 @@ import Link from "next/link";
 import moment from "moment";
 import { useState } from "react";
 import {
-  useDownloadInvoiceMutation,
+  useDownloadVendorInvoiceMutation,
   useGetMyOrdersQuery,
 } from "@/redux/api/ordersApi";
 import { FiShoppingCart } from "react-icons/fi";
@@ -73,7 +73,7 @@ const OrdersList = ({
   const [showNote, setShowNote] = useState<boolean>(false);
   const [note, setNote] = useState<string>("");
   const [downloadInvoicePdf, { isLoading: isPending }] =
-    useDownloadInvoiceMutation();
+    useDownloadVendorInvoiceMutation();
 
   // Func for download Invoice pdf
   const handleDownloadInvoice = (orderId: number) => {

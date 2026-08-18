@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import moment from "moment";
-import { useDownloadInvoiceMutation } from "@/redux/api/ordersApi";
+import { useDownloadVendorInvoiceMutation } from "@/redux/api/ordersApi";
 
 type OrderLineItem = {
   id: number;
@@ -26,7 +26,7 @@ type OrderProps = {
 
 const OrderedProducts = ({ data, order_id }: OrderProps) => {
   const [downloadInvoicePdf, { isLoading: isPending }] =
-    useDownloadInvoiceMutation();
+    useDownloadVendorInvoiceMutation();
 
   const handleDownloadInvoice = (orderId: number) => {
     downloadInvoicePdf(orderId)

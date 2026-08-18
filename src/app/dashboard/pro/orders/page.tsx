@@ -1,22 +1,22 @@
 "use client";
-import moment from "moment";
-import { useEffect, useState } from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { OrderRowSkeleton } from "@/Components/Loader/Loader";
-import useAuth from "@/Hooks/useAuth";
-import Link from "next/link";
-import Modal from "@/Components/Common/Modal";
-import { Download } from "@/Components/Svg/SvgContainer";
-import { IoSearchOutline } from "react-icons/io5";
-import { CSVLink } from "react-csv";
-import OrdersList from "@/Components/PageComponents/dashboardPages/Orders/OrdersList";
 import {
   useCancelOrderMutation,
   useGetVendorOrdersQuery,
 } from "@/redux/api/ordersApi";
+import moment from "moment";
+import Link from "next/link";
+import { CSVLink } from "react-csv";
 import toast from "react-hot-toast";
+import useAuth from "@/Hooks/useAuth";
+import { useEffect, useState } from "react";
+import Modal from "@/Components/Common/Modal";
 import { FiShoppingBag } from "react-icons/fi";
+import { IoSearchOutline } from "react-icons/io5";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { Download } from "@/Components/Svg/SvgContainer";
+import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import PaginationControl from "@/Components/Common/PaginationControl";
+import OrdersList from "@/Components/PageComponents/dashboardPages/Orders/OrdersList";
 
 type orderItem = {
   id: number;
@@ -29,7 +29,7 @@ type orderItem = {
   subscribe_website: number;
   amount: string;
   status: string;
-  shipping_option: string;
+  fulfillment_type: string;
   note: string;
   customer: {
     first_name: string;
@@ -89,25 +89,18 @@ const page = () => {
   ];
 
   const csvData =
-    allOrders?.data?.data?.map((order: orderItem) => ({
+    allOrders?.data?.map((order: orderItem) => ({
       order_number: order?.order_number,
       order_date: moment(order?.created_at).format("ll"),
       customer: `${order?.customer?.first_name || ""} ${order?.customer?.last_name || ""}`,
       email: order?.customer?.email,
       opt: order?.subscribe_website ? "Yes" : "No",
-      total_quantity: order?.total_quantity,
+      total_quantity: order?.items,
       total_amount: `$${order?.amount}`,
-      payment_method:
-        order?.payment_method === "paypal" ? "Paypal" : "Cash On Delivery",
+      payment_method: "paypal",
       payment_status: order?.payment_status,
-      status:
-        order?.status === "local_pickup_requested"
-          ? "Local pickup requested"
-          : order?.status === "awaiting_payment"
-            ? "Awaiting Payment"
-            : order?.status,
-      shipping_option:
-        order?.shipping_option === "local_pickup" ? "Local Pickup" : "Shipping",
+      status: order?.status,
+      shipping_option: order?.fulfillment_type,
       note: order?.note || "",
     })) || [];
 
@@ -341,18 +334,12 @@ const page = () => {
                                             : "bg-gray-500"
                             }`}
                           >
-                            {order?.status === "local_pickup_requested"
-                              ? "Local pickup requested"
-                              : order?.status === "awaiting_payment"
-                                ? "Awaiting Payment"
-                                : order?.status}
+                            {order?.status}
                           </span>
                         </td>
 
-                        <td className="py-4 px-4">
-                          {order?.shipping_option === "local_pickup"
-                            ? "Local pickup"
-                            : "Shipping"}
+                        <td className="py-4 px-4 capitalize">
+                          {order?.fulfillment_type}
                         </td>
 
                         <td className="py-4 px-4 capitalize">

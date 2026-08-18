@@ -29,16 +29,13 @@ type ProductItem = {
 type ViewMode = "table" | "grid";
 
 const statusStyles: Record<string, string> = {
-  pending: "bg-amber-100 text-amber-700",
-  confirmed: "bg-blue-100 text-blue-700",
-  shipped: "bg-purple-100 text-purple-700",
-  approved: "bg-emerald-100 text-emerald-700",
-  cancelled: "bg-red-100 text-red-700",
+  pending: "bg-accent-red text-gray-100",
+  approved: "bg-primary-green text-white",
 };
 
 const StatusBadge = ({ status }: { status: string }) => (
   <span
-    className={`px-3 py-1 rounded-full text-xs font-semibold capitalize ${
+    className={`px-3 py-1 rounded-full text-xs shadow font-semibold capitalize ${
       statusStyles[status] ?? "bg-gray-100 text-gray-600"
     }`}
   >

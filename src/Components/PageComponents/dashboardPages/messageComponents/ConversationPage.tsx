@@ -10,7 +10,11 @@ import { PuffLoader } from "react-spinners";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
 import { useEffect, useRef, useState } from "react";
 import { FiPaperclip, FiSmile, FiSend } from "react-icons/fi";
-import EmojiPicker from "emoji-picker-react";
+import dynamic from "next/dynamic";
+
+const EmojiPicker = dynamic(() => import("emoji-picker-react"), {
+  ssr: false,
+});
 import {
   chatApi,
   useGetSingleConversationQuery,
@@ -129,18 +133,22 @@ function ProductCard({
 function AttachedItemCard({
   message,
   time,
+  compact,
   children,
 }: {
   message: string;
   time: string;
+  compact?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
-      <div className="p-4 border-b border-gray-200">
+      <div className={`${compact ? "p-4" : "p-3"} border-b border-gray-200`}>
         <p className="text-sm text-gray-700">{message}</p>
       </div>
-      <div className="p-4 space-y-4">{children}</div>
+      <div className={`${compact ? "p-4 space-y-4" : "p-3 space-y-3.5"}`}>
+        {children}
+      </div>
       <div className="px-4 pb-3 text-right">
         <span className="text-xs text-gray-500">{time}</span>
       </div>
@@ -473,7 +481,11 @@ const ConversationPage = ({
 
                   {/* Cart message for basic vendor's product */}
                   {msg.cart && (
-                    <AttachedItemCard message={msg.message} time={time}>
+                    <AttachedItemCard
+                      message={msg.message}
+                      time={time}
+                      compact={compact}
+                    >
                       <ProductCard
                         key={msg?.cart?.id}
                         href={`/product-details/${msg?.cart?.product?.id}`}

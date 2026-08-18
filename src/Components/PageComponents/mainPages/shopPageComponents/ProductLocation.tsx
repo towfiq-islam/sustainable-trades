@@ -7,7 +7,9 @@ import { LuFileQuestion } from "react-icons/lu";
 import Container from "@/Components/Common/Container";
 import { ShopListSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
-import ProductMap from "./ProductMap";
+import dynamic from "next/dynamic";
+
+const ProductMap = dynamic(() => import("./ProductMap"), { ssr: false });
 import { DollarSvg, SignSvg } from "@/Components/Svg/SvgContainer";
 import { useGetAllProductsQuery } from "@/redux/api/productApi";
 

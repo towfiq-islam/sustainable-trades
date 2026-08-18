@@ -5,7 +5,12 @@ import { useState } from "react";
 import Modal from "@/Components/Common/Modal";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
-import MembershipApplicationModal from "@/Components/Modals/MembershipApplicationModal";
+import dynamic from "next/dynamic";
+
+const MembershipApplicationModal = dynamic(
+  () => import("@/Components/Modals/MembershipApplicationModal"),
+  { ssr: false },
+);
 
 type communityItem = {
   id: number;

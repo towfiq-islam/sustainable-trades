@@ -8,7 +8,12 @@ import { LuFileQuestion } from "react-icons/lu";
 import Container from "@/Components/Common/Container";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
 import { ShopListSkeleton } from "@/Components/Loader/Loader";
-import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
+import dynamic from "next/dynamic";
+
+const ShopsMap = dynamic(
+  () => import("@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap"),
+  { ssr: false },
+);
 import { useGetAllShopsQuery } from "@/redux/api/shopApi";
 
 type Props = {

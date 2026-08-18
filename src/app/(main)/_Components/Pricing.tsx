@@ -7,7 +7,13 @@ import { useRouter } from "next/navigation";
 import Modal from "@/Components/Common/Modal";
 import Container from "@/Components/Common/Container";
 import { PricingSkeletonCard } from "@/Components/Loader/Loader";
-import SubscriptionPaypalModal from "@/Components/Modals/SubscriptionPaypalModal";
+import dynamic from "next/dynamic";
+
+const SubscriptionPaypalModal = dynamic(
+  () => import("@/Components/Modals/SubscriptionPaypalModal"),
+  { ssr: false },
+);
+
 import {
   useCancelMembershipMutation,
   useGetMembershipsQuery,

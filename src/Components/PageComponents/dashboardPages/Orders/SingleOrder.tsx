@@ -9,7 +9,7 @@ import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import { useState } from "react";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 import {
-  useDownloadInvoiceMutation,
+  useDownloadVendorInvoiceMutation,
   useGetOrderDetailsQuery,
 } from "@/redux/api/ordersApi";
 
@@ -18,7 +18,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
   const [open, isOpen] = useState<boolean>(false);
   const { data: getSingleOrder, isLoading } = useGetOrderDetailsQuery(orderId);
   const [downloadInvoicePdf, { isLoading: isPending }] =
-    useDownloadInvoiceMutation();
+    useDownloadVendorInvoiceMutation();
 
   // Func for download Invoice pdf
   const handleDownloadInvoice = () => {

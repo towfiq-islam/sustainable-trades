@@ -33,7 +33,7 @@ export const vendorApi = apiSlice.injectEndpoints({
     }),
 
     // Notifications
-    getNotifications: builder.query<any, string | undefined>({
+    getNotifications: builder.query({
       query: page => ({ url: "/api/notifications", params: { page } }),
       providesTags: ["notification"],
     }),

@@ -487,7 +487,7 @@ const Page = () => {
       </Modal>
 
       <Modal open={open} onClose={() => isOpen(false)}>
-        <TrackPackageModal order_id={order_id} />
+        <TrackPackageModal type="vendor" order_id={order_id} />
       </Modal>
 
       <Modal open={showNote} onClose={() => setShowNote(false)}>

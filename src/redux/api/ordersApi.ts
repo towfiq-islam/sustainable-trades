@@ -102,6 +102,14 @@ export const ordersApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    downloadCustomerInvoice: builder.mutation<Blob, any>({
+      query: orderId => ({
+        url: `/api/orders/${orderId}/invoice/download`,
+        method: "GET",
+        responseHandler: response => response.blob(),
+      }),
+    }),
+
     basicVendorOrder: builder.mutation({
       query: data => ({
         url: "/api/basic-vendor-order",
@@ -124,6 +132,7 @@ export const {
   useGetOrderStatisticsQuery,
   useGuestOrderMutation,
   useDownloadVendorInvoiceMutation,
+  useDownloadCustomerInvoiceMutation,
   useAddProductReviewMutation,
   useBasicVendorOrderMutation,
   useGetCustomerOrderHistoryQuery,

@@ -217,11 +217,7 @@ const page = () => {
       </div>
 
       {isActive === "purchased from another member" ? (
-        <OrdersList
-          role="pro"
-          reviewBasePath="/dashboard/pro/reviews"
-          orderBasePath="/dashboard/pro/orders/details"
-        />
+        <OrdersList role="pro" orderBasePath="/dashboard/pro/orders/details" />
       ) : (
         <div className="w-full pt-10">
           {/* Desktop Table */}
@@ -318,8 +314,7 @@ const page = () => {
                             className={`min-w-[100px] ${order?.status === "processing" ? "text-primary-green" : order?.status === "shipped" ? "text-secondary-gray" : "text-white"} capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
                               order?.status === "delivered"
                                 ? "bg-primary-green"
-                                : order?.status === "pending" ||
-                                    order?.status === "local_pickup_requested"
+                                : order?.status === "pending"
                                   ? "bg-accent-red"
                                   : order?.status === "confirmed"
                                     ? "bg-dark-green"

@@ -11,9 +11,9 @@ export const ordersApi = apiSlice.injectEndpoints({
     }),
 
     getMyOrders: builder.query({
-      query: status => ({
+      query: ({ status, page }) => ({
         url: "/api/my-orders",
-        params: { status },
+        params: { status, page, per_page: 10 },
       }),
       providesTags: ["order"],
     }),

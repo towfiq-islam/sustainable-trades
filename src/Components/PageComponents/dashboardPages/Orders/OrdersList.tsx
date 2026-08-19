@@ -1,349 +1,199 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import moment from "moment";
 import { useState } from "react";
-import {
-  useDownloadVendorInvoiceMutation,
-  useGetMyOrdersQuery,
-} from "@/redux/api/ordersApi";
-import { FiShoppingCart } from "react-icons/fi";
+import { useGetMyOrdersQuery } from "@/redux/api/ordersApi";
+import { FiShoppingCart, FiPackage } from "react-icons/fi";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
-import OrderCardSkeleton from "@/Components/Loader/Loader";
-import Modal from "@/Components/Common/Modal";
-import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
+import PaginationControl from "@/Components/Common/PaginationControl";
+import { CustomerOrderTableSkeleton } from "@/Components/Loader/Loader";
 
 type OrdersListProps = {
   role: "customer" | "pro";
   showHeader?: boolean;
   showTabs?: boolean;
-  reviewBasePath: string;
   orderBasePath: string;
 };
 
-type ProductImg = {
-  image: string;
-};
-
-type SingleItem = {
-  product_id: number;
-  total_price: string;
-  quantity: number;
-  product: {
-    product_name: string;
-    product_price: string;
-    images: ProductImg[];
-  };
-};
-
-type orderItem = {
+type OrderRow = {
   id: number;
-  created_at: string;
-  total_amount: string;
-  status: string;
   order_number: string;
-  note: string;
-  shop: {
-    shop_name: string;
-    user: {
-      membership: {
-        user_id: number;
-        membership_type: string;
-      };
-    };
-  };
-  order_items: SingleItem[];
-  latest_order_status: {
-    content: string;
-  };
+  total_amount: number;
+  currency: string;
+  payment_status: string;
+  status: string;
+  created_at: string;
+  vendor_count: number;
+  item_count: number;
 };
+
+const statusBadgeClass = (status: string) => {
+  const map: Record<string, string> = {
+    delivered: "bg-primary-green",
+    pending: "bg-accent-red",
+    confirmed: "bg-dark-green",
+    paid: "bg-light-green",
+    shipped: "bg-accent-blue",
+    processing: "bg-off-green",
+    cancelled: "bg-primary-red",
+  };
+  return `inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize ${
+    map[status] ?? "bg-gray-100 text-gray-600"
+  }`;
+};
+
+const TABS = [
+  { key: "orders", label: "All" },
+  { key: "pending", label: "Pending" },
+  { key: "processing", label: "Processing" },
+  { key: "shipped", label: "Shipped" },
+  { key: "delivered", label: "Delivered" },
+  { key: "cancelled", label: "Cancelled" },
+];
 
 const OrdersList = ({
   showHeader,
   showTabs,
-  reviewBasePath,
   orderBasePath,
 }: OrdersListProps) => {
   const [isActive, setIsActive] = useState("orders");
   const [status, setStatus] = useState<string>("");
-  const [orderId, setOrderId] = useState<number | null>(null);
-  const [open, isOpen] = useState<boolean>(false);
-  const tabs = ["orders", "pending", "confirmed", "delivered", "cancelled"];
-  const { data: myOrders, isLoading } = useGetMyOrdersQuery(status);
-  const [showNote, setShowNote] = useState<boolean>(false);
-  const [note, setNote] = useState<string>("");
-  const [downloadInvoicePdf, { isLoading: isPending }] =
-    useDownloadVendorInvoiceMutation();
-  console.log(myOrders?.data);
+  const [page, setPage] = useState<number>(1);
+  const { data: myOrders, isFetching: isLoading } = useGetMyOrdersQuery({
+    status,
+    page,
+  });
+  const orders = myOrders?.data ?? [];
+  const meta = myOrders?.meta;
 
-  // Func for download Invoice pdf
-  const handleDownloadInvoice = (orderId: number) => {
-    downloadInvoicePdf(orderId)
-      .unwrap()
-      .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "invoice.pdf");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      });
+  const handleTabClick = (tabKey: string) => {
+    setIsActive(tabKey);
+    setStatus(tabKey === "orders" ? "" : tabKey);
+    setPage(1);
   };
 
   return (
-    <section>
+    <>
       {showHeader && (
-        <DashBoardHeader heading="Yours Orders" placeholder="Search Orders" />
+        <DashBoardHeader heading="All Orders" placeholder="Search Orders" />
       )}
 
       {showTabs && (
-        <ul className="flex flex-wrap md:flex-nowrap gap-2 lg:gap-x-6 py-6">
-          {tabs?.map((tab: string, index: number) => (
+        <ul className="flex flex-wrap md:flex-nowrap gap-2 lg:gap-x-6 py-6 w-full">
+          {TABS.map(tab => (
             <li
-              key={tab}
-              onClick={() => {
-                setIsActive(tab);
-                setStatus(tab === "orders" ? "" : tab);
-              }}
-              className={`text-[15px] lg:text-[20px] font-bold text-black px-3 md:px-6 py-2 w-fit flex-1 text-nowrap cursor-pointer capitalize ${
-                isActive === tab
-                  ? "border-b-[3px] border-light-green"
-                  : "border-b border-[#BFBEBE]"
-              } ${index === tabs.length - 1 ? "flex-1" : "sm:shrink-0"}`}
+              key={tab.key}
+              onClick={() => handleTabClick(tab.key)}
+              className={`text-[15px] text-center font-semibold border-b-2 text-black px-3 py-2 flex-1 cursor-pointer ${
+                isActive === tab.key
+                  ? "text-primary-green border-light-green"
+                  : "text-gray-500 border-gray-300"
+              }`}
             >
-              {tab}
+              {tab.label}
             </li>
           ))}
         </ul>
       )}
 
-      <div className="flex flex-col gap-6">
-        {isLoading ? (
-          [1, 2, 3]?.map((_, idx) => <OrderCardSkeleton key={idx} />)
-        ) : myOrders?.data?.length > 0 ? (
-          myOrders?.data?.map((order: orderItem) => (
-            <div
-              key={order?.id}
-              className="border border-[#BFBEBE] rounded-[8px]"
-            >
-              <div className="px-3 md:px-6 py-2 md:py-4">
-                <div className="flex flex-col sm:flex-row sm:justify-between">
-                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-x-10">
-                    <div>
-                      <h3 className="text-[#67645F] font-sans font-bold">
-                        Order Placed
-                      </h3>
+      {isLoading ? (
+        <CustomerOrderTableSkeleton />
+      ) : orders.length > 0 ? (
+        <div className="border border-[#EDEDED] rounded-[12px] overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-[#FAFAF9] text-[15px] text-[#67645F] font-semibold">
+                  <th className="px-6 py-4">Order</th>
+                  <th className="px-6 py-4">Items</th>
+                  <th className="px-6 py-4">Total</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Date</th>
+                  <th className="px-6 py-4 text-right">Action</th>
+                </tr>
+              </thead>
 
-                      <p className="font-sans font-normal text-black text-[16px]">
-                        {moment(order?.created_at).format("LL")}
+              <tbody>
+                {orders.map((order: OrderRow) => (
+                  <tr
+                    key={order.id}
+                    className="border-t border-[#EDEDED] hover:bg-[#FAFAF9] transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <p className="font-bold text-black text-[15px] pb-1">
+                        #{order.order_number}
                       </p>
-                    </div>
-
-                    <div>
-                      <h3 className="text-[#67645F] font-sans font-bold">
-                        Total
-                      </h3>
-
-                      <p className="font-sans font-normal text-black text-[16px]">
-                        ${order?.total_amount}
+                      <p className="text-sm text-[#67645F]">
+                        {order.vendor_count}{" "}
+                        {order.vendor_count === 1 ? "vendor" : "vendors"}
                       </p>
-                    </div>
+                    </td>
 
-                    <div>
-                      <h3 className="text-[#67645F] font-sans font-bold  mb-1">
-                        Status
-                      </h3>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2 text-black text-sm">
+                        <FiPackage className="text-[#67645F]" />
+                        <span>
+                          {order.item_count}{" "}
+                          {order.item_count === 1 ? "item" : "items"}
+                        </span>
+                      </div>
+                    </td>
 
-                      <p
-                        className={`font-sans font-normal ${order?.status === "processing" ? "text-primary-green" : order?.status === "shipped" ? "text-secondary-gray" : "text-white"} px-3 text-sm py-1 rounded-lg capitalize ${
-                          order?.status === "delivered"
-                            ? "bg-primary-green"
-                            : order?.status === "pending" ||
-                                order?.status === "local_pickup_requested"
-                              ? "bg-accent-red"
-                              : order?.status === "confirmed"
-                                ? "bg-dark-green"
-                                : order?.status === "processing"
-                                  ? "bg-off-green"
-                                  : order?.status === "cancelled"
-                                    ? "bg-primary-red"
-                                    : order?.status === "shipped"
-                                      ? "bg-accent-blue"
-                                      : order?.status === "paid"
-                                        ? "bg-light-green"
-                                        : "bg-gray-500"
-                        }`}
+                    <td className="px-6 py-4 font-bold text-secondary-black">
+                      ${order.total_amount}
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <span className={statusBadgeClass(order.status)}>
+                        {order.status}
+                      </span>
+                    </td>
+
+                    <td className="px-6 py-4 text-sm text-[#67645F]">
+                      <p>{moment(order.created_at).format("MMM D, YYYY")}</p>
+                    </td>
+
+                    <td className="px-6 py-4 text-right">
+                      <Link
+                        href={`${orderBasePath}/${order?.id}`}
+                        className="inline-block px-4 py-2 rounded-[8px] border border-gray-300 text-sm font-medium text-primary-green transition duration-300 hover:bg-primary-green hover:text-white"
                       >
-                        {order?.status === "local_pickup_requested"
-                          ? "Local pickup requested"
-                          : order?.status === "awaiting_payment"
-                            ? "Awaiting Payment"
-                            : order?.status}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex  flex-col sm:flex-row gap-2 sm:gap-x-10">
-                    <div>
-                      <h3 className="text-[#67645F] font-sans font-bold">
-                        Order Number
-                      </h3>
-
-                      <p className="font-sans font-normal text-black text-[16px]">
-                        {order?.order_number}
-                      </p>
-                    </div>
-
-                    <button
-                      disabled={isPending}
-                      onClick={() => {
-                        handleDownloadInvoice(order?.id);
-                        setOrderId(order?.id);
-                      }}
-                      className={`text-[#1F4038] font-sans font-bold ${
-                        isPending
-                          ? "cursor-not-allowed"
-                          : "cursor-pointer underline"
-                      }`}
-                    >
-                      {isPending && order?.id === orderId ? (
-                        <>
-                          <span className="inline-block animate-spin">⏳</span>{" "}
-                          Downloading
-                        </>
-                      ) : (
-                        "View Invoice"
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-full bg-[#BFBEBE] h-[1px]" />
-
-              <div className="pt-2 px-4 pb-4">
-                <div className="flex flex-col gap-2.5 sm:gap-0 sm:flex-row sm:justify-between sm:items-center">
-                  <div>
-                    <h4 className="text-[16px] sm:text-[20px] font-bold text-black">
-                      {order?.shop?.shop_name}
-                    </h4>
-
-                    <p className="font-sans font-normal text-black text-[13px] sm:text-[16px] pt-2 pb-3">
-                      {order?.latest_order_status?.content}
-                    </p>
-
-                    <div className="space-y-5">
-                      {order?.order_items?.map(item => (
-                        <div className="flex gap-x-3">
-                          <figure className="rounded size-[120px]">
-                            <Image
-                              src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images[0]?.image}`}
-                              alt="order_img"
-                              height={117}
-                              width={115}
-                              unoptimized
-                              className="rounded size-full object-cover"
-                            />
-                          </figure>
-                          <div className="flex flex-col gap-1.5">
-                            <h5 className="text-[16px] sm:text-[20px] font-bold text-black">
-                              {item?.product?.product_name}
-                            </h5>
-                            <h5 className="text-[#222]">
-                              Price: ${item?.total_price}
-                            </h5>
-
-                            <h5 className="text-[#222]">
-                              Qty: {item?.quantity}
-                            </h5>
-
-                            {order?.status === "delivered" && (
-                              <Link
-                                href={`${reviewBasePath}/${item.product_id}`}
-                                className="px-3 py-1 rounded-full cursor-pointer border text-sm w-fit font-semibold border-primary-green"
-                              >
-                                Write review
-                              </Link>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-3">
-                    <button
-                      onClick={() => {
-                        isOpen(true);
-                        setOrderId(order?.id);
-                      }}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-black cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
-                    >
-                      Track Package
-                    </button>
-
-                    <Link
-                      href={`${orderBasePath}/${order.id}`}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-black cursor-pointer text-center w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
-                    >
-                      View Order
-                    </Link>
-
-                    <Link
-                      href={`/dashboard/${order?.shop?.user?.membership?.membership_type}/messages/inbox/${order?.shop?.user?.membership?.user_id}`}
-                      className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal text-black cursor-pointer w-full sm:w-[250px] text-center hover:scale-105 duration-500 ease-in-out"
-                    >
-                      Message Seller
-                    </Link>
-
-                    {order?.note && (
-                      <button
-                        onClick={() => {
-                          setNote(order?.note);
-                          setShowNote(true);
-                        }}
-                        className="p-2 rounded-[8px] border border-[#BFBEBE] text-[13px] md:text-[16px] font-normal  text-black cursor-pointer  w-full sm:w-[250px]  hover:scale-105 duration-500 ease-in-out"
-                      >
-                        View note
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="flex flex-col items-center justify-center text-center py-16">
-            <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
-              <FiShoppingCart className="text-accent-red text-2xl" />
-            </div>
-
-            <h6 className="text-secondary-black font-semibold">
-              {status ? `No ${status} orders` : "No orders yet"}
-            </h6>
-
-            <p className="text-sm text-gray-500 font-normal mt-2 max-w-[280px]">
-              {status
-                ? "Try checking a different tab."
-                : "Orders you place will show up here."}
-            </p>
+                        View Details
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        )}
-      </div>
 
-      <Modal open={open} onClose={() => isOpen(false)}>
-        <TrackPackageModal order_id={orderId} />
-      </Modal>
+          {/* Pagination */}
+          <div className="pe-5">
+            <PaginationControl
+              currentPage={meta.current_page}
+              lastPage={meta.last_page}
+              onPageChange={setPage}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center text-center py-16">
+          <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+            <FiShoppingCart className="text-accent-red text-2xl" />
+          </div>
 
-      <Modal open={showNote} onClose={() => setShowNote(false)}>
-        <h3 className="text-xl font-semibold text-primary-green mb-2">
-          Order Note
-        </h3>
-        <p className="leading-[164%] text-gray-700">"{note}"</p>
-      </Modal>
-    </section>
+          <h6 className="text-secondary-black font-semibold">
+            {status ? `No ${status} orders` : "No orders yet"}
+          </h6>
+
+          <p className="text-sm text-gray-500 font-normal mt-2 max-w-[280px]">
+            {status
+              ? "Try checking a different tab."
+              : "Orders you place will show up here."}
+          </p>
+        </div>
+      )}
+    </>
   );
 };
 

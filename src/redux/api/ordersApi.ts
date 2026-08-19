@@ -28,16 +28,6 @@ export const ordersApi = apiSlice.injectEndpoints({
       providesTags: ["order"],
     }),
 
-    getCustomerOrderHistory: builder.query({
-      query: id => `/api/my-order/${id}/history`,
-      providesTags: (_r, _e, id) => [{ type: "order", id }],
-    }),
-
-    getVendorOrderHistory: builder.query({
-      query: id => `/api/vendor-order/${id}/history`,
-      providesTags: (_r, _e, id) => [{ type: "order", id }],
-    }),
-
     getOrderDetails: builder.query({
       query: id => `/api/my-order/${id}`,
       providesTags: (_r, _e, id) => [{ type: "order", id }],
@@ -135,6 +125,4 @@ export const {
   useDownloadCustomerInvoiceMutation,
   useAddProductReviewMutation,
   useBasicVendorOrderMutation,
-  useGetCustomerOrderHistoryQuery,
-  useGetVendorOrderHistoryQuery,
 } = ordersApi;

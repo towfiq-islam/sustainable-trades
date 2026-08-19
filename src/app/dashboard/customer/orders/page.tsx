@@ -6,7 +6,6 @@ const page = () => {
       role="customer"
       showHeader={true}
       showTabs={true}
-      reviewBasePath="/dashboard/customer/reviews"
       orderBasePath="/dashboard/customer/orders"
     />
   );

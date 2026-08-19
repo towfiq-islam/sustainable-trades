@@ -442,13 +442,13 @@ const Page = () => {
           </Link>
 
           <button
-            disabled={!singleOrder?.data?.note}
+            disabled={!singleOrder?.data?.noted}
             onClick={() => {
-              setNote(singleOrder?.data?.note);
+              setNote(singleOrder?.data?.noted);
               setShowNote(true);
             }}
             className={`font-semibold border border-[#E1E2E2] rounded-lg overflow-hidden w-full p-3 ${
-              singleOrder?.data?.note
+              singleOrder?.data?.noted
                 ? "cursor-pointer hover:bg-accent-red hover:text-white duration-300 transition-all"
                 : "opacity-70 bg-gray-200 cursor-not-allowed"
             }`}
@@ -487,7 +487,7 @@ const Page = () => {
       </Modal>
 
       <Modal open={open} onClose={() => isOpen(false)}>
-        <TrackPackageModal order_id={order_id} />
+        <TrackPackageModal type="vendor" order_id={order_id} />
       </Modal>
 
       <Modal open={showNote} onClose={() => setShowNote(false)}>

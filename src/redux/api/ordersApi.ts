@@ -11,9 +11,9 @@ export const ordersApi = apiSlice.injectEndpoints({
     }),
 
     getMyOrders: builder.query({
-      query: status => ({
+      query: ({ status, page }) => ({
         url: "/api/my-orders",
-        params: { status },
+        params: { status, page, per_page: 10 },
       }),
       providesTags: ["order"],
     }),
@@ -102,6 +102,14 @@ export const ordersApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    downloadCustomerInvoice: builder.mutation<Blob, any>({
+      query: orderId => ({
+        url: `/api/orders/${orderId}/invoice/download`,
+        method: "GET",
+        responseHandler: response => response.blob(),
+      }),
+    }),
+
     basicVendorOrder: builder.mutation({
       query: data => ({
         url: "/api/basic-vendor-order",
@@ -124,6 +132,7 @@ export const {
   useGetOrderStatisticsQuery,
   useGuestOrderMutation,
   useDownloadVendorInvoiceMutation,
+  useDownloadCustomerInvoiceMutation,
   useAddProductReviewMutation,
   useBasicVendorOrderMutation,
   useGetCustomerOrderHistoryQuery,

@@ -1,5 +1,8 @@
 import { OrderTrackSkeleton } from "@/Components/Loader/Loader";
-import { useGetVendorOrderHistoryQuery } from "@/redux/api/ordersApi";
+import {
+  useGetCustomerOrderHistoryQuery,
+  useGetVendorOrderHistoryQuery,
+} from "@/redux/api/ordersApi";
 
 type OrderItem = {
   id: number;
@@ -7,9 +10,19 @@ type OrderItem = {
   created_at: string;
 };
 
-const TrackPackageModal = ({ order_id }: { order_id: number | null }) => {
-  const { data: orderHistory, isLoading } =
-    useGetVendorOrderHistoryQuery(order_id);
+const TrackPackageModal = ({
+  type,
+  order_id,
+}: {
+  type: "vendor" | "customer";
+  order_id: number | null;
+}) => {
+  const { data: vendorOrderHistory, isLoading: isVendorHistoryLoading } =
+    useGetVendorOrderHistoryQuery(order_id, { skip: type !== "vendor" });
+  const { data: customerOrderHistory, isLoading: isCustomerHistoryLoading } =
+    useGetCustomerOrderHistoryQuery(order_id, { skip: type !== "customer" });
+  const isLoading = isVendorHistoryLoading || isCustomerHistoryLoading;
+  const orderHistory = vendorOrderHistory || customerOrderHistory;
 
   return (
     <div className="p-4">

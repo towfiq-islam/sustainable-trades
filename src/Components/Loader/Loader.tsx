@@ -609,44 +609,69 @@ export const ShopCardSkeleton = () => {
   );
 };
 
-const OrderCardSkeleton = () => {
+export const CustomerOrderTableSkeleton = () => {
   return (
-    <div className="border border-gray-300 rounded-[8px] animate-pulse">
-      {/* Top section */}
-      <div className="px-3 md:px-6 py-2 md:py-4">
-        <div className="flex flex-col sm:flex-row gap-6">
-          <div>
-            <div className="h-4 w-28 bg-gray-300 rounded mb-2" />
-            <div className="h-5 w-32 bg-gray-200 rounded" />
-          </div>
-          <div className="h-5 w-24 bg-gray-200 rounded self-center" />
-        </div>
-      </div>
+    <div className="border border-[#EDEDED] rounded-[12px] overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-[#FAFAF9] text-[15px] text-[#67645F] font-semibold">
+              <th className="px-6 py-4">Order</th>
+              <th className="px-6 py-4">Items</th>
+              <th className="px-6 py-4">Total</th>
+              <th className="px-6 py-4">Status</th>
+              <th className="px-6 py-4">Date</th>
+              <th className="px-6 py-4 text-right">Action</th>
+            </tr>
+          </thead>
 
-      <div className="w-full bg-gray-300 h-[1px]" />
+          <tbody>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <tr
+                key={index}
+                className="border-t border-[#EDEDED] animate-pulse"
+              >
+                {/* Order */}
+                <td className="px-6 py-4">
+                  <div className="h-5 w-32 rounded bg-gray-200 mb-2" />
+                  <div className="h-4 w-20 rounded bg-gray-200" />
+                </td>
 
-      {/* Bottom section */}
-      <div className="pt-2 px-4 pb-6">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
-          <div className="w-full">
-            <div className="h-6 w-48 bg-gray-300 rounded mb-3" />
-            <div className="h-4 w-64 bg-gray-200 rounded mb-4" />
+                {/* Items */}
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-2">
+                    <div className="h-5 w-5 rounded bg-gray-200" />
+                    <div className="h-4 w-20 rounded bg-gray-200" />
+                  </div>
+                </td>
 
-            <div className="flex gap-x-3 mb-4">
-              <div className="h-[117px] w-[115px] bg-gray-300 rounded" />
-              <div className="flex flex-col gap-3">
-                <div className="h-5 w-40 bg-gray-300 rounded" />
-                <div className="h-4 w-28 bg-gray-200 rounded" />
-              </div>
-            </div>
-          </div>
-        </div>
+                {/* Total */}
+                <td className="px-6 py-4">
+                  <div className="h-5 w-20 rounded bg-gray-200" />
+                </td>
+
+                {/* Status */}
+                <td className="px-6 py-4">
+                  <div className="h-7 w-20 rounded-full bg-gray-200" />
+                </td>
+
+                {/* Date */}
+                <td className="px-6 py-4">
+                  <div className="h-4 w-28 rounded bg-gray-200" />
+                </td>
+
+                {/* Action */}
+                <td className="px-6 py-4">
+                  <div className="ml-auto h-9 w-28 rounded-[8px] bg-gray-200" />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 };
-
-export default OrderCardSkeleton;
 
 export const CustomerReviewCardSkeleton = () => {
   return (
@@ -1012,4 +1037,3 @@ export const OrderSuccessSkeleton = () => {
     </div>
   );
 };
-

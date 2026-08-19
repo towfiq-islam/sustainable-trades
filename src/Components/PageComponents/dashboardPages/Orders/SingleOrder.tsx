@@ -25,8 +25,13 @@ const fulfillmentLabel = (type: string) =>
 
 const SingleOrder = ({ orderId }: { orderId: number }) => {
   const router = useRouter();
-  const [trackingVendorOrderId, setTrackingVendorOrderId] = useState<
-    number | null
+  const [trackingHistory, setTrackingHistory] = useState<
+    | {
+        id: number;
+        content: string;
+        created_at: string;
+      }[]
+    | null
   >(null);
   const { data: getSingleOrder, isLoading } = useGetOrderDetailsQuery(orderId);
   const [downloadInvoicePdf, { isLoading: isPending }] =
@@ -303,7 +308,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                       <div className="flex flex-col gap-2">
                         <button
                           onClick={() =>
-                            setTrackingVendorOrderId(vendorOrder.id)
+                            setTrackingHistory(vendorOrder.order_status_history)
                           }
                           className="p-2.5 rounded-[8px] border border-[#BFBEBE] text-sm font-semibold text-secondary-black hover:border-primary-green duration-300 ease-in-out cursor-pointer"
                         >
@@ -429,10 +434,10 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
       </div>
 
       <Modal
-        open={trackingVendorOrderId !== null}
-        onClose={() => setTrackingVendorOrderId(null)}
+        open={trackingHistory !== null}
+        onClose={() => setTrackingHistory(null)}
       >
-        <TrackPackageModal type="customer" order_id={trackingVendorOrderId} />
+        <TrackPackageModal history={trackingHistory ?? []} />
       </Modal>
     </>
   );

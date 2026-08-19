@@ -1,46 +1,27 @@
-import { OrderTrackSkeleton } from "@/Components/Loader/Loader";
-import {
-  useGetCustomerOrderHistoryQuery,
-  useGetVendorOrderHistoryQuery,
-} from "@/redux/api/ordersApi";
-
-type OrderItem = {
+type OrderStatusHistoryItem = {
   id: number;
   content: string;
   created_at: string;
 };
 
 const TrackPackageModal = ({
-  type,
-  order_id,
+  history,
 }: {
-  type: "vendor" | "customer";
-  order_id: number | null;
+  history: OrderStatusHistoryItem[] | undefined;
 }) => {
-  const { data: vendorOrderHistory, isLoading: isVendorHistoryLoading } =
-    useGetVendorOrderHistoryQuery(order_id, { skip: type !== "vendor" });
-  const { data: customerOrderHistory, isLoading: isCustomerHistoryLoading } =
-    useGetCustomerOrderHistoryQuery(order_id, { skip: type !== "customer" });
-  const isLoading = isVendorHistoryLoading || isCustomerHistoryLoading;
-  const orderHistory = vendorOrderHistory || customerOrderHistory;
-
   return (
     <div className="p-4">
       <h2 className="text-2xl font-semibold text-primary-green mb-7 text-center">
         📦 Order Tracking
       </h2>
 
-      {isLoading ? (
-        Array.from({ length: 3 })?.map((_, idx) => (
-          <OrderTrackSkeleton key={idx} />
-        ))
-      ) : orderHistory?.data?.length === 0 ? (
+      {!history || history.length === 0 ? (
         <p className="text-center text-primary-red">
           No tracking history available
         </p>
       ) : (
         <ol className="relative border-l border-gray-300">
-          {orderHistory?.data?.map((item: OrderItem) => (
+          {history.map(item => (
             <li key={item.id} className="mb-4 ml-4">
               {/* Dot */}
               <span className="absolute -left-1.5 flex items-center justify-center size-3 bg-accent-red rounded-full ring-4 ring-white" />
@@ -49,7 +30,7 @@ const TrackPackageModal = ({
               <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-300">
                 <p className="font-medium text-gray-800">{item.content}</p>
                 <p className="text-sm text-gray-500 mt-1">
-                  {new Date(item?.created_at).toLocaleString()}
+                  {new Date(item.created_at).toLocaleString()}
                 </p>
               </div>
             </li>

@@ -46,6 +46,15 @@ const Page = () => {
   const { data: singleOrder, isLoading } = useGetSingleOrderQuery(order_id);
   const [cancelOrder, { isLoading: isCancellingOrder }] =
     useCancelOrderMutation();
+  const [trackingHistory, setTrackingHistory] = useState<
+    | {
+        id: number;
+        content: string;
+        created_at: string;
+      }[]
+    | null
+  >(null);
+  console.log(trackingHistory);
 
   const steps = [
     { label: "Order Confirmed", key: "confirmed" },
@@ -204,20 +213,11 @@ const Page = () => {
             </h3>
 
             <div className="flex gap-3 items-center">
-              {singleOrder?.data?.label_url && (
-                <Link
-                  href={singleOrder?.data?.label_url}
-                  target="_blank"
-                  className="py-3 px-4 rounded-[8px] border border-accent-red font-semibold text-accent-red cursor-pointer hover:border-accent-red duration-300 ease-in-out"
-                  onClick={() => isOpen(true)}
-                >
-                  Shipping Label
-                </Link>
-              )}
-
               <button
                 className="py-3 px-4 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out"
-                onClick={() => isOpen(true)}
+                onClick={() =>
+                  setTrackingHistory(singleOrder?.data?.order_status_history)
+                }
               >
                 Track Package
               </button>
@@ -485,11 +485,12 @@ const Page = () => {
           onClose={() => setNoteModalOpen(false)}
         />
       </Modal>
-
-      <Modal open={open} onClose={() => isOpen(false)}>
-        <TrackPackageModal type="vendor" order_id={order_id} />
+      <Modal
+        open={trackingHistory !== null}
+        onClose={() => setTrackingHistory(null)}
+      >
+        <TrackPackageModal history={trackingHistory ?? []} />
       </Modal>
-
       <Modal open={showNote} onClose={() => setShowNote(false)}>
         <h3 className="text-xl font-semibold text-primary-green mb-2">
           Order Note

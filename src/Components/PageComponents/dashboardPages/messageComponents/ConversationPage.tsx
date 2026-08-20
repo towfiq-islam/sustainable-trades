@@ -142,7 +142,7 @@ function AttachedItemCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+    <div className="bg-accent-white rounded-xl shadow border border-gray-200 overflow-hidden">
       <div className={`${compact ? "p-4" : "p-3"} border-b border-gray-200`}>
         <p className="text-sm text-gray-700">{message}</p>
       </div>

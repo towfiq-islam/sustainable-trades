@@ -202,6 +202,12 @@ export const productApi = apiSlice.injectEndpoints({
       query: () => "/api/sub-categories",
       providesTags: ["category"],
     }),
+
+    // Product Categories With Subcategories
+    getCategoriesWithSubCategories: builder.query({
+      query: () => "/api/category-and-subcategories",
+      providesTags: ["category"],
+    }),
   }),
 });
 
@@ -221,6 +227,7 @@ export const {
   useGetMyFavoriteQuery,
   useGetProductCategoriesQuery,
   useGetProductSubCategoriesQuery,
+  useGetCategoriesWithSubCategoriesQuery,
   useGetCategoryDetailsQuery,
   useAddFavoriteMutation,
   useGetVendorListingsQuery,

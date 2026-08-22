@@ -11,7 +11,7 @@ export const EmptyState = ({
   actionLabel?: string;
   onAction?: () => void;
 }) => (
-  <div className="flex flex-col justify-center items-center gap-4 text-center py-12 md:py-20 px-4 border border-dashed border-gray-200 rounded-2xl bg-gray-50/60">
+  <div className="flex flex-col justify-center items-center gap-4 text-center py-12 md:py-20 px-4 border border-dashed border-gray-200 rounded-2xl bg-off-green/10">
     <div className="size-16 md:size-20 rounded-full bg-primary-green/10 grid place-items-center text-primary-green text-2xl md:text-4xl">
       {icon}
     </div>

@@ -9,30 +9,7 @@ import {
 } from "@react-google-maps/api";
 import { useRouter } from "next/navigation";
 import { MdOutlineLocationOn } from "react-icons/md";
-
-interface Address {
-  id: number;
-  shop_info_id: number;
-  address_line_1: string;
-  address_line_2?: string | null;
-  city: string;
-  state: string;
-  postal_code: string;
-  latitude: string;
-  longitude: string;
-  display_my_address: boolean;
-  address_10_mile: boolean;
-  do_not_display: boolean;
-}
-
-interface ShopInfo {
-  id: number;
-  user_id: number;
-  shop_name: string;
-  shop_image: string;
-  shop_banner?: string;
-  address: Address;
-}
+import { ShopAddress, ShopInfo } from "@/Types";
 
 interface Shop {
   id: number;

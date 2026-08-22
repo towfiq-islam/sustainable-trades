@@ -7,7 +7,8 @@ import toast from "react-hot-toast";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { apiSlice } from "@/redux/api/apiSlice";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { CartItem, clearCart } from "@/redux/slices/cartSlice";
+import { CartItem } from "@/Types";
+import { clearCart } from "@/redux/slices/cartSlice";
 import { clearCheckout, setBuyNowItem } from "@/redux/slices/checkoutSlice";
 import { PayPalButtonWithSkeleton } from "./PayPalButtonWithSkeleton";
 

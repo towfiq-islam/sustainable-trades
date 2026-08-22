@@ -1,11 +1,7 @@
 "use client";
 import Link from "next/link";
 import { FiDollarSign, FiRepeat } from "react-icons/fi";
-
-type DateRange = {
-  from: string;
-  to: string;
-};
+import { DateRange } from "@/Types";
 
 type Props = {
   title: string;

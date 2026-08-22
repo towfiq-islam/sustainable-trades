@@ -1,62 +1,28 @@
-import { CartItem } from "@/redux/slices/cartSlice";
-import { Fulfillment } from "@/lib/fulfillment";
+import {
+  CartItem,
+  Fulfillment,
+  VendorFormFields,
+  VendorFormValues,
+  CheckoutProductPayload,
+  CheckoutDeliveryAddressPayload,
+  CheckoutPickupAddressPayload,
+  CheckoutVendorOrder,
+  VendorExtrasMap,
+  VendorOrdersPayload,
+  CheckoutPayload,
+} from "@/Types";
 
-// ---- Checkout payload builder ----
-export interface VendorFormFields {
-  first_name?: string;
-  last_name?: string;
-  email?: string;
-  phone?: string;
-  street_address?: string;
-  apt?: string;
-  city?: string;
-  state?: string;
-  postal_code?: string;
-  country?: string;
-  latitude?: number;
-  longitude?: number;
-  pickup_id?: string;
-}
-
-export type VendorFormValues = Record<string, VendorFormFields>;
-
-export interface CheckoutProductPayload {
-  id: number;
-  quantity: number;
-}
-
-export interface CheckoutDeliveryAddressPayload {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  street_address: string;
-  apt: string | null;
-  city: string;
-  state: string;
-  postal_code: string;
-  country: string;
-  latitude: number | null;
-  longitude: number | null;
-}
-
-export interface CheckoutPickupAddressPayload {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  pickup_id: number;
-}
-
-export interface CheckoutVendorOrder {
-  vendor_id: number;
-  shop_id: number;
-  selectedFulfillment: Fulfillment;
-  coupon_code: string | null;
-  subscribe_shop: 0 | 1;
-  products: CheckoutProductPayload[];
-  address: CheckoutDeliveryAddressPayload | CheckoutPickupAddressPayload;
-}
+export type {
+  VendorFormFields,
+  VendorFormValues,
+  CheckoutProductPayload,
+  CheckoutDeliveryAddressPayload,
+  CheckoutPickupAddressPayload,
+  CheckoutVendorOrder,
+  VendorExtrasMap,
+  VendorOrdersPayload,
+  CheckoutPayload,
+};
 
 export const formatDiscountLabel = (
   type?: "percentage" | "fixed" | null,
@@ -67,13 +33,6 @@ export const formatDiscountLabel = (
     ? `Discount (${value}%)`
     : `Discount ($${value})`;
 };
-
-// Per-vendor extras that live outside the RHF delivery-details form
-// (set later, on ReviewStep) - coupon code + shop newsletter opt-in.
-export type VendorExtrasMap = Record<
-  number,
-  { coupon_code?: string | null; subscribe_shop?: boolean }
->;
 
 const buildVendorOrders = (
   items: CartItem[],
@@ -126,10 +85,6 @@ const buildVendorOrders = (
 
 // { vendor_orders: [...] } — used in DeliveryDetails.tsx for the initial
 // tax/shipping calculation, before coupon/newsletter extras exist yet.
-export interface VendorOrdersPayload {
-  vendor_orders: CheckoutVendorOrder[];
-}
-
 export const buildVendorOrdersPayload = (
   items: CartItem[],
   formValues: VendorFormValues,
@@ -137,13 +92,6 @@ export const buildVendorOrdersPayload = (
 ): VendorOrdersPayload => {
   return { vendor_orders: buildVendorOrders(items, formValues, vendorExtras) };
 };
-
-export interface CheckoutPayload {
-  payment_method: "paypal";
-  terms_and_condition: boolean;
-  subscribe_website: boolean;
-  vendor_orders: CheckoutVendorOrder[];
-}
 
 export const buildCheckoutPayload = (
   items: CartItem[],

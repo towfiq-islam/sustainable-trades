@@ -1,3 +1,7 @@
+import { Fulfillment, VendorFulfillmentStatus } from "@/Types";
+
+export type { Fulfillment, VendorFulfillmentStatus };
+
 export const fulfillmentMap: Record<string, Fulfillment[]> = {
   pickup: ["pickup"],
   delivery: ["delivery"],
@@ -11,8 +15,6 @@ export const fulfillmentMap: Record<string, Fulfillment[]> = {
 
   pickup_and_delivery_and_shipping: ["pickup", "delivery", "shipping"],
 };
-
-export type Fulfillment = "pickup" | "delivery" | "shipping";
 
 export const normalizeFulfillment = (
   fulfillment?: Fulfillment[] | string,
@@ -56,17 +58,6 @@ export const getVendorFulfillmentOptions = (
     normalizeFulfillment(products[0].fulfillment),
   );
 };
-
-/**
- * Convenience wrapper used by the fulfillment step to decide, per vendor:
- * - "auto"    -> exactly one common option, pre-select it, no user choice needed
- * - "choose"  -> multiple common options, customer must pick one
- * - "blocked" -> zero common options, customer must remove a product
- */
-export type VendorFulfillmentStatus =
-  | { status: "auto"; options: [Fulfillment] }
-  | { status: "choose"; options: Fulfillment[] }
-  | { status: "blocked"; options: [] };
 
 export const getVendorFulfillmentStatus = (
   products: { fulfillment: Fulfillment[] }[],

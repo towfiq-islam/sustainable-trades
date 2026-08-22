@@ -15,10 +15,7 @@ import {
 } from "@/redux/api/vendorApi";
 import { FaAngleRight } from "react-icons/fa";
 import { FiBox, FiBell } from "react-icons/fi";
-
-type ImageItem = {
-  image: string;
-};
+import { ImageItem } from "@/Types";
 
 type ItemData = {
   id: number;

@@ -9,6 +9,7 @@ import {
 } from "@react-google-maps/api";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { ShopAddress } from "@/Types";
 
 const containerStyle = {
   width: "100%",
@@ -22,26 +23,14 @@ interface ProductImage {
   product_id: number;
   image: string;
 }
-interface Address {
-  id: number;
-  shop_info_id: number;
-  address_line_1: string;
-  address_line_2?: string | null;
-  city: string | null;
-  state: string | null;
-  postal_code: string;
-  latitude: string | null;
-  longitude: string | null;
-  display_my_address: boolean;
-  address_10_mile: boolean;
-  do_not_display: boolean;
-}
+
 interface Shop {
   id: number;
   user_id: number;
   shop_name: string;
-  address: Address;
+  address: ShopAddress;
 }
+
 interface Product {
   id: number;
   shop_info_id: number;
@@ -51,6 +40,7 @@ interface Product {
   images: ProductImage[];
   shop: Shop;
 }
+
 interface ProductMapProps {
   products: Product[];
   hoveredProduct?: Product | null;

@@ -15,7 +15,7 @@ import {
   setVendorCoupon,
   setVendorSubscribeShop,
 } from "@/redux/slices/checkoutSlice";
-import { CartItem } from "@/redux/slices/cartSlice";
+import { CartItem } from "@/Types";
 
 const ReviewStep = ({ items }: { items: CartItem[] }) => {
   const router = useRouter();

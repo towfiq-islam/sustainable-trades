@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/redux/store";
 import {
-  CartItem,
   removeFromCart,
   setVendorFulfillment,
 } from "@/redux/slices/cartSlice";
+import { CartItem } from "@/Types";
 import {
   Fulfillment,
   fulfillmentDescription,

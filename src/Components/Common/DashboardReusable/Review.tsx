@@ -3,25 +3,12 @@ import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { CustomerReviewCardSkeleton } from "@/Components/Loader/Loader";
 import Image from "next/image";
 import { FiStar } from "react-icons/fi";
-
-type ImageItem = {
-  image: string;
-};
-
-type reviewItem = {
-  id: number;
-  message: string;
-  rating: number;
-  product: {
-    product_name: string;
-    images: ImageItem[];
-  };
-};
+import { ReviewItem } from "@/Types";
 
 interface ReviewProps {
   reviews: {
     data: {
-      data: reviewItem[];
+      data: ReviewItem[];
       links: any;
     };
   };
@@ -39,7 +26,7 @@ const Review = ({ reviews, isLoading, setPage }: ReviewProps) => {
             <CustomerReviewCardSkeleton key={idx} />
           ))
         ) : reviews?.data?.data?.length > 0 ? (
-          reviews?.data?.data?.map((item: reviewItem) => (
+          reviews?.data?.data?.map((item: ReviewItem) => (
             <div
               key={item?.id}
               className="border border-gray-300 rounded-xl p-6 shadow-md bg-white flex flex-col items-center text-center"

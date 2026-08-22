@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { CartItem } from "@/redux/slices/cartSlice";
+import { CartItem } from "@/Types";
 import { useAppSelector } from "@/redux/store";
 
 const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {

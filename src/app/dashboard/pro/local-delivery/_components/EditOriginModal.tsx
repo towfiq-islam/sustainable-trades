@@ -6,18 +6,9 @@ import { FiMapPin } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
 import { useAddDeliveryOriginMutation } from "@/redux/api/vendorApi";
-import { DeliveryOrigin } from "@/Types/LocalDelivery";
+import { DeliveryOrigin, DeliveryOriginFormValues } from "@/Types";
 const US_COUNTRY_CODE = "US";
 const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
-
-export type DeliveryOriginFormValues = {
-  address: string;
-  unit: string;
-  city: string;
-  state: string;
-  zip_code: string;
-  country: string;
-};
 
 const DEFAULT_VALUES: DeliveryOriginFormValues = {
   address: "",

@@ -4,7 +4,7 @@ import { FaAngleDown, FaCheck } from "react-icons/fa";
 import { PuffLoader } from "react-spinners";
 import { GoBackSvg, Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
@@ -17,6 +17,7 @@ import {
 } from "@/redux/api/ordersApi";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 import OrderedProducts from "@/Components/Prodashboardcomponents/OrderedProducts";
+
 type FulfillmentType = "shipping" | "delivery" | "pickup";
 
 const FULFILLMENT_STEPS: Record<
@@ -60,6 +61,8 @@ const DROPDOWN_STATUSES: Record<FulfillmentType, string[]> = {
     "cancelled",
   ],
 };
+
+const TERMINAL_STATUSES = new Set(["delivered", "picked_up", "cancelled"]);
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "Pending",
@@ -117,6 +120,19 @@ const Page = () => {
   const stepKeys = steps.map(s => s.key);
   const dropdownStatuses = DROPDOWN_STATUSES[fulfillmentType];
   const currentStepIndex = currentStatus ? stepKeys.indexOf(currentStatus) : -1;
+
+  const enabledStatuses = useMemo(() => {
+    if (!currentStatus || TERMINAL_STATUSES.has(currentStatus)) {
+      return new Set<string>();
+    }
+    const enabled = new Set<string>(["cancelled"]);
+    const nextStep =
+      currentStepIndex === -1 ? steps[0] : steps[currentStepIndex + 1];
+
+    if (nextStep) enabled.add(nextStep.key);
+
+    return enabled;
+  }, [currentStatus, currentStepIndex, steps]);
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -180,7 +196,6 @@ const Page = () => {
       };
     }
 
-    // default: shipping
     return {
       title: "Shipping Address",
       content: (
@@ -311,7 +326,7 @@ const Page = () => {
                   }`}
                 />
               </button>
-              
+
               <div
                 className={`absolute left-0 top-[110%] z-50 w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl transition-all duration-300 ${
                   openStatusPopover
@@ -323,11 +338,16 @@ const Page = () => {
                   {dropdownStatuses.map(statusKey => {
                     const isCancelledOption = statusKey === "cancelled";
                     const isCurrent = statusKey === currentStatus;
+                    const isEnabled =
+                      !isCurrent && enabledStatuses.has(statusKey);
 
                     return (
                       <button
                         key={statusKey}
+                        disabled={!isEnabled}
                         onClick={() => {
+                          if (!isEnabled) return;
+
                           updateStatusMutation({
                             id: order_id,
                             data: { status: statusKey },
@@ -345,10 +365,14 @@ const Page = () => {
 
                           setOpenStatusPopover(false);
                         }}
-                        className={`group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition-all cursor-pointer ${
-                          isCancelledOption
-                            ? "hover:bg-primary-red/5"
-                            : "hover:bg-primary-green/5"
+                        className={`group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition-all ${
+                          isEnabled
+                            ? `cursor-pointer ${
+                                isCancelledOption
+                                  ? "hover:bg-primary-red/5"
+                                  : "hover:bg-primary-green/5"
+                              }`
+                            : "cursor-not-allowed opacity-70"
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -360,15 +384,19 @@ const Page = () => {
                                   : "bg-primary-green"
                                 : isCancelledOption
                                   ? "bg-primary-red/40"
-                                  : "bg-gray-300"
+                                  : "bg-gray-600"
                             }`}
                           />
 
                           <span
                             className={`text-[14px] font-medium ${
                               isCancelledOption
-                                ? "text-primary-red group-hover:text-primary-red"
-                                : "text-[#222] group-hover:text-primary-green"
+                                ? isEnabled
+                                  ? "text-primary-red group-hover:text-primary-red"
+                                  : "text-primary-red"
+                                : isEnabled
+                                  ? "text-[#222] group-hover:text-primary-green"
+                                  : "text-[#222]"
                             }`}
                           >
                             {STATUS_LABELS[statusKey] ?? statusKey}
@@ -516,6 +544,7 @@ const Page = () => {
                 Chat with Buyer
               </h2>
             </div>
+            
             <div className="h-[480px] flex flex-col p-3">
               <ConversationPage
                 receiverId={singleOrder?.data?.vendor_id}

@@ -319,12 +319,35 @@ const page = () => {
                                         ? "bg-primary-red"
                                         : order?.status === "shipped"
                                           ? "bg-accent-blue"
-                                          : order?.status === "paid"
+                                          : order?.status ===
+                                                "out_for_delivery" ||
+                                              order?.status === "picked_up" ||
+                                              order?.status ===
+                                                "ready_for_pickup"
                                             ? "bg-light-green"
                                             : "bg-gray-500"
                             }`}
                           >
-                            {order?.status}
+                            {order?.status === "delivered"
+                              ? "Delivered"
+                              : order?.status === "pending"
+                                ? "Pending"
+                                : order?.status === "confirmed"
+                                  ? "Confirmed"
+                                  : order?.status === "processing"
+                                    ? "Processing"
+                                    : order?.status === "cancelled"
+                                      ? "Cancelled"
+                                      : order?.status === "shipped"
+                                        ? "Shipped"
+                                        : order?.status === "out_for_delivery"
+                                          ? "Out for delivery"
+                                          : order?.status === "picked_up"
+                                            ? "Picked up"
+                                            : order?.status ===
+                                                "ready_for_pickup"
+                                              ? "Ready for pickup"
+                                              : "Unknown"}
                           </span>
                         </td>
 

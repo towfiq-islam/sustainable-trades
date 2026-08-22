@@ -256,7 +256,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                         )}
 
                         <div className="flex justify-between text-[#67645F]">
-                          <span>Est. Sales Tax</span>
+                          <span>Sales Tax</span>
                           <span>${vendorOrder.tax_amount}</span>
                         </div>
 
@@ -386,7 +386,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                   <span>${order?.sub_total}</span>
                 </div>
                 <div className="flex justify-between text-[#67645F]">
-                  <span>Est. Sales Tax</span>
+                  <span>Sales Tax</span>
                   <span>${order?.tax_amount}</span>
                 </div>
                 <div className="flex justify-between text-[#67645F]">

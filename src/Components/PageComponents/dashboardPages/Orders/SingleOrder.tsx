@@ -9,12 +9,13 @@ import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { FiFileText, FiHeart, FiShield } from "react-icons/fi";
+import { FiFileText, FiShield } from "react-icons/fi";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 import {
   useDownloadCustomerInvoiceMutation,
   useGetOrderDetailsQuery,
 } from "@/redux/api/ordersApi";
+import { FaHeart } from "react-icons/fa";
 
 const fulfillmentLabel = (type: string) =>
   type === "delivery"
@@ -385,6 +386,13 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                   <span>Subtotal</span>
                   <span>${order?.sub_total}</span>
                 </div>
+                {order?.discount_amount > 0 && (
+                  <div className="flex justify-between text-[#67645F]">
+                    <span>Discount</span>
+                    <span>-${order?.discount_amount}</span>
+                  </div>
+                )}
+
                 <div className="flex justify-between text-[#67645F]">
                   <span>Sales Tax</span>
                   <span>${order?.tax_amount}</span>
@@ -426,7 +434,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
 
               <div className="flex gap-3 items-center pt-1.5 text-sm text-gray-600">
                 <p>Together we rise, together we thrive.</p>
-                <FiHeart className="text-primary-green shrink-0" size={18} />
+                <FaHeart className="text-primary-green shrink-0" size={18} />
               </div>
             </div>
           </div>

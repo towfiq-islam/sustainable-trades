@@ -5,7 +5,7 @@ import { PuffLoader } from "react-spinners";
 import { GoBackSvg, Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
-import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
+import OrderSummary from "@/Components/ProductComponents/OrderSummary";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import Link from "next/link";
@@ -16,7 +16,7 @@ import {
   useUpdateOrderStatusMutation,
 } from "@/redux/api/ordersApi";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
-import OrderedProducts from "@/Components/Prodashboardcomponents/OrderedProducts";
+import OrderedProducts from "@/Components/ProductComponents/OrderedProducts";
 
 type FulfillmentType = "shipping" | "delivery" | "pickup";
 

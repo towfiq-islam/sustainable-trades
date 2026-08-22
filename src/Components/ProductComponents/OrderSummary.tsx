@@ -49,7 +49,7 @@ const OrderSummary = ({ data }: OrderItem) => {
               </li>
             )}
             <li className="text-[16px] font-normal text-secondary-black">
-              Estimated tax:
+              Sales tax:
             </li>
             <li className="text-[16px] font-bold text-secondary-black">
               Grand Total

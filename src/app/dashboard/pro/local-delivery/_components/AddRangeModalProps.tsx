@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { FiInfo } from "react-icons/fi";
 import toast from "react-hot-toast";
-import { DeliveryRange } from "@/Types/LocalDelivery";
+import { DeliveryRange, DeliveryRangeFormValues } from "@/Types";
 import {
   useAddDeliveryRangeMutation,
   useEditDeliveryRangeMutation,
@@ -14,12 +14,6 @@ interface AddRangeModalProps {
   initialRange: DeliveryRange | null;
   onClose: () => void;
 }
-
-export type DeliveryRangeFormValues = {
-  minMiles: string;
-  maxMiles: string;
-  fee: string;
-};
 
 const DEFAULT_VALUES: DeliveryRangeFormValues = {
   minMiles: "",

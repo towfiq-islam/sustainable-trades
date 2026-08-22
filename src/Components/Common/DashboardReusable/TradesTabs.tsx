@@ -17,46 +17,7 @@ import {
   useCancelTradeOfferMutation,
 } from "@/redux/api/tradeApi";
 import { FiRepeat } from "react-icons/fi";
-
-export type TradeItem = {
-  image: StaticImageData | string;
-  product: productInfo;
-  store: string;
-  quantity: string;
-  type: string;
-};
-
-export type shopData = {
-  id: Number;
-  shop_name: String;
-  user_id: Number;
-};
-
-export type productInfo = {
-  description: string;
-  id: number;
-  product_name: string;
-  product_price: number;
-  images: ImageArr[];
-  shop: shopData;
-  shop_info_id: string;
-};
-
-export type ImageArr = {
-  id: number;
-  image: string;
-  product_id: number;
-};
-
-export type TradeRequest = {
-  id: number;
-  created_at: string;
-  inquiry: number;
-  status: string;
-  items: TradeItem[];
-  sender_id: number;
-  receiver_id: number;
-};
+import { TradeItem, TradeRequest } from "@/Types";
 
 type TradesTabsProps = {
   tradeRequests: TradeRequest[];

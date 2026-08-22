@@ -8,12 +8,7 @@ import {
   FiCreditCard,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
-
-export type CheckoutStep =
-  | "delivery-options"
-  | "delivery-details"
-  | "review-order"
-  | "payment";
+import { CheckoutStep } from "@/Types";
 
 type Node = {
   key: string;

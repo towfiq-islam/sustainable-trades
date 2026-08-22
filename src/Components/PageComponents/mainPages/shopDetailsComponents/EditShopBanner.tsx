@@ -18,36 +18,11 @@ import {
   useUpdateShopBannerMutation,
   useUpdateShopPhotoMutation,
 } from "@/redux/api/shopApi";
-
-type BannerItem = {
-  rating_avg: string;
-  is_followed: boolean;
-  first_name: string;
-  last_name: string;
-  avatar: string;
-  trade_offers_count: number;
-  shop_info: {
-    id: number;
-    user_id: number;
-    shop_banner: string;
-    shop_image: string;
-    shop_name: string;
-    order_count: number;
-    about: {
-      statement: string;
-    };
-    address: {
-      address_line_1: string;
-      display_my_address: string;
-      city: string;
-      state: string;
-    };
-  };
-};
+import { ShopBannerData } from "@/Types";
 
 interface BannerProps {
   shop_id: number;
-  data: BannerItem;
+  data: ShopBannerData;
 }
 
 const EditShopBanner = ({ shop_id, data }: BannerProps) => {

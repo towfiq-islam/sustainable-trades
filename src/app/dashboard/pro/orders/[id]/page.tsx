@@ -4,8 +4,8 @@ import { FaAngleDown, FaCheck } from "react-icons/fa";
 import { PuffLoader } from "react-spinners";
 import { GoBackSvg, Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
-import { useLayoutEffect, useRef, useState } from "react";
-import OrderSummary from "@/Components/Prodashboardcomponents/OrderSummary";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import OrderSummary from "@/Components/ProductComponents/OrderSummary";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import Link from "next/link";
@@ -16,14 +16,70 @@ import {
   useUpdateOrderStatusMutation,
 } from "@/redux/api/ordersApi";
 import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
-import OrderedProducts from "@/Components/Prodashboardcomponents/OrderedProducts";
-const STATUS_STEPS = ["confirmed", "processing", "shipped", "delivered"];
+import OrderedProducts from "@/Components/ProductComponents/OrderedProducts";
+
+type FulfillmentType = "shipping" | "delivery" | "pickup";
+
+const FULFILLMENT_STEPS: Record<
+  FulfillmentType,
+  { label: string; key: string }[]
+> = {
+  shipping: [
+    { label: "Order Confirmed", key: "confirmed" },
+    { label: "Order Processing", key: "processing" },
+    { label: "Order Shipped", key: "shipped" },
+    { label: "Order Delivered", key: "delivered" },
+  ],
+  delivery: [
+    { label: "Order Confirmed", key: "confirmed" },
+    { label: "Order Processing", key: "processing" },
+    { label: "Out for Delivery", key: "out_for_delivery" },
+    { label: "Order Delivered", key: "delivered" },
+  ],
+  pickup: [
+    { label: "Order Confirmed", key: "confirmed" },
+    { label: "Order Processing", key: "processing" },
+    { label: "Ready for Pickup", key: "ready_for_pickup" },
+    { label: "Picked Up", key: "picked_up" },
+  ],
+};
+
+const DROPDOWN_STATUSES: Record<FulfillmentType, string[]> = {
+  shipping: ["confirmed", "processing", "shipped", "delivered", "cancelled"],
+  delivery: [
+    "confirmed",
+    "processing",
+    "out_for_delivery",
+    "delivered",
+    "cancelled",
+  ],
+  pickup: [
+    "confirmed",
+    "processing",
+    "ready_for_pickup",
+    "picked_up",
+    "cancelled",
+  ],
+};
+
+const TERMINAL_STATUSES = new Set(["delivered", "picked_up", "cancelled"]);
+
+const STATUS_LABELS: Record<string, string> = {
+  pending: "Pending",
+  confirmed: "Order Confirmed",
+  processing: "Order Processing",
+  shipped: "Order Shipped",
+  delivered: "Order Delivered",
+  out_for_delivery: "Out for Delivery",
+  ready_for_pickup: "Ready for Pickup",
+  picked_up: "Picked Up",
+  cancelled: "Order Cancelled",
+};
 
 const Page = () => {
   const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);
-  const [open, isOpen] = useState<boolean>(false);
   const [note, setNote] = useState<string>("");
   const [openItems, setOpenItems] = useState<Set<number>>(
     () => new Set([0, 1, 2]),
@@ -54,21 +110,29 @@ const Page = () => {
       }[]
     | null
   >(null);
-  console.log(trackingHistory);
-
-  const steps = [
-    { label: "Order Confirmed", key: "confirmed" },
-    { label: "Order Processing", key: "processing" },
-    { label: "Order Shipped", key: "shipped" },
-    { label: "Order Delivered", key: "delivered" },
-    { label: "Order Cancelled", key: "cancelled" },
-  ];
-
   const currentStatus: string | undefined = singleOrder?.data?.status;
   const isCancelled = currentStatus === "cancelled";
-  const currentStepIndex = currentStatus
-    ? STATUS_STEPS.indexOf(currentStatus)
-    : -1;
+
+  const fulfillmentType: FulfillmentType =
+    (singleOrder?.data?.fulfillment_type as FulfillmentType) ?? "shipping";
+
+  const steps = FULFILLMENT_STEPS[fulfillmentType];
+  const stepKeys = steps.map(s => s.key);
+  const dropdownStatuses = DROPDOWN_STATUSES[fulfillmentType];
+  const currentStepIndex = currentStatus ? stepKeys.indexOf(currentStatus) : -1;
+
+  const enabledStatuses = useMemo(() => {
+    if (!currentStatus || TERMINAL_STATUSES.has(currentStatus)) {
+      return new Set<string>();
+    }
+    const enabled = new Set<string>(["cancelled"]);
+    const nextStep =
+      currentStepIndex === -1 ? steps[0] : steps[currentStepIndex + 1];
+
+    if (nextStep) enabled.add(nextStep.key);
+
+    return enabled;
+  }, [currentStatus, currentStepIndex, steps]);
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -85,7 +149,6 @@ const Page = () => {
     return () => window.removeEventListener("resize", measure);
   }, [openItems]);
 
-  const fulfillmentType = singleOrder?.data?.fulfillment_type;
   const deliveryAddress = singleOrder?.data?.delivery?.delivery_address;
   const pickup = singleOrder?.data?.pickup;
 
@@ -133,7 +196,6 @@ const Page = () => {
       };
     }
 
-    // default: shipping
     return {
       title: "Shipping Address",
       content: (
@@ -251,7 +313,9 @@ const Page = () => {
                         isCancelled ? "text-primary-red" : "text-primary-green"
                       }`}
                     >
-                      {currentStatus ?? "Unknown"}
+                      {currentStatus
+                        ? (STATUS_LABELS[currentStatus] ?? currentStatus)
+                        : "Unknown"}
                     </h5>
                   </div>
                 </div>
@@ -263,7 +327,6 @@ const Page = () => {
                 />
               </button>
 
-              {/* Popover */}
               <div
                 className={`absolute left-0 top-[110%] z-50 w-full overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl transition-all duration-300 ${
                   openStatusPopover
@@ -272,50 +335,95 @@ const Page = () => {
                 }`}
               >
                 <div className="p-2">
-                  {steps?.slice(0, 4)?.map(step => (
-                    <button
-                      key={step.key}
-                      onClick={() => {
-                        updateStatusMutation({
-                          id: order_id,
-                          data: { status: step?.key },
-                        })
-                          .unwrap()
-                          .then(res => {
-                            toast.success(res.message);
+                  {dropdownStatuses.map(statusKey => {
+                    const isCancelledOption = statusKey === "cancelled";
+                    const isCurrent = statusKey === currentStatus;
+                    const isEnabled =
+                      !isCurrent && enabledStatuses.has(statusKey);
+
+                    return (
+                      <button
+                        key={statusKey}
+                        disabled={!isEnabled}
+                        onClick={() => {
+                          if (!isEnabled) return;
+
+                          updateStatusMutation({
+                            id: order_id,
+                            data: { status: statusKey },
                           })
-                          .catch(err => {
-                            toast.error(err?.data?.message);
-                          });
+                            .unwrap()
+                            .then(res => {
+                              toast.success(res.message);
+                            })
+                            .catch(err => {
+                              toast.error(
+                                err?.data?.message ??
+                                  "Couldn't update order status",
+                              );
+                            });
 
-                        setOpenStatusPopover(false);
-                      }}
-                      className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left hover:bg-primary-green/5 transition-all cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="size-2 rounded-full bg-primary-green" />
+                          setOpenStatusPopover(false);
+                        }}
+                        className={`group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition-all ${
+                          isEnabled
+                            ? `cursor-pointer ${
+                                isCancelledOption
+                                  ? "hover:bg-primary-red/5"
+                                  : "hover:bg-primary-green/5"
+                              }`
+                            : "cursor-not-allowed opacity-70"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`size-2 rounded-full ${
+                              isCurrent
+                                ? isCancelledOption
+                                  ? "bg-primary-red"
+                                  : "bg-primary-green"
+                                : isCancelledOption
+                                  ? "bg-primary-red/40"
+                                  : "bg-gray-600"
+                            }`}
+                          />
 
-                        <span className="text-[14px] font-medium text-[#222] group-hover:text-primary-green">
-                          {step.label}
-                        </span>
-                      </div>
+                          <span
+                            className={`text-[14px] font-medium ${
+                              isCancelledOption
+                                ? isEnabled
+                                  ? "text-primary-red group-hover:text-primary-red"
+                                  : "text-primary-red"
+                                : isEnabled
+                                  ? "text-[#222] group-hover:text-primary-green"
+                                  : "text-[#222]"
+                            }`}
+                          >
+                            {STATUS_LABELS[statusKey] ?? statusKey}
+                          </span>
+                        </div>
 
-                      <FaCheck className="opacity-0 scale-50 text-primary-green transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
-                    </button>
-                  ))}
+                        {isCurrent && (
+                          <FaCheck
+                            className={
+                              isCancelledOption
+                                ? "text-primary-red"
+                                : "text-primary-green"
+                            }
+                          />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Progress Bar */}
+          {/* Progress Bar - steps and their count match fulfillment type */}
           <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start mt-6">
             {steps.map((step, index) => {
-              const isCompleted =
-                step.key === "cancelled"
-                  ? isCancelled
-                  : !isCancelled &&
-                    STATUS_STEPS.indexOf(step.key) <= currentStepIndex;
+              const isCompleted = !isCancelled && index <= currentStepIndex;
 
               return (
                 <div
@@ -359,6 +467,19 @@ const Page = () => {
                 </div>
               );
             })}
+
+            {/* Cancelled - shown as its own trailing step only when relevant */}
+            {isCancelled && (
+              <div className="flex flex-col items-center relative">
+                <div className="absolute top-3 -left-1/2 w-full border-t border-dashed border-primary-red" />
+                <div className="z-10 size-6 rounded-full border-2 border-primary-red flex items-center justify-center">
+                  <div className="size-4 rounded-full bg-primary-red" />
+                </div>
+                <h5 className="mt-3 text-center text-[14px] font-medium text-primary-red">
+                  Order Cancelled
+                </h5>
+              </div>
+            )}
           </div>
 
           {/* Products */}
@@ -423,6 +544,7 @@ const Page = () => {
                 Chat with Buyer
               </h2>
             </div>
+            
             <div className="h-[480px] flex flex-col p-3">
               <ConversationPage
                 receiverId={singleOrder?.data?.vendor_id}
@@ -457,7 +579,7 @@ const Page = () => {
           </button>
 
           <button
-            disabled={isCancellingOrder}
+            disabled={isCancellingOrder || isCancelled}
             onClick={() => {
               cancelOrder(order_id)
                 .unwrap()
@@ -465,7 +587,7 @@ const Page = () => {
                   toast.success(res.message);
                 })
                 .catch(err => {
-                  toast.error(err?.data?.message);
+                  toast.error(err?.data?.message ?? "Couldn't cancel order");
                 });
             }}
             className="py-4 px-6 rounded-[8px] border border-primary-red bg-[#FFE8E8] font-semibold text-primary-red cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"

@@ -1,43 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CartItem } from "./cartSlice";
-import { Fulfillment } from "@/lib/fulfillment";
-
-export interface PickupLocationSelection {
-  id: number;
-  location_name: string;
-  address: string;
-  unit?: string;
-  city: string;
-  state: string;
-  zip_code: string;
-}
-
-export interface VendorPricing {
-  vendor_id: number;
-  tax_amount: number;
-  shipping_amount: number;
-  delivery_amount: number;
-  discount_amount: number;
-  total_amount: number;
-}
-
-export interface MasterPricing {
-  sub_total: number;
-  tax_amount: number;
-  shipping_amount: number;
-  delivery_amount: number;
-  discount_amount: number;
-  total_amount: number;
-}
-
-export interface VendorExtras {
-  coupon_code: string | null;
-  subscribe_shop: boolean;
-  discount_amount: number;
-  discount_type?: "percentage" | "fixed" | null;
-  discount_value?: number | null;
-  pickup_location?: PickupLocationSelection | null;
-}
+import {
+  CartItem,
+  Fulfillment,
+  MasterPricing,
+  VendorPricing,
+  VendorExtras,
+  PickupLocationSelection,
+} from "@/Types";
 
 interface CheckoutState {
   master: MasterPricing | null;

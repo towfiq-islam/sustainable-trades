@@ -6,7 +6,6 @@ import "swiper/css/navigation";
 import useAuth from "@/Hooks/useAuth";
 import { FaCheck } from "react-icons/fa6";
 import { Navigation } from "swiper/modules";
-import { AiOutlineFileUnknown } from "react-icons/ai";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Container from "@/Components/Common/Container";
 import Product from "@/Components/Common/Product";
@@ -23,6 +22,8 @@ import {
   useGetProductCategoriesQuery,
 } from "@/redux/api/productApi";
 import PaginationControl from "@/Components/Common/PaginationControl";
+import { FiPackage, FiMapPin } from "react-icons/fi";
+import { EmptyState } from "@/Components/Common/EmptyState";
 
 type categoryItem = {
   id: number;
@@ -40,7 +41,7 @@ const page = () => {
   const { data: allCategory, isLoading: categoryLoading } =
     useGetProductCategoriesQuery({});
 
-  const { data: categoryDetails, isLoading } = useGetCategoryDetailsQuery(
+  const { data: categoryDetails, isFetching } = useGetCategoryDetailsQuery(
     {
       id: categoryId,
       lat: latitude,
@@ -64,6 +65,12 @@ const page = () => {
   useEffect(() => {
     setPage(1);
   }, [categoryId]);
+
+  const goToFirstCategory = () => {
+    if (allCategory?.data?.[0]?.id) {
+      setCategoryId(allCategory.data[0].id);
+    }
+  };
 
   return (
     <>
@@ -158,7 +165,7 @@ const page = () => {
 
       {/* Geographically Closest Listings */}
       <Container>
-        {isLoading ? (
+        {isFetching ? (
           <h2 className="w-60 h-6 mb-7 animate-pulse bg-gray-200 rounded"></h2>
         ) : (
           <h2 className="text-lg md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5 xl:mb-7">
@@ -166,20 +173,20 @@ const page = () => {
           </h2>
         )}
 
-        {isLoading ? (
+        {isFetching ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {Array.from({ length: 4 }).map((_, idx) => (
               <ProductSkeleton key={idx} />
             ))}
           </div>
-        ) : categoryDetails?.data?.products?.data?.length === 0 ||
-          !categoryDetails ? (
-          <div className="flex flex-col justify-center items-center gap-3 lg:gap-4 text-center py-5 md:py-20">
-            <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
-            <p className="text-gray-600 text-sm md:text-lg font-semibold">
-              No products found!!
-            </p>
-          </div>
+        ) : categoryDetails?.data?.length === 0 ? (
+          <EmptyState
+            icon={<FiPackage />}
+            title="Nothing here yet"
+            description={`No sustainable listings under "${categoryDetails?.data?.category?.name || "this category"}" near you right now. Try another category or check back soon.`}
+            actionLabel="Browse first category"
+            onAction={goToFirstCategory}
+          />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {categoryDetails?.data?.products?.data?.map((product: any) => (
@@ -188,12 +195,13 @@ const page = () => {
           </div>
         )}
 
-        {!isLoading && categoryDetails?.data?.products && (
+        {!isFetching && categoryDetails?.data?.products && (
           <div className="py-8">
             <PaginationControl
               currentPage={categoryDetails.data.products.current_page}
               lastPage={categoryDetails.data.products.last_page}
               onPageChange={setPage}
+              alignment="center"
             />
           </div>
         )}
@@ -212,12 +220,11 @@ const page = () => {
             ))}
           </div>
         ) : nearbyProducts?.data?.length === 0 ? (
-          <div className="flex flex-col justify-center items-center gap-3 lg:gap-4 text-center py-5 xl:py-20">
-            <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
-            <p className="text-gray-600 text-sm md:text-lg font-semibold">
-              No products found!!
-            </p>
-          </div>
+          <EmptyState
+            icon={<FiMapPin />}
+            title="No sellers nearby just yet"
+            description="We couldn't find sustainable products or services close to your location. New vendors join every week — try widening your search area or check back later."
+          />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {nearbyProducts?.data?.data?.map((product: any) => (

@@ -8,19 +8,9 @@ import {
 } from "@/redux/api/vendorApi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
+import { PickupLocationFormValues } from "@/Types";
 const US_COUNTRY_CODE = "US";
 const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
-
-export type PickupLocationFormValues = {
-  location_name: string;
-  address: string;
-  unit: string;
-  city: string;
-  state: string;
-  zip_code: string;
-  country: string;
-  is_active: string | boolean;
-};
 
 const DEFAULT_VALUES: PickupLocationFormValues = {
   location_name: "",

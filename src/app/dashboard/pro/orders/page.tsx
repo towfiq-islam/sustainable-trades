@@ -9,7 +9,6 @@ import { CSVLink } from "react-csv";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { useEffect, useState } from "react";
-import Modal from "@/Components/Common/Modal";
 import { FiShoppingBag } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -43,9 +42,7 @@ const page = () => {
   const { user } = useAuth();
   const [isActive, setIsActive] = useState("orders");
   const [status, setStatus] = useState<string>("");
-  const [note, setNote] = useState<string>("");
   const [openPopup, setOpenPopup] = useState<boolean>(false);
-  const [showNote, setShowNote] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<number | null>(null);
   const [page, setPage] = useState<number>(1);
   const [filter, setFilter] = useState("last_30_days");
@@ -236,7 +233,6 @@ const page = () => {
                     <th className="py-3 px-4 text-left">Payment Status</th>
                     <th className="py-3 px-4 text-left">Order Status</th>
                     <th className="py-3 px-4 text-left">FullFillment</th>
-                    <th className="py-3 px-4 text-left">Notes</th>
                     <th className="py-3 px-4 text-center">Action</th>
                   </tr>
                 </thead>
@@ -261,7 +257,6 @@ const page = () => {
                       <th className="py-3 px-4 text-left">Payment Status</th>
                       <th className="py-3 px-4 text-left">Order Status</th>
                       <th className="py-3 px-4 text-left">FullFillment</th>
-                      <th className="py-3 px-4 text-left">Notes</th>
                       <th className="py-3 px-4 text-center">Action</th>
                     </tr>
                   </thead>
@@ -324,34 +319,40 @@ const page = () => {
                                         ? "bg-primary-red"
                                         : order?.status === "shipped"
                                           ? "bg-accent-blue"
-                                          : order?.status === "paid"
+                                          : order?.status ===
+                                                "out_for_delivery" ||
+                                              order?.status === "picked_up" ||
+                                              order?.status ===
+                                                "ready_for_pickup"
                                             ? "bg-light-green"
                                             : "bg-gray-500"
                             }`}
                           >
-                            {order?.status}
+                            {order?.status === "delivered"
+                              ? "Delivered"
+                              : order?.status === "pending"
+                                ? "Pending"
+                                : order?.status === "confirmed"
+                                  ? "Confirmed"
+                                  : order?.status === "processing"
+                                    ? "Processing"
+                                    : order?.status === "cancelled"
+                                      ? "Cancelled"
+                                      : order?.status === "shipped"
+                                        ? "Shipped"
+                                        : order?.status === "out_for_delivery"
+                                          ? "Out for delivery"
+                                          : order?.status === "picked_up"
+                                            ? "Picked up"
+                                            : order?.status ===
+                                                "ready_for_pickup"
+                                              ? "Ready for pickup"
+                                              : "Unknown"}
                           </span>
                         </td>
 
                         <td className="py-4 px-4 capitalize">
                           {order?.fulfillment_type}
-                        </td>
-
-                        <td className="py-4 px-4 capitalize">
-                          <button
-                            disabled={!order?.note}
-                            onClick={() => {
-                              setNote(order?.note);
-                              setShowNote(true);
-                            }}
-                            className={`px-2.5 py-1 text-xs font-semibold rounded-full border-2 text-accent-red ${
-                              order?.note
-                                ? "border-accent-red cursor-pointer hover:bg-accent-red hover:text-white duration-300 transition-all"
-                                : "opacity-70 bg-gray-200 cursor-not-allowed"
-                            }`}
-                          >
-                            View
-                          </button>
                         </td>
 
                         <td className="py-4 px-4 flex justify-center items-center relative">
@@ -450,13 +451,6 @@ const page = () => {
           </div>
         </div>
       )}
-
-      <Modal open={showNote} onClose={() => setShowNote(false)}>
-        <h3 className="text-xl font-semibold text-primary-green mb-2">
-          Order Note
-        </h3>
-        <p className="leading-[164%] text-gray-700">"{note}"</p>
-      </Modal>
     </>
   );
 };

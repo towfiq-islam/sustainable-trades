@@ -17,8 +17,7 @@ import DetailsTab from "@/Components/PageComponents/mainPages/shopDetailsCompone
 import EditShopBanner from "@/Components/PageComponents/mainPages/shopDetailsComponents/EditShopBanner";
 import {
   useGetAllProductsUnderShopQuery,
-  useGetProductCategoriesQuery,
-  useGetProductSubCategoriesQuery,
+  useGetCategoriesWithSubCategoriesQuery,
 } from "@/redux/api/productApi";
 import {
   useGetFeaturedListingsQuery,
@@ -41,10 +40,8 @@ const page = ({ searchParams }: Props) => {
   const [page, setPage] = useState<string>("");
   const [reviewPage, setReviewPage] = useState<string>("");
 
-  const { data: productCategories, isLoading: categoryLoading } =
-    useGetProductCategoriesQuery({});
-  const { data: productSubCategories, isLoading: subCategoryLoading } =
-    useGetProductSubCategoriesQuery({});
+  const { data: categoriesWithSubCategories, isLoading: categoriesLoading } =
+    useGetCategoriesWithSubCategoriesQuery({});
 
   const { data: shopDetailsData, isLoading: shopDetailLoading } =
     useGetShopDetailsQuery(id);
@@ -65,7 +62,6 @@ const page = ({ searchParams }: Props) => {
         short_by,
         search,
         page,
-       
       },
       { skip: !listing_id },
     );
@@ -92,6 +88,8 @@ const page = ({ searchParams }: Props) => {
       <ShopListing
         featuredListings={featuredListings?.data}
         allListings={products?.data}
+        category={category_id}
+        subCategory={sub_category_id}
         setSearch={setSearch}
         setCategory={setCategory}
         setSubCategory={setSubCategory}
@@ -99,10 +97,8 @@ const page = ({ searchParams }: Props) => {
         setPage={setPage}
         featuredLoading={featuredLoading}
         listingsLoading={isShopLoading}
-        categoryLoading={categoryLoading}
-        subCategoryLoading={subCategoryLoading}
-        productCategories={productCategories?.data}
-        productSubCategories={productSubCategories?.data}
+        categoriesLoading={categoriesLoading}
+        categoriesWithSubCategories={categoriesWithSubCategories?.data}
       />
 
       {/* Shop Reviews */}

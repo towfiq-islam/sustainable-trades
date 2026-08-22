@@ -15,7 +15,7 @@ import {
   setVendorCoupon,
   setVendorSubscribeShop,
 } from "@/redux/slices/checkoutSlice";
-import { CartItem } from "@/redux/slices/cartSlice";
+import { CartItem } from "@/Types";
 
 const ReviewStep = ({ items }: { items: CartItem[] }) => {
   const router = useRouter();
@@ -348,8 +348,14 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
         </button>
         <button
           type="button"
-          disabled={!terms_and_condition}
-          onClick={() => router.push(buildStepUrl("payment"))}
+          onClick={() => {
+            if (!terms_and_condition) {
+              toast.error("Agree with terms and condition");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              return;
+            }
+            router.push(buildStepUrl("payment"));
+          }}
           className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           Confirm and pay

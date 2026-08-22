@@ -1,15 +1,33 @@
-import React from "react";
+import { useMemo } from "react";
 import Product from "@/Components/Common/Product";
 import Container from "@/Components/Common/Container";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
-import { AiOutlineFileUnknown } from "react-icons/ai";
 import { GrPowerReset } from "react-icons/gr";
+import { FiStar, FiSearch } from "react-icons/fi";
 import { FilteringSkeleton, ProductSkeleton } from "@/Components/Loader/Loader";
 import PaginationControl from "@/Components/Common/PaginationControl";
+import { EmptyState } from "@/Components/Common/EmptyState";
+
+type SubCategoryItem = {
+  id: number;
+  category_id: number;
+  sub_category_name: string;
+  taxability_code: string;
+};
+
+type CategoryItem = {
+  id: number;
+  name: string;
+  image: string;
+  icon: string;
+  subcategories: SubCategoryItem[];
+};
 
 const ShopListing = ({
   featuredListings,
   allListings,
+  category,
+  subCategory,
   setSearch,
   setCategory,
   setSubCategory,
@@ -17,11 +35,34 @@ const ShopListing = ({
   setPage,
   listingsLoading,
   featuredLoading,
-  categoryLoading,
-  subCategoryLoading,
-  productCategories,
-  productSubCategories,
+  categoriesLoading,
+  categoriesWithSubCategories,
 }: any) => {
+  const resetFilters = () => {
+    setSearch("");
+    setCategory("");
+    setSubCategory("");
+    setSortBy("");
+  };
+
+  // Only relevant once a category is picked - subcategories that belong to it.
+  const subCategoryOptions: SubCategoryItem[] = useMemo(() => {
+    if (!category || !categoriesWithSubCategories?.length) return [];
+
+    const selectedCategory = categoriesWithSubCategories.find(
+      (cat: CategoryItem) => String(cat.id) === String(category),
+    );
+
+    return selectedCategory?.subcategories ?? [];
+  }, [categoriesWithSubCategories, category]);
+
+  const handleCategoryChange = (value: string) => {
+    setCategory(value);
+    // Previously selected sub-category won't belong to the new category
+    // (or to "All Categories"), so clear it to avoid a stale filter.
+    setSubCategory("");
+  };
+
   return (
     <section id="Listings" className="mt-10">
       <Container>
@@ -35,11 +76,12 @@ const ShopListing = ({
             ))}
           </div>
         ) : featuredListings?.length === 0 ? (
-          <div className="flex flex-col justify-center items-center gap-3 text-center py-5 md:py-20">
-            <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
-            <p className="text-gray-600 text-sm md:text-lg font-semibold">
-              No product found!!
-            </p>
+          <div className="mb-5 lg:mb-10">
+            <EmptyState
+              icon={<FiStar />}
+              title="No featured listings right now"
+              description="Vendors haven't been featured yet. Check back soon, or browse everything in All Listings below."
+            />
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-7 mb-5 lg:mb-10">
@@ -57,7 +99,7 @@ const ShopListing = ({
         <h2 className="section_sub_title">All Listings</h2>
 
         {/* Filtering */}
-        {categoryLoading && subCategoryLoading ? (
+        {categoriesLoading ? (
           <FilteringSkeleton />
         ) : (
           <div className="flex flex-col gap-3 flex-wrap lg:flex-row lg:justify-between lg:items-end mb-8">
@@ -69,11 +111,13 @@ const ShopListing = ({
                 </h3>
 
                 <select
-                  onChange={e => setCategory(e.target.value)}
+                  value={category || ""}
+                  onChange={e => handleCategoryChange(e.target.value)}
                   className="border w-full md:w-[192px] md:text-base text-xs rounded-lg px-3 py-1.5 md:py-3 border-gray-400 outline-none text-secondary-gray"
                 >
-                  {productCategories?.map(
-                    ({ id, name }: { id: number; name: string }) => (
+                  <option value="">All Categories</option>
+                  {categoriesWithSubCategories?.map(
+                    ({ id, name }: CategoryItem) => (
                       <option key={id} value={id}>
                         {name}
                       </option>
@@ -82,30 +126,30 @@ const ShopListing = ({
                 </select>
               </div>
 
-              <div className="w-full">
-                <h3 className="text-secondary-gray md:text-base text-xs font-semibold mb-1.5">
-                  Product Sub Category
-                </h3>
+              {/* Sub Category - only shown once a category is picked,
+                  and only if that category actually has subcategories */}
+              {category && subCategoryOptions.length > 0 && (
+                <div className="w-full">
+                  <h3 className="text-secondary-gray md:text-base text-xs font-semibold mb-1.5">
+                    Product Sub Category
+                  </h3>
 
-                <select
-                  onChange={e => setSubCategory(e.target.value)}
-                  className="border w-full md:w-[192px] md:text-base text-xs rounded-lg px-3 py-1.5 md:py-3 border-gray-400 outline-none text-secondary-gray"
-                >
-                  {productSubCategories?.map(
-                    ({
-                      id,
-                      sub_category_name,
-                    }: {
-                      id: number;
-                      sub_category_name: string;
-                    }) => (
-                      <option key={id} value={id}>
-                        {sub_category_name}
-                      </option>
-                    ),
-                  )}
-                </select>
-              </div>
+                  <select
+                    value={subCategory || ""}
+                    onChange={e => setSubCategory(e.target.value)}
+                    className="border w-full md:w-[192px] md:text-base text-xs rounded-lg px-3 py-1.5 md:py-3 border-gray-400 outline-none text-secondary-gray"
+                  >
+                    <option value="">All Sub Categories</option>
+                    {subCategoryOptions.map(
+                      ({ id, sub_category_name }: SubCategoryItem) => (
+                        <option key={id} value={id}>
+                          {sub_category_name}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                </div>
+              )}
 
               <div className="w-full">
                 <h3 className="text-secondary-gray md:text-base text-xs font-semibold mb-1.5">
@@ -137,12 +181,7 @@ const ShopListing = ({
 
               {/* Reset */}
               <button
-                onClick={() => {
-                  setSearch("");
-                  setCategory("");
-                  setSubCategory("");
-                  setSortBy("");
-                }}
+                onClick={resetFilters}
                 className="flex gap-2 items-center cursor-pointer px-4 py-2 md:py-3 rounded-lg border-gray-200 relative duration-300 transition-all hover:bg-secondary-blue hover:text-white border hover:border-transparent text-white bg-primary-green"
               >
                 <GrPowerReset />
@@ -160,12 +199,13 @@ const ShopListing = ({
             ))}
           </div>
         ) : allListings?.length === 0 ? (
-          <div className="flex flex-col justify-center items-center gap-3 text-center py-5 md:py-20">
-            <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
-            <p className="text-gray-600 text-sm md:text-lg font-semibold">
-              No product found!!
-            </p>
-          </div>
+          <EmptyState
+            icon={<FiSearch />}
+            title="No listings match your filters"
+            description="We couldn't find any products for this search and filter combination. Try adjusting your filters or resetting them to see everything."
+            actionLabel="Reset filters"
+            onAction={resetFilters}
+          />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {allListings?.data?.map((product: any) => (

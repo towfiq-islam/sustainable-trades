@@ -17,7 +17,7 @@ import {
   setCheckoutPricing,
   setVendorPickupLocation,
 } from "@/redux/slices/checkoutSlice";
-import { CartItem } from "@/redux/slices/cartSlice";
+import { CartItem } from "@/Types";
 import Modal from "@/Components/Common/Modal";
 import { IoIosInformationCircle } from "react-icons/io";
 

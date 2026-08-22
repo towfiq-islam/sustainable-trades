@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
-import AddPickupLocationModal, {
-  PickupLocationFormValues,
-} from "./_components/AddPickupLocationModal";
+import AddPickupLocationModal from "./_components/AddPickupLocationModal";
+import { PickupLocation } from "@/Types";
 import { IoIosWarning } from "react-icons/io";
 import { FaLightbulb } from "react-icons/fa";
 import Modal from "@/Components/Common/Modal";
@@ -14,10 +13,7 @@ import {
 import { LocationRowSkeleton } from "@/Components/Loader/Loader";
 import toast from "react-hot-toast";
 
-export type PickupLocation = PickupLocationFormValues & {
-  id: number;
-  is_active: string | boolean;
-};
+
 
 const Page = () => {
   const { data: pickupLocationsData, isLoading } = useGetPickupLocationsQuery(

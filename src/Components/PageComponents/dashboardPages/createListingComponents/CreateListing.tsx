@@ -18,30 +18,10 @@ import {
   useGetProductCategoriesQuery,
   useGetProductSubCategoriesQuery,
 } from "@/redux/api/productApi";
+import { ListingFormData } from "@/Types";
 
-export type FormData = {
-  shop_info_id: string | number;
-  product_name: string;
-  product_price: string;
-  product_quantity: string;
-  weight: string;
-  cost: string;
-  description: string;
-  category_id: string;
-  sub_category_id: string;
-  fulfillment: string;
-  selling_option: string;
-  unlimited_stock: boolean;
-  out_of_stock: boolean;
-  is_featured: boolean;
-  tags: string[];
-  images: File[];
-  video?: File | null;
-  length: string;
-  width: string;
-  height: string;
-  dimension_unit: "mm" | "cm" | "in";
-};
+// Re-export for child components that import FormData from here
+export type FormData = ListingFormData;
 
 type Category = { id: number | string; name: string };
 
@@ -72,7 +52,7 @@ const VARIANT_CONFIG = {
   },
 } as const;
 
-const EMPTY_FORM: Omit<FormData, "shop_info_id"> = {
+const EMPTY_FORM: Omit<ListingFormData, "shop_info_id"> = {
   product_name: "",
   product_price: "",
   product_quantity: "",
@@ -124,7 +104,7 @@ const CreateListing = ({
     reset,
     formState: { errors },
     setValue,
-  } = useForm<FormData>({ defaultValues: EMPTY_FORM });
+  } = useForm<ListingFormData>({ defaultValues: EMPTY_FORM });
 
   const fulfillment = watch("fulfillment");
   const categoryId = watch("category_id");
@@ -138,7 +118,7 @@ const CreateListing = ({
   });
 
   // ── submit ────────────────────────────────────────────────────────────────
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: ListingFormData) => {
     const fd = new FormData();
 
     if (user?.shop_info?.id)

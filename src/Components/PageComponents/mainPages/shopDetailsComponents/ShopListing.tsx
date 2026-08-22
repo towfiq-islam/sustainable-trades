@@ -1,11 +1,11 @@
-import React from "react";
 import Product from "@/Components/Common/Product";
 import Container from "@/Components/Common/Container";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
-import { AiOutlineFileUnknown } from "react-icons/ai";
 import { GrPowerReset } from "react-icons/gr";
+import { FiStar, FiSearch } from "react-icons/fi";
 import { FilteringSkeleton, ProductSkeleton } from "@/Components/Loader/Loader";
 import PaginationControl from "@/Components/Common/PaginationControl";
+import { EmptyState } from "@/Components/Common/EmptyState";
 
 const ShopListing = ({
   featuredListings,
@@ -22,6 +22,13 @@ const ShopListing = ({
   productCategories,
   productSubCategories,
 }: any) => {
+  const resetFilters = () => {
+    setSearch("");
+    setCategory("");
+    setSubCategory("");
+    setSortBy("");
+  };
+
   return (
     <section id="Listings" className="mt-10">
       <Container>
@@ -35,11 +42,12 @@ const ShopListing = ({
             ))}
           </div>
         ) : featuredListings?.length === 0 ? (
-          <div className="flex flex-col justify-center items-center gap-3 text-center py-5 md:py-20">
-            <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
-            <p className="text-gray-600 text-sm md:text-lg font-semibold">
-              No product found!!
-            </p>
+          <div className="mb-5 lg:mb-10">
+            <EmptyState
+              icon={<FiStar />}
+              title="No featured listings right now"
+              description="Vendors haven't been featured yet. Check back soon, or browse everything in All Listings below."
+            />
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-7 mb-5 lg:mb-10">
@@ -137,12 +145,7 @@ const ShopListing = ({
 
               {/* Reset */}
               <button
-                onClick={() => {
-                  setSearch("");
-                  setCategory("");
-                  setSubCategory("");
-                  setSortBy("");
-                }}
+                onClick={resetFilters}
                 className="flex gap-2 items-center cursor-pointer px-4 py-2 md:py-3 rounded-lg border-gray-200 relative duration-300 transition-all hover:bg-secondary-blue hover:text-white border hover:border-transparent text-white bg-primary-green"
               >
                 <GrPowerReset />
@@ -160,12 +163,13 @@ const ShopListing = ({
             ))}
           </div>
         ) : allListings?.length === 0 ? (
-          <div className="flex flex-col justify-center items-center gap-3 text-center py-5 md:py-20">
-            <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
-            <p className="text-gray-600 text-sm md:text-lg font-semibold">
-              No product found!!
-            </p>
-          </div>
+          <EmptyState
+            icon={<FiSearch />}
+            title="No listings match your filters"
+            description="We couldn't find any products for this search and filter combination. Try adjusting your filters or resetting them to see everything."
+            actionLabel="Reset filters"
+            onAction={resetFilters}
+          />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {allListings?.data?.map((product: any) => (

@@ -56,7 +56,7 @@ export default function VendorListings({
   variant: "basic" | "pro";
 }) {
   console.log(variant);
-  const [view, setView] = useState<ViewMode>("grid");
+  const [view, setView] = useState<ViewMode>("table");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [selected, setSelected] = useState<number[]>([]);
@@ -103,19 +103,6 @@ export default function VendorListings({
         {/* View toggle */}
         <div className="hidden sm:flex gap-2 items-center border border-gray-300 rounded-lg p-1 w-fit self-start sm:self-auto">
           <button
-            onClick={() => setView("grid")}
-            aria-pressed={view === "grid"}
-            className={`p-2 rounded-[6px] cursor-pointer transition-colors duration-200 ${
-              view === "grid"
-                ? "bg-primary-green text-white"
-                : "text-secondary-black hover:bg-gray-100"
-            }`}
-            aria-label="Grid view"
-          >
-            <FiGrid size={18} />
-          </button>
-
-          <button
             onClick={() => setView("table")}
             aria-pressed={view === "table"}
             className={`p-2 rounded-[6px] cursor-pointer transition-colors duration-200 ${
@@ -126,6 +113,19 @@ export default function VendorListings({
             aria-label="Table view"
           >
             <FiList size={18} />
+          </button>
+
+          <button
+            onClick={() => setView("grid")}
+            aria-pressed={view === "grid"}
+            className={`p-2 rounded-[6px] cursor-pointer transition-colors duration-200 ${
+              view === "grid"
+                ? "bg-primary-green text-white"
+                : "text-secondary-black hover:bg-gray-100"
+            }`}
+            aria-label="Grid view"
+          >
+            <FiGrid size={18} />
           </button>
         </div>
       </div>

@@ -10,9 +10,10 @@ import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Container from "@/Components/Common/Container";
 import { RightArrowSvg } from "@/Components/Svg/SvgContainer";
-import { AiOutlineFileUnknown } from "react-icons/ai";
+import { FiMessageSquare } from "react-icons/fi";
 import { ShopReviewSkeleton } from "@/Components/Loader/Loader";
 import PaginationControl from "@/Components/Common/PaginationControl";
+import { EmptyState } from "@/Components/Common/EmptyState";
 
 type ImageItem = {
   image: string;
@@ -58,7 +59,7 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
   return (
     <section id="Reviews" className="mt-14 xl:mt-24">
       <Container>
-        <h2 className="section_sub_title !mb-3">Read Our Reviews</h2>
+        <h2 className="section_sub_title">Read Our Reviews</h2>
 
         <div>
           {reviewLoading ? (
@@ -196,44 +197,21 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
               </div>
             ))
           ) : (
-            <div className="flex flex-col justify-center items-center gap-3 text-center py-5 xl:py-20">
-              <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
-              <p className="text-gray-600 text-sm md:text-lg font-semibold">
-                No Review found!!
-              </p>
-            </div>
+            <EmptyState
+              icon={<FiMessageSquare />}
+              title="No reviews yet"
+              description="This shop hasn't received any customer reviews so far. Be the first to share your experience once you've made a purchase."
+            />
           )}
         </div>
 
-        {!reviewLoading && data?.data && (
+        {!reviewLoading && (
           <div className="py-8">
             <PaginationControl
-              currentPage={data.current_page}
-              lastPage={data.last_page}
+              currentPage={data?.links?.current_page}
+              lastPage={data?.links?.last_page}
               onPageChange={setReviewPage}
             />
-          </div>
-        )}
-
-        {!reviewLoading && (
-          <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">
-            {data?.links?.map((item: any, idx: number) => (
-              <button
-                key={idx}
-                disabled={!item.url}
-                dangerouslySetInnerHTML={{ __html: item.label }}
-                onClick={() =>
-                  item.url && setReviewPage(item.url.split("=")[1])
-                }
-                className={`px-3 py-1 rounded border transition-all duration-200 ${
-                  item.active
-                    ? "bg-primary-green text-white"
-                    : "bg-white text-gray-700"
-                } ${
-                  !item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-                }`}
-              />
-            ))}
           </div>
         )}
       </Container>

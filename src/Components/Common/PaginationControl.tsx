@@ -27,40 +27,27 @@ interface PaginationProps {
   from?: number;
   to?: number;
   onPageChange: (page: number) => void;
-  showSummary?: boolean;
+  alignment?: "center" | "right";
   className?: string;
 }
 
 export default function PaginationControl({
   currentPage,
   lastPage,
-  total,
-  from,
-  to,
   onPageChange,
-  showSummary = true,
+  alignment = "right",
   className = "",
 }: PaginationProps) {
   if (!lastPage || lastPage <= 1) return null;
 
   const pages = getPageList(currentPage, lastPage);
-  const hasSummary = showSummary && from != null && to != null && total != null;
 
   return (
     <div
       className={`flex items-center py-8 flex-wrap gap-4 ${
-        hasSummary ? "justify-between" : "justify-end"
+        alignment === "center" ? "justify-center" : "justify-end"
       } ${className}`}
     >
-      {hasSummary && (
-        <p className="text-sm text-gray">
-          Showing <span className="font-medium text-black">{from}</span>
-          {"–"}
-          <span className="font-medium text-black">{to}</span> of{" "}
-          <span className="font-medium text-black">{total}</span> results
-        </p>
-      )}
-
       <div className="flex items-center gap-1">
         {/* Prev */}
         <button

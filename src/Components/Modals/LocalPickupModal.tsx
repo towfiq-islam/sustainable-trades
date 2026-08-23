@@ -28,8 +28,7 @@ const LocalPickupModal = ({ onClose, productId }: Props) => {
       ...data,
     };
     try {
-      const res = await localPickup(payload).unwrap();
-      toast.success(res?.message);
+      await localPickup(payload).unwrap();
       onClose();
     } catch (err: any) {
       toast.error(err?.data?.message);

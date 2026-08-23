@@ -2,13 +2,12 @@
 import type React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 import { Reload } from "@/Components/Svg/SvgContainer";
 import moment from "moment";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import Modal from "../Modal";
-import MessageShopOwner from "@/Components/Modals/MessageShopOwner";
 import { useState } from "react";
 import { ImSpinner9 } from "react-icons/im";
 import { TradeRequestSkeleton } from "@/Components/Loader/Loader";
@@ -18,6 +17,7 @@ import {
 } from "@/redux/api/tradeApi";
 import { FiRepeat } from "react-icons/fi";
 import { TradeItem, TradeRequest } from "@/Types";
+import MessageToSellerModal from "@/Components/Modals/MessageToSellerModal";
 
 type TradesTabsProps = {
   tradeRequests: TradeRequest[];
@@ -333,8 +333,12 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
         </div>
       )}
 
-      <Modal open={msgOpen} onClose={() => setMsgOpen(false)}>
-        <MessageShopOwner id={userId} setMsgOpen={setMsgOpen} />
+      <Modal
+        open={msgOpen}
+        onClose={() => setMsgOpen(false)}
+        className="max-w-xl"
+      >
+        <MessageToSellerModal id={userId} setMsgOpen={setMsgOpen} />
       </Modal>
     </>
   );

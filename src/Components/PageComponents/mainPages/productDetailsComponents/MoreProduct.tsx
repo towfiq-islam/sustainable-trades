@@ -1,5 +1,6 @@
 import Product from "@/Components/Common/Product";
-import { AiOutlineFileUnknown } from "react-icons/ai";
+import { FiShoppingBag } from "react-icons/fi";
+import { EmptyState } from "@/Components/Common/EmptyState";
 
 type productItem = {
   id: number;
@@ -28,20 +29,15 @@ const MoreProduct = ({ data }: moreProductProps) => {
       {data?.more_products_from_shop?.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-x-5 md:gap-y-10">
           {data?.more_products_from_shop?.map(product => (
-            <Product
-              key={product?.id}
-              product={product}
-              has_cart={false}
-            />
+            <Product key={product?.id} product={product} />
           ))}
         </div>
       ) : (
-        <div className="flex flex-col justify-center items-center gap-3 text-center py-5 md:py-20">
-          <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
-          <p className="text-gray-600 text-sm md:text-lg font-semibold">
-            No product found!!
-          </p>
-        </div>
+        <EmptyState
+          icon={<FiShoppingBag />}
+          title="Nothing else listed yet"
+          description="This shop doesn't have any other products up right now. Check back later as they add more to their catalog."
+        />
       )}
     </section>
   );

@@ -88,9 +88,7 @@ const ProductReviews = ({
             </div>
           ))
         ) : (
-          <p className="font-semibold mt-3 text-primary-green">
-            No reviews yet!!
-          </p>
+          <p className="font-medium mt-3 text-gray-500">No reviews yet!</p>
         )}
       </div>
 

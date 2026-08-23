@@ -325,7 +325,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
           <span> Message Seller</span>
         </button>
       )}
-      {/* Modals */}
+
       <Modal
         open={tradeOpen}
         onClose={() => setTradeOpen(false)}
@@ -341,8 +341,12 @@ const ProductDescription = ({ data }: descriptionProps) => {
         />
       </Modal>
 
-      <Modal open={msgOpen} onClose={() => setMsgOpen(false)}>
-        <MessageToSellerModal id={id} shopInfo={data} setMsgOpen={setMsgOpen} />
+      <Modal
+        open={msgOpen}
+        onClose={() => setMsgOpen(false)}
+        className="max-w-xl"
+      >
+        <MessageToSellerModal id={id} setMsgOpen={setMsgOpen} />
       </Modal>
     </>
   );

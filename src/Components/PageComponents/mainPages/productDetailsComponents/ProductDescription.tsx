@@ -2,7 +2,6 @@
 import {
   AddToCartSvg,
   DollarSvg,
-  MinSvg,
   MyLocationSvg,
   MyMsgSvg,
   SignSvg,
@@ -78,15 +77,10 @@ const ProductDescription = ({ data }: descriptionProps) => {
   const [productId, setProductId] = useState<number | null>(null);
   const [tradeOpen, setTradeOpen] = useState<boolean>(false);
   const [msgOpen, setMsgOpen] = useState<boolean>(false);
-  const [quantity, setQuantity] = useState<number>(1);
 
   // Mutations
   const [addFavoriteMutation, { isLoading: isPending }] =
     useAddFavoriteMutation();
-
-  // Func for Increase & Decrease
-  const handleIncrease = () => setQuantity(prev => prev + 1);
-  const handleDecrease = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
 
   // Func for add to favorite
   const handleAddFavorite = (product_id: any) => {
@@ -173,6 +167,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
           )}
         </button>
       </div>
+
       <div className="flex gap-5 justify-between items-start mb-5">
         {/* Product Name */}
         <h3 className="text-lg md:text-xl font-semibold text-secondary-black">
@@ -273,24 +268,10 @@ const ProductDescription = ({ data }: descriptionProps) => {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mb-7">
-        {/* Price */}
-        <p className="text-2xl md:text-3xl lg:text-4xl font-semibold">
-          ${data?.product_price}
-        </p>
-
-        {/* Quantity */}
-        <div className="flex gap-3 items-center border rounded-lg px-4 md:px-7 py-2 font-semibold border-primary-green">
-          <button onClick={handleDecrease} className="cursor-pointer">
-            <MinSvg />
-          </button>
-          <p className="text-secondary-gray">Qty:</p>
-          <p className="text-secondary-gray">{quantity}</p>
-          <button onClick={handleIncrease} className="cursor-pointer">
-            +
-          </button>
-        </div>
-      </div>
+      {/* Price */}
+      <p className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-7">
+        ${data?.product_price}
+      </p>
 
       {/* Buy btn */}
       <button

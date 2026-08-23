@@ -11,7 +11,6 @@ import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import {
-  useCancelOrderMutation,
   useGetSingleOrderQuery,
   useUpdateOrderStatusMutation,
 } from "@/redux/api/ordersApi";
@@ -80,10 +79,7 @@ const Page = () => {
   const router = useRouter();
   const params = useParams();
   const order_id = Number(params.id);
-  const [note, setNote] = useState<string>("");
-  const [openItems, setOpenItems] = useState<Set<number>>(
-    () => new Set([0, 1, 2]),
-  );
+  const [openItems, setOpenItems] = useState<Set<number>>(() => new Set([0]));
 
   const toggleAccordion = (idx: number) => {
     setOpenItems(prev => {
@@ -94,14 +90,11 @@ const Page = () => {
     });
   };
   const [openStatusPopover, setOpenStatusPopover] = useState(false);
-  const [showNote, setShowNote] = useState<boolean>(false);
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [heights, setHeights] = useState<Array<string>>([]);
   const [updateStatusMutation] = useUpdateOrderStatusMutation();
   const { data: singleOrder, isLoading } = useGetSingleOrderQuery(order_id);
-  const [cancelOrder, { isLoading: isCancellingOrder }] =
-    useCancelOrderMutation();
   const [trackingHistory, setTrackingHistory] = useState<
     | {
         id: number;
@@ -135,19 +128,20 @@ const Page = () => {
   }, [currentStatus, currentStepIndex, steps]);
 
   useLayoutEffect(() => {
+    if (isLoading) return;
+
     const measure = () => {
       const newHeights = contentRefs.current.map((ref, idx) => {
         if (!ref) return "0px";
         return openItems.has(idx) ? `${ref.scrollHeight}px` : "0px";
       });
-
       setHeights(newHeights);
     };
 
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, [openItems]);
+  }, [openItems, isLoading]);
 
   const deliveryAddress = singleOrder?.data?.delivery?.delivery_address;
   const pickup = singleOrder?.data?.pickup;
@@ -239,7 +233,7 @@ const Page = () => {
     },
     getFulfillmentAccordionItem(),
     {
-      title: "Add Note",
+      title: "Notes",
       content: <></>,
       isModal: true,
     },
@@ -276,7 +270,7 @@ const Page = () => {
 
             <div className="flex gap-3 items-center">
               <button
-                className="py-3 px-4 rounded-[8px] border border-light-green text-[16px] font-semibold text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out"
+                className="py-3 px-4 rounded-[8px] border font-medium text-secondary-black cursor-pointer border-primary-green duration-300 ease-in-out hover:bg-primary-green hover:text-white"
                 onClick={() =>
                   setTrackingHistory(singleOrder?.data?.order_status_history)
                 }
@@ -503,7 +497,7 @@ const Page = () => {
               <div
                 className="flex justify-between items-center p-3 cursor-pointer"
                 onClick={() => {
-                  if (item.isModal && item.title === "Add Note")
+                  if (item.isModal && item.title === "Notes")
                     setNoteModalOpen(true);
                   else toggleAccordion(idx);
                 }}
@@ -544,7 +538,7 @@ const Page = () => {
                 Chat with Buyer
               </h2>
             </div>
-            
+
             <div className="h-[480px] flex flex-col p-3">
               <ConversationPage
                 receiverId={singleOrder?.data?.vendor_id}
@@ -562,38 +556,6 @@ const Page = () => {
           >
             Go to Messages Board
           </Link>
-
-          <button
-            disabled={!singleOrder?.data?.noted}
-            onClick={() => {
-              setNote(singleOrder?.data?.noted);
-              setShowNote(true);
-            }}
-            className={`font-semibold border border-[#E1E2E2] rounded-lg overflow-hidden w-full p-3 ${
-              singleOrder?.data?.noted
-                ? "cursor-pointer hover:bg-accent-red hover:text-white duration-300 transition-all"
-                : "opacity-70 bg-gray-200 cursor-not-allowed"
-            }`}
-          >
-            View Note
-          </button>
-
-          <button
-            disabled={isCancellingOrder || isCancelled}
-            onClick={() => {
-              cancelOrder(order_id)
-                .unwrap()
-                .then(res => {
-                  toast.success(res.message);
-                })
-                .catch(err => {
-                  toast.error(err?.data?.message ?? "Couldn't cancel order");
-                });
-            }}
-            className="py-4 px-6 rounded-[8px] border border-primary-red bg-[#FFE8E8] font-semibold text-primary-red cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full disabled:cursor-not-allowed disabled:opacity-80"
-          >
-            {isCancellingOrder ? "Cancelling...." : "Cancel Order"}
-          </button>
         </div>
       </div>
 
@@ -601,24 +563,23 @@ const Page = () => {
         <OrderSummary data={singleOrder?.data} />
       </div>
 
-      <Modal open={noteModalOpen} onClose={() => setNoteModalOpen(false)}>
+      <Modal
+        open={noteModalOpen}
+        onClose={() => setNoteModalOpen(false)}
+        className="max-w-xl"
+      >
         <OrderNote
           order_id={order_id}
           onClose={() => setNoteModalOpen(false)}
+          note={singleOrder?.data?.noted}
         />
       </Modal>
+
       <Modal
         open={trackingHistory !== null}
         onClose={() => setTrackingHistory(null)}
       >
         <TrackPackageModal history={trackingHistory ?? []} />
-      </Modal>
-      <Modal open={showNote} onClose={() => setShowNote(false)}>
-        <h3 className="text-xl font-semibold text-primary-green mb-2">
-          Order Note
-        </h3>
-
-        <p className="leading-[164%] text-gray-700">"{note}"</p>
       </Modal>
     </>
   );

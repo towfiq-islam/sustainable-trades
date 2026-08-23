@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { ReviewCardSkeleton } from "@/Components/Loader/Loader";
+import PaginationControl from "@/Components/Common/PaginationControl";
 
 const ProductReviews = ({
   reviewCount,
@@ -17,7 +18,7 @@ const ProductReviews = ({
     <>
       {/* Upper part */}
       <div className="flex gap-5 items-center mb-2">
-        <h3 className="text-xl md:text-2xl md:text-3xl lg:text-4xl font-semibold text-secondary-black">
+        <h3 className="text-xl md:text-2xl lg:text-4xl font-semibold text-secondary-black">
           {reviewCount} Reviews
         </h3>
 
@@ -94,21 +95,11 @@ const ProductReviews = ({
       </div>
 
       {!reviewLoading && (
-        <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">
-          {data?.links?.map((item: any, idx: number) => (
-            <button
-              key={idx}
-              onClick={() => item.url && setPage(item.url.split("=")[1])}
-              className={`px-3 py-1 rounded border transition-all duration-200 
-        ${
-          item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"
-        } 
-        ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-              disabled={!item.url}
-              dangerouslySetInnerHTML={{ __html: item.label }}
-            />
-          ))}
-        </div>
+        <PaginationControl
+          currentPage={data?.links?.first_page}
+          lastPage={data?.links?.last_page}
+          onPageChange={setPage}
+        />
       )}
     </>
   );

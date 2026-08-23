@@ -8,13 +8,14 @@ import { CgSpinnerTwo } from "react-icons/cg";
 interface OrderNoteProps {
   order_id: number;
   onClose: () => void;
+  note: string;
 }
 
 interface FormValues {
   note: string;
 }
 
-const OrderNote: React.FC<OrderNoteProps> = ({ order_id, onClose }) => {
+const OrderNote: React.FC<OrderNoteProps> = ({ order_id, onClose, note }) => {
   const [addNoteMutation, { isLoading: isPending }] = useAddOrderNoteMutation();
 
   const {
@@ -42,7 +43,8 @@ const OrderNote: React.FC<OrderNoteProps> = ({ order_id, onClose }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <textarea
           placeholder="Type note here..."
-          className="p-3 rounded-[8px] border border-primary-red text-[16px] font-normal text-secondary-black cursor-pointer hover:border-primary-green duration-300 ease-in-out w-full mt-5 h-[280px]"
+          defaultValue={note}
+          className="p-3 rounded-[8px] border border-gray-300 text-secondary-black outline-none hover:border-off-green duration-300 ease-in-out w-full mt-3 h-[230px]"
           {...register("note", {
             required: "Note is required",
           })}

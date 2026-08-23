@@ -169,7 +169,6 @@ export const shopApi = apiSlice.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           if (data?.success) {
             toast.success(data.message);
           }

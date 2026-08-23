@@ -18,7 +18,6 @@ const PaymentOptions = () => {
   const { items, totalQuantity, totalPrice } = useAppSelector(
     state => state.cart,
   );
-  console.log(items);
 
   return (
     <section className="">

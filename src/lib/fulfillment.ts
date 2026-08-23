@@ -47,7 +47,7 @@ export const fulfillmentDescription: Record<Fulfillment, string> = {
  *   [["delivery","shipping"], ["shipping"]]             -> ["shipping"]
  *   [["pickup"], ["delivery"]]                          -> []  (no overlap)
  */
-export const getVendorFulfillmentOptions = (
+const getVendorFulfillmentOptions = (
   products: { fulfillment: Fulfillment[] | string }[],
 ): Fulfillment[] => {
   if (!products.length) return [];

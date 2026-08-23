@@ -55,7 +55,6 @@ const page = () => {
       skip: !categoryId,
     },
   );
-  console.log(categoryDetails?.data);
 
   useEffect(() => {
     setCategoryId(allCategory?.data[0]?.id);

@@ -55,7 +55,6 @@ export default function VendorListings({
 }: {
   variant: "basic" | "pro";
 }) {
-  console.log(variant);
   const [view, setView] = useState<ViewMode>("table");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");

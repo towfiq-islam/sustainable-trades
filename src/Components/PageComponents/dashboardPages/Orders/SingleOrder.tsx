@@ -235,6 +235,13 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                           <span>${vendorOrder.sub_total}</span>
                         </div>
 
+                        {vendorOrder.discount_amount > 0 && (
+                          <div className="flex justify-between text-[#67645F]">
+                            <span>Discount</span>
+                            <span>${vendorOrder.discount_amount}</span>
+                          </div>
+                        )}
+
                         {vendorOrder.fulfillment_type === "shipping" && (
                           <div className="flex justify-between text-[#67645F]">
                             <span>Shipping</span>

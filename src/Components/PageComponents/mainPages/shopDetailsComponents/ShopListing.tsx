@@ -84,12 +84,11 @@ const ShopListing = ({
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-7 mb-5 lg:mb-10">
-            {featuredListings?.slice(0, 3)?.map((product: any) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-7 mb-5 lg:mb-10">
+            {featuredListings?.slice(0, 4)?.map((product: any) => (
               <Product
                 key={product?.id}
                 product={product}
-                is_feathered={true}
               />
             ))}
           </div>

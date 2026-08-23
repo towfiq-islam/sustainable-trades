@@ -440,9 +440,9 @@ const CreateListing = ({
                     className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                   >
                     <option value="">Choose Below</option>
-                    <option value="trade/barter">Trade/Barter</option>
+                    <option value="trade/barter">For Trade/Barter</option>
                     <option value="for_sale_or_trade_barter">
-                      For Sale or Trade Barter
+                      For Sale and Trade/Barter
                     </option>
                     <option value="for_sale">For Sale</option>
                   </select>

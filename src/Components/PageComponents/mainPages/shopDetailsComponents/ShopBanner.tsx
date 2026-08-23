@@ -3,15 +3,13 @@ import { useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
-import award from "@/Assets/award.png";
-import badge from "@/Assets/badge.png";
 import { CgSpinnerTwo } from "react-icons/cg";
 import Container from "@/Components/Common/Container";
 import { LocationSvg, StarSvg } from "@/Components/Svg/SvgContainer";
 import Modal from "@/Components/Common/Modal";
-import MessageShopOwner from "@/Components/Modals/MessageShopOwner";
 import { useFollowShopMutation } from "@/redux/api/shopApi";
 import { ShopBannerData } from "@/Types";
+import MessageToSellerModal from "@/Components/Modals/MessageToSellerModal";
 
 interface BannerProps {
   id: number;
@@ -180,10 +178,13 @@ const ShopBanner = ({ id, data }: BannerProps) => {
         </div>
       </Container>
 
-      <Modal open={msgOpen} onClose={() => setMsgOpen(false)}>
-        <MessageShopOwner
+      <Modal
+        open={msgOpen}
+        onClose={() => setMsgOpen(false)}
+        className="max-w-xl"
+      >
+        <MessageToSellerModal
           id={data?.shop_info?.user_id}
-          data={data}
           setMsgOpen={setMsgOpen}
         />
       </Modal>

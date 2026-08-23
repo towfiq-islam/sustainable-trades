@@ -187,7 +187,11 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                       </div>
 
                       <p className="text-sm text-secondary-black font-normal py-1 truncate">
-                        {item?.selling_option}
+                        {item?.selling_option === "for_sale_or_trade_barter"
+                          ? "For sale and trade/barter"
+                          : item?.selling_option === "trade/barter"
+                            ? "For trade/barter"
+                            : "For sale"}
                       </p>
 
                       <h6 className="text-[12px] text-secondary-black font-semibold">

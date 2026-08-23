@@ -65,7 +65,6 @@ const ReuseableFavorite = () => {
             myFavorites?.data?.map((item: any) => (
               <Product
                 key={item?.id}
-                is_feathered={true}
                 product={
                   {
                     id: item?.product?.id,

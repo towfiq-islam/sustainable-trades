@@ -69,11 +69,6 @@ const TradeOfferModal = ({
   const { data: myTradeProducts, isLoading: myTradeLoading } =
     useGetTradeShopProductQuery(user?.shop_info?.id);
 
-  // Loader
-  // if (tradeLoading || myTradeLoading) {
-  //   return <TradeOfferSkeleton />;
-  // }
-
   // Func for send offer
   const handleSendOffer = () => {
     const invalidOffered = offeredItems.some(

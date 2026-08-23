@@ -23,6 +23,7 @@ import { Fulfillment, normalizeFulfillment } from "@/lib/fulfillment";
 import { useState } from "react";
 import Modal from "./Modal";
 import LocalPickupModal from "../Modals/LocalPickupModal";
+import SuccessModal from "../Modals/SuccessModal";
 
 type ProductItem = {
   id: number;
@@ -52,22 +53,15 @@ type ProductItem = {
 
 type Props = {
   product: ProductItem;
-  is_feathered?: boolean;
-  has_cart?: boolean;
-  has_slider?: boolean;
   isMiles?: boolean;
 };
 
-const Product = ({
-  product,
-  is_feathered = false,
-  has_cart = true,
-  isMiles = false,
-}: Props) => {
+const Product = ({ product, isMiles = false }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { user } = useAuth();
   const [openMsg, setOpenMsg] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
   const [addFavoriteMutation, { isLoading: isPending }] =
     useAddFavoriteMutation();
 
@@ -153,11 +147,7 @@ const Product = ({
       >
         {product?.images?.map((img, idx) => (
           <SwiperSlide key={idx}>
-            <figure
-              className={`w-full rounded-lg border border-gray-100 relative ${
-                is_feathered ? "h-[270px] xl:h-[350px]" : "h-[270px]"
-              }`}
-            >
+            <figure className="w-full rounded-lg border border-gray-100 relative h-[270px]">
               <div className="absolute inset-0 bg-black/20 rounded-lg" />
               <Image
                 src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
@@ -227,20 +217,18 @@ const Product = ({
             Contact Seller
           </button>
         ) : (
-          has_cart && (
-            <button
-              onClick={() => handleAddToCart(product)}
-              disabled={
-                product?.selling_option === "trade/barter" ||
-                (!product?.unlimited_stock && product?.out_of_stock) ||
-                (!product?.unlimited_stock && product?.product_quantity === 0)
-              }
-              className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm disabled:cursor-not-allowed disabled:opacity-75 disabled:border-gray-400 cursor-pointer border-secondary-gray enabled:hover:bg-primary-green enabled:hover:text-accent-white enabled:hover:scale-95`}
-            >
-              <span>Add to Cart</span>
-              <AddToCartSvg />
-            </button>
-          )
+          <button
+            onClick={() => handleAddToCart(product)}
+            disabled={
+              product?.selling_option === "trade/barter" ||
+              (!product?.unlimited_stock && product?.out_of_stock) ||
+              (!product?.unlimited_stock && product?.product_quantity === 0)
+            }
+            className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm disabled:cursor-not-allowed disabled:opacity-75 disabled:border-gray-400 cursor-pointer border-secondary-gray enabled:hover:bg-primary-green enabled:hover:text-accent-white enabled:hover:scale-95`}
+          >
+            <span>Add to Cart</span>
+            <AddToCartSvg />
+          </button>
         )}
       </div>
 
@@ -251,8 +239,19 @@ const Product = ({
       >
         <LocalPickupModal
           productId={product?.id}
-          onClose={() => setOpenMsg(false)}
+          onClose={() => {
+            setOpenMsg(false);
+            setSuccessModal(true);
+          }}
         />
+      </Modal>
+
+      <Modal
+        open={successModal}
+        onClose={() => setSuccessModal(false)}
+        className="max-w-sm"
+      >
+        <SuccessModal onClose={() => setSuccessModal(false)} />
       </Modal>
     </div>
   );

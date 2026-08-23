@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
-import { FaAngleRight, FaPlay, FaPlus } from "react-icons/fa";
+import { FaPlay, FaPlus } from "react-icons/fa";
 import { MdArrowOutward, MdDelete, MdInfo } from "react-icons/md";
 import Preview from "@/Assets/fallbackimage.png";
 import Image from "next/image";
@@ -533,13 +533,13 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
                       />
                       <button
                         type="button"
-                        disabled={isDeletingImage}
+                        disabled={isDeleting}
                         onClick={() =>
-                          !isDeletingImage && handleRemoveImage(src, isNew)
+                          !isDeleting && handleRemoveImage(src, isNew)
                         }
-                        className={`absolute top-0 right-0 bg-primary-red text-white cursor-pointer rounded-full w-5 h-5 flex items-center justify-center text-xs ${isDeletingImage ? "cursor-not-allowed opacity-50" : ""}`}
+                        className={`absolute top-0 right-0 bg-primary-red text-white cursor-pointer rounded-full w-5 h-5 flex items-center justify-center text-xs ${isDeleting ? "cursor-not-allowed opacity-50" : ""}`}
                       >
-                        {isDeletingImage ? (
+                        {isDeleting ? (
                           <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white" />
                         ) : (
                           "×"
@@ -1110,9 +1110,9 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
                     className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                   >
                     <option value="">Choose Below</option>
-                    <option value="trade/barter">Trade/Barter</option>
+                    <option value="trade/barter">For Trade/Barter</option>
                     <option value="for_sale_or_trade_barter">
-                      For Sale or Trade Barter
+                      For Sale and Trade/Barter
                     </option>
                     <option value="for_sale">For Sale</option>
                   </select>

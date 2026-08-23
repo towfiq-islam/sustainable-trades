@@ -157,7 +157,6 @@ const CounterTrades = ({ id }: { id: string }) => {
   // Send counter
   const handleSendCounter = () => {
     if (!data?.data) return;
-    // const receiverId = data?.data?.sender?.id;
     const receiverId = isUserSender
       ? data?.data?.receiver?.id
       : data?.data?.sender?.id;

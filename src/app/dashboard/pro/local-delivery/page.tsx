@@ -16,7 +16,7 @@ import {
   formatFee,
   mapApiOriginToOrigin,
   mapApiRangeToRange,
-} from "@/Types/LocalDelivery";
+} from "@/Types";
 import Link from "next/link";
 import { FaLightbulb } from "react-icons/fa";
 import Modal from "@/Components/Common/Modal";

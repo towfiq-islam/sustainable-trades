@@ -22,10 +22,8 @@ const baseQueryWithInterceptor: BaseQueryFn<
 
   // Handle 401 interceptor
   if (status === 401) {
-    console.log("Unauthenticated. Logging out...");
     api.dispatch(removeUser());
     api.dispatch(apiSlice.util.resetApiState()); // Wipe all cached queries
-    // window.location.href = "/auth/login";
   }
 
   return result;

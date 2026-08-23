@@ -53,7 +53,6 @@ export const chatApi = apiSlice.injectEndpoints({
       invalidatesTags: (_result, _error, body) => [
         { type: "conversation", id: `${body.type}-${body.receiver_id}` },
         "conversation",
-        ,
       ],
     }),
   }),

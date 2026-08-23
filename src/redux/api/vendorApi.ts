@@ -100,11 +100,6 @@ export const vendorApi = apiSlice.injectEndpoints({
       },
     }),
 
-    reconnectPaypal: builder.mutation<any, void>({
-      query: () => ({ url: "/api/paypal/reconnect", method: "POST" }),
-      invalidatesTags: ["user"],
-    }),
-
     // Shippo / shipping
     connectShippo: builder.mutation<any, void>({
       query: () => ({ url: "/api/shippo/connect", method: "POST" }),
@@ -291,7 +286,6 @@ export const {
 
   useOnboardPaypalMutation,
   useDisconnectPaypalMutation,
-  useReconnectPaypalMutation,
 
   useConnectShippoMutation,
   useDisconnectShippoMutation,

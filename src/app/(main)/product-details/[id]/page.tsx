@@ -81,10 +81,7 @@ const page = () => {
 
           {/* Right */}
           <div className="space-y-10 xl:space-y-16">
-            {/* Product Description */}
             <ProductDescription data={productDetailsData?.data} />
-
-            {/* Shop Info */}
             <ShopInfo data={productDetailsData?.data} />
           </div>
         </div>

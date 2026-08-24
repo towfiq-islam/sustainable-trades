@@ -38,7 +38,7 @@ type conversationItem = {
   };
 };
 
-const InboxMessage = ({ search, activeTab }: Props) => {
+const ConversationList = ({ search, activeTab }: Props) => {
   const { user } = useAuth();
   const dispatch = useAppDispatch();
   const { data: allConversation, isLoading } = useGetAllConversationQuery({
@@ -160,4 +160,4 @@ const InboxMessage = ({ search, activeTab }: Props) => {
   );
 };
 
-export default InboxMessage;
+export default ConversationList;

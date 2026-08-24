@@ -14,8 +14,8 @@ import {
   useGetSingleOrderQuery,
   useUpdateOrderStatusMutation,
 } from "@/redux/api/ordersApi";
-import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 import OrderedProducts from "@/Components/ProductComponents/OrderedProducts";
+import MessagePage from "@/Components/PageComponents/dashboardPages/messageComponents/MessagePage";
 
 type FulfillmentType = "shipping" | "delivery" | "pickup";
 
@@ -540,7 +540,7 @@ const Page = () => {
             </div>
 
             <div className="h-[480px] flex flex-col p-3">
-              <ConversationPage
+              <MessagePage
                 receiverId={singleOrder?.data?.vendor_id}
                 conversationId={singleOrder?.data?.conversation?.id}
                 compact={true}

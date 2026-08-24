@@ -10,12 +10,12 @@ import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FiFileText, FiShield } from "react-icons/fi";
-import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
 import {
   useDownloadCustomerInvoiceMutation,
   useGetOrderDetailsQuery,
 } from "@/redux/api/ordersApi";
 import { FaHeart } from "react-icons/fa";
+import MessagePage from "../messageComponents/MessagePage";
 
 const fulfillmentLabel = (type: string) =>
   type === "delivery"
@@ -306,7 +306,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                     {/* Right: chat + actions */}
                     <div className="col-span-2">
                       <div className="rounded-[10px] h-[450px] flex flex-col overflow-hidden mb-3 border border-gray-300 p-3">
-                        <ConversationPage
+                        <MessagePage
                           receiverId={vendorOrder?.vendor_id}
                           conversationId={vendorOrder?.conversation?.id}
                           compact={true}

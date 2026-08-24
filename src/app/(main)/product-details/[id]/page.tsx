@@ -3,16 +3,16 @@ import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Container from "@/Components/Common/Container";
 import { ProductDetailsSkeleton } from "@/Components/Loader/Loader";
-import ProductGallery from "@/Components/PageComponents/mainPages/productDetailsComponents/ProductGallery";
-import ProductReviews from "@/Components/PageComponents/mainPages/productDetailsComponents/ProductReviews";
-import MoreProduct from "@/Components/PageComponents/mainPages/productDetailsComponents/MoreProduct";
-import Subscribe from "@/app/(main)/_Components/Subscribe";
-import ShopInfo from "@/Components/PageComponents/mainPages/productDetailsComponents/ShopInfo";
-import ProductDescription from "@/Components/PageComponents/mainPages/productDetailsComponents/ProductDescription";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
 import { useParams, useRouter } from "next/navigation";
 import useAuth from "@/Hooks/useAuth";
 import { useGetProductDetailsQuery } from "@/redux/api/productApi";
+import ProductGallery from "@/Components/productDetails/ProductGallery";
+import ProductReviews from "@/Components/productDetails/ProductReviews";
+import ProductDescription from "@/Components/productDetails/ProductDescription";
+import ShopInfo from "@/Components/productDetails/ShopInfo";
+import MoreProduct from "@/Components/productDetails/MoreProduct";
+import Subscribe from "../../_Components/Subscribe";
 
 const page = () => {
   const { latitude, longitude } = useAuth();

@@ -5,13 +5,6 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { MdInfo } from "react-icons/md";
 import useAuth from "@/Hooks/useAuth";
-import Header from "@/Components/PageComponents/dashboardPages/createListingComponents/Header";
-import ImageUpload from "@/Components/PageComponents/dashboardPages/createListingComponents/ImageUpload";
-import QuantitySection from "@/Components/PageComponents/dashboardPages/createListingComponents/QuantitySection";
-import VideoUpload from "@/Components/PageComponents/dashboardPages/createListingComponents/VideoUpload";
-import PriceSection from "@/Components/PageComponents/dashboardPages/createListingComponents/PriceSection";
-import CategorySection from "@/Components/PageComponents/dashboardPages/createListingComponents/CategorySection";
-import MetaTags from "@/Components/PageComponents/dashboardPages/createListingComponents/MetaTags";
 import DimensionsSection from "./DimensionsSection";
 import {
   useAddProductMutation,
@@ -19,6 +12,13 @@ import {
   useGetProductSubCategoriesQuery,
 } from "@/redux/api/productApi";
 import { ListingFormData } from "@/Types";
+import Header from "./Header";
+import ImageUpload from "./ImageUpload";
+import VideoUpload from "./VideoUpload";
+import QuantitySection from "./QuantitySection";
+import PriceSection from "./PriceSection";
+import CategorySection from "./CategorySection";
+import MetaTags from "./MetaTags";
 
 // Re-export for child components that import FormData from here
 export type FormData = ListingFormData;

@@ -15,7 +15,7 @@ import {
   useGetOrderDetailsQuery,
 } from "@/redux/api/ordersApi";
 import { FaHeart } from "react-icons/fa";
-import MessagePage from "../messageComponents/MessagePage";
+import MessagePage from "@/Components/messages/MessagePage";
 
 const fulfillmentLabel = (type: string) =>
   type === "delivery"

@@ -1,6 +1,6 @@
 "use client";
+import MessagePage from "@/Components/messages/MessagePage";
 import { use } from "react";
-import MessagePage from "@/Components/PageComponents/dashboardPages/messageComponents/MessagePage";
 
 type Props = {
   searchParams: Promise<{ conversation_id: number; receiver_id: number }>;

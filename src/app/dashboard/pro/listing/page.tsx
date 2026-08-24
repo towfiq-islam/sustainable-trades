@@ -1,4 +1,4 @@
-import VendorListings from "@/Components/PageComponents/dashboardPages/createListingComponents/VendorListings";
+import VendorListings from "@/Components/createListing/VendorListings";
 
 const page = () => {
   return <VendorListings variant="pro" />;

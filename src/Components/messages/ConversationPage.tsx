@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
-import ConversationList from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationList";
+import ConversationList from "./ConversationList";
 
 const ConversationPage = () => {
   const [search, setSearch] = useState<string>("");

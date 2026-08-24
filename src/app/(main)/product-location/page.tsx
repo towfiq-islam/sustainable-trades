@@ -16,13 +16,13 @@ import {
   SingleShopSkeleton,
 } from "@/Components/Loader/Loader";
 import { AiOutlineFileUnknown } from "react-icons/ai";
-import ProductLocation from "@/Components/PageComponents/mainPages/shopPageComponents/ProductLocation";
 import MemberSpotlight from "../_Components/MemberSpotlight";
 import { useGetMembershipSpotlightQuery } from "@/redux/api/shopApi";
 import {
   useGetCategoryDetailsQuery,
   useGetProductCategoriesQuery,
 } from "@/redux/api/productApi";
+import ProductLocation from "@/Components/shop/ProductLocation";
 
 type categoryItem = {
   id: number;

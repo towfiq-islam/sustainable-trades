@@ -15,7 +15,7 @@ const ProductReviews = ({ id }: { id: number }) => {
   return (
     <>
       <h3 className="text-xl md:text-2xl lg:text-4xl font-semibold text-secondary-black mb-2">
-        {productReviews?.data?.data?.length ?? 0} Reviews
+        {productReviews?.data?.reviews?.total} Reviews
       </h3>
 
       {/* Lower part */}

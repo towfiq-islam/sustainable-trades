@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Product from "@/Components/Common/Product";
 import Container from "@/Components/Common/Container";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
@@ -7,6 +7,11 @@ import { FiStar, FiSearch } from "react-icons/fi";
 import { FilteringSkeleton, ProductSkeleton } from "@/Components/Loader/Loader";
 import PaginationControl from "@/Components/Common/PaginationControl";
 import { EmptyState } from "@/Components/Common/EmptyState";
+import { useGetFeaturedListingsQuery } from "@/redux/api/shopApi";
+import {
+  useGetAllProductsUnderShopQuery,
+  useGetCategoriesWithSubCategoriesQuery,
+} from "@/redux/api/productApi";
 
 type SubCategoryItem = {
   id: number;
@@ -23,21 +28,15 @@ type CategoryItem = {
   subcategories: SubCategoryItem[];
 };
 
-const ShopListing = ({
-  featuredListings,
-  allListings,
-  category,
-  subCategory,
-  setSearch,
-  setCategory,
-  setSubCategory,
-  setSortBy,
-  setPage,
-  listingsLoading,
-  featuredLoading,
-  categoriesLoading,
-  categoriesWithSubCategories,
-}: any) => {
+const ShopListing = ({ id }: { id: number }) => {
+  const [short_by, setSortBy] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const [page, setPage] = useState<number>(0);
+  const [category_id, setCategory] = useState<string>("");
+  const [sub_category_id, setSubCategory] = useState<string>("");
+  const { data: categoriesWithSubCategories, isLoading: categoriesLoading } =
+    useGetCategoriesWithSubCategoriesQuery({});
+
   const resetFilters = () => {
     setSearch("");
     setCategory("");
@@ -45,23 +44,35 @@ const ShopListing = ({
     setSortBy("");
   };
 
-  // Only relevant once a category is picked - subcategories that belong to it.
   const subCategoryOptions: SubCategoryItem[] = useMemo(() => {
-    if (!category || !categoriesWithSubCategories?.length) return [];
+    if (!category_id || !categoriesWithSubCategories?.data?.length) return [];
 
-    const selectedCategory = categoriesWithSubCategories.find(
-      (cat: CategoryItem) => String(cat.id) === String(category),
+    const selectedCategory = categoriesWithSubCategories?.data?.find(
+      (cat: CategoryItem) => String(cat.id) === String(category_id),
     );
 
     return selectedCategory?.subcategories ?? [];
-  }, [categoriesWithSubCategories, category]);
+  }, [categoriesWithSubCategories, category_id]);
 
   const handleCategoryChange = (value: string) => {
     setCategory(value);
-    // Previously selected sub-category won't belong to the new category
-    // (or to "All Categories"), so clear it to avoid a stale filter.
     setSubCategory("");
   };
+
+  const { data: featuredListings, isLoading: featuredLoading } =
+    useGetFeaturedListingsQuery(id);
+  const { data: products, isFetching: listingsLoading } =
+    useGetAllProductsUnderShopQuery(
+      {
+        id,
+        category_id,
+        sub_category_id,
+        short_by,
+        search,
+        page,
+      },
+      { skip: !id },
+    );
 
   return (
     <section id="Listings" className="mt-10">
@@ -75,7 +86,7 @@ const ShopListing = ({
               <ProductSkeleton key={idx} />
             ))}
           </div>
-        ) : featuredListings?.length === 0 ? (
+        ) : featuredListings?.data?.length === 0 ? (
           <div className="mb-5 lg:mb-10">
             <EmptyState
               icon={<FiStar />}
@@ -85,11 +96,8 @@ const ShopListing = ({
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-7 mb-5 lg:mb-10">
-            {featuredListings?.slice(0, 4)?.map((product: any) => (
-              <Product
-                key={product?.id}
-                product={product}
-              />
+            {featuredListings?.data?.slice(0, 4)?.map((product: any) => (
+              <Product key={product?.id} product={product} />
             ))}
           </div>
         )}
@@ -110,12 +118,12 @@ const ShopListing = ({
                 </h3>
 
                 <select
-                  value={category || ""}
+                  value={category_id || ""}
                   onChange={e => handleCategoryChange(e.target.value)}
                   className="border w-full md:w-[192px] md:text-base text-xs rounded-lg px-3 py-1.5 md:py-3 border-gray-400 outline-none text-secondary-gray"
                 >
                   <option value="">All Categories</option>
-                  {categoriesWithSubCategories?.map(
+                  {categoriesWithSubCategories?.data?.map(
                     ({ id, name }: CategoryItem) => (
                       <option key={id} value={id}>
                         {name}
@@ -125,16 +133,14 @@ const ShopListing = ({
                 </select>
               </div>
 
-              {/* Sub Category - only shown once a category is picked,
-                  and only if that category actually has subcategories */}
-              {category && subCategoryOptions.length > 0 && (
+              {category_id && subCategoryOptions.length > 0 && (
                 <div className="w-full">
                   <h3 className="text-secondary-gray md:text-base text-xs font-semibold mb-1.5">
                     Product Sub Category
                   </h3>
 
                   <select
-                    value={subCategory || ""}
+                    value={sub_category_id || ""}
                     onChange={e => setSubCategory(e.target.value)}
                     className="border w-full md:w-[192px] md:text-base text-xs rounded-lg px-3 py-1.5 md:py-3 border-gray-400 outline-none text-secondary-gray"
                   >
@@ -197,7 +203,7 @@ const ShopListing = ({
               <ProductSkeleton key={idx} />
             ))}
           </div>
-        ) : allListings?.length === 0 ? (
+        ) : products?.data?.length === 0 ? (
           <EmptyState
             icon={<FiSearch />}
             title="No listings match your filters"
@@ -207,18 +213,18 @@ const ShopListing = ({
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-            {allListings?.data?.map((product: any) => (
+            {products?.data?.data?.map((product: any) => (
               <Product key={product?.id} product={product} />
             ))}
           </div>
         )}
 
         {/* Pagination */}
-        {!listingsLoading && allListings?.data && (
+        {!listingsLoading && (
           <div className="py-8">
             <PaginationControl
-              currentPage={allListings.current_page}
-              lastPage={allListings.last_page}
+              currentPage={products?.data?.current_page}
+              lastPage={products?.data?.last_page}
               onPageChange={setPage}
             />
           </div>

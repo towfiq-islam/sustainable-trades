@@ -50,7 +50,7 @@ export const productApi = apiSlice.injectEndpoints({
         sub_category_id?: string;
         short_by?: string;
         search?: string;
-        page?: string;
+        page?: number;
       }) => ({
         url: `/api/shop/products/${id}`,
         params: {

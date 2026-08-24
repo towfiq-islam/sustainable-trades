@@ -26,7 +26,7 @@ const AboutShop = ({ data }: AboutProps) => {
   const [showMore, setShowMore] = useState<boolean>(false);
 
   return (
-    <section id="About" className="mt-4 md:mt-8 xl:mt-16">
+    <section id="About" className="mt-4 md:mt-8">
       <Container>
         <h2 className="section_sub_title">About us</h2>
 

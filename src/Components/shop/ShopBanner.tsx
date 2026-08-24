@@ -46,12 +46,20 @@ const ShopBanner = ({ id, data }: BannerProps) => {
   };
 
   return (
-    <section
-      style={{
-        backgroundImage: `url(${bannerUrl})`,
-      }}
-      className="h-[450px] md:h-[400px] lg:h-[470px] 2xl:h-[600px] bg-no-repeat bg-center bg-cover bg-black/50 bg-blend-overlay py-10 bg-fixed mb-10"
-    >
+    <section className="relative h-[450px] md:h-[400px] lg:h-[470px] 2xl:h-[600px] py-10 mb-10 overflow-hidden">
+      {/* Banner image */}
+      <Image
+        src={bannerUrl}
+        alt={`${data?.shop_info?.shop_name ?? "Shop"} banner`}
+        fill
+        priority
+        unoptimized
+        sizes="100vw"
+        className="object-cover object-center -z-20"
+      />
+      {/* Dark overlay (replaces bg-black/50 bg-blend-overlay) */}
+      <div className="absolute inset-0 bg-black/50 -z-10" />
+
       <Container>
         <div className="flex flex-col md:flex-row justify-between">
           {/* Left - Shop Info */}

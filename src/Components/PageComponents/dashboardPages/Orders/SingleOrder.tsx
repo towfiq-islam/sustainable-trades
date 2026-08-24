@@ -9,7 +9,7 @@ import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { FiFileText, FiShield } from "react-icons/fi";
+import { FiFileText, FiShield, FiStar } from "react-icons/fi";
 import {
   useDownloadCustomerInvoiceMutation,
   useGetOrderDetailsQuery,
@@ -220,6 +220,19 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                               <p className="text-[#67645F] text-sm font-sans">
                                 Qty: {item?.quantity}
                               </p>
+                              {vendorOrder.status === "delivered" && (
+                                <button
+                                  onClick={() =>
+                                    router.push(
+                                      `/dashboard/customer/reviews/${item.product_id}`,
+                                    )
+                                  }
+                                  className="flex items-center gap-1 text-primary-green text-[13px] font-semibold mt-0.5 cursor-pointer hover:underline w-fit"
+                                >
+                                  <FiStar size={13} />
+                                  Leave a Review
+                                </button>
+                              )}
                             </div>
 
                             <p className="font-sans font-semibold text-secondary-black text-sm shrink-0">

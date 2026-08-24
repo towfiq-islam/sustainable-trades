@@ -1,4 +1,4 @@
-import UpdateListing from "@/Components/PageComponents/dashboardPages/createListingComponents/UpdateListing";
+import UpdateListing from "@/Components/createListing/UpdateListing";
 
 const page = () => {
   return <UpdateListing variant="basic" />;

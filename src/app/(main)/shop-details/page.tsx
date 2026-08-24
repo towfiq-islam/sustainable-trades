@@ -6,24 +6,16 @@ import {
   ShopFAQSkeleton,
   ShopPoliciesSkeleton,
 } from "@/Components/Loader/Loader";
-import { use, useState } from "react";
-import ShopFAQ from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopFAQ";
-import AboutShop from "@/Components/PageComponents/mainPages/shopDetailsComponents/AboutShop";
-import ShopBanner from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopBanner";
-import ShopPolicies from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopPolicies";
-import ShopListing from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopListing";
-import ShopReviews from "@/Components/PageComponents/mainPages/shopDetailsComponents/ShopReviews";
-import DetailsTab from "@/Components/PageComponents/mainPages/shopDetailsComponents/DetailsTab";
-import EditShopBanner from "@/Components/PageComponents/mainPages/shopDetailsComponents/EditShopBanner";
-import {
-  useGetAllProductsUnderShopQuery,
-  useGetCategoriesWithSubCategoriesQuery,
-} from "@/redux/api/productApi";
-import {
-  useGetFeaturedListingsQuery,
-  useGetShopDetailsQuery,
-  useGetShopReviewsQuery,
-} from "@/redux/api/shopApi";
+import { use } from "react";
+import ShopFAQ from "@/Components/shop/ShopFAQ";
+import AboutShop from "@/Components/shop/AboutShop";
+import ShopBanner from "@/Components/shop/ShopBanner";
+import ShopPolicies from "@/Components/shop/ShopPolicies";
+import ShopListing from "@/Components/shop/ShopListing";
+import ShopReviews from "@/Components/shop/ShopReviews";
+import DetailsTab from "@/Components/shop/DetailsTab";
+import EditShopBanner from "@/Components/shop/EditShopBanner";
+import { useGetShopDetailsQuery } from "@/redux/api/shopApi";
 
 type Props = {
   searchParams: Promise<{ id: number; listing_id: number; view: string }>;
@@ -31,40 +23,8 @@ type Props = {
 
 const page = ({ searchParams }: Props) => {
   const { id, listing_id, view } = use(searchParams);
-
-  // States
-  const [category_id, setCategory] = useState<string>("");
-  const [sub_category_id, setSubCategory] = useState<string>("");
-  const [short_by, setSortBy] = useState<string>("");
-  const [search, setSearch] = useState<string>("");
-  const [page, setPage] = useState<string>("");
-  const [reviewPage, setReviewPage] = useState<string>("");
-
-  const { data: categoriesWithSubCategories, isLoading: categoriesLoading } =
-    useGetCategoriesWithSubCategoriesQuery({});
-
   const { data: shopDetailsData, isLoading: shopDetailLoading } =
     useGetShopDetailsQuery(id);
-  const { data: featuredListings, isLoading: featuredLoading } =
-    useGetFeaturedListingsQuery(listing_id);
-  const { data: shopReviews, isLoading: reviewLoading } =
-    useGetShopReviewsQuery({
-      id: listing_id,
-      page,
-    });
-
-  const { data: products, isFetching: isShopLoading } =
-    useGetAllProductsUnderShopQuery(
-      {
-        id: listing_id,
-        category_id,
-        sub_category_id,
-        short_by,
-        search,
-        page,
-      },
-      { skip: !listing_id },
-    );
 
   return (
     <>
@@ -81,32 +41,10 @@ const page = ({ searchParams }: Props) => {
         <EditShopBanner data={shopDetailsData?.data} shop_id={id} />
       )}
 
-      {/* Shop Tabs */}
       <DetailsTab />
 
-      {/* Shop Listings */}
-      <ShopListing
-        featuredListings={featuredListings?.data}
-        allListings={products?.data}
-        category={category_id}
-        subCategory={sub_category_id}
-        setSearch={setSearch}
-        setCategory={setCategory}
-        setSubCategory={setSubCategory}
-        setSortBy={setSortBy}
-        setPage={setPage}
-        featuredLoading={featuredLoading}
-        listingsLoading={isShopLoading}
-        categoriesLoading={categoriesLoading}
-        categoriesWithSubCategories={categoriesWithSubCategories?.data}
-      />
-
-      {/* Shop Reviews */}
-      <ShopReviews
-        data={shopReviews?.data}
-        reviewLoading={reviewLoading}
-        setReviewPage={setReviewPage}
-      />
+      <ShopListing id={listing_id} />
+      <ShopReviews id={listing_id} />
 
       {/* Shop About */}
       {shopDetailLoading ? (

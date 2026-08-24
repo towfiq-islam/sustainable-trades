@@ -43,7 +43,7 @@ const HowItWorks = async () => {
 
         <Link
           href="#membership_plan"
-          className="md:w-[416px] text-center hover:bg-primary-green hover:text-white duration-500 transition-all mx-auto block border border-gray-500 2xl:text-lg text-secondary-black cursor-pointer py-2 md:py-4 rounded-lg shadow-lg hover:scale-105"
+          className="md:w-[416px] text-center bg-primary-green/90 text-white duration-500 transition-all mx-auto block 2xl:text-lg cursor-pointer py-2 md:py-4 rounded-lg shadow-lg hover:scale-105"
         >
           View Membership Plans
         </Link>

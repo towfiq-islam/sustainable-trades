@@ -44,9 +44,7 @@ export default function PaginationControl({
 
   return (
     <div
-      className={`flex items-center py-8 flex-wrap gap-4 ${
-        alignment === "center" ? "justify-center" : "justify-end"
-      } ${className}`}
+      className={`flex items-center py-8 flex-wrap gap-4 ${alignment === "center" ? "justify-center" : "justify-end"} ${className}`}
     >
       <div className="flex items-center gap-1">
         {/* Prev */}

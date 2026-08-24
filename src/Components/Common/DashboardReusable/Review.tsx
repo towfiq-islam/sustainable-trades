@@ -4,12 +4,15 @@ import { CustomerReviewCardSkeleton } from "@/Components/Loader/Loader";
 import Image from "next/image";
 import { FiStar } from "react-icons/fi";
 import { ReviewItem } from "@/Types";
+import PaginationControl from "../PaginationControl";
 
 interface ReviewProps {
   reviews: {
     data: {
       data: ReviewItem[];
       links: any;
+      current_page: number;
+      last_page: number;
     };
   };
   isLoading: any;
@@ -72,21 +75,11 @@ const Review = ({ reviews, isLoading, setPage }: ReviewProps) => {
 
       {/* Pagination */}
       {!isLoading && (
-        <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">
-          {reviews?.data?.links?.map((item: any, idx: number) => (
-            <button
-              key={idx}
-              onClick={() => item.url && setPage(item.url.split("=")[1])}
-              className={`px-3 py-1 rounded border transition-all duration-200 
-        ${
-          item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"
-        } 
-        ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-              disabled={!item.url}
-              dangerouslySetInnerHTML={{ __html: item.label }}
-            />
-          ))}
-        </div>
+        <PaginationControl
+          currentPage={reviews?.data?.current_page}
+          lastPage={reviews?.data?.last_page}
+          onPageChange={setPage}
+        />
       )}
     </>
   );

@@ -3,31 +3,20 @@ import { useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { ReviewCardSkeleton } from "@/Components/Loader/Loader";
 import PaginationControl from "@/Components/Common/PaginationControl";
+import { useGetProductReviewsQuery } from "@/redux/api/productApi";
 
-const ProductReviews = ({
-  reviewCount,
-  reviewAvg,
-  data,
-  reviewLoading,
-  setPage,
-}: any) => {
+const ProductReviews = ({ id }: { id: number }) => {
+  const [page, setPage] = useState<number>(0);
   const [showMore, setShowMore] = useState<boolean>(false);
   const [showMoreId, setShowMoreId] = useState<number>(0);
+  const { data: productReviews, isFetching: reviewLoading } =
+    useGetProductReviewsQuery({ id, page });
 
   return (
     <>
-      {/* Upper part */}
-      <div className="flex gap-5 items-center mb-2">
-        <h3 className="text-xl md:text-2xl lg:text-4xl font-semibold text-secondary-black">
-          {reviewCount} Reviews
-        </h3>
-
-        <div className="flex gap-1 items-center">
-          {Array.from({ length: +reviewAvg }).map((_, index) => (
-            <FaStar key={index} className="text-primary-green" />
-          ))}
-        </div>
-      </div>
+      <h3 className="text-xl md:text-2xl lg:text-4xl font-semibold text-secondary-black mb-2">
+        {productReviews?.data?.reviews?.total} Reviews
+      </h3>
 
       {/* Lower part */}
       <div>
@@ -35,15 +24,15 @@ const ProductReviews = ({
           Array.from({ length: 3 }).map((_, idx) => (
             <ReviewCardSkeleton key={idx} />
           ))
-        ) : data?.data?.length > 0 ? (
-          data?.data?.map((item: any) => (
+        ) : productReviews?.data?.reviews?.data?.length > 0 ? (
+          productReviews?.data?.reviews?.data?.map((item: any) => (
             <div
               key={item?.id}
-              className="border-b last:border-b-0 border-gray-300 py-6"
+              className="border-b last:border-b-0 border-gray-300 py-3"
             >
               <div className="flex gap-5 items-center">
                 {/* Author Name */}
-                <h3 className="text-lg font-semibold text-primary-green">
+                <h3 className="text-base font-semibold text-primary-green">
                   Reviewed by {item?.user?.first_name} {item?.user?.last_name}
                 </h3>
 
@@ -66,7 +55,7 @@ const ProductReviews = ({
               </div>
 
               {/* Description */}
-              <p className="text-secondary-gray">
+              <p className="text-secondary-gray text-[15px]">
                 {showMore && item?.id === showMoreId
                   ? item?.message
                   : item?.message?.slice(0, 120)}
@@ -90,15 +79,17 @@ const ProductReviews = ({
         ) : (
           <p className="font-medium mt-3 text-gray-500">No reviews yet!</p>
         )}
-      </div>
 
-      {!reviewLoading && (
-        <PaginationControl
-          currentPage={data?.links?.first_page}
-          lastPage={data?.links?.last_page}
-          onPageChange={setPage}
-        />
-      )}
+        {!reviewLoading && (
+          <PaginationControl
+            currentPage={productReviews?.data?.reviews?.current_page}
+            lastPage={productReviews?.data?.reviews?.last_page}
+            onPageChange={setPage}
+            className="!pb-0"
+            alignment="center"
+          />
+        )}
+      </div>
     </>
   );
 };

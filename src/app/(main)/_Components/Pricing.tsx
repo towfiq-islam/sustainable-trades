@@ -135,7 +135,7 @@ const Pricing = ({
                 ) => (
                   <div
                     key={id}
-                    className={`border border-primary-green shadow rounded-2xl p-4 md:p-6 w-full md:w-[400px] flex flex-col justify-between ${
+                    className={`border border-off-green/40 shadow-[0_3px_5px_0_rgba(0,0,0,0.05),_0_3px_12px_0_rgba(0,0,0,0.05)] rounded-2xl p-4 md:p-6 w-full md:w-[400px] flex flex-col justify-between ${
                       user?.membership?.status === "active" &&
                       user?.membership?.membership_type === membership_type &&
                       user?.membership?.type === interval

@@ -14,6 +14,7 @@ import { FiMessageSquare } from "react-icons/fi";
 import { ShopReviewSkeleton } from "@/Components/Loader/Loader";
 import PaginationControl from "@/Components/Common/PaginationControl";
 import { EmptyState } from "@/Components/Common/EmptyState";
+import { useGetShopReviewsQuery } from "@/redux/api/shopApi";
 
 type ImageItem = {
   image: string;
@@ -41,43 +42,38 @@ type ReviewItem = {
   };
 };
 
-interface ReviewProps {
-  data: {
-    links: any;
-    current_page: number;
-    last_page: number;
-    data: ReviewItem[];
-  };
-  reviewLoading: any;
-  setReviewPage: any;
-}
-
-const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
+const ShopReviews = ({ id }: { id: number }) => {
+  const [page, setPage] = useState<number>(0);
   const [showMore, setShowMore] = useState<boolean>(false);
   const [showMoreId, setShowMoreId] = useState<number>(0);
+  const { data: shopReviews, isLoading: reviewLoading } =
+    useGetShopReviewsQuery({
+      id,
+      page,
+    });
 
   return (
-    <section id="Reviews" className="mt-14 xl:mt-24">
+    <section id="Reviews" className="mt-8">
       <Container>
         <h2 className="section_sub_title">Read Our Reviews</h2>
 
         <div>
           {reviewLoading ? (
-            <div className="space-y-5">
+            <div className="space-y-3">
               {Array.from({ length: 4 }).map((_, idx) => (
                 <ShopReviewSkeleton key={idx} />
               ))}
             </div>
-          ) : data?.data?.length > 0 ? (
-            data?.data?.map(item => (
+          ) : shopReviews?.data?.data?.length > 0 ? (
+            shopReviews?.data?.data?.map((item: ReviewItem) => (
               <div
                 key={item?.id}
-                className="flex flex-col lg:flex-row gap-5 sm:gap-10 md:gap-20 lg:items-center border-b last:border-b-0 border-gray-200 py-4 md:py-8"
+                className="flex flex-col lg:flex-row gap-5 sm:gap-10 md:gap-16 lg:items-center border-b last:border-b-0 border-gray-200 pt-4 pb-2"
               >
                 {/* Left - Reviews */}
-                <div className="grow flex flex-col sm:flex-row gap-5 items-start">
+                <div className="grow flex flex-col sm:flex-row gap-4 items-start">
                   {/* Author Image */}
-                  <figure className="shrink-0 size-16 grid place-items-center rounded-full relative bg-accent-red text-accent-white text-2xl font-semibold">
+                  <figure className="shrink-0 size-12 grid place-items-center rounded-full relative bg-accent-red text-accent-white font-semibold">
                     {item?.user?.avatar ? (
                       <Image
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.user?.avatar}`}
@@ -95,17 +91,17 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
                   <div className="flex gap-10">
                     <div>
                       {/* Author Name */}
-                      <h3 className=" text-sm sm:text-base md:text-lg font-semibold text-primary-green">
+                      <h3 className=" text-sm sm:text-base font-semibold text-primary-green">
                         {item?.user?.first_name} {item?.user?.last_name}
                       </h3>
 
                       {/* Review Count */}
-                      <div className="flex gap-1 items-center py-2">
+                      <div className="flex gap-1 items-center py-1.5">
                         {Array.from({ length: item?.rating }).map(
                           (_, index) => (
                             <FaStar
                               key={index}
-                              className="text-primary-green text-sm"
+                              className="text-primary-green text-xs"
                             />
                           ),
                         )}
@@ -114,14 +110,14 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
                           (_, index) => (
                             <FaRegStar
                               key={index}
-                              className="text-primary-green text-xs md:text-sm"
+                              className="text-primary-green text-xs"
                             />
                           ),
                         )}
                       </div>
 
                       {/* Description */}
-                      <p className="text-secondary-gray text-xs sm:text-sm md:text-[15px]">
+                      <p className="text-secondary-gray text-xs sm:text-[15px]">
                         {showMore && item?.id === showMoreId
                           ? item?.message
                           : item?.message?.slice(0, 150)}
@@ -203,17 +199,16 @@ const ShopReviews = ({ data, reviewLoading, setReviewPage }: ReviewProps) => {
               description="This shop hasn't received any customer reviews so far. Be the first to share your experience once you've made a purchase."
             />
           )}
-        </div>
 
-        {!reviewLoading && (
-          <div className="py-8">
+          {!reviewLoading && (
             <PaginationControl
-              currentPage={data?.links?.current_page}
-              lastPage={data?.links?.last_page}
-              onPageChange={setReviewPage}
+              currentPage={shopReviews?.data?.current_page}
+              lastPage={shopReviews?.data?.last_page}
+              onPageChange={setPage}
+              alignment="center"
             />
-          </div>
-        )}
+          )}
+        </div>
       </Container>
     </section>
   );

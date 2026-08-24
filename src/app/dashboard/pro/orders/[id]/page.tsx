@@ -5,7 +5,7 @@ import { PuffLoader } from "react-spinners";
 import { GoBackSvg, Pen } from "@/Components/Svg/SvgContainer";
 import OrderNote from "@/Components/Modals/OrderNote";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
-import OrderSummary from "@/Components/ProductComponents/OrderSummary";
+import OrderSummary from "@/Components/order/OrderSummary";
 import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import Link from "next/link";
@@ -14,8 +14,8 @@ import {
   useGetSingleOrderQuery,
   useUpdateOrderStatusMutation,
 } from "@/redux/api/ordersApi";
-import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
-import OrderedProducts from "@/Components/ProductComponents/OrderedProducts";
+import OrderedProducts from "@/Components/order/OrderedProducts";
+import MessagePage from "@/Components/messages/MessagePage";
 
 type FulfillmentType = "shipping" | "delivery" | "pickup";
 
@@ -540,7 +540,7 @@ const Page = () => {
             </div>
 
             <div className="h-[480px] flex flex-col p-3">
-              <ConversationPage
+              <MessagePage
                 receiverId={singleOrder?.data?.vendor_id}
                 conversationId={singleOrder?.data?.conversation?.id}
                 compact={true}

@@ -101,7 +101,7 @@ function AttachedItemCard({
   );
 }
 
-const ConversationPage = ({
+const MessagePage = ({
   receiverId,
   conversationId,
   compact,
@@ -601,4 +601,4 @@ const ConversationPage = ({
   );
 };
 
-export default ConversationPage;
+export default MessagePage;

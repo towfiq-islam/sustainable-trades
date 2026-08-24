@@ -36,7 +36,7 @@ export const ordersApi = apiSlice.injectEndpoints({
     getCustomerReviews: builder.query({
       query: page => ({
         url: "/api/my-reviews",
-        params: { page },
+        params: { page, per_page: 6 },
       }),
       providesTags: ["review"],
     }),

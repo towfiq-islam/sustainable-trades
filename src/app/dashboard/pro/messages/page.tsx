@@ -1,7 +1,7 @@
-import MessagePage from "@/Components/PageComponents/dashboardPages/messageComponents/MessagePage";
+import ConversationPage from "@/Components/messages/ConversationPage";
 
 const page = () => {
-  return <MessagePage />;
+  return <ConversationPage />;
 };
 
 export default page;

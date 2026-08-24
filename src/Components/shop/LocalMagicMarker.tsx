@@ -10,10 +10,9 @@ import { SearchSvg } from "@/Components/Svg/SvgContainer";
 import { ShopListSkeleton } from "@/Components/Loader/Loader";
 import dynamic from "next/dynamic";
 
-const ShopsMap = dynamic(
-  () => import("@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap"),
-  { ssr: false },
-);
+const ShopsMap = dynamic(() => import("@/Components/shop/ShopsMap"), {
+  ssr: false,
+});
 import { useGetAllShopsQuery } from "@/redux/api/shopApi";
 
 type Props = {

@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
-import InboxMessage from "@/Components/PageComponents/dashboardPages/messageComponents/InboxMessage";
+import ConversationList from "./ConversationList";
 
-const MessagePage = () => {
+const ConversationPage = () => {
   const [search, setSearch] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string>("");
 
@@ -16,7 +16,7 @@ const MessagePage = () => {
   return (
     <>
       {/* Upper Part */}
-      <div className="flex items-center justify-between mb-7">
+      <div className="flex items-center justify-between mb-5">
         <h3 className="text-3xl text-secondary-black font-semibold">
           Messages
         </h3>
@@ -36,7 +36,7 @@ const MessagePage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-10 items-center mb-10">
+      <div className="flex gap-10 items-center mb-5">
         {tabs?.map(tab => (
           <button
             key={tab?.id}
@@ -53,9 +53,9 @@ const MessagePage = () => {
       </div>
 
       {/* Message Body */}
-      <InboxMessage search={search} activeTab={activeTab} />
+      <ConversationList search={search} activeTab={activeTab} />
     </>
   );
 };
 
-export default MessagePage;
+export default ConversationPage;

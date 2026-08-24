@@ -29,13 +29,13 @@ type OrderRow = {
 
 const statusBadgeClass = (status: string) => {
   const map: Record<string, string> = {
-    delivered: "bg-primary-green",
-    pending: "bg-accent-red",
-    confirmed: "bg-dark-green",
+    delivered: "bg-primary-green text-gray-100",
+    pending: "bg-accent-red text-gray-100",
+    confirmed: "bg-dark-green text-gray-100",
     paid: "bg-light-green",
-    shipped: "bg-accent-blue",
+    shipped: "bg-accent-blue text-gray-100",
     processing: "bg-off-green",
-    cancelled: "bg-primary-red",
+    cancelled: "bg-primary-red text-white",
   };
   return `inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize ${
     map[status] ?? "bg-gray-100 text-gray-600"

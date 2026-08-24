@@ -15,7 +15,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { Download } from "@/Components/Svg/SvgContainer";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import PaginationControl from "@/Components/Common/PaginationControl";
-import OrdersList from "@/Components/PageComponents/dashboardPages/Orders/OrdersList";
+import OrdersList from "@/Components/order/OrdersList";
 
 type orderItem = {
   id: number;

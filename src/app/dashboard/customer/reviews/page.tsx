@@ -5,8 +5,8 @@ import { useGetCustomerReviewsQuery } from "@/redux/api/ordersApi";
 
 const page = () => {
   const [page, setPage] = useState<string>("");
-  const { data: reviews, isLoading } = useGetCustomerReviewsQuery(page);
-
+  const { data: reviews, isFetching: isLoading } =
+    useGetCustomerReviewsQuery(page);
   return <Review reviews={reviews} isLoading={isLoading} setPage={setPage} />;
 };
 

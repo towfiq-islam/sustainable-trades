@@ -436,15 +436,16 @@ export const CartItemSkeleton = () => {
 // Conversation Card Skeleton
 export const ConversationCardSkeleton = () => {
   return (
-    <div className="border-b-2 border-gray-200 py-7 px-5 flex justify-between items-center animate-pulse">
-      <div className="flex gap-3 items-center">
-        <div className="size-16 rounded-full bg-gray-200" />
-        <div className="flex flex-col gap-2">
-          <div className="h-4 w-40 bg-gray-200 rounded" />
-          <div className="h-3 w-64 bg-gray-200 rounded" />
+    <div className="border-b last:border-b-0 border-gray-200 py-4 px-3 flex justify-between items-center animate-pulse">
+      <div className="flex gap-3 items-center min-w-0">
+        <div className="size-13 rounded-full bg-gray-200 shrink-0" />
+        <div className="min-w-0">
+          <div className="h-5 w-32 bg-gray-200 rounded mb-2" />
+          <div className="h-4 w-48 bg-gray-200 rounded" />
         </div>
       </div>
-      <div className="shrink-0 flex flex-col items-end gap-3">
+
+      <div className="shrink-0 flex flex-col items-end gap-2">
         <div className="h-4 w-16 bg-gray-200 rounded" />
         <div className="h-5 w-6 bg-gray-200 rounded" />
       </div>

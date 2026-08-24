@@ -1,4 +1,4 @@
-import OrdersList from "@/Components/PageComponents/dashboardPages/Orders/OrdersList";
+import OrdersList from "@/Components/order/OrdersList";
 
 const page = () => {
   return (

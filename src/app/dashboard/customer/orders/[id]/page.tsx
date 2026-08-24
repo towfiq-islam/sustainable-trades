@@ -1,5 +1,5 @@
 "use client";
-import SingleOrder from "@/Components/PageComponents/dashboardPages/Orders/SingleOrder";
+import SingleOrder from "@/Components/order/SingleOrder";
 import { useParams } from "next/navigation";
 
 const Page = () => {

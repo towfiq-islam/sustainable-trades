@@ -9,13 +9,13 @@ import Modal from "@/Components/Common/Modal";
 import TrackPackageModal from "@/Components/Modals/TrackPackageModal";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { FiFileText, FiShield } from "react-icons/fi";
-import ConversationPage from "@/Components/PageComponents/dashboardPages/messageComponents/ConversationPage";
+import { FiFileText, FiShield, FiStar } from "react-icons/fi";
 import {
   useDownloadCustomerInvoiceMutation,
   useGetOrderDetailsQuery,
 } from "@/redux/api/ordersApi";
 import { FaHeart } from "react-icons/fa";
+import MessagePage from "@/Components/messages/MessagePage";
 
 const fulfillmentLabel = (type: string) =>
   type === "delivery"
@@ -220,6 +220,19 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                               <p className="text-[#67645F] text-sm font-sans">
                                 Qty: {item?.quantity}
                               </p>
+                              {vendorOrder.status === "delivered" && (
+                                <button
+                                  onClick={() =>
+                                    router.push(
+                                      `/dashboard/customer/reviews/${item.product_id}`,
+                                    )
+                                  }
+                                  className="flex items-center gap-1 text-primary-green text-[13px] font-semibold mt-0.5 cursor-pointer hover:underline w-fit"
+                                >
+                                  <FiStar size={13} />
+                                  Leave a Review
+                                </button>
+                              )}
                             </div>
 
                             <p className="font-sans font-semibold text-secondary-black text-sm shrink-0">
@@ -306,7 +319,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                     {/* Right: chat + actions */}
                     <div className="col-span-2">
                       <div className="rounded-[10px] h-[450px] flex flex-col overflow-hidden mb-3 border border-gray-300 p-3">
-                        <ConversationPage
+                        <MessagePage
                           receiverId={vendorOrder?.vendor_id}
                           conversationId={vendorOrder?.conversation?.id}
                           compact={true}

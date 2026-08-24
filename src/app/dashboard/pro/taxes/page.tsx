@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Country, State } from "country-state-city";
+import { State } from "country-state-city";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
 import { FaLightbulb } from "react-icons/fa";
@@ -15,10 +15,6 @@ import {
   useSaveTaxesMutation,
 } from "@/redux/api/taxApi";
 import toast from "react-hot-toast";
-
-const allowedCountries = Country.getAllCountries().filter(
-  country => country.isoCode === "US" || country.isoCode === "CA",
-);
 
 type stateItem = {
   id: number;
@@ -44,7 +40,7 @@ export default function TaxRatePage() {
   const [addSalesTaxMutate, { isLoading: isAddingSalesTax }] =
     useAddSalesTaxMutation();
 
-  const [country, setCountry] = useState<any>(null);
+  const [country] = useState<string>("US");
   const [state, setState] = useState<any>(null);
   const { data: taxData } = useGetSalesTaxDataQuery();
   const { data: allTaxes } = useGetAllTaxesQuery();
@@ -92,7 +88,7 @@ export default function TaxRatePage() {
 
   const onSubmit = (data: TaxForm) => {
     const payload = {
-      country,
+      country: "US",
       state,
       rate: data.rate,
       is_digital_products: chargeOnServices ? 1 : 0,
@@ -105,8 +101,6 @@ export default function TaxRatePage() {
       .then(res => {
         toast.success(res.message);
         reset();
-        setChargeOnServices(true);
-        setChargeOnShipping(false);
       })
       .catch(err => {
         toast.error(err?.data?.message);
@@ -121,26 +115,17 @@ export default function TaxRatePage() {
 
   useEffect(() => {
     if (allTaxes?.data) {
-      let countryCode = "";
-
-      if (allTaxes.data.country === "US") {
-        countryCode = "US";
-      } else if (allTaxes.data.country === "CA") {
-        countryCode = "CA";
-      }
-
-      setCountry(countryCode);
-      setValue("country", countryCode);
       setState(allTaxes.data.state);
 
       reset({
-        country: countryCode,
+        country: "US",
         state: allTaxes.data.state,
         rate: allTaxes.data.rate,
       });
 
       setChargeOnServices(allTaxes.data.is_digital_products);
       setChargeOnShipping(allTaxes.data.is_shipping);
+      setChargeOnProduce(allTaxes.data.is_food_products);
     }
   }, [allTaxes, reset]);
 
@@ -213,33 +198,14 @@ export default function TaxRatePage() {
                     Country *
                   </label>
 
-                  <select
-                    value={country || ""}
-                    {...register("country", {
-                      required: "Country is required",
-                    })}
-                    className="w-full h-12 px-4 border border-gray-300 rounded-lg"
-                    onChange={e => {
-                      const selectedCountry = e.target.value;
-                      setCountry(selectedCountry);
-                      setState("");
-                      setValue("country", selectedCountry);
-                      setValue("state", "");
-                    }}
-                  >
-                    <option value="">Select Country</option>
-                    {allowedCountries.map(country => (
-                      <option key={country.isoCode} value={country.isoCode}>
-                        {country.name}
-                      </option>
-                    ))}
-                  </select>
-
-                  {errors.country && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.country.message}
-                    </p>
-                  )}
+                  <input
+                    type="text"
+                    value="United States"
+                    disabled
+                    readOnly
+                    className="w-full h-12 px-4 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                  />
+                  <input type="hidden" {...register("country")} value="US" />
                 </div>
 
                 {/* State */}
@@ -256,9 +222,7 @@ export default function TaxRatePage() {
                     value={state}
                     onChange={e => {
                       const selectedState = e.target.value;
-
                       setState(selectedState);
-
                       setValue("state", selectedState, {
                         shouldValidate: true,
                       });

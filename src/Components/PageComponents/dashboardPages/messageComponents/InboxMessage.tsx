@@ -83,11 +83,11 @@ const InboxMessage = ({ search, activeTab }: Props) => {
               }/messages/inbox?receiver_id=${
                 conversation?.participants[0]?.participant_id
               }&conversation_id=${conversation?.participants[0]?.conversation_id}`}
-              className="border-b-2 border-gray-200 py-7 cursor-pointer duration-300 transition-all hover:bg-gray-100 px-5 flex justify-between items-center"
+              className="border-b last:border-b-0 border-gray-200 py-4 cursor-pointer duration-300 transition-all hover:bg-gray-100 px-3 flex justify-between items-center"
             >
               {/* Left */}
               <div className="flex gap-3 items-center">
-                <figure className="size-16 rounded-full border border-gray-100 grid place-items-center relative bg-accent-red">
+                <figure className="size-13 rounded-full border border-gray-100 grid place-items-center relative bg-accent-red">
                   {conversation?.participants[0]?.participant?.avatar ? (
                     <Image
                       src={`${process.env.NEXT_PUBLIC_SITE_URL}/${conversation?.participants[0]?.participant?.avatar}`}
@@ -96,7 +96,7 @@ const InboxMessage = ({ search, activeTab }: Props) => {
                       className="size-full rounded-full"
                     />
                   ) : (
-                    <span className="text-xl font-bold text-white">
+                    <span className="font-semibold text-white">
                       {conversation?.participants[0]?.participant?.first_name?.at(
                         0,
                       )}
@@ -105,12 +105,12 @@ const InboxMessage = ({ search, activeTab }: Props) => {
                 </figure>
 
                 <div>
-                  <h3 className="text-xl font-bold text-secondary-black mb-1">
+                  <h3 className="font-semibold text-secondary-black/90 mb-1">
                     {conversation?.participants[0]?.participant?.first_name}
                     {conversation?.participants[0]?.participant?.last_name}
                   </h3>
 
-                  <p className="text-gray-500">
+                  <p className="text-gray-500 text-sm">
                     {conversation?.last_message?.message?.length > 100
                       ? conversation?.last_message?.message?.slice(0, 100) +
                         "...."
@@ -121,11 +121,11 @@ const InboxMessage = ({ search, activeTab }: Props) => {
 
               {/* Right */}
               <div className="shrink-0 flex flex-col items-end gap-2">
-                <p className="font-semibold text-[#1AA884]">
+                <p className="font-semibold text-sm text-[#1AA884]">
                   {moment(conversation?.last_message?.created_at).format("ll")}
                 </p>
 
-                <p className="bg-[#1AA884] text-white font-bold px-2 text-sm py-1 rounded grid place-items-center">
+                <p className="bg-[#1AA884] text-white font-bold px-1.5 text-xs py-0.5 rounded grid place-items-center">
                   {conversation?.unread_messages_count}
                 </p>
               </div>

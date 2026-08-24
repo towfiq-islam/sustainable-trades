@@ -163,7 +163,6 @@ const page = () => {
         </Container>
       </section>
 
-      {/* Geographically Closest Listings */}
       <Container>
         {isFetching ? (
           <h2 className="w-60 h-6 mb-7 animate-pulse bg-gray-200 rounded"></h2>
@@ -209,7 +208,7 @@ const page = () => {
 
       {/* Nearby Listings */}
       <Container>
-        <h2 className="mt-8 xl:mt-16 text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5 lg:mb-10 capitalize">
+        <h2 className="mt-5 text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5 lg:mb-8 capitalize">
           Sustainable Products & Services Nearby
         </h2>
 

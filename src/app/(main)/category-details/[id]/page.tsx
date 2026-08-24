@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import { AiOutlineFileUnknown } from "react-icons/ai";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Container from "@/Components/Common/Container";
 import Product from "@/Components/Common/Product";
@@ -22,6 +21,9 @@ import {
   useGetProductCategoriesQuery,
 } from "@/redux/api/productApi";
 import { useParams } from "next/navigation";
+import PaginationControl from "@/Components/Common/PaginationControl";
+import { EmptyState } from "@/Components/Common/EmptyState";
+import { FiPackage } from "react-icons/fi";
 
 type categoryItem = {
   id: number;
@@ -33,27 +35,32 @@ type categoryItem = {
 const page = () => {
   const id = Number(useParams()?.id);
   const { latitude, longitude } = useAuth();
-  const [page, setPage] = useState<string>("");
+  const [page, setPage] = useState<number>(0);
   const [categoryId, setCategoryId] = useState<number>(id);
   const { data: spotlightData } = useGetMembershipSpotlightQuery({});
   const { data: allCategory, isLoading: categoryLoading } =
     useGetProductCategoriesQuery({});
-  const { data: categoryDetails, isLoading } = useGetCategoryDetailsQuery({
+  const { data: categoryDetails, isFetching } = useGetCategoryDetailsQuery({
     id: categoryId,
     lat: latitude,
     lng: longitude,
     page,
   });
 
+  const goToFirstCategory = () => {
+    if (allCategory?.data?.[0]?.id) {
+      setCategoryId(allCategory.data[0].id);
+    }
+  };
+
   return (
     <>
       <MagicMarkers />
 
-      {/* All Categories */}
       <section className="mb-10 md:mb-20">
         <Container>
-          <h2 className="text-lg md:text-xl sm:text-2xl xl:text-3xl font-semibold text-secondary-black mb-10 capitalize">
-            Explore Sustainable Products & Services Nearby
+          <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black pt-3 xl:pt-0 mb-5 lg:mb-10 capitalize">
+            Explore Category Wise Sustainable Products Nearby
           </h2>
 
           <div className="relative">
@@ -136,51 +143,45 @@ const page = () => {
         </Container>
       </section>
 
-      {/* Geographically Closest Listings */}
       <Container>
-        {isLoading ? (
+        {isFetching ? (
           <h2 className="w-60 h-6 mb-7 animate-pulse bg-gray-200 rounded"></h2>
         ) : (
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-secondary-black mb-4 md:mb-7">
+          <h2 className="text-lg md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5 xl:mb-7">
             {categoryDetails?.data?.category?.name}
           </h2>
         )}
 
-        {isLoading ? (
+        {isFetching ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {Array.from({ length: 4 }).map((_, idx) => (
               <ProductSkeleton key={idx} />
             ))}
           </div>
-        ) : categoryDetails?.data?.products?.data?.length > 0 ? (
+        ) : categoryDetails?.data?.length === 0 ? (
+          <EmptyState
+            icon={<FiPackage />}
+            title="Nothing here yet"
+            description={`No sustainable listings under "${categoryDetails?.data?.category?.name || "this category"}" near you right now. Try another category or check back soon.`}
+            actionLabel="Browse first category"
+            onAction={goToFirstCategory}
+          />
+        ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-            {categoryDetails.data.products.data.map((product: any) => (
+            {categoryDetails?.data?.products?.data?.map((product: any) => (
               <Product key={product?.id} product={product} />
             ))}
           </div>
-        ) : (
-          <div className="flex flex-col justify-center items-center gap-3 lg:gap-4 text-center py-5 md:py-20">
-            <AiOutlineFileUnknown className="text-xl md:text-3xl lg:text-6xl text-gray-500" />
-            <p className="text-gray-600 text-sm md:text-lg font-semibold">
-              No products found!!
-            </p>
-          </div>
         )}
 
-        {/* Pagination */}
-        {!isLoading && (
-          <div className="py-8 flex justify-center items-center gap-2 flex-wrap">
-            {categoryDetails?.data?.products?.links?.map(
-              (item: any, idx: number) => (
-                <button
-                  key={idx}
-                  disabled={!item.url}
-                  dangerouslySetInnerHTML={{ __html: item.label }}
-                  onClick={() => item.url && setPage(item.url.split("=")[1])}
-                  className={`px-3 py-1 rounded border transition-all duration-200 ${item.active ? "bg-primary-green text-white" : "bg-white text-gray-700"} ${!item.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                />
-              ),
-            )}
+        {!isFetching && categoryDetails?.data?.products && (
+          <div className="py-8">
+            <PaginationControl
+              currentPage={categoryDetails.data.products.current_page}
+              lastPage={categoryDetails.data.products.last_page}
+              onPageChange={setPage}
+              alignment="center"
+            />
           </div>
         )}
       </Container>

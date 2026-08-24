@@ -19,7 +19,7 @@ interface moreProductProps {
 
 const MoreProduct = ({ data }: moreProductProps) => {
   return (
-    <section className="my-10 xl:my-20">
+    <section className="my-10 xl:mb-20">
       {/* Title */}
       <h3 className="text-xl md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-4 xl:mb-7">
         More from this shop

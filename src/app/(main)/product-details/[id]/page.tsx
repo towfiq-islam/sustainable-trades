@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Container from "@/Components/Common/Container";
 import { ProductDetailsSkeleton } from "@/Components/Loader/Loader";
@@ -13,15 +12,11 @@ import ProductDescription from "@/Components/PageComponents/mainPages/productDet
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
 import { useParams, useRouter } from "next/navigation";
 import useAuth from "@/Hooks/useAuth";
-import {
-  useGetProductDetailsQuery,
-  useGetProductReviewsQuery,
-} from "@/redux/api/productApi";
+import { useGetProductDetailsQuery } from "@/redux/api/productApi";
 
 const page = () => {
   const { latitude, longitude } = useAuth();
   const router = useRouter();
-  const [page, setPage] = useState<string>("");
   const params = useParams();
   const id = Number(params.id);
 
@@ -30,9 +25,6 @@ const page = () => {
     lat: latitude,
     lng: longitude,
   });
-
-  const { data: productReviews, isLoading: reviewLoading } =
-    useGetProductReviewsQuery({ id, page });
 
   if (isLoading) {
     return <ProductDetailsSkeleton />;
@@ -62,21 +54,8 @@ const page = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 md:gap-8 2xl:gap-12 lg:mb-16">
           {/* Left */}
           <div className="space-y-5 md:space-y-10 lg:space-y-16">
-            {/* Thumbnail Gallery */}
             <ProductGallery data={productDetailsData?.data} />
-
-            {/* Reviews */}
-            <ProductReviews
-              reviewCount={
-                productDetailsData?.data?.reviews_count
-                  ? productDetailsData?.data?.reviews_count
-                  : 0
-              }
-              reviewAvg={productDetailsData?.data?.reviews_avg_rating}
-              data={productReviews?.data}
-              reviewLoading={reviewLoading}
-              setPage={setPage}
-            />
+            <ProductReviews id={id} />
           </div>
 
           {/* Right */}

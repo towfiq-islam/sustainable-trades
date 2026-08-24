@@ -4,7 +4,7 @@ import Link from "next/link";
 import echo from "@/lib/echo";
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { ConversationCardSkeleton } from "@/Components/Loader/Loader";
 import { chatApi, useGetAllConversationQuery } from "@/redux/api/chatApi";
@@ -41,11 +41,44 @@ type conversationItem = {
 const ConversationList = ({ search, activeTab }: Props) => {
   const { user } = useAuth();
   const dispatch = useAppDispatch();
-  const { data: allConversation, isLoading } = useGetAllConversationQuery({
+  const [page, setPage] = useState(1);
+
+  const {
+    data: allConversation,
+    isLoading,
+    isFetching,
+  } = useGetAllConversationQuery({
     name: search,
     sent: activeTab === "sent" ? "sent" : "",
     unread: activeTab === "unread" ? "unread" : "",
+    page,
   });
+
+  // Reset back to page 1 whenever the filters change
+  useEffect(() => {
+    setPage(1);
+  }, [search, activeTab]);
+
+  const conversations = allConversation?.data?.conversations?.data ?? [];
+  const hasNextPage = !!allConversation?.data?.conversations?.next_page_url;
+
+  // Fires when the last conversation card scrolls into view
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastItemRef = useCallback(
+    (node: HTMLAnchorElement | null) => {
+      if (isLoading || isFetching) return;
+      observer.current?.disconnect();
+
+      observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          setPage(prev => prev + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [isLoading, isFetching, hasNextPage],
+  );
 
   // Pusher Config
   useEffect(() => {
@@ -64,74 +97,84 @@ const ConversationList = ({ search, activeTab }: Props) => {
   return (
     <>
       {isLoading ? (
-        Array.from({ length: 5 }).map((_, index) => (
+        Array.from({ length: 6 }).map((_, index) => (
           <ConversationCardSkeleton key={index} />
         ))
-      ) : allConversation?.data?.conversations?.length > 0 ? (
-        allConversation?.data?.conversations?.map(
-          (conversation: conversationItem) => (
-            <Link
-              key={conversation?.id}
-              href={`/dashboard/${
-                user?.role === "vendor" &&
-                user?.membership?.membership_type === "pro"
-                  ? "pro"
-                  : user?.role === "vendor" &&
-                      user?.membership?.membership_type === "basic"
-                    ? "basic"
-                    : "customer"
-              }/messages/inbox?receiver_id=${
-                conversation?.participants[0]?.participant_id
-              }&conversation_id=${conversation?.participants[0]?.conversation_id}`}
-              className="border-b last:border-b-0 border-gray-200 py-4 cursor-pointer duration-300 transition-all hover:bg-gray-100 px-3 flex justify-between items-center"
-            >
-              {/* Left */}
-              <div className="flex gap-3 items-center">
-                <figure className="size-13 rounded-full border border-gray-100 grid place-items-center relative bg-accent-red">
-                  {conversation?.participants[0]?.participant?.avatar ? (
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_SITE_URL}/${conversation?.participants[0]?.participant?.avatar}`}
-                      fill
-                      alt="author_img"
-                      className="size-full rounded-full"
-                    />
-                  ) : (
-                    <span className="font-semibold text-white">
-                      {conversation?.participants[0]?.participant?.first_name?.at(
-                        0,
-                      )}
-                    </span>
-                  )}
-                </figure>
+      ) : conversations?.length > 0 ? (
+        <>
+          {conversations.map(
+            (conversation: conversationItem, index: number) => (
+              <Link
+                key={conversation?.id}
+                ref={
+                  index === conversations.length - 1 ? lastItemRef : undefined
+                }
+                href={`/dashboard/${
+                  user?.role === "vendor" &&
+                  user?.membership?.membership_type === "pro"
+                    ? "pro"
+                    : user?.role === "vendor" &&
+                        user?.membership?.membership_type === "basic"
+                      ? "basic"
+                      : "customer"
+                }/messages/inbox?receiver_id=${
+                  conversation?.participants[0]?.participant_id
+                }&conversation_id=${conversation?.participants[0]?.conversation_id}`}
+                className="border-b last:border-b-0 border-gray-200 py-4 cursor-pointer duration-300 transition-all hover:bg-gray-100 px-3 flex justify-between items-center"
+              >
+                {/* Left */}
+                <div className="flex gap-3 items-center">
+                  <figure className="size-13 rounded-full border border-gray-100 grid place-items-center relative bg-accent-red">
+                    {conversation?.participants[0]?.participant?.avatar ? (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${conversation?.participants[0]?.participant?.avatar}`}
+                        fill
+                        alt="author_img"
+                        className="size-full rounded-full"
+                      />
+                    ) : (
+                      <span className="font-semibold text-white">
+                        {conversation?.participants[0]?.participant?.first_name?.at(
+                          0,
+                        )}
+                      </span>
+                    )}
+                  </figure>
 
-                <div>
-                  <h3 className="font-semibold text-secondary-black/90 mb-1">
-                    {conversation?.participants[0]?.participant?.first_name}
-                    {conversation?.participants[0]?.participant?.last_name}
-                  </h3>
+                  <div>
+                    <h3 className="font-semibold text-secondary-black/90 mb-1">
+                      {conversation?.participants[0]?.participant?.first_name}
+                      {conversation?.participants[0]?.participant?.last_name}
+                    </h3>
 
-                  <p className="text-gray-500 text-sm">
-                    {conversation?.last_message?.message?.length > 100
-                      ? conversation?.last_message?.message?.slice(0, 100) +
-                        "...."
-                      : conversation?.last_message?.message}
+                    <p className="text-gray-500 text-sm">
+                      {conversation?.last_message?.message?.length > 100
+                        ? conversation?.last_message?.message?.slice(0, 100) +
+                          "...."
+                        : conversation?.last_message?.message}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right */}
+                <div className="shrink-0 flex flex-col items-end gap-2">
+                  <p className="font-semibold text-sm text-[#1AA884]">
+                    {moment(conversation?.last_message?.created_at).format(
+                      "ll",
+                    )}
+                  </p>
+
+                  <p className="bg-[#1AA884] text-white font-bold px-1.5 text-xs py-0.5 rounded grid place-items-center">
+                    {conversation?.unread_messages_count}
                   </p>
                 </div>
-              </div>
+              </Link>
+            ),
+          )}
 
-              {/* Right */}
-              <div className="shrink-0 flex flex-col items-end gap-2">
-                <p className="font-semibold text-sm text-[#1AA884]">
-                  {moment(conversation?.last_message?.created_at).format("ll")}
-                </p>
-
-                <p className="bg-[#1AA884] text-white font-bold px-1.5 text-xs py-0.5 rounded grid place-items-center">
-                  {conversation?.unread_messages_count}
-                </p>
-              </div>
-            </Link>
-          ),
-        )
+          {/* Loading indicator while fetching subsequent pages */}
+          {isFetching && page > 1 && <ConversationCardSkeleton />}
+        </>
       ) : (
         <div className="pt-20 pb-10 flex justify-center items-center flex-col gap-1 text-center px-5">
           <IoChatboxEllipsesOutline className="text-5xl text-gray-500 mb-3" />

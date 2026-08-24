@@ -70,7 +70,7 @@ const FeaturedShops = () => {
                 </figure>
 
                 {/* Shop Name */}
-                <h3 className="mt-4 text-sm xl:text-base 2xl:text-xl font-semibold text-primary-green">
+                <h3 className="mt-4 text-sm xl:text-base 2xl:text-lg font-semibold text-primary-green truncate">
                   {shop_info?.shop_name}
                 </h3>
 

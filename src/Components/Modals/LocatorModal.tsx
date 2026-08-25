@@ -1,9 +1,8 @@
 import { useFormContext } from "react-hook-form";
-import { State, Country } from "country-state-city";
+import { State } from "country-state-city";
 import { useState } from "react";
-const allowedCountries = Country.getAllCountries().filter(
-  country => country.isoCode === "US" || country.isoCode === "CA",
-);
+const US_COUNTRY_CODE = "US";
+const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
 
 const AddressForm = () => {
   const {
@@ -14,7 +13,6 @@ const AddressForm = () => {
   } = useFormContext();
 
   const [state, setState] = useState<any>(() => getValues("state") || "");
-  const [country, setCountry] = useState<any>(() => getValues("country") || "");
 
   return (
     <form className="my-6 flex flex-col gap-3">
@@ -60,88 +58,72 @@ const AddressForm = () => {
         )}
       </div>
 
-      {/* Zip */}
+      {/* State */}
       <div>
-        <p className="form-label font-bold">Zip Code *</p>
-        <input
-          type="text"
-          {...register("zip_code", { required: "zip_code is required" })}
+        <p className="form-label font-bold">State *</p>
+
+        <select
+          {...register("state", {
+            required: "State is required",
+          })}
+          value={state}
           className="form-input"
-          placeholder="zip_code"
-        />
-        {errors.zip_code && (
+          onChange={e => {
+            setState(e.target.value);
+            setValue("state", e.target.value, {
+              shouldValidate: true,
+            });
+          }}
+        >
+          <option value="">Select State</option>
+
+          {usStates.map(item => (
+            <option key={item.isoCode} value={item.isoCode}>
+              {item.name} ({item.isoCode})
+            </option>
+          ))}
+        </select>
+
+        {errors.state && (
           <span className="text-red-500 text-sm pt-1">
-            {errors.zip_code.message as string}
+            {errors.state.message as string}
           </span>
         )}
       </div>
 
       <div className="grid grid-cols-2 gap-5">
-        {/* Country */}
+        {/* Zip */}
         <div>
-          <p className="form-label font-bold">Country *</p>
-          <select
-            value={country || ""}
-            {...register("country", {
-              required: "Country is required",
-            })}
+          <p className="form-label font-bold">Zip Code *</p>
+          <input
+            type="text"
+            {...register("zip_code", { required: "zip_code is required" })}
             className="form-input"
-            onChange={e => {
-              const selectedCountry = e.target.value;
-              setCountry(selectedCountry);
-              setState("");
-              setValue("country", selectedCountry, {
-                shouldValidate: true,
-              });
-              setValue("state", "");
-            }}
-          >
-            <option value="">Select Country</option>
-            {allowedCountries.map(country => (
-              <option key={country.isoCode} value={country.isoCode}>
-                {country.name}
-              </option>
-            ))}
-          </select>
-
-          {errors.country && (
+            placeholder="zip_code"
+          />
+          {errors.zip_code && (
             <span className="text-red-500 text-sm pt-1">
-              {errors.country.message as string}
+              {errors.zip_code.message as string}
             </span>
           )}
         </div>
 
-        {/* State */}
+        {/* Country */}
         <div>
-          <p className="form-label font-bold">State *</p>
+          <p className="form-label font-bold">Country *</p>
 
-          <select
-            {...register("state", {
-              required: "State is required",
-            })}
-            value={state}
-            className="form-input"
-            onChange={e => {
-              setState(e.target.value);
-              setValue("state", e.target.value, {
-                shouldValidate: true,
-              });
-            }}
-          >
-            <option value="">Select State</option>
-
-            {State.getStatesOfCountry(country).map(item => (
-              <option key={item.isoCode} value={item.isoCode}>
-                {item.name} ({item.isoCode})
-              </option>
-            ))}
-          </select>
-
-          {errors.state && (
-            <span className="text-red-500 text-sm pt-1">
-              {errors.state.message as string}
-            </span>
-          )}
+          <input
+            type="text"
+            value="United States"
+            disabled
+            readOnly
+            className="form-input bg-gray-100 text-gray-500 cursor-not-allowed"
+          />
+          <input
+            type="hidden"
+            {...register("country")}
+            value={US_COUNTRY_CODE}
+          />
         </div>
       </div>
     </form>

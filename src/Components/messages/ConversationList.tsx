@@ -134,17 +134,24 @@ const ConversationList = ({ search, activeTab }: Props) => {
                       />
                     ) : (
                       <span className="font-semibold text-white">
-                        {conversation?.participants[0]?.participant?.first_name?.at(
-                          0,
-                        )}
+                        {conversation?.type === "guest_order"
+                          ? "G"
+                          : conversation?.participants[0]?.participant?.first_name?.at(
+                              0,
+                            )}
                       </span>
                     )}
                   </figure>
 
                   <div>
                     <h3 className="font-semibold text-secondary-black/90 mb-1">
-                      {conversation?.participants[0]?.participant?.first_name}
-                      {conversation?.participants[0]?.participant?.last_name}
+                      {conversation?.type === "guest_order"
+                        ? "Guest"
+                        : conversation?.participants[0]?.participant
+                            ?.first_name}
+                      {conversation?.type === "guest_order"
+                        ? " User"
+                        : conversation?.participants[0]?.participant?.last_name}
                     </h3>
 
                     <p className="text-gray-500 text-sm">

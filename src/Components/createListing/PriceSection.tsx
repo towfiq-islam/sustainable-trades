@@ -36,6 +36,10 @@ const PriceSection = ({
           <input
             type="number"
             {...field}
+            onChange={e => {
+              field.onChange(e);
+              control._formState.isSubmitted && control.trigger?.("cost");
+            }}
             className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2 outline-0"
           />
         )}
@@ -61,6 +65,19 @@ const PriceSection = ({
             pattern: {
               value: /^\d+(\.\d{1,2})?$/,
               message: "Cost must be a valid number (e.g., 5.99)",
+            },
+            validate: (value, formValues) => {
+              if (isBasicMember) return true;
+              if (!value) return true;
+
+              const cost = parseFloat(value);
+              const price = parseFloat(formValues.product_price);
+
+              if (!isNaN(cost) && !isNaN(price) && cost >= price) {
+                return "Cost must be less than price";
+              }
+
+              return true;
             },
           }}
           render={({ field }) => (

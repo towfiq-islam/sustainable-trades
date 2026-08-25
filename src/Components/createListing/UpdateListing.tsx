@@ -411,11 +411,10 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
 
   // ── Delete ─────────────────────────────────────────────────────────────────
   const confirmDelete = () => {
-    setShowDeleteModal(false);
-
     deleteProduct(id)
       .unwrap()
       .then(res => {
+        setShowDeleteModal(false);
         toast.success(res.message);
         router.push(config.listingHref);
       })
@@ -775,6 +774,21 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
               <Controller
                 name="cost"
                 control={control}
+                rules={{
+                  validate: (value, formValues) => {
+                    if (!proOnly) return true;
+                    if (!value) return true;
+
+                    const cost = parseFloat(value);
+                    const price = parseFloat(formValues.product_price);
+
+                    if (!isNaN(cost) && !isNaN(price) && cost >= price) {
+                      return "Cost must be less than price";
+                    }
+
+                    return true;
+                  },
+                }}
                 render={({ field }) => (
                   <input
                     {...field}
@@ -784,6 +798,11 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
                   />
                 )}
               />
+              {errors.cost && (
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.cost.message}
+                </p>
+              )}
             </div>
 
             {/* Weight */}
@@ -1170,9 +1189,9 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
               <button
                 onClick={confirmDelete}
                 disabled={isDeleting}
-                className="px-4 py-2 bg-primary-red transition duration-300 text-white rounded-lg cursor-pointer hover:bg-red-700 disabled:opacity-50"
+                className="px-4 py-2 bg-primary-red transition duration-300 text-white rounded-lg cursor-pointer hover:bg-red-700 disabled:opacity-50 disabled:animate-pulse"
               >
-                {isDeleting ? "Deleting..." : "Delete"}
+                Delete
               </button>
             </div>
           </div>

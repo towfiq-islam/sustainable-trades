@@ -13,6 +13,7 @@ import { fulfillmentLabel } from "@/lib/fulfillment";
 import { OrderSuccessSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
 import { BsTruck } from "react-icons/bs";
+import { useRouter } from "next/navigation";
 
 type VendorItem = {
   id: number;
@@ -53,6 +54,7 @@ const fulfillmentDisplay = (type: string) =>
   fulfillmentLabel[type as "pickup" | "delivery" | "shipping"] ?? type;
 
 export default function Page({ searchParams }: Props) {
+  const router = useRouter();
   const { order_id } = use(searchParams);
   const { user } = useAuth();
   const { data: res, isLoading } = useGetOrderDetailsQuery(order_id, {
@@ -190,11 +192,12 @@ export default function Page({ searchParams }: Props) {
             <div className="flex gap-2 mb-4">
               <button
                 disabled={!user}
+                onClick={() =>
+                  router.push(`/dashboard/customer/orders/${order_id}`)
+                }
                 className={`flex-1 text-center px-4 py-2.5 rounded-lg border border-gray-300 text-secondary-black text-sm font-medium transition-all duration-300 cursor-pointer enabled:hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60 disabled:pointer-events-none`}
               >
-                <Link href={`/dashboard/customer/orders/${order_id}`}>
-                  View order
-                </Link>
+                View order
               </button>
 
               <Link

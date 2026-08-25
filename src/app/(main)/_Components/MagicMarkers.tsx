@@ -40,7 +40,7 @@ const MagicMarkers = () => {
             <div className="flex gap-2.5 md:gap-5 flex-col md:flex-row  md:items-center">
               <input
                 type="text"
-                placeholder="Denver, CO 80012"
+                placeholder="Austin, Texas 78745"
                 onChange={e => setSearch(e.target.value)}
                 className="outline-none border-2 border-primary-green text-sm md:text-base p-1.5 md:p-3 rounded w-full md:w-[416px]"
               />

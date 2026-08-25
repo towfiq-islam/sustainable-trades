@@ -276,6 +276,8 @@ const MessagePage = ({
     singleConversation?.data?.conversation?.participants?.[0]?.participant;
 
   const dashboardSegment = getDashboardSegment(user);
+  const isGuest =
+    singleConversation?.data?.conversation?.type === "guest_order";
 
   return (
     <section className="h-full flex flex-col justify-between">
@@ -310,8 +312,8 @@ const MessagePage = ({
                 className="size-full rounded-full"
               />
             ) : (
-              <span className="text-xl font-bold text-white">
-                {participant?.first_name?.at(0)}
+              <span className="text-xl font-semibold text-white">
+                {isGuest ? "G" : participant?.first_name?.at(0)}
               </span>
             )}
           </figure>
@@ -322,8 +324,8 @@ const MessagePage = ({
             <h3
               className={`${compact ? "text-base" : "text-xl"} font-bold text-secondary-black flex gap-1 items-center`}
             >
-              <span>{participant?.first_name}</span>
-              <span>{participant?.last_name}</span>
+              <span>{isGuest ? "Guest" : participant?.first_name}</span>
+              <span>{isGuest ? "User" : participant?.last_name}</span>
             </h3>
           )}
         </div>

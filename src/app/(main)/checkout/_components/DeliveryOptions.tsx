@@ -16,7 +16,6 @@ import { IoMdInformationCircleOutline } from "react-icons/io";
 import {
   clearDeliveryUnavailableVendor,
   setBuyNowFulfillment,
-  setDeliveryUnavailableVendors,
 } from "@/redux/slices/checkoutSlice";
 
 const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
@@ -143,6 +142,11 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
             vendor.products,
           );
           const selected = selections[vendor.vendor_id];
+          const isDeliveryUnavailable =
+            options[0] === "delivery" &&
+            deliveryUnavailableVendors.some(
+              v => v.vendor_id === vendor.vendor_id,
+            );
 
           return (
             <div
@@ -224,7 +228,6 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                 </div>
               )}
 
-              {/* Auto: exactly one common method, no choice needed */}
               {status === "auto" && (
                 <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-off-green/70 bg-off-green/40">
                   <span className="size-5 rounded-full border-2 border-primary-green grid place-items-center shrink-0">
@@ -235,8 +238,16 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                       {fulfillmentLabel[options[0]]}
                     </span>
                     <span className="block text-sm text-secondary-gray">
-                      {fulfillmentDescription[options[0]]} · This is the only
-                      delivery option available for this product.
+                      {fulfillmentDescription[options[0]]}
+                      {!isDeliveryUnavailable &&
+                        " · This is the only delivery option available for this product."}
+                      {isDeliveryUnavailable && (
+                        <span className="text-accent-red">
+                          {" "}
+                          (The local delivery address is outside the delivery
+                          range.)
+                        </span>
+                      )}
                     </span>
                   </span>
                 </div>
@@ -252,7 +263,6 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                       deliveryUnavailableVendors.some(
                         v => v.vendor_id === vendor.vendor_id,
                       );
-                    console.log(isUnavailable)
 
                     return (
                       <button

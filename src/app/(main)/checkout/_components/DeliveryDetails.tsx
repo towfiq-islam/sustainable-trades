@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useFormContext } from "react-hook-form";
-import { useAppDispatch } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { fulfillmentLabel } from "@/lib/fulfillment";
 import VendorProgressBar from "./VendorProgressBar";
 import { State } from "country-state-city";
@@ -21,6 +21,7 @@ import {
 import { CartItem } from "@/Types";
 import Modal from "@/Components/Common/Modal";
 import { IoIosInformationCircle } from "react-icons/io";
+import { CiShop } from "react-icons/ci";
 
 const US_COUNTRY_CODE = "US";
 const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
@@ -40,9 +41,9 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
   const { latitude, longitude } = useAuth();
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [deliveryUnavailableOpen, setDeliveryUnavailableOpen] = useState(false);
-  const [unavailableVendorName, setUnavailableVendorName] = useState<
-    string | null
-  >(null);
+  const { deliveryUnavailableVendors } = useAppSelector(
+    state => state.checkout,
+  );
 
   const {
     register,
@@ -192,13 +193,10 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           err?.data?.message ===
           "Local delivery is not available for this address."
         ) {
-          const unavailableVendors = err?.data?.data?.unavailable_vendors ?? [];
-
-          dispatch(setDeliveryUnavailableVendors(unavailableVendors));
-
-          const names = unavailableVendors.map((v: any) => v.shop_name);
-          setUnavailableVendorName(
-            names.length ? names.join(", ") : vendor.shop_name,
+          dispatch(
+            setDeliveryUnavailableVendors(
+              err?.data?.data?.unavailable_vendors ?? [],
+            ),
           );
           setDeliveryUnavailableOpen(true);
         } else {
@@ -413,15 +411,25 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           <IoIosInformationCircle className="text-accent-red text-4xl" />
         </div>
 
-        <h3 className="text-xl font-semibold text-secondary-black mb-2">
-          {unavailableVendorName ?? "This seller"} can't deliver to this address
+        <h3 className="text-lg font-semibold text-secondary-black mb-1.5">
+          We can't deliver to this address
         </h3>
-        <p className="text-secondary-gray text-sm mb-6">
-          {unavailableVendorName?.includes(",")
-            ? "These sellers' local delivery service doesn't"
-            : "This seller's local delivery service doesn't"}{" "}
-          cover your address. Choose a different fulfillment method to continue.
+        <p className="text-secondary-gray text-sm mb-4">
+          {deliveryUnavailableVendors.length > 1
+            ? "These sellers don't offer local delivery to your address:"
+            : "This seller doesn't offer local delivery to your address:"}
         </p>
+
+        <div className="py-2 px-4 mb-4 text-left">
+          {deliveryUnavailableVendors.map(v => (
+            <div key={v.vendor_id} className="flex items-center gap-2 py-1.5">
+              <CiShop className="text-primary-green"/>
+              <span className="text-sm text-secondary-black">
+                {v.shop_name}
+              </span>
+            </div>
+          ))}
+        </div>
 
         <button
           type="button"
@@ -431,7 +439,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           }}
           className="w-full py-3 rounded-lg bg-primary-green text-white font-medium cursor-pointer hover:scale-95 transition-all duration-300"
         >
-          Go back to delivery options
+          Choose a different delivery method
         </button>
       </Modal>
     </div>

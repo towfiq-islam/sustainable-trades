@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
 import {
   setCheckoutPricing,
+  setDeliveryUnavailableVendors,
   setVendorPickupLocation,
 } from "@/redux/slices/checkoutSlice";
 import { CartItem } from "@/Types";
@@ -191,11 +192,14 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           err?.data?.message ===
           "Local delivery is not available for this address."
         ) {
-          const failedVendorId = err?.data?.vendor_id;
-          const failedVendor = failedVendorId
-            ? items.find(v => v.vendor_id === failedVendorId)
-            : vendor;
-          setUnavailableVendorName(failedVendor?.shop_name ?? vendor.shop_name);
+          const unavailableVendors = err?.data?.data?.unavailable_vendors ?? [];
+
+          dispatch(setDeliveryUnavailableVendors(unavailableVendors));
+
+          const names = unavailableVendors.map((v: any) => v.shop_name);
+          setUnavailableVendorName(
+            names.length ? names.join(", ") : vendor.shop_name,
+          );
           setDeliveryUnavailableOpen(true);
         } else {
           toast.error(
@@ -413,8 +417,10 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           {unavailableVendorName ?? "This seller"} can't deliver to this address
         </h3>
         <p className="text-secondary-gray text-sm mb-6">
-          Your address falls outside the range of this shop's local delivery
-          service.
+          {unavailableVendorName?.includes(",")
+            ? "These sellers' local delivery service doesn't"
+            : "This seller's local delivery service doesn't"}{" "}
+          cover your address. Choose a different fulfillment method to continue.
         </p>
 
         <button

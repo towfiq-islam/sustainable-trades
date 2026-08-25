@@ -8,6 +8,11 @@ import {
   PickupLocationSelection,
 } from "@/Types";
 
+export interface UnavailableVendor {
+  vendor_id: number;
+  shop_name: string;
+}
+
 interface CheckoutState {
   master: MasterPricing | null;
   vendor_orders: VendorPricing[];
@@ -15,6 +20,7 @@ interface CheckoutState {
   terms_and_condition: boolean;
   vendors: Record<number, VendorExtras>;
   buyNowItem: CartItem | null;
+  deliveryUnavailableVendors: UnavailableVendor[];
 }
 
 const initialState: CheckoutState = {
@@ -24,6 +30,7 @@ const initialState: CheckoutState = {
   terms_and_condition: false,
   vendors: {},
   buyNowItem: null,
+  deliveryUnavailableVendors: [],
 };
 
 const checkoutSlice = createSlice({
@@ -112,6 +119,19 @@ const checkoutSlice = createSlice({
         state.buyNowItem.selectedFulfillment = action.payload.fulfillment;
       }
     },
+    
+    setDeliveryUnavailableVendors: (
+      state,
+      action: PayloadAction<UnavailableVendor[]>,
+    ) => {
+      state.deliveryUnavailableVendors = action.payload;
+    },
+    clearDeliveryUnavailableVendor: (state, action: PayloadAction<number>) => {
+      state.deliveryUnavailableVendors =
+        state.deliveryUnavailableVendors.filter(
+          v => v.vendor_id !== action.payload,
+        );
+    },
     clearCheckout: () => initialState,
   },
 });
@@ -125,6 +145,8 @@ export const {
   setVendorPickupLocation,
   clearCheckout,
   setBuyNowItem,
-  setBuyNowFulfillment
+  setBuyNowFulfillment,
+  setDeliveryUnavailableVendors,
+  clearDeliveryUnavailableVendor,
 } = checkoutSlice.actions;
 export default checkoutSlice.reducer;

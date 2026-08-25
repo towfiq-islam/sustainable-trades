@@ -1,11 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAppDispatch } from "@/redux/store";
-import {
-  removeFromCart,
-  setVendorFulfillment,
-} from "@/redux/slices/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { removeFromCart, setVendorFulfillment } from "@/redux/slices/cartSlice";
 import { CartItem } from "@/Types";
 import {
   Fulfillment,
@@ -16,7 +13,11 @@ import {
 } from "@/lib/fulfillment";
 import Image from "next/image";
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import { setBuyNowFulfillment } from "@/redux/slices/checkoutSlice";
+import {
+  clearDeliveryUnavailableVendor,
+  setBuyNowFulfillment,
+  setDeliveryUnavailableVendors,
+} from "@/redux/slices/checkoutSlice";
 
 const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
   const router = useRouter();
@@ -25,6 +26,9 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
   const isBuyNow = mode === "buy-now";
+  const { deliveryUnavailableVendors } = useAppSelector(
+    state => state.checkout,
+  );
 
   useEffect(() => {
     setSelections(prev => {
@@ -53,6 +57,10 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
 
   const handleSelect = (vendor_id: number, fulfillment: Fulfillment) => {
     setSelections(prev => ({ ...prev, [vendor_id]: fulfillment }));
+
+    if (fulfillment !== "delivery") {
+      dispatch(clearDeliveryUnavailableVendor(vendor_id));
+    }
   };
 
   const handleRemoveProduct = (vendor_id: number, product_id: number) => {
@@ -239,6 +247,13 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                 <div className="space-y-3">
                   {options.map(option => {
                     const isSelected = selected === option;
+                    const isUnavailable =
+                      option === "delivery" &&
+                      deliveryUnavailableVendors.some(
+                        v => v.vendor_id === vendor.vendor_id,
+                      );
+                    console.log(isUnavailable)
+
                     return (
                       <button
                         key={option}
@@ -263,15 +278,24 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                         </span>
 
                         <span>
-                          <span
-                            className={`block font-semibold text-[15px] ${
-                              isSelected
-                                ? "text-primary-green"
-                                : "text-secondary-black"
-                            }`}
-                          >
-                            {fulfillmentLabel[option]}
+                          <span className="flex items-center gap-2">
+                            <span
+                              className={`block font-semibold text-[15px] ${
+                                isSelected
+                                  ? "text-primary-green"
+                                  : "text-secondary-black"
+                              }`}
+                            >
+                              {fulfillmentLabel[option]}
+                            </span>
+                            {isUnavailable && (
+                              <span className="text-xs text-accent-red font-normal">
+                                (The local delivery address is outside the
+                                delivery range.)
+                              </span>
+                            )}
                           </span>
+
                           <span className="block text-sm text-secondary-gray">
                             {fulfillmentDescription[option]}
                           </span>

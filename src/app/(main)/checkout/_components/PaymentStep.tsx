@@ -99,7 +99,10 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
                 return orderData.paypal_order_id;
               }
 
-              throw new Error("Unable to create PayPal order");
+              toast.error(
+                orderData?.message || "Unable to create PayPal order",
+              );
+              return undefined;
             } catch (error) {
               console.error(error);
               toast.error("Unable to initialize payment");
@@ -138,6 +141,8 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
                 router.replace(
                   `/order-success?order_id=${orderData?.data?.id}`,
                 );
+              } else {
+                toast.error(orderData?.message || "Payment capture failed");
               }
             } catch (error) {
               console.error(error);

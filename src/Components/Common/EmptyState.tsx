@@ -1,35 +1,56 @@
-export const EmptyState = ({
-  icon,
-  title,
-  description,
-  actionLabel,
-  onAction,
-}: {
-  icon: React.ReactNode;
+import { ReactNode } from "react";
+import { IconType } from "react-icons";
+
+interface EmptyStateProps {
+  icon?: IconType | ReactNode;
   title: string;
   description: string;
+  iconColor?: string;
+  iconBg?: string;
   actionLabel?: string;
   onAction?: () => void;
-}) => (
-  <div className="flex flex-col justify-center items-center gap-4 text-center py-12 md:py-20 px-4 border border-dashed border-gray-200 rounded-2xl bg-off-green/10">
-    <div className="size-16 md:size-18 rounded-full bg-primary-green/10 grid place-items-center text-primary-green text-2xl md:text-3xl">
-      {icon}
-    </div>
-    <div className="space-y-1.5">
-      <p className="text-secondary-black text-base md:text-lg font-semibold">
-        {title}
-      </p>
-      <p className="text-gray-500 text-sm md:text-base max-w-lg mx-auto">
+}
+
+/**
+ * Reusable empty state component.
+ * Deduplicates the repeated empty state pattern used in
+ * ReuseableFavorite, ReuseableNotification, and other list views.
+ */
+const EmptyState = ({
+  icon: Icon,
+  title,
+  description,
+  iconColor = "text-accent-red",
+  iconBg = "bg-accent-red/10",
+  actionLabel,
+  onAction,
+}: EmptyStateProps) => {
+  return (
+    <div className="col-span-full flex flex-col items-center justify-center text-center py-16">
+      {Icon && (
+        <div className={`size-14 rounded-full ${iconBg} grid place-items-center mb-5`}>
+          {typeof Icon === "function" ? (
+            <Icon className={`${iconColor} text-2xl`} />
+          ) : (
+            Icon
+          )}
+        </div>
+      )}
+      <h6 className="text-secondary-black font-semibold">{title}</h6>
+      <p className="text-sm text-gray-500 font-normal mt-2 max-w-xs">
         {description}
       </p>
+      {actionLabel && onAction && (
+        <button
+          onClick={onAction}
+          className="mt-4 px-5 py-2 rounded-lg bg-primary-green text-white font-semibold hover:bg-transparent hover:text-primary-green border-2 border-primary-green transition-all duration-500 cursor-pointer"
+        >
+          {actionLabel}
+        </button>
+      )}
     </div>
-    {actionLabel && onAction && (
-      <button
-        onClick={onAction}
-        className="mt-2 px-5 py-2.5 rounded-full bg-primary-green text-white text-sm font-medium hover:opacity-90 transition cursor-pointer"
-      >
-        {actionLabel}
-      </button>
-    )}
-  </div>
-);
+  );
+};
+
+export { EmptyState };
+export default EmptyState;

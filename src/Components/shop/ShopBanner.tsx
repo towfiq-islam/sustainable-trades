@@ -7,7 +7,7 @@ import { CgSpinnerTwo } from "react-icons/cg";
 import Container from "@/Components/Common/Container";
 import { LocationSvg, StarSvg } from "@/Components/Svg/SvgContainer";
 import Modal from "@/Components/Common/Modal";
-import { useFollowShopMutation } from "@/redux/api/shopApi";
+import { useFollowShop } from "@/Hooks/useFollowShop";
 import { ShopBannerData } from "@/Types";
 import MessageToSellerModal from "@/Components/Modals/MessageToSellerModal";
 
@@ -20,19 +20,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
   const [msgOpen, setMsgOpen] = useState<boolean>(false);
   const { user } = useAuth();
   const bannerUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/${data?.shop_info?.shop_banner}`;
-  const [followShopMutation, { isLoading: isPending }] =
-    useFollowShopMutation();
-
-  // Func for follow shop
-  const handleFollowShop = () => {
-    if (!user) {
-      return toast.error("Please login first");
-    }
-    if (user?.shop_info?.user_id === id) {
-      return toast.error("You can't follow your own shop");
-    }
-    followShopMutation(data?.shop_info?.id).unwrap();
-  };
+  const { handleFollowShop, isLoading: isPending } = useFollowShop();
 
   // Func for send message
   const handleMessage = () => {
@@ -117,7 +105,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
             {/* Btns */}
             <div className="flex flex-col md:flex-row gap-2.5 md:gap-5 items-center xl:pt-5">
               <button
-                onClick={handleFollowShop}
+                onClick={() => handleFollowShop(data?.shop_info?.id, id)}
                 disabled={isPending}
                 className="px-5 2xl:px-8 py-2.5 2xl:py-3.5 rounded-lg cursor-pointer shadow 2xl:text-lg font-semibold text-primary-green bg-off-green duration-300 transition-transform hover:scale-105 w-full md:w-auto"
               >

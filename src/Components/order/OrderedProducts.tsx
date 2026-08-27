@@ -2,6 +2,7 @@
 import Image from "next/image";
 import moment from "moment";
 import { useDownloadVendorInvoiceMutation } from "@/redux/api/ordersApi";
+import { downloadBlob } from "@/lib/downloadBlob";
 
 type OrderLineItem = {
   id: number;
@@ -31,16 +32,7 @@ const OrderedProducts = ({ data, order_id }: OrderProps) => {
   const handleDownloadInvoice = (orderId: number) => {
     downloadInvoicePdf(orderId)
       .unwrap()
-      .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "invoice.pdf");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      });
+      .then(blob => downloadBlob(blob, "invoice.pdf"));
   };
 
   return (

@@ -35,7 +35,9 @@ export default function TaxRatePage() {
   const { user } = useAuth();
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [show, setShow] = useState(false);
-  const [activeTab, setActiveTab] = useState<"manual" | "automatic">("manual");
+  const [activeTab, setActiveTab] = useState<"manual" | "automatic">(
+    "automatic",
+  );
   const [saveTax, { isLoading: isPending }] = useSaveTaxesMutation();
   const [addSalesTaxMutate, { isLoading: isAddingSalesTax }] =
     useAddSalesTaxMutation();
@@ -147,18 +149,6 @@ export default function TaxRatePage() {
       <div className="flex  p-1.5 md:p-3 rounded-xl shadow w-full md:w-[500px] mx-auto bg-primary-green mb-7 md:mb-10">
         <button
           type="button"
-          onClick={() => setActiveTab("manual")}
-          className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm md:text-base ${
-            activeTab === "manual"
-              ? "text-primary-green bg-accent-white"
-              : "text-accent-white bg-transparent"
-          }`}
-        >
-          Local Sales Tax
-        </button>
-
-        <button
-          type="button"
           onClick={() => setActiveTab("automatic")}
           className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm md:text-base ${
             activeTab === "automatic"
@@ -167,6 +157,18 @@ export default function TaxRatePage() {
           }`}
         >
           Automatic Tax (ZipTax)
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("manual")}
+          className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm md:text-base ${
+            activeTab === "manual"
+              ? "text-primary-green bg-accent-white"
+              : "text-accent-white bg-transparent"
+          }`}
+        >
+          Local Sales Tax
         </button>
       </div>
 

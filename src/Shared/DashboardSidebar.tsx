@@ -70,17 +70,6 @@ const DashboardSidebar = ({
 
           return (
             <div key={item.id}>
-              {/* Group Labels */}
-              {(item?.id === 1 || item?.id === 16 || item?.id === 25) && (
-                <p className={navLabelClass}>Menu</p>
-              )}
-              {(item?.id === 12 || item?.id === 23) && (
-                <p className={navLabelClass}>Customer Notifications</p>
-              )}
-              {item?.id === 14 && (
-                <p className={navLabelClass}>Selling Tools</p>
-              )}
-
               {/* Main Menu */}
               {hasSubMenus ? (
                 <button

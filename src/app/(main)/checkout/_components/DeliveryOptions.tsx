@@ -99,15 +99,14 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
 
   return (
     <div className="border border-gray-300 rounded-xl p-6 bg-white">
-      <div className="flex gap-20 items-center justify-between">
+      <div className="flex gap-10 items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-secondary-black mb-1">
             Choose Local Delivery, Local Pickup, or Shipping
           </h3>
           <p className="text-secondary-gray text-[15px] mb-6">
-            Choose how you'd like to receive your order from each seller.
-            Available options are determined at the listing level by each
-            seller.
+            Choose how you'd like to receive your order. Available delivery
+            options are determined at the listing level by each shop owner.
           </p>
         </div>
 
@@ -127,11 +126,11 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
             className="pointer-events-none absolute right-0 top-full z-20 mt-2 w-72 origin-top-right rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-700 shadow-lg opacity-0 invisible translate-y-1 transition-all duration-150 ease-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0"
           >
             <span className="absolute -top-1 right-4 size-2 rotate-45 border-l border-t border-gray-200 bg-white" />
-            Each seller chooses which delivery options are available for each
-            product they list. During checkout, you'll select one delivery
-            method for each seller. If a seller's items don't share a compatible
-            delivery option, you'll need to remove the conflicting item(s) or
-            purchase them in a separate order.
+            Each shop owner chooses the delivery options available for their
+            products. During checkout, you'll select one delivery method per
+            shop. If all items from a shop don't have a delivery option in
+            common, you'll need to remove the conflicting item(s) and purchase
+            them in a separate order.
           </div>
         </div>
       </div>

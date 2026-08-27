@@ -257,7 +257,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           ? "Please select your pickup location below. You'll review everything before your order is placed."
           : fulfillment === "delivery"
             ? "Please enter your address for delivery. You'll review everything before your order is placed."
-            : " Please provide the shipping details for this seller. You'll review everything before your order is placed."}
+            : " Please provide the shipping details for this shop. You'll review everything before your order is placed."}
       </p>
 
       <div key={vendor.vendor_id} className="space-y-4 mb-6">

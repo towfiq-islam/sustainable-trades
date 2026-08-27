@@ -17,7 +17,7 @@ const VendorProgressBar = ({
       ))}
     </div>
     <p className="text-sm text-secondary-gray">
-      Vendor {current} of {total}
+      Shop {current} of {total}
     </p>
   </div>
 );

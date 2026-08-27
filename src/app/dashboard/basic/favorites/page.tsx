@@ -1,4 +1,4 @@
-import ReuseableFavorite from "@/Components/Common/DashboardReusable/ReuseableFavorite";
+import ReuseableFavorite from "@/Components/Common/ReuseableFavorite";
 
 const page = () => {
   return <ReuseableFavorite />;

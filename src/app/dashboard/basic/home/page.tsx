@@ -1,4 +1,4 @@
-import DashboardReusable from "@/Components/Common/DashboardReusable/DashboardReusable";
+import DashboardReusable from "@/Components/Common/DashboardReusable";
 
 const page = () => {
   return <DashboardReusable isStatistics={false} isPackage={true} />;

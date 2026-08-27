@@ -10,7 +10,7 @@ import {
 } from "@/redux/api/vendorApi";
 import { FiInbox } from "react-icons/fi";
 import EmptyState from "@/Components/Common/EmptyState";
-import PaginationControl from "../PaginationControl";
+import PaginationControl from "./PaginationControl";
 
 type notificationItem = {
   id: number;

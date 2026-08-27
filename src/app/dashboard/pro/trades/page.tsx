@@ -1,8 +1,8 @@
 "use client";
-import SentTrades from "@/Components/Common/DashboardReusable/SentTrades";
-import PendingTrades from "@/Components/Common/DashboardReusable/PendingTrades";
-import PreviousTrades from "@/Components/Common/DashboardReusable/PreviousTrades";
-import CanceledTrades from "@/Components/Common/DashboardReusable/CanceledTrades";
+import SentTrades from "@/Components/Common/SentTrades";
+import PendingTrades from "@/Components/Common/PendingTrades";
+import PreviousTrades from "@/Components/Common/PreviousTrades";
+import CanceledTrades from "@/Components/Common/CanceledTrades";
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import {

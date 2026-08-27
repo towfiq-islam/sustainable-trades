@@ -2,7 +2,7 @@
 import type React from "react";
 import Image from "next/image";
 import { useState } from "react";
-import DetailsImage from "../../../Assets/e1.jpg";
+import DetailsImage from "@/Assets/e1.jpg";
 import { FaPaperPlane, FaMicrophone, FaPlus } from "react-icons/fa";
 
 interface Message {

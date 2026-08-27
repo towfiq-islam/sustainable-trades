@@ -2,13 +2,13 @@
 import moment from "moment";
 import Image from "next/image";
 import { useState } from "react";
-import DetailsImage from "../../../Assets/e1.jpg";
 import { useParams, useRouter } from "next/navigation";
 import TradeDetaillsBottom from "./TradeDetaillsBottom";
 import { FaAngleDown, FaRegStar } from "react-icons/fa6";
 import { LocationSvg1, Reload } from "@/Components/Svg/SvgContainer";
 import { useGetShopDetailsQuery } from "@/redux/api/shopApi";
 import { useGetTradeOfferQuery } from "@/redux/api/tradeApi";
+import DetailsImage from "@/Assets/e1.jpg";
 
 const TradeDetailsReusable = () => {
   const params = useParams();

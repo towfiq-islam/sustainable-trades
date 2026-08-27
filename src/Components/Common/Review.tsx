@@ -4,7 +4,7 @@ import { CustomerReviewCardSkeleton } from "@/Components/Loader/Loader";
 import Image from "next/image";
 import { FiStar } from "react-icons/fi";
 import { ReviewItem } from "@/Types";
-import PaginationControl from "../PaginationControl";
+import PaginationControl from "./PaginationControl";
 
 interface ReviewProps {
   reviews: {

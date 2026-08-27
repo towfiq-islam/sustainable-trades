@@ -7,7 +7,6 @@ import { Reload } from "@/Components/Svg/SvgContainer";
 import moment from "moment";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
-import Modal from "../Modal";
 import { useState } from "react";
 import { ImSpinner9 } from "react-icons/im";
 import { TradeRequestSkeleton } from "@/Components/Loader/Loader";
@@ -18,6 +17,7 @@ import {
 import { FiRepeat } from "react-icons/fi";
 import { TradeItem, TradeRequest } from "@/Types";
 import MessageToSellerModal from "@/Components/Modals/MessageToSellerModal";
+import Modal from "./Modal";
 
 type TradesTabsProps = {
   tradeRequests: TradeRequest[];

@@ -3,6 +3,8 @@ import moment from "moment";
 import Container from "@/Components/Common/Container";
 import { getSingleBlog } from "@/lib/cms.api";
 
+export const revalidate = 3600;
+
 const page = async ({ params }: any) => {
   const { id } = await params;
   const blogDetailsData = await getSingleBlog(id);

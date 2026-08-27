@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import Product from "@/Components/Common/Product";
+import Product from "@/Components/Common/ProductWrapper";
 import Container from "@/Components/Common/Container";
 import { SearchSvg } from "@/Components/Svg/SvgContainer";
 import { GrPowerReset } from "react-icons/gr";

@@ -7,7 +7,7 @@ import { Navigation } from "swiper/modules";
 import { use, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Subscribe from "@/app/(main)/_Components/Subscribe";
-import Product from "@/Components/Common/Product";
+import Product from "@/Components/Common/ProductWrapper";
 import Container from "@/Components/Common/Container";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";

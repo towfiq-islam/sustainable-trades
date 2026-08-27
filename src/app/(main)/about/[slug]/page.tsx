@@ -3,6 +3,8 @@ import Container from "@/Components/Common/Container";
 import AboutUsTab from "@/Components/Common/AboutUsTab";
 import { getDynamicPages, getSingleDynamicPage } from "@/lib/cms.api";
 
+export const revalidate = 3600;
+
 const page = async ({ params }: any) => {
   const { slug } = await params;
   const dynamicPage = await getDynamicPages();

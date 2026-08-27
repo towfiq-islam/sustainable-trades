@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Shop from "@/Components/Common/Shop";
-import Product from "@/Components/Common/Product";
+import Product from "@/Components/Common/ProductWrapper";
 import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { useGetFollowedShopsQuery } from "@/redux/api/shopApi";

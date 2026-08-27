@@ -195,7 +195,7 @@ const page = () => {
         )}
 
         {!isFetching && categoryDetails?.data?.products && (
-          <div className="py-8">
+          <div className="pt-3 pb-8">
             <PaginationControl
               currentPage={categoryDetails.data.products.current_page}
               lastPage={categoryDetails.data.products.last_page}
@@ -243,7 +243,7 @@ const page = () => {
         )}
       </Container>
 
-      <div className="py-10 md:py-16">
+      <div className="py-10 md:pb-16">
         <MemberSpotlight data={spotlightData?.data} has_community={true} />
       </div>
       <Subscribe />

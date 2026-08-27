@@ -8,7 +8,7 @@ import { FaCheck } from "react-icons/fa6";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Container from "@/Components/Common/Container";
-import Product from "@/Components/Common/Product";
+import Product from "@/Components/Common/ProductWrapper";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { SingleShopSkeleton } from "@/Components/Loader/Loader";
@@ -195,7 +195,7 @@ const page = () => {
         )}
 
         {!isFetching && categoryDetails?.data?.products && (
-          <div className="py-8">
+          <div className="pt-3 pb-8">
             <PaginationControl
               currentPage={categoryDetails.data.products.current_page}
               lastPage={categoryDetails.data.products.last_page}
@@ -243,7 +243,7 @@ const page = () => {
         )}
       </Container>
 
-      <div className="py-10 md:py-16">
+      <div className="py-10 md:pb-16">
         <MemberSpotlight data={spotlightData?.data} has_community={true} />
       </div>
       <Subscribe />

@@ -3,6 +3,8 @@ import HelpUsTab from "@/Components/Common/HelpUsTab";
 import Container from "@/Components/Common/Container";
 import { getContactData } from "@/lib/cms.api";
 
+export const revalidate = 3600; 
+
 const Page = async () => {
   const contactData = await getContactData();
 

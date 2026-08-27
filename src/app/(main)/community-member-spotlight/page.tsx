@@ -4,6 +4,8 @@ import Container from "@/Components/Common/Container";
 import { RightSvg } from "@/Components/Svg/SvgContainer";
 import { getSpotlightData } from "@/lib/cms.api";
 
+export const revalidate = 3600;
+
 type SpotlightItem = {
   id: number;
   shop_name: string;

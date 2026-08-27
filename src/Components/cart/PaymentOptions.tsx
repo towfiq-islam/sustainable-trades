@@ -3,10 +3,9 @@ import CartItem from "./CartItem";
 import dynamic from "next/dynamic";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 
-const EmptyCartAnimation = dynamic(
-  () => import("./EmptyCartAnimation"),
-  { ssr: false },
-);
+const EmptyCartAnimation = dynamic(() => import("./EmptyCartAnimation"), {
+  ssr: false,
+});
 import { TiDelete } from "react-icons/ti";
 import { clearCart } from "@/redux/slices/cartSlice";
 import { useRouter } from "next/navigation";
@@ -49,11 +48,12 @@ const PaymentOptions = () => {
                 </div>
 
                 <p className="text-[#374151] leading-6 text-[14px]">
-                  After you click Proceed to Checkout, you'll choose the
-                  available delivery option for each seller. Available options
-                  may include Local Pickup, Local Delivery, or Shipping.
-                  Shipping or delivery fees and taxes will be calculated based
-                  on your selections.
+                  After you click Proceed to Checkout, you'll choose from the
+                  available delivery options. Options may include Local Pickup,
+                  Local Delivery, or Shipping. If the items in your order are
+                  coming from different shops, you'll choose a delivery option
+                  for each shop. Shipping or delivery fees and taxes will be
+                  calculated based on your selections.
                 </p>
               </div>
             </div>

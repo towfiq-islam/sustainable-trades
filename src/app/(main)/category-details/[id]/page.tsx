@@ -6,7 +6,7 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Container from "@/Components/Common/Container";
-import Product from "@/Components/Common/Product";
+import Product from "@/Components/Common/ProductWrapper";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { ProductSkeleton } from "@/Components/Loader/Loader";
 import { SingleShopSkeleton } from "@/Components/Loader/Loader";

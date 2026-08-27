@@ -1,4 +1,4 @@
-import Product from "@/Components/Common/Product";
+import Product from "@/Components/Common/ProductWrapper";
 import { FiShoppingBag } from "react-icons/fi";
 import { EmptyState } from "@/Components/Common/EmptyState";
 

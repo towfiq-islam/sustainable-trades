@@ -22,10 +22,6 @@ html {
   @apply scroll-smooth;
 }
 
-/* body {
-  @apply font-lato;
-} */
-
 /* Custom CSS */
 .section_title {
   @apply font-medium text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-[45px] text-primary-green mb-5 lg:mb-8 xl:mb-12;

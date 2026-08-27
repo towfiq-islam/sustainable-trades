@@ -2,6 +2,8 @@ import Container from "@/Components/Common/Container";
 import HelpUsTab from "@/Components/Common/HelpUsTab";
 import { getInfringementData } from "@/lib/cms.api";
 
+export const revalidate = 3600;
+
 const Page = async () => {
   const infringementData = await getInfringementData();
 

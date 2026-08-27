@@ -22,10 +22,10 @@ type orderItem = {
   order_number: string;
   payment_method: string;
   payment_status: string;
-  created_at: string;
+  order_date: string;
   total_quantity: number;
   items: number;
-  subscribe_website: number;
+  opt_in: string;
   amount: string;
   status: string;
   fulfillment_type: string;
@@ -88,10 +88,10 @@ const page = () => {
   const csvData =
     allOrders?.data?.map((order: orderItem) => ({
       order_number: order?.order_number,
-      order_date: moment(order?.created_at).format("ll"),
+      order_date: moment(order?.order_date).format("ll"),
       customer: `${order?.customer?.first_name || ""} ${order?.customer?.last_name || ""}`,
       email: order?.customer?.email,
-      opt: order?.subscribe_website ? "Yes" : "No",
+      opt: order?.opt_in ? "Yes" : "No",
       total_quantity: order?.items,
       total_amount: `$${order?.amount}`,
       payment_method: "paypal",
@@ -269,7 +269,7 @@ const page = () => {
                       >
                         <td className="py-4 px-4">{order?.order_number}</td>
                         <td className="py-4 px-4">
-                          {moment(order?.created_at).format("ll")}
+                          {moment(order?.order_date).format("ll")}
                         </td>
                         <td className="py-4 px-4 overflow-hidden">
                           <div className="flex flex-col">
@@ -284,7 +284,7 @@ const page = () => {
                         </td>
 
                         <td className="py-4 px-4">
-                          {order?.subscribe_website ? "Yes" : "No"}
+                          {order?.opt_in ? "Yes" : "No"}
                         </td>
                         <td className="py-4 px-4">{order?.items}</td>
                         <td className="py-4 px-4">${order?.amount}</td>

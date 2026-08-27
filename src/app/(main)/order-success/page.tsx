@@ -114,21 +114,6 @@ export default function Page({ searchParams }: Props) {
             </p>
 
             <div className="space-y-5">
-              {/* Multi-vendor notice */}
-              <div className="flex gap-3.5 bg-off-green/20 rounded-lg p-4">
-                <div className="size-12 rounded-full bg-off-green/50 grid place-items-center shrink-0">
-                  <BsTruck className="text-primary-green text-xl" />
-                </div>
-                <p className="text-sm text-secondary-gray leading-relaxed">
-                  Your order includes items from multiple sellers. Each seller
-                  will fulfill their portion of your order separately, so
-                  pickup, delivery, shipping, and status updates may vary by
-                  seller.
-                </p>
-              </div>
-
-              <hr className="border-gray-200" />
-
               {/* If has account */}
               <div className="flex gap-3.5">
                 <div className="size-10 rounded-full bg-off-green/30 grid place-items-center shrink-0">
@@ -139,10 +124,10 @@ export default function Page({ searchParams }: Props) {
                     If you have a Sustainable Shopper account:
                   </p>
                   <p className="text-sm leading-6.5">
-                    Click the View order button above or go to the Orders tab on
-                    your dashboard and select View Details. From there, you can
-                    view each seller's order details, track the status of your
-                    items, and message each seller directly.
+                    Click the View Order button above, or go to the Orders tab
+                    on your dashboard and select View Details. From there, you
+                    can view your order details, track the status of your items,
+                    and message the shop(s) directly.
                   </p>
                 </div>
               </div>
@@ -169,8 +154,9 @@ export default function Page({ searchParams }: Props) {
                   </p>
                   <p className="text-sm leading-6.5">
                     Otherwise, check your email for order details and updates.
-                    If you need to communicate with a seller about your order,
-                    feel free to respond to that email.
+                    If you need to communicate with the shop owner(s) about your
+                    order, simply select Message This Shop in your order
+                    confirmation email.
                   </p>
                 </div>
               </div>
@@ -213,7 +199,7 @@ export default function Page({ searchParams }: Props) {
                 Order summary
               </h3>
               <p className="text-sm text-secondary-gray mb-4">
-                {order.order_number} · {order.vendor_count} seller
+                {order.order_number} · {order.vendor_count} shop
                 {order.vendor_count > 1 ? "s" : ""}
               </p>
 

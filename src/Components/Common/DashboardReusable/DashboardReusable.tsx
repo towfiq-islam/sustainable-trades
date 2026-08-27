@@ -326,10 +326,6 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
         )}
       </div>
 
-      {/* <div className="pt-8 pb-8 lg:pb-16">
-        <ProDashboardMessage />
-      </div> */}
-
       {/* Statistics */}
       {isStatistics && <ProdashboardStatistics />}
     </>

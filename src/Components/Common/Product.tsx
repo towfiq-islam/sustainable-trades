@@ -3,11 +3,9 @@ import "swiper/css";
 import Link from "next/link";
 import Image from "next/image";
 import "swiper/css/pagination";
-import toast from "react-hot-toast";
-import useAuth from "@/Hooks/useAuth";
 import { FaHeart } from "react-icons/fa";
-import { Pagination } from "swiper/modules";
 import { LuLoaderPinwheel } from "react-icons/lu";
+import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   AddToCartSvg,
@@ -15,11 +13,9 @@ import {
   LocationTwoSvg,
   SignSvg,
 } from "../Svg/SvgContainer";
-import { useAddFavoriteMutation } from "@/redux/api/productApi";
-import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/redux/store";
-import { addToCart } from "@/redux/slices/cartSlice";
-import { Fulfillment, normalizeFulfillment } from "@/lib/fulfillment";
+import { useAddFavorite } from "@/Hooks/useAddFavorite";
+import { useAddToCart } from "@/Hooks/useAddToCart";
+import { Fulfillment } from "@/lib/fulfillment";
 import { useState } from "react";
 import Modal from "./Modal";
 import LocalPickupModal from "../Modals/LocalPickupModal";
@@ -57,59 +53,16 @@ type Props = {
 };
 
 const Product = ({ product, isMiles = false }: Props) => {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const { user } = useAuth();
   const [openMsg, setOpenMsg] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
-  const [addFavoriteMutation, { isLoading: isPending }] =
-    useAddFavoriteMutation();
-
-  // Func for add to favorite
-  const handleAddFavorite = (product_id: any) => {
-    if (!user) {
-      toast.error("Please login first to proceed");
-      router.push("/auth/login");
-      return;
-    }
-    addFavoriteMutation(product_id)
-      .unwrap()
-      .then(res => {
-        toast.success(res.message);
-      })
-      .catch(err => {
-        toast.error(err?.data?.message);
-      });
-  };
-
-  // Func for add-to-cart
-  const handleAddToCart = (product: any) => {
-    const payload = {
-      vendor_id: product?.shop?.user_id,
-      shop_id: product?.shop?.id,
-      shop_name: product?.shop?.shop_name,
-      shop_image: product?.shop?.shop_image,
-      products: [
-        {
-          id: product?.id,
-          name: product?.product_name,
-          image: product?.images?.[0]?.image,
-          price: Number(product?.product_price),
-          quantity: 1,
-          fulfillment: normalizeFulfillment(product.fulfillment),
-        },
-      ],
-    };
-
-    dispatch(addToCart(payload));
-    toast.success("Added to cart");
-  };
+  const { handleAddFavorite, isLoading: isPending } = useAddFavorite();
+  const { handleAddToCart } = useAddToCart();
 
   return (
     <div className="rounded-t-lg relative">
       {/* Wishlist btn */}
       <button
-        onClick={() => handleAddFavorite(product?.id)}
+        onClick={() => handleAddFavorite(product?.id as number)}
         className="absolute z-40 top-4 right-5 size-9 rounded-full grid place-items-center bg-primary-green cursor-pointer"
       >
         {isPending ? (
@@ -218,7 +171,7 @@ const Product = ({ product, isMiles = false }: Props) => {
           </button>
         ) : (
           <button
-            onClick={() => handleAddToCart(product)}
+            onClick={() => handleAddToCart(product as any)}
             disabled={
               product?.selling_option === "trade/barter" ||
               (!product?.unlimited_stock && product?.out_of_stock) ||

@@ -16,6 +16,7 @@ import {
 } from "@/redux/api/ordersApi";
 import { FaHeart } from "react-icons/fa";
 import MessagePage from "@/Components/messages/MessagePage";
+import { downloadBlob } from "@/lib/downloadBlob";
 
 const fulfillmentLabel = (type: string) =>
   type === "delivery"
@@ -42,19 +43,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
   const handleDownloadInvoice = () => {
     downloadInvoicePdf(orderId)
       .unwrap()
-      .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute(
-          "download",
-          `invoice-${order?.order_number ?? orderId}.pdf`,
-        );
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
+      .then(blob => downloadBlob(blob, `invoice-${order?.order_number ?? orderId}.pdf`))
       .catch(() => toast.error("Couldn't download invoice"));
   };
 

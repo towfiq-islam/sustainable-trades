@@ -23,7 +23,7 @@ import {
 } from "@/redux/api/productApi";
 import PaginationControl from "@/Components/Common/PaginationControl";
 import { FiPackage, FiMapPin } from "react-icons/fi";
-import { EmptyState } from "@/Components/Common/EmptyState";
+import EmptyState from "@/Components/Common/EmptyState";
 
 type categoryItem = {
   id: number;

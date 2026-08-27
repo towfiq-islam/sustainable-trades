@@ -15,12 +15,12 @@ import { LuLoaderPinwheel } from "react-icons/lu";
 import TradeOfferModal from "@/Components/Modals/TradeOfferModal";
 import MessageToSellerModal from "@/Components/Modals/MessageToSellerModal";
 import Link from "next/link";
-import { useAddFavoriteMutation } from "@/redux/api/productApi";
+import { useAddFavorite } from "@/Hooks/useAddFavorite";
+import { useAddToCart } from "@/Hooks/useAddToCart";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/store";
-import { normalizeFulfillment } from "@/lib/fulfillment";
 import { setBuyNowItem } from "@/redux/slices/checkoutSlice";
-import { addToCart } from "@/redux/slices/cartSlice";
+import { normalizeFulfillment } from "@/lib/fulfillment"
 
 type descriptionItem = {
   id: number;
@@ -78,47 +78,19 @@ const ProductDescription = ({ data }: descriptionProps) => {
   const [tradeOpen, setTradeOpen] = useState<boolean>(false);
   const [msgOpen, setMsgOpen] = useState<boolean>(false);
 
-  // Mutations
-  const [addFavoriteMutation, { isLoading: isPending }] =
-    useAddFavoriteMutation();
+  const { handleAddFavorite, isLoading: isPending } = useAddFavorite();
+  const { handleAddToCart } = useAddToCart();
 
-  // Func for add to favorite
-  const handleAddFavorite = (product_id: any) => {
-    if (!user) {
-      return toast.error("Please login first to proceed");
-    }
-
-    addFavoriteMutation(product_id)
-      .unwrap()
-      .then(res => {
-        toast.success(res?.message);
-      })
-      .catch(err => {
-        toast.error(err?.data?.message);
-      });
-  };
-
-  const handleAddToCart = () => {
-    const payload = {
-      vendor_id: data?.shop?.user?.id,
-      shop_id: data?.shop?.id,
-      shop_name: data?.shop?.shop_name,
-      shop_image: data?.shop?.shop_image,
-
-      products: [
-        {
-          id: data?.id,
-          name: data?.product_name,
-          image: data?.images?.[0]?.image,
-          price: Number(data?.product_price),
-          quantity: 1,
-          fulfillment: normalizeFulfillment(data.fulfillment),
-        },
-      ],
-    };
-
-    dispatch(addToCart(payload));
-    toast.success("Added to cart");
+  const handleAddToCartClick = () => {
+    handleAddToCart({
+      ...data,
+      shop: {
+        id: data?.shop?.id,
+        user_id: data?.shop?.user?.id,
+        shop_name: data?.shop?.shop_name,
+        shop_image: data?.shop?.shop_image,
+      },
+    } as any);
   };
 
   const handleBuyNow = () => {
@@ -181,7 +153,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
             (!data?.unlimited_stock && data?.product_quantity === 0) ||
             data?.selling_option === "trade/barter"
           }
-          onClick={() => handleAddToCart()}
+          onClick={handleAddToCartClick}
           className={`border border-primary-green rounded-lg px-4 py-2 enabled:hover:bg-primary-green enabled:hover:text-accent-white duration-500 transition-all shrink-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:border-gray-300 disabled:bg-gray-100 cursor-pointer`}
         >
           <p className="flex gap-2 items-center">

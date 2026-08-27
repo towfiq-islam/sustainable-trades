@@ -2,8 +2,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
-import award from "@/Assets/award.png";
-import badge from "@/Assets/badge.png";
 import {
   DollarSvg,
   DThreeSvg,

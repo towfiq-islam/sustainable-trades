@@ -1,61 +1,5 @@
 import Container from "@/Components/Common/Container";
 
-// Shop Banner Skeleton
-export const ShopBannerSkeleton = () => {
-  return (
-    <section className="md:h-[600px] bg-gray-200 bg-no-repeat bg-center bg-cover bg-blend-overlay py-10 bg-fixed mb-10 animate-pulse">
-      <Container>
-        <div className="flex flex-col md:flex-row justify-between">
-          {/* Left - Shop Info */}
-          <div className="space-y-4 w-full">
-            {/* Shop Profile */}
-            <div className="flex md:justify-start justify-center items-center ">
-              <div className="size-22 md:size-[153px] rounded-full bg-gray-300"></div>
-            </div>
-
-            {/* Shop Name + Badges */}
-            <div className="flex flex-col md:flex-row gap-2 md:gap-6 md:items-center">
-              <div className="h-8 w-48 bg-gray-300 rounded"></div>
-
-              <div className="flex gap-3 items-center">
-                <div className="size-6 md:size-10 bg-gray-300 rounded-full"></div>
-                <div className="size-6 md:size-10 bg-gray-300 rounded-full"></div>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="h-5 bg-gray-300 rounded w-72"></div>
-            <div className="h-5 bg-gray-300 rounded w-64"></div>
-
-            {/* Location */}
-            <div className="flex gap-3 items-center md:pt-3">
-              <div className="size-5 bg-gray-300 rounded"></div>
-              <div className="h-5 w-40 bg-gray-300 rounded"></div>
-            </div>
-
-            {/* Reviews */}
-            <div className="flex gap-3 items-center">
-              {Array.from({ length: 5 }).map((_, idx) => (
-                <div
-                  key={idx}
-                  className="size-9 shrink-0 shadow border border-gray-300 rounded-full bg-gray-300"
-                ></div>
-              ))}
-              <div className="h-5 w-8 bg-gray-300 rounded"></div>
-            </div>
-
-            {/* Buttons */}
-            <div className="flex flex-col md:flex-row gap-2.5 md:gap-5 items-center md:pt-5">
-              <div className="h-10 w-40 bg-gray-300 rounded"></div>
-              <div className="h-10 w-40 bg-gray-300 rounded"></div>
-            </div>
-          </div>
-        </div>
-      </Container>
-    </section>
-  );
-};
-
 // Single Product Skeleton
 export const ProductSkeleton = () => {
   return (
@@ -103,120 +47,6 @@ export const FilteringSkeleton = () => {
         <div className="h-10 w-28 bg-gray-300 rounded-lg"></div>
       </div>
     </div>
-  );
-};
-
-// About Shop Skeleton
-export const AboutShopSkeleton = () => {
-  return (
-    <section id="About" className="mt-4 md:mt-8 lg:mt-16 animate-pulse">
-      <Container>
-        <div className="h-6 w-32 bg-gray-200 rounded mb-6"></div>
-
-        <div className="flex flex-col lg:flex-row gap-5 md:gap-10 lg:items-center">
-          <div className="flex flex-col sm:flex-row gap-5 md:gap-10 grow">
-            {/* Left - Image skeleton */}
-            <div className="size-auto xs:size-[220px] md:size-[280px] lg:size-[350px] shrink-0 bg-gray-200 rounded-xl"></div>
-
-            {/* Right - Text skeletons */}
-            <div className="flex flex-col gap-4 w-full">
-              <div className="h-5 w-48 bg-gray-200 rounded"></div>
-              <div className="h-4 w-40 bg-gray-200 rounded"></div>
-
-              <div className="space-y-2">
-                <div className="h-3 w-full bg-gray-200 rounded"></div>
-                <div className="h-3 w-5/6 bg-gray-200 rounded"></div>
-                <div className="h-3 w-2/3 bg-gray-200 rounded"></div>
-              </div>
-
-              <div className="h-4 w-32 bg-gray-200 rounded mt-5"></div>
-
-              <div className="space-y-2">
-                <div className="h-3 w-full bg-gray-200 rounded"></div>
-                <div className="h-3 w-5/6 bg-gray-200 rounded"></div>
-                <div className="h-3 w-3/4 bg-gray-200 rounded"></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right - Meet the seller (hidden for now) */}
-          <div className="hidden lg:block shrink-0 w-[200px]">
-            <div className="h-5 w-40 bg-gray-200 rounded mb-4"></div>
-            <div className="flex gap-4 items-center mb-4">
-              <div className="size-14 bg-gray-200 rounded-full"></div>
-              <div className="flex-1 space-y-2">
-                <div className="h-4 w-28 bg-gray-200 rounded"></div>
-                <div className="h-3 w-24 bg-gray-200 rounded"></div>
-              </div>
-            </div>
-            <div className="flex gap-4 items-center">
-              <div className="size-14 bg-gray-200 rounded-full"></div>
-              <div className="flex-1 space-y-2">
-                <div className="h-4 w-28 bg-gray-200 rounded"></div>
-                <div className="h-3 w-24 bg-gray-200 rounded"></div>
-              </div>
-            </div>
-            <div className="h-4 w-32 bg-gray-200 rounded mt-5"></div>
-          </div>
-        </div>
-      </Container>
-    </section>
-  );
-};
-
-// Shop Policies Skeleton
-export const ShopPoliciesSkeleton = () => {
-  return (
-    <section id="Shop_policies" className="mt-4 md:mt-8 lg:mt-16 animate-pulse">
-      <Container>
-        {/* Section Title */}
-        <div className="h-6 w-40 bg-gray-200 rounded mb-5"></div>
-
-        {/* Payment Methods Title */}
-        <div className="h-5 w-56 bg-gray-200 rounded mb-2"></div>
-
-        {/* Payment Methods List */}
-        <div className="flex flex-col gap-2 mb-6">
-          <div className="h-4 w-32 bg-gray-200 rounded"></div>
-          <div className="h-4 w-40 bg-gray-200 rounded"></div>
-          <div className="h-4 w-28 bg-gray-200 rounded"></div>
-        </div>
-
-        {/* Returns/Exchanges Title */}
-        <div className="h-5 w-48 bg-gray-200 rounded mt-5 mb-2"></div>
-
-        {/* Return Policy Text */}
-        <div className="space-y-2">
-          <div className="h-3 w-full bg-gray-200 rounded"></div>
-          <div className="h-3 w-5/6 bg-gray-200 rounded"></div>
-          <div className="h-3 w-2/3 bg-gray-200 rounded"></div>
-        </div>
-      </Container>
-    </section>
-  );
-};
-
-// Shop FAQ Skeleton
-export const ShopFAQSkeleton = () => {
-  return (
-    <section className="pt-3 md:pt-6 lg:pt-12 pb-5 md:pb-10 lg:pb-20 animate-pulse">
-      <Container>
-        {/* Section Title */}
-        <div className="h-6 w-24 bg-gray-200 rounded mb-4 md:mb-6"></div>
-
-        <div className="border-b-2 border-gray-200 py-3 md:py-5">
-          <div className="flex justify-between items-center">
-            <div className="h-5 w-2/3 bg-gray-200 rounded"></div>
-            <div className="h-6 w-6 bg-gray-200 rounded-full"></div>
-          </div>
-          <div className="mt-3 space-y-2">
-            <div className="h-3 w-full bg-gray-200 rounded"></div>
-            <div className="h-3 w-5/6 bg-gray-200 rounded"></div>
-            <div className="h-3 w-2/3 bg-gray-200 rounded"></div>
-          </div>
-        </div>
-      </Container>
-    </section>
   );
 };
 
@@ -345,7 +175,7 @@ export const PricingSkeletonCard = () => (
   </div>
 );
 
-// Shop List  Skeleton
+// Shop List Skeleton
 export const ShopListSkeleton = () => {
   return (
     <div className="flex flex-col md:flex-row gap-2.5 md:gap-5 md:items-center border-b last:border-b-0 border-gray-200 py-3 animate-pulse">
@@ -389,50 +219,6 @@ export const SingleShopSkeleton = () => {
   );
 };
 
-// Cart Item Skeleton
-export const CartItemSkeleton = () => {
-  return (
-    <div className="border border-gray-300 p-5 rounded-lg bg-white animate-pulse">
-      {/* Shop Info */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center mt-3 mb-5">
-        <div className="flex gap-2 sm:gap-5 items-center">
-          <div className="size-12 rounded-full bg-gray-200" />
-          <div className="h-5 w-40 bg-gray-200 rounded" />
-        </div>
-
-        <div className="flex gap-2 items-center">
-          <div className="h-5 w-28 bg-gray-200 rounded" />
-        </div>
-
-        <div className="h-8 w-24 bg-gray-200 rounded-full" />
-      </div>
-
-      {/* Product Info */}
-      <div className="space-y-6">
-        {[1, 2].map(i => (
-          <div
-            key={i}
-            className="flex flex-col sm:flex-row gap-5 border-b last:border-b-0 border-gray-300 pb-7 last:pb-0"
-          >
-            {/* Product Image */}
-            <div className="w-full sm:w-[180px] h-[140px] bg-gray-200 rounded-lg" />
-
-            <div className="grow space-y-4">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                <div className="h-5 w-40 bg-gray-200 rounded" />
-                <div className="h-6 w-16 bg-gray-200 rounded" />
-              </div>
-
-              {/* Remove Button Skeleton */}
-              <div className="h-4 w-20 bg-gray-200 rounded" />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 // Conversation Card Skeleton
 export const ConversationCardSkeleton = () => {
   return (
@@ -448,23 +234,6 @@ export const ConversationCardSkeleton = () => {
       <div className="shrink-0 flex flex-col items-end gap-2">
         <div className="h-4 w-16 bg-gray-200 rounded" />
         <div className="h-5 w-6 bg-gray-200 rounded" />
-      </div>
-    </div>
-  );
-};
-
-// Message Skeleton
-export const MessageSkeleton = ({ isSender = false }) => {
-  return (
-    <div
-      className={`flex gap-3 animate-pulse ${
-        isSender ? "justify-end" : "justify-start"
-      }`}
-    >
-      <div className="size-11 rounded-full bg-gray-300 shrink-0" />
-      <div className="max-w-[550px]">
-        <div className="bg-gray-300 h-5 w-40 rounded-md mb-2" />
-        <div className="bg-gray-300 h-5 w-56 rounded-md mb-2" />
       </div>
     </div>
   );
@@ -488,103 +257,6 @@ export const TradeOfferSkeleton = () => {
       <div className="flex gap-4">
         <div className="h-10 bg-gray-200 rounded w-full"></div>
         <div className="h-10 bg-gray-200 rounded w-full"></div>
-      </div>
-    </div>
-  );
-};
-
-// Edit Shop Skeleton
-export const EditShopBannerSkeleton = () => {
-  return (
-    <section className="mb-12 animate-pulse">
-      <div className="h-[350px] bg-gray-200 relative">
-        <Container>
-          <div className="flex h-[350px] items-end relative">
-            {/* Profile image placeholder */}
-            <figure className="size-[180px] -mb-10 relative bg-gray-300 rounded-full border-[5px] border-white" />
-          </div>
-        </Container>
-      </div>
-
-      <Container>
-        <div className="flex justify-between items-center mt-14">
-          <div className="flex-1">
-            <div className="h-8 w-60 bg-gray-300 rounded mb-4" />
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-6 h-6 bg-gray-300 rounded-full" />
-              <div className="h-5 w-48 bg-gray-300 rounded" />
-            </div>
-
-            <div className="flex gap-8 items-center">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="flex gap-2 items-center">
-                  <div className="size-7 bg-gray-300 rounded-full" />
-                  <div className="h-5 w-12 bg-gray-300 rounded" />
-                </div>
-              ))}
-              <div className="h-5 w-24 bg-gray-300 rounded" />
-            </div>
-          </div>
-
-          <div className="flex gap-4 items-center">
-            <div>
-              <div className="h-5 w-40 bg-gray-300 rounded mb-2" />
-              <div className="h-4 w-32 bg-gray-200 rounded" />
-            </div>
-            <div className="size-14 bg-gray-300 rounded-full" />
-          </div>
-        </div>
-      </Container>
-    </section>
-  );
-};
-
-// Shop Review Skeleton
-export const ShopReviewSkeleton = () => {
-  return (
-    <div className="flex flex-col lg:flex-row gap-5 sm:gap-10 md:gap-20 lg:items-center border-b last:border-b-0 border-gray-200 py-4 md:py-8 animate-pulse">
-      <div className="grow flex flex-col sm:flex-row gap-5 items-start">
-        <figure className="shrink-0 size-16 rounded-full bg-gray-200" />
-        <div className="flex gap-10 w-full">
-          <div className="flex-1">
-            <div className="h-4 w-32 bg-gray-200 rounded mb-2" />
-            <div className="flex gap-1 items-center py-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="size-3 bg-gray-200 rounded" />
-              ))}
-            </div>
-            <div className="space-y-2">
-              <div className="h-3 w-full bg-gray-200 rounded" />
-              <div className="h-3 w-5/6 bg-gray-200 rounded" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="xl:w-[300px] shrink-0">
-        <div className="flex items-center gap-5">
-          <figure className="size-16 rounded-lg bg-gray-200" />
-          <div className="h-4 w-32 bg-gray-200 rounded" />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Product Review Skeleton
-export const ReviewCardSkeleton = () => {
-  return (
-    <div className="border-b last:border-b-0 border-gray-200 py-6 animate-pulse">
-      <div className="flex gap-5 items-center">
-        <div className="h-5 w-48 bg-gray-200 rounded"></div>
-        <div className="flex gap-1 items-center py-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="size-3 bg-gray-200 rounded-full"></div>
-          ))}
-        </div>
-      </div>
-      <div className="mt-2 space-y-2">
-        <div className="h-4 w-5/6 bg-gray-200 rounded"></div>
-        <div className="h-4 w-4/6 bg-gray-200 rounded"></div>
       </div>
     </div>
   );
@@ -693,17 +365,6 @@ export const CustomerReviewCardSkeleton = () => {
   );
 };
 
-export const OrderTrackSkeleton = () => {
-  return (
-    <div className="mb-5 ml-4 animate-pulse">
-      <div className="bg-white p-4 rounded-lg border border-gray-300">
-        <p className="h-4 bg-gray-300 rounded w-3/4 mb-2" />
-        <p className="h-3 bg-gray-200 rounded w-1/2" />
-      </div>
-    </div>
-  );
-};
-
 export const NotificationSkeleton = () => {
   return (
     <div className="border-b border-[#E5E5E5] flex justify-between p-2.5 md:p-5 items-center animate-pulse">
@@ -777,40 +438,6 @@ export const OrderRowSkeleton = () => {
   );
 };
 
-export const ProductRowSkeleton = () => {
-  return (
-    <tr className="border-b border-gray-300 animate-pulse">
-      <td className="py-3">
-        <div className="flex items-center gap-5">
-          <div className="h-[80px] w-[100px] rounded-lg bg-gray-200" />
-          <div className="h-4 w-40 bg-gray-200 rounded" />
-        </div>
-      </td>
-      <td>
-        <div className="h-8 w-24 bg-gray-200 rounded-full" />
-      </td>
-      <td>
-        <div className="h-4 w-20 bg-gray-200 rounded" />
-      </td>
-      <td>
-        <div className="h-4 w-12 bg-gray-200 rounded" />
-      </td>
-      <td>
-        <div className="h-4 w-16 bg-gray-200 rounded" />
-      </td>
-      <td>
-        <div className="h-4 w-16 bg-gray-200 rounded" />
-      </td>
-      <td>
-        <div className="h-8 w-24 bg-gray-200 rounded-full" />
-      </td>
-      <td>
-        <div className="h-5 w-5 bg-gray-200 rounded-full mx-auto" />
-      </td>
-    </tr>
-  );
-};
-
 export const PaymentRowSkeleton = () => {
   return (
     <tr className="border-b border-gray-300 animate-pulse">
@@ -853,23 +480,6 @@ export const DiscountSkeleton = () => {
     </div>
   );
 };
-
-export function InventoryItemSkeleton() {
-  return (
-    <div className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300 animate-pulse">
-      <div className="w-[100px] h-[80px] bg-gray-300 rounded-lg" />
-
-      <div className="w-full">
-        <div className="flex w-full justify-between items-center">
-          <div className="h-[14px] w-[40%] bg-gray-300 rounded" />
-          <div className="h-[14px] w-[25%] bg-gray-300 rounded" />
-        </div>
-        <div className="h-[14px] w-[60%] bg-gray-300 rounded mt-2" />
-        <div className="h-[12px] w-[20%] bg-gray-300 rounded mt-2" />
-      </div>
-    </div>
-  );
-}
 
 export const TradeRequestSkeleton = () => {
   return (
@@ -946,6 +556,26 @@ export const LocationRowSkeleton = () => (
   </div>
 );
 
+// Review Card Skeleton
+export const ReviewCardSkeleton = () => {
+  return (
+    <div className="border-b last:border-b-0 border-gray-200 py-6 animate-pulse">
+      <div className="flex gap-5 items-center">
+        <div className="h-5 w-48 bg-gray-200 rounded"></div>
+        <div className="flex gap-1 items-center py-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="size-3 bg-gray-200 rounded-full"></div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-2 space-y-2">
+        <div className="h-4 w-5/6 bg-gray-200 rounded"></div>
+        <div className="h-4 w-4/6 bg-gray-200 rounded"></div>
+      </div>
+    </div>
+  );
+};
+
 const Bar = ({ className = "" }: { className?: string }) => (
   <div className={`bg-gray-200 rounded animate-pulse ${className}`} />
 );
@@ -993,6 +623,230 @@ const VendorCardSkeleton = () => (
     </div>
   </div>
 );
+
+// Shop Banner Skeleton
+export const ShopBannerSkeleton = () => {
+  return (
+    <section className="md:h-[600px] bg-gray-200 bg-no-repeat bg-center bg-cover bg-blend-overlay py-10 bg-fixed mb-10 animate-pulse">
+      <Container>
+        <div className="flex flex-col md:flex-row justify-between">
+          <div className="space-y-4 w-full">
+            <div className="flex md:justify-start justify-center items-center ">
+              <div className="size-22 md:size-[153px] rounded-full bg-gray-300"></div>
+            </div>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-6 md:items-center">
+              <div className="h-8 w-48 bg-gray-300 rounded"></div>
+              <div className="flex gap-3 items-center">
+                <div className="size-6 md:size-10 bg-gray-300 rounded-full"></div>
+                <div className="size-6 md:size-10 bg-gray-300 rounded-full"></div>
+              </div>
+            </div>
+            <div className="h-5 bg-gray-300 rounded w-72"></div>
+            <div className="h-5 bg-gray-300 rounded w-64"></div>
+            <div className="flex gap-3 items-center md:pt-3">
+              <div className="size-5 bg-gray-300 rounded"></div>
+              <div className="h-5 w-40 bg-gray-300 rounded"></div>
+            </div>
+            <div className="flex gap-3 items-center">
+              {Array.from({ length: 5 }).map((_, idx) => (
+                <div key={idx} className="size-9 shrink-0 shadow border border-gray-300 rounded-full bg-gray-300"></div>
+              ))}
+              <div className="h-5 w-8 bg-gray-300 rounded"></div>
+            </div>
+            <div className="flex flex-col md:flex-row gap-2.5 md:gap-5 items-center md:pt-5">
+              <div className="h-10 w-40 bg-gray-300 rounded"></div>
+              <div className="h-10 w-40 bg-gray-300 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+};
+
+// About Shop Skeleton
+export const AboutShopSkeleton = () => {
+  return (
+    <section id="About" className="mt-4 md:mt-8 lg:mt-16 animate-pulse">
+      <Container>
+        <div className="h-6 w-32 bg-gray-200 rounded mb-6"></div>
+        <div className="flex flex-col lg:flex-row gap-5 md:gap-10 lg:items-center">
+          <div className="flex flex-col sm:flex-row gap-5 md:gap-10 grow">
+            <div className="size-auto xs:size-[220px] md:size-[280px] lg:size-[350px] shrink-0 bg-gray-200 rounded-xl"></div>
+            <div className="flex flex-col gap-4 w-full">
+              <div className="h-5 w-48 bg-gray-200 rounded"></div>
+              <div className="h-4 w-40 bg-gray-200 rounded"></div>
+              <div className="space-y-2">
+                <div className="h-3 w-full bg-gray-200 rounded"></div>
+                <div className="h-3 w-5/6 bg-gray-200 rounded"></div>
+                <div className="h-3 w-2/3 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+};
+
+// Shop Policies Skeleton
+export const ShopPoliciesSkeleton = () => {
+  return (
+    <section id="Shop_policies" className="mt-4 md:mt-8 lg:mt-16 animate-pulse">
+      <Container>
+        <div className="h-6 w-40 bg-gray-200 rounded mb-5"></div>
+        <div className="h-5 w-56 bg-gray-200 rounded mb-2"></div>
+        <div className="flex flex-col gap-2 mb-6">
+          <div className="h-4 w-32 bg-gray-200 rounded"></div>
+          <div className="h-4 w-40 bg-gray-200 rounded"></div>
+          <div className="h-4 w-28 bg-gray-200 rounded"></div>
+        </div>
+        <div className="h-5 w-48 bg-gray-200 rounded mt-5 mb-2"></div>
+        <div className="space-y-2">
+          <div className="h-3 w-full bg-gray-200 rounded"></div>
+          <div className="h-3 w-5/6 bg-gray-200 rounded"></div>
+          <div className="h-3 w-2/3 bg-gray-200 rounded"></div>
+        </div>
+      </Container>
+    </section>
+  );
+};
+
+// Shop FAQ Skeleton
+export const ShopFAQSkeleton = () => {
+  return (
+    <section className="pt-3 md:pt-6 lg:pt-12 pb-5 md:pb-10 lg:pb-20 animate-pulse">
+      <Container>
+        <div className="h-6 w-24 bg-gray-200 rounded mb-4 md:mb-6"></div>
+        <div className="border-b-2 border-gray-200 py-3 md:py-5">
+          <div className="flex justify-between items-center">
+            <div className="h-5 w-2/3 bg-gray-200 rounded"></div>
+            <div className="h-6 w-6 bg-gray-200 rounded-full"></div>
+          </div>
+          <div className="mt-3 space-y-2">
+            <div className="h-3 w-full bg-gray-200 rounded"></div>
+            <div className="h-3 w-5/6 bg-gray-200 rounded"></div>
+            <div className="h-3 w-2/3 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+};
+
+// Edit Shop Banner Skeleton
+export const EditShopBannerSkeleton = () => {
+  return (
+    <section className="mb-12 animate-pulse">
+      <div className="h-[350px] bg-gray-200 relative">
+        <Container>
+          <div className="flex h-[350px] items-end relative">
+            <figure className="size-[180px] -mb-10 relative bg-gray-300 rounded-full border-[5px] border-white" />
+          </div>
+        </Container>
+      </div>
+      <Container>
+        <div className="flex justify-between items-center mt-14">
+          <div className="flex-1">
+            <div className="h-8 w-60 bg-gray-300 rounded mb-4" />
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-6 h-6 bg-gray-300 rounded-full" />
+              <div className="h-5 w-48 bg-gray-300 rounded" />
+            </div>
+          </div>
+          <div className="flex gap-4 items-center">
+            <div>
+              <div className="h-5 w-40 bg-gray-300 rounded mb-2" />
+              <div className="h-4 w-32 bg-gray-200 rounded" />
+            </div>
+            <div className="size-14 bg-gray-300 rounded-full" />
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+};
+
+// Shop Review Skeleton
+export const ShopReviewSkeleton = () => {
+  return (
+    <div className="flex flex-col lg:flex-row gap-5 sm:gap-10 md:gap-20 lg:items-center border-b last:border-b-0 border-gray-200 py-4 md:py-8 animate-pulse">
+      <div className="grow flex flex-col sm:flex-row gap-5 items-start">
+        <figure className="shrink-0 size-16 rounded-full bg-gray-200" />
+        <div className="flex gap-10 w-full">
+          <div className="flex-1">
+            <div className="h-4 w-32 bg-gray-200 rounded mb-2" />
+            <div className="flex gap-1 items-center py-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="size-3 bg-gray-200 rounded" />
+              ))}
+            </div>
+            <div className="space-y-2">
+              <div className="h-3 w-full bg-gray-200 rounded" />
+              <div className="h-3 w-5/6 bg-gray-200 rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="xl:w-[300px] shrink-0">
+        <div className="flex items-center gap-5">
+          <figure className="size-16 rounded-lg bg-gray-200" />
+          <div className="h-4 w-32 bg-gray-200 rounded" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const ProductRowSkeleton = () => {
+  return (
+    <tr className="border-b border-gray-300 animate-pulse">
+      <td className="py-3">
+        <div className="flex items-center gap-5">
+          <div className="h-[80px] w-[100px] rounded-lg bg-gray-200" />
+          <div className="h-4 w-40 bg-gray-200 rounded" />
+        </div>
+      </td>
+      <td>
+        <div className="h-8 w-24 bg-gray-200 rounded-full" />
+      </td>
+      <td>
+        <div className="h-4 w-20 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-4 w-12 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-4 w-16 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-4 w-16 bg-gray-200 rounded" />
+      </td>
+      <td>
+        <div className="h-8 w-24 bg-gray-200 rounded-full" />
+      </td>
+      <td>
+        <div className="h-5 w-5 bg-gray-200 rounded-full mx-auto" />
+      </td>
+    </tr>
+  );
+};
+
+export function InventoryItemSkeleton() {
+  return (
+    <div className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300 animate-pulse">
+      <div className="w-[100px] h-[80px] bg-gray-300 rounded-lg" />
+      <div className="w-full">
+        <div className="flex w-full justify-between items-center">
+          <div className="h-[14px] w-[40%] bg-gray-300 rounded" />
+          <div className="h-[14px] w-[25%] bg-gray-300 rounded" />
+        </div>
+        <div className="h-[14px] w-[60%] bg-gray-300 rounded mt-2" />
+        <div className="h-[12px] w-[20%] bg-gray-300 rounded mt-2" />
+      </div>
+    </div>
+  );
+}
 
 export const OrderSuccessSkeleton = () => {
   return (

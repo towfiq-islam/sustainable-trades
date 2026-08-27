@@ -123,13 +123,13 @@ export const proNavLinks = [
     icon: <PNineSvg />,
   },
   {
-    id: 8,
+    id: 16,
     label: "Local Pickup",
     path: "/dashboard/pro/local-pickup",
     icon: <LuMapPinned className="text-xl" />,
   },
   {
-    id: 8,
+    id: 17,
     label: "Local Delivery",
     path: "/dashboard/pro/local-delivery",
     icon: <FaTruck className="text-xl" />,

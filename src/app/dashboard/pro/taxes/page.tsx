@@ -28,7 +28,7 @@ type TaxForm = {
   state: string;
   rate: string;
   is_digital_products: boolean;
-  is_shipping: boolean;
+  is_food_products: boolean;
 };
 
 export default function TaxRatePage() {
@@ -36,7 +36,7 @@ export default function TaxRatePage() {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [show, setShow] = useState(false);
   const [activeTab, setActiveTab] = useState<"manual" | "automatic">(
-    "automatic",
+    user?.shop_info?.tax_provider === "manual" ? "manual" : "automatic",
   );
   const [saveTax, { isLoading: isPending }] = useSaveTaxesMutation();
   const [addSalesTaxMutate, { isLoading: isAddingSalesTax }] =
@@ -48,7 +48,6 @@ export default function TaxRatePage() {
   const { data: allTaxes } = useGetAllTaxesQuery();
   const [apiKey, setApiKey] = useState("");
   const [chargeOnServices, setChargeOnServices] = useState(true);
-  const [chargeOnShipping, setChargeOnShipping] = useState(false);
   const [chargeOnProduce, setChargeOnProduce] = useState(false);
   const [states, setStates] = useState(taxData?.data?.states || []);
 
@@ -94,7 +93,6 @@ export default function TaxRatePage() {
       state,
       rate: data.rate,
       is_digital_products: chargeOnServices ? 1 : 0,
-      is_shipping: chargeOnShipping ? 1 : 0,
       is_food_products: chargeOnProduce ? 1 : 0,
     };
 
@@ -126,7 +124,6 @@ export default function TaxRatePage() {
       });
 
       setChargeOnServices(allTaxes.data.is_digital_products);
-      setChargeOnShipping(allTaxes.data.is_shipping);
       setChargeOnProduce(allTaxes.data.is_food_products);
     }
   }, [allTaxes, reset]);
@@ -141,9 +138,9 @@ export default function TaxRatePage() {
 
       <p className="text-center text-base sm:text-lg max-w-3xl mx-auto text-secondary-gray mb-7">
         Choose how you'd like to calculate sales tax for your business. Set up a
-        single local sales tax rate for local pickup orders, or connect ZipTax
-        to automatically calculate sales tax based on your customer's address or
-        pickup location at checkout.
+        single local sales tax rate for local pickup and/or local delivery
+        orders, or connect ZipTax to automatically calculate sales tax based on
+        your customer's address or pickup location at checkout.
       </p>
 
       <div className="flex  p-1.5 md:p-3 rounded-xl shadow w-full md:w-[500px] mx-auto bg-primary-green mb-7 md:mb-10">
@@ -296,27 +293,6 @@ export default function TaxRatePage() {
                   </button>
                 </div>
 
-                {/* Shipping */}
-                <div className="flex items-center justify-between border-t border-gray-300 pt-5">
-                  <span className="font-semibold text-secondary-black">
-                    Charge taxes on shipping
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={() => setChargeOnShipping(!chargeOnShipping)}
-                    className={`cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      chargeOnShipping ? "bg-primary-green" : "bg-gray-300"
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        chargeOnShipping ? "translate-x-6" : "translate-x-1"
-                      }`}
-                    />
-                  </button>
-                </div>
-
                 {/* Product Tax */}
                 <div className="flex items-center justify-between border-t border-gray-300 pt-5">
                   <span className="font-semibold text-secondary-black">
@@ -363,16 +339,14 @@ export default function TaxRatePage() {
 
                   <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
                     <span>
-                      This option is designed for sellers who offer Local Pickup
-                      and apply the same sales tax rate to all of their
-                      products.
+                      This option is for shop owners who offer Local Pickup
+                      and/or Local Delivery and use the same sales tax rate for
+                      all products.
                     </span>
                     <span>
-                      It works well for businesses selling from a physical
-                      location, such as a farm, storefront, studio, workshop,
-                      farmers market, or pop-up event. The sales tax rate you
-                      enter here will be applied to Local Pickup orders during
-                      checkout.
+                      If you have multiple pickup locations or a delivery range,
+                      make sure the tax rate entered here is appropriate for all
+                      locations where it will be applied.
                     </span>
                   </p>
                 </div>
@@ -388,11 +362,9 @@ export default function TaxRatePage() {
 
                   <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
                     <span>
-                      This option is for Local Pickup only. The local sales tax
-                      rate will be applied when the fulfillment option of a
-                      listing is set to Local Pickup. If a listing is set to
-                      Shipping or Local Pickup + Shipping, this rate will not be
-                      applied to orders where the shopper chooses shipping.
+                      This tax rate applies only when a shopper selects Local
+                      Pickup or Local Delivery. It will not be applied to orders
+                      that are shipped.
                     </span>
                   </p>
                 </div>
@@ -405,9 +377,9 @@ export default function TaxRatePage() {
 
                   <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
                     <span>
-                      Enter the sales tax rate for the location where you are
-                      selling. The rate will be applied to Local Pickup orders
-                      during checkout until it is updated or changed.
+                      Enter the sales tax rate you want applied at checkout.
+                      This rate is automatically applied to Local Pickup and
+                      Local Delivery orders.
                     </span>
                   </p>
                 </div>
@@ -424,12 +396,10 @@ export default function TaxRatePage() {
                       according to your local, state, and federal obligations.
                     </span>
                     <span>
-                      This option applies a single sales tax rate to all Local
-                      Pickup orders. It does not calculate tax based on the
-                      customer's location or individual product taxability
-                      codes. If you need location-based tax calculations or
-                      product-specific tax rules, we recommend using ZipTax
-                      Automated Sales Tax.
+                      This option uses a single tax rate and does not calculate
+                      tax based on the customer's location or individual product
+                      taxability. For location-based or product-specific tax
+                      calculations, use ZipTax Automated Sales Tax.
                     </span>
                   </p>
                 </div>

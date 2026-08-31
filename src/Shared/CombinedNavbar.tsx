@@ -184,7 +184,7 @@ const CombinedNavbar = ({
         {/* NavLinks */}
         {isDashboard ? (
           <div
-            className="hidden 2xl:flex static top-0 left-0 h-auto w-auto bg-transparent transform transition-transform duration-300 ease-in-out z-40 flex-row gap-6 2xl:gap-10 items-center p-0"
+            className="hidden xl:flex static top-0 left-0 h-auto w-auto bg-transparent transform transition-transform duration-300 ease-in-out z-40 flex-row gap-6 xl:gap-10 items-center p-0"
             onClick={e => e.stopPropagation()}
           >
             {navLins?.slice(0, 3)?.map(item => {

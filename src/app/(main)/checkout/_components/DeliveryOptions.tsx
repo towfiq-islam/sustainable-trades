@@ -14,6 +14,7 @@ import {
 import Image from "next/image";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import {
+  clearCheckout,
   clearDeliveryUnavailableVendor,
   setBuyNowFulfillment,
 } from "@/redux/slices/checkoutSlice";
@@ -64,6 +65,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
 
   const handleRemoveProduct = (vendor_id: number, product_id: number) => {
     dispatch(removeFromCart({ vendor_id, product_id }));
+    dispatch(clearCheckout());
   };
 
   const blockedVendors = items.filter(

@@ -3,6 +3,7 @@ import { MinSvg } from "@/Components/Svg/SvgContainer";
 import Link from "next/link";
 import { useAppDispatch } from "@/redux/store";
 import { removeFromCart, updateCartQuantity } from "@/redux/slices/cartSlice";
+import { clearCheckout } from "@/redux/slices/checkoutSlice";
 
 const CartItem = ({ item }: any) => {
   const dispatch = useAppDispatch();
@@ -23,6 +24,7 @@ const CartItem = ({ item }: any) => {
 
   const handleRemoveFromCart = (product_id: number, vendor_id: number) => {
     dispatch(removeFromCart({ product_id, vendor_id }));
+    dispatch(clearCheckout());
   };
 
   return (

@@ -9,7 +9,7 @@ const ProductReviews = ({ id }: { id: number }) => {
   const [page, setPage] = useState<number>(0);
   const [showMore, setShowMore] = useState<boolean>(false);
   const [showMoreId, setShowMoreId] = useState<number>(0);
-  const { data: productReviews, isFetching: reviewLoading } =
+  const { data: productReviews, isLoading: reviewLoading } =
     useGetProductReviewsQuery({ id, page });
 
   return (

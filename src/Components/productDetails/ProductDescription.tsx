@@ -20,7 +20,9 @@ import { useAddToCart } from "@/Hooks/useAddToCart";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/store";
 import { setBuyNowItem } from "@/redux/slices/checkoutSlice";
-import { normalizeFulfillment } from "@/lib/fulfillment"
+import { normalizeFulfillment } from "@/lib/fulfillment";
+import LocalPickupModal from "@/Components/Modals/LocalPickupModal";
+import SuccessModal from "@/Components/Modals/SuccessModal";
 
 type descriptionItem = {
   id: number;
@@ -71,6 +73,8 @@ const ProductDescription = ({ data }: descriptionProps) => {
   const dispatch = useAppDispatch();
   const { user } = useAuth();
   const [sellingOption, setSellingOption] = useState<boolean>(Boolean);
+  const [openMsg, setOpenMsg] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
 
   // States
   const [id, setId] = useState<number | null>(null);
@@ -147,20 +151,22 @@ const ProductDescription = ({ data }: descriptionProps) => {
         </h3>
 
         {/* Add To Cart */}
-        <button
-          disabled={
-            (!data?.unlimited_stock && data?.out_of_stock) ||
-            (!data?.unlimited_stock && data?.product_quantity === 0) ||
-            data?.selling_option === "trade/barter"
-          }
-          onClick={handleAddToCartClick}
-          className={`border border-primary-green rounded-lg px-4 py-2 enabled:hover:bg-primary-green enabled:hover:text-accent-white duration-500 transition-all shrink-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:border-gray-300 disabled:bg-gray-100 cursor-pointer`}
-        >
-          <p className="flex gap-2 items-center">
-            <span>Add to Cart</span>
-            <AddToCartSvg />
-          </p>
-        </button>
+        {data?.shop?.user?.membership?.membership_type === "pro" && (
+          <button
+            disabled={
+              (!data?.unlimited_stock && data?.out_of_stock) ||
+              (!data?.unlimited_stock && data?.product_quantity === 0) ||
+              data?.selling_option === "trade/barter"
+            }
+            onClick={handleAddToCartClick}
+            className={`border border-primary-green rounded-lg px-4 py-2 enabled:hover:bg-primary-green enabled:hover:text-accent-white duration-500 transition-all shrink-0 disabled:cursor-not-allowed disabled:opacity-60 disabled:border-gray-300 disabled:bg-gray-100 cursor-pointer`}
+          >
+            <p className="flex gap-2 items-center">
+              <span>Add to Cart</span>
+              <AddToCartSvg />
+            </p>
+          </button>
+        )}
       </div>
 
       {/* Product Description */}
@@ -246,13 +252,29 @@ const ProductDescription = ({ data }: descriptionProps) => {
       </p>
 
       {/* Buy btn */}
-      <button
-        disabled={data?.selling_option === "trade/barter"}
-        onClick={() => handleBuyNow()}
-        className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-medium border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
-      >
-        Buy it now
-      </button>
+      {data?.shop?.user?.membership?.membership_type === "pro" ? (
+        <button
+          disabled={data?.selling_option === "trade/barter"}
+          onClick={() => handleBuyNow()}
+          className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-medium border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          Buy it now
+        </button>
+      ) : (
+        <button
+          onClick={() => {
+            if (!user) {
+              toast.error("Please login first to proceed");
+              router.push("/auth/login");
+              return;
+            }
+            setOpenMsg(true);
+          }}
+          className="mb-3 md:mb-5 block w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-medium border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          Contact Seller
+        </button>
+      )}
 
       {/* Trade btn */}
       <button
@@ -281,22 +303,25 @@ const ProductDescription = ({ data }: descriptionProps) => {
       </button>
 
       {/* Message btn */}
-      {user?.shop_info?.user_id !== data?.shop?.user_id && (
-        <button
-          onClick={() => {
-            if (!user) {
-              return toast.error("Please login first to proceed");
-            }
-            setId(data?.shop?.user_id);
-            setProductId(data?.id);
-            setMsgOpen(true);
-          }}
-          className="mb-5 w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 text-primary-green rounded-lg shadow hover:text-accent-white hover:bg-primary-green font-semibold border-primary-green flex gap-2 items-center justify-center"
-        >
-          <MyMsgSvg />
-          <span> Message Seller</span>
-        </button>
-      )}
+      {user?.shop_info?.user_id !== data?.shop?.user_id &&
+        data?.shop?.user?.membership?.membership_type === "pro" && (
+          <button
+            onClick={() => {
+              if (!user) {
+                toast.error("Please login first to proceed");
+                router.push("/auth/login");
+                return;
+              }
+              setId(data?.shop?.user_id);
+              setProductId(data?.id);
+              setMsgOpen(true);
+            }}
+            className="mb-5 w-full text-center duration-500 transition-all border-2 md:text-lg cursor-pointer py-2 md:py-3 text-primary-green rounded-lg shadow hover:text-accent-white hover:bg-primary-green font-semibold border-primary-green flex gap-2 items-center justify-center"
+          >
+            <MyMsgSvg />
+            <span> Message Seller</span>
+          </button>
+        )}
 
       <Modal
         open={tradeOpen}
@@ -319,6 +344,28 @@ const ProductDescription = ({ data }: descriptionProps) => {
         className="max-w-xl"
       >
         <MessageToSellerModal id={id} setMsgOpen={setMsgOpen} />
+      </Modal>
+
+      <Modal
+        open={openMsg}
+        onClose={() => setOpenMsg(false)}
+        className="max-w-xl"
+      >
+        <LocalPickupModal
+          productId={data?.id}
+          onClose={() => {
+            setOpenMsg(false);
+            setSuccessModal(true);
+          }}
+        />
+      </Modal>
+
+      <Modal
+        open={successModal}
+        onClose={() => setSuccessModal(false)}
+        className="max-w-sm"
+      >
+        <SuccessModal onClose={() => setSuccessModal(false)} />
       </Modal>
     </>
   );

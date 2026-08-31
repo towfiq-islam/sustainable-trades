@@ -38,8 +38,6 @@ const DashboardSidebar = ({
     );
   };
 
-  const navLabelClass = "text-secondary-black font-semibold text-lg mb-4";
-
   const parentLinkClass = (isActive: boolean) =>
     `w-full text-left ml-1 px-2 py-2 flex gap-3 items-center text-base font-semibold border-l-2 hover:bg-gray-100 duration-300 transition-all hover:scale-[1.03] ${
       isActive
@@ -64,7 +62,6 @@ const DashboardSidebar = ({
             (pathname?.startsWith(`/dashboard/customer/messages`) ||
               pathname?.startsWith(`/dashboard/basic/messages`) ||
               pathname?.startsWith(`/dashboard/pro/messages`));
-
           const isActive = isActiveParent || isActiveSub || isMessageActive;
           const hasSubMenus = !!item?.subMenus;
 

@@ -269,6 +269,16 @@ const Page = () => {
             </h3>
 
             <div className="flex gap-3 items-center">
+              {singleOrder?.data?.tracking?.label_url && (
+                <Link
+                  href={singleOrder?.data?.tracking?.label_url}
+                  target="_blank"
+                  className="py-3 px-4 rounded-[8px] border border-accent-red font-semibold text-accent-red cursor-pointer hover:border-accent-red duration-300 ease-in-out"
+                >
+                  Shipping Label
+                </Link>
+              )}
+
               <button
                 className="py-3 px-4 rounded-[8px] border font-medium text-secondary-black cursor-pointer border-primary-green duration-300 ease-in-out hover:bg-primary-green hover:text-white"
                 onClick={() =>

@@ -8,6 +8,7 @@ const EmptyCartAnimation = dynamic(() => import("./EmptyCartAnimation"), {
 });
 import { TiDelete } from "react-icons/ti";
 import { clearCart } from "@/redux/slices/cartSlice";
+import { clearCheckout } from "@/redux/slices/checkoutSlice";
 import { useRouter } from "next/navigation";
 import { MdLockOpen } from "react-icons/md";
 
@@ -29,7 +30,7 @@ const PaymentOptions = () => {
 
         {items?.length > 0 && (
           <button
-            onClick={() => dispatch(clearCart())}
+            onClick={() => { dispatch(clearCart()); dispatch(clearCheckout()); }}
             className="px-3 py-1.5 text-sm rounded-full font-medium bg-primary-red cursor-pointer text-white flex gap-1 items-center"
           >
             <TiDelete className="text-lg" />

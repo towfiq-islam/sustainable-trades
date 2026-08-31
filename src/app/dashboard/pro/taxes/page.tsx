@@ -275,7 +275,7 @@ export default function TaxRatePage() {
                 {/* Digital Products */}
                 <div className="flex items-center justify-between border-t border-gray-300 pt-5">
                   <span className="font-semibold text-secondary-black">
-                    Charge taxes on services and digital products
+                    Don’t charge tax on services and digital products
                   </span>
 
                   <button
@@ -296,7 +296,7 @@ export default function TaxRatePage() {
                 {/* Product Tax */}
                 <div className="flex items-center justify-between border-t border-gray-300 pt-5">
                   <span className="font-semibold text-secondary-black">
-                    Charge taxes on food and produce
+                    Don’t charge tax on food and produce
                   </span>
 
                   <button

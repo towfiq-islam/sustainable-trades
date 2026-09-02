@@ -3,6 +3,8 @@ import Container from "@/Components/Common/Container";
 import AboutUsTab from "@/Components/Common/AboutUsTab";
 import { getDynamicPages, getSingleDynamicPage } from "@/lib/cms.api";
 
+export const revalidate = 3600;
+
 const page = async ({ params }: any) => {
   const { slug } = await params;
   const dynamicPage = await getDynamicPages();
@@ -33,7 +35,7 @@ const page = async ({ params }: any) => {
                 dangerouslySetInnerHTML={{
                   __html: pageData?.data?.page_content,
                 }}
-                className="text-secondary-gray text-sm lg:text-base leading-8 max-w-[900px] [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:pl-5 [&_ol]:list-decimal"
+                className="parsed_content"
               />
             </div>
           </div>

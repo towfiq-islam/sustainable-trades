@@ -2,6 +2,8 @@ import Container from "@/Components/Common/Container";
 import HelpUsTab from "@/Components/Common/HelpUsTab";
 import { getInfringementData } from "@/lib/cms.api";
 
+export const revalidate = 3600;
+
 const Page = async () => {
   const infringementData = await getInfringementData();
 
@@ -19,7 +21,7 @@ const Page = async () => {
                 dangerouslySetInnerHTML={{
                   __html: infringementData?.data?.description,
                 }}
-                className="text-secondary-gray leading-8 text-sm lg:text-base  xl:max-w-[900px] [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:pl-5 [&_ol]:list-decimal"
+                className="parsed_content"
               />
             </div>
           </div>

@@ -1,0 +1,116 @@
+"use client";
+import { useState } from "react";
+import Shop from "@/Components/Common/Shop";
+import Product from "@/Components/Common/ProductWrapper";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
+import { ProductSkeleton } from "@/Components/Loader/Loader";
+import { useGetFollowedShopsQuery } from "@/redux/api/shopApi";
+import { useGetMyFavoriteQuery } from "@/redux/api/productApi";
+import { FiHeart, FiHome } from "react-icons/fi";
+import EmptyState from "@/Components/Common/EmptyState";
+
+type ShopItem = {
+  id: number;
+  shop: {
+    id: number;
+    user_id: number;
+    shop_image: string;
+    shop_name: string;
+    address: {
+      display_my_address: boolean;
+      address_line_1: string;
+      city: string;
+      state: string;
+    };
+  };
+};
+
+const ReuseableFavorite = () => {
+  const tabs: string[] = ["Followed Shop", "WishLists"];
+  const [isActive, setIsActive] = useState("Followed Shop");
+  const { data: myFavorites, isLoading: isFavoriteLoading } =
+    useGetMyFavoriteQuery({});
+  const { data: followedShop, isLoading: isFollowedLoading } =
+    useGetFollowedShopsQuery({});
+
+  return (
+    <>
+      <DashBoardHeader
+        heading="Your Favorites"
+        placeholder="Search favorites"
+      />
+
+      {/* Tabs */}
+      <div className="flex gap-x-10 items-center mt-5">
+        {tabs?.map(tab => (
+          <h3
+            key={tab}
+            onClick={() => setIsActive(tab)}
+            className={`text-[16px] md:text-[18px] font-bold shrink-0 cursor-pointer transition-all duration-200 uppercase ${
+              isActive === tab
+                ? "text-secondary-black border-b-2 border-black"
+                : "text-light-green"
+            }`}
+          >
+            {tab}
+          </h3>
+        ))}
+      </div>
+
+      {/* Favorites Products */}
+      {isActive === "WishLists" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-10">
+          {isFavoriteLoading ? (
+            [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
+          ) : myFavorites?.data?.length > 0 ? (
+            myFavorites?.data?.map((item: any) => (
+              <Product
+                key={item?.id}
+                product={
+                  {
+                    id: item?.product?.id,
+                    product_name: item?.product?.product_name,
+                    product_quantity: item?.product?.product_quantity,
+                    product_price: item?.product?.product_price,
+                    out_of_stock: item?.product?.out_of_stock,
+                    unlimited_stock: item?.product?.unlimited_stock,
+                    is_favorite: item?.product?.is_favorite,
+                    selling_option: item?.product?.selling_option,
+                    images: item?.product?.images || [],
+                  } as any
+                }
+              />
+            ))
+          ) : (
+            <EmptyState
+              icon={FiHeart}
+              title="Your wishlist is empty"
+              description="Tap the heart icon on any product to save it here for later."
+            />
+          )}
+        </div>
+      )}
+
+      {/* FOLLOW Shop list */}
+      {isActive === "Followed Shop" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mb-14 mt-10">
+          {isFollowedLoading ? (
+            [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
+          ) : followedShop?.data?.length > 0 ? (
+            followedShop?.data?.map((item: ShopItem) => (
+              <Shop key={item?.id} shop={item} />
+            ))
+          ) : (
+            <EmptyState
+              icon={FiHome}
+              title="You're not following any shops yet"
+              description="Follow shops you like to keep track of their new listings and deals."
+            />
+          )}{" "}
+        </div>
+      )}
+    </>
+  );
+};
+
+export default ReuseableFavorite;

@@ -44,22 +44,6 @@ export const tradeApi = apiSlice.injectEndpoints({
       },
     }),
 
-    approveTrade: builder.mutation({
-      query: id => ({
-        url: `/api/trade-offer-approve/${id}`,
-        method: "GET",
-      }),
-      invalidatesTags: ["trade"],
-    }),
-
-    cancelTrade: builder.mutation({
-      query: id => ({
-        url: `/api/trade-offer-cancel/${id}`,
-        method: "GET",
-      }),
-      invalidatesTags: ["trade"],
-    }),
-
     getTradeAndBarterData: builder.query({
       query: params => ({
         url: "/api/barters-and-trades/summary",
@@ -110,8 +94,6 @@ export const {
   useGetTradeOfferQuery,
   useGetTradeShopProductQuery,
   useSendCounterOfferMutation,
-  useApproveTradeMutation,
-  useCancelTradeMutation,
   useGetTradeAndBarterDataQuery,
   useGetTradesDataQuery,
   useTradeSendOfferMutation,

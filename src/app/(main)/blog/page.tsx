@@ -4,6 +4,8 @@ import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 
+export const revalidate = 3600; 
+
 type blogItem = {
   id: number;
   image: string;

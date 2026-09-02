@@ -50,7 +50,7 @@ export const productApi = apiSlice.injectEndpoints({
         sub_category_id?: string;
         short_by?: string;
         search?: string;
-        page?: string;
+        page?: number;
       }) => ({
         url: `/api/shop/products/${id}`,
         params: {
@@ -59,6 +59,7 @@ export const productApi = apiSlice.injectEndpoints({
           page,
           category_id,
           sub_category_id,
+          per_page: 4,
         },
       }),
 
@@ -174,6 +175,7 @@ export const productApi = apiSlice.injectEndpoints({
           lat,
           lng,
           page,
+          per_page: 8,
         },
       }),
       providesTags: (_result, _error, { id }) => [{ type: "product", id }],
@@ -200,6 +202,12 @@ export const productApi = apiSlice.injectEndpoints({
       query: () => "/api/sub-categories",
       providesTags: ["category"],
     }),
+
+    // Product Categories With Subcategories
+    getCategoriesWithSubCategories: builder.query({
+      query: () => "/api/category-and-subcategories",
+      providesTags: ["category"],
+    }),
   }),
 });
 
@@ -219,6 +227,7 @@ export const {
   useGetMyFavoriteQuery,
   useGetProductCategoriesQuery,
   useGetProductSubCategoriesQuery,
+  useGetCategoriesWithSubCategoriesQuery,
   useGetCategoryDetailsQuery,
   useAddFavoriteMutation,
   useGetVendorListingsQuery,

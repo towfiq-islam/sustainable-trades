@@ -7,12 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useAddProductReviewMutation } from "@/redux/api/ordersApi";
-
-type ReviewFormValues = {
-  title: string;
-  message: string;
-  images: FileList;
-};
+import { ReviewFormValues } from "@/Types";
 
 const ReviewDetails = () => {
   const router = useRouter();

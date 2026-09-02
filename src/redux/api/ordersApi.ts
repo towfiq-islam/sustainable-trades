@@ -11,9 +11,9 @@ export const ordersApi = apiSlice.injectEndpoints({
     }),
 
     getMyOrders: builder.query({
-      query: status => ({
+      query: ({ status, page }) => ({
         url: "/api/my-orders",
-        params: { status },
+        params: { status, page, per_page: 10 },
       }),
       providesTags: ["order"],
     }),
@@ -28,11 +28,6 @@ export const ordersApi = apiSlice.injectEndpoints({
       providesTags: ["order"],
     }),
 
-    getOrderHistory: builder.query({
-      query: id => `/api/my-order/${id}/history`,
-      providesTags: (_r, _e, id) => [{ type: "order", id }],
-    }),
-
     getOrderDetails: builder.query({
       query: id => `/api/my-order/${id}`,
       providesTags: (_r, _e, id) => [{ type: "order", id }],
@@ -41,7 +36,7 @@ export const ordersApi = apiSlice.injectEndpoints({
     getCustomerReviews: builder.query({
       query: page => ({
         url: "/api/my-reviews",
-        params: { page },
+        params: { page, per_page: 6 },
       }),
       providesTags: ["review"],
     }),
@@ -89,11 +84,27 @@ export const ordersApi = apiSlice.injectEndpoints({
       invalidatesTags: ["review"],
     }),
 
-    downloadInvoice: builder.mutation<Blob, any>({
+    downloadVendorInvoice: builder.mutation<Blob, any>({
       query: orderId => ({
-        url: `/api/invoice-generate/${orderId}`,
-        method: "POST",
+        url: `/api/vendor/orders/${orderId}/invoice/download`,
+        method: "GET",
         responseHandler: response => response.blob(),
+      }),
+    }),
+
+    downloadCustomerInvoice: builder.mutation<Blob, any>({
+      query: orderId => ({
+        url: `/api/orders/${orderId}/invoice/download`,
+        method: "GET",
+        responseHandler: response => response.blob(),
+      }),
+    }),
+
+    basicVendorOrder: builder.mutation({
+      query: data => ({
+        url: "/api/basic-vendor-order",
+        method: "POST",
+        body: data,
       }),
     }),
   }),
@@ -103,7 +114,6 @@ export const {
   useGetVendorOrdersQuery,
   useGetMyOrdersQuery,
   useGetSingleOrderQuery,
-  useGetOrderHistoryQuery,
   useGetOrderDetailsQuery,
   useUpdateOrderStatusMutation,
   useCancelOrderMutation,
@@ -111,6 +121,8 @@ export const {
   useGetCustomerReviewsQuery,
   useGetOrderStatisticsQuery,
   useGuestOrderMutation,
-  useDownloadInvoiceMutation,
+  useDownloadVendorInvoiceMutation,
+  useDownloadCustomerInvoiceMutation,
   useAddProductReviewMutation,
+  useBasicVendorOrderMutation,
 } = ordersApi;

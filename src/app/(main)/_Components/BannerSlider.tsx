@@ -78,7 +78,7 @@ const BannerSlider = ({ data }: bannerProps) => {
                         {sliderData?.title}
                       </h2>
 
-                      <h3 className="text-xl lg:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5">
+                      <h3 className="text-xl lg:text-2xl font-semibold text-secondary-black mb-5">
                         {sliderData?.sub_title}
                       </h3>
 
@@ -88,7 +88,7 @@ const BannerSlider = ({ data }: bannerProps) => {
 
                       <Link
                         href={sliderData?.btn_link}
-                        className="md:w-[416px] text-center hover:bg-primary-green hover:text-white duration-500 transition-all mx-auto block border text-base md:text-lg text-secondary-black cursor-pointer py-2 md:py-4 bg-accent-white rounded-lg shadow-lg hover:scale-105"
+                        className="md:w-[416px] text-center bg-primary-green text-white duration-500 transition-all mx-auto block text-base md:text-lg cursor-pointer py-2 md:py-4 rounded-lg shadow-lg hover:scale-105"
                       >
                         {sliderData?.btn_text}
                       </Link>

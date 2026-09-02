@@ -13,6 +13,7 @@ import {
 import { FaLeaf } from "react-icons/fa";
 import { HiOutlineArrowPath } from "react-icons/hi2";
 import Link from "next/link";
+
 type TradeOfferModalProps = {
   id: number | null;
   productId: number | null;
@@ -67,11 +68,6 @@ const TradeOfferModal = ({
   // Sender trades
   const { data: myTradeProducts, isLoading: myTradeLoading } =
     useGetTradeShopProductQuery(user?.shop_info?.id);
-
-  // Loader
-  // if (tradeLoading || myTradeLoading) {
-  //   return <TradeOfferSkeleton />;
-  // }
 
   // Func for send offer
   const handleSendOffer = () => {

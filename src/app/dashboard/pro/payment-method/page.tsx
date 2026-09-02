@@ -4,7 +4,6 @@ import useAuth from "@/Hooks/useAuth";
 import {
   useDisconnectPaypalMutation,
   useOnboardPaypalMutation,
-  useReconnectPaypalMutation,
 } from "@/redux/api/vendorApi";
 import toast from "react-hot-toast";
 import { CgSpinnerTwo } from "react-icons/cg";
@@ -20,10 +19,6 @@ const page = () => {
   // Disconnect
   const [onboardingDisconnectMutation, { isLoading: isDisconnecting }] =
     useDisconnectPaypalMutation();
-
-  // Reconnect
-  //  const [onboardingReconnectMutation, { isLoading: isReconnecting }] =
-  //    useReconnectPaypalMutation();
 
   // CONNECT
   const handleConnect = () => {
@@ -47,23 +42,6 @@ const page = () => {
   const handleDisconnect = () => {
     onboardingDisconnectMutation().unwrap();
   };
-
-  // RECONNECT
-  // const handleReconnect = () => {
-  //   onboardingReconnectMutation(
-  //     {
-  //       success_url: `${window.location.origin}/dashboard/pro/payment-method`,
-  //       cancel_url: `${window.location.origin}/dashboard/pro/payment-method`,
-  //     },
-  //     {
-  //       onSuccess: (data: any) => {
-  //         if (data?.success) {
-  //           window.location.href = data?.data?.url;
-  //         }
-  //       },
-  //     },
-  //   );
-  // };
 
   return (
     <>
@@ -132,23 +110,7 @@ const page = () => {
             </button>
           )}
 
-          {/* RECONNECT BUTTON */}
-          {/* {isOnboarded && (
-            <button
-              disabled={isReconnecting}
-              onClick={handleReconnect}
-              className="mt-5 md:mt-10 p-2 md:p-3 bg-primary-green border border-primary-green rounded-md text-[12px] md:text-[14px] font-semibold text-white enabled:hover:opacity-90 duration-500 ease-in-out uppercase disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer min-w-[130px]"
-            >
-              {isReconnecting ? (
-                <p className="flex gap-2 items-center justify-center">
-                  <CgSpinnerTwo className="animate-spin text-xl" />
-                  <span>Please wait...</span>
-                </p>
-              ) : (
-                "Reconnect"
-              )}
-            </button>
-          )} */}
+
         </div>
       </div>
     </>

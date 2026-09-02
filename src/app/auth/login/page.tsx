@@ -15,7 +15,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useLoginMutation } from "@/redux/api/authApi";
 import useAuth from "@/Hooks/useAuth";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type formData = {
   email: string;
@@ -24,6 +24,8 @@ type formData = {
 
 const Page = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect");
   const { setAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [login, { isLoading }] = useLoginMutation();
@@ -39,11 +41,15 @@ const Page = () => {
       const res = await login(data).unwrap();
 
       if (
-        res?.success &&
-        (res?.data?.role === "customer" || res?.data?.membership)
+        res?.success && (res?.data?.role === "customer" || res?.data?.membership)
       ) {
         setAuthenticated();
         toast.success(res?.message);
+        if (redirectTo) {
+          router.push(redirectTo);
+          return;
+        }
+
         router.push(
           `${
             res?.data?.role === "customer"
@@ -80,7 +86,9 @@ const Page = () => {
             </Link>
           </div>
 
-          <h2 className="auth-heading">Welcome Back!</h2>
+          <h2 className="auth-heading">
+            {redirectTo ? "Sign in to continue checkout" : "Welcome Back!"}
+          </h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-4 xl:gap-8 sm:items-center">
@@ -184,7 +192,11 @@ const Page = () => {
             <p>New Member?</p>
             <Link
               className="text-primary-green font-semibold underline"
-              href="/auth/choose-package"
+              href={
+                redirectTo
+                  ? `/auth/choose-package?redirect=${encodeURIComponent(redirectTo)}`
+                  : "/auth/choose-package"
+              }
             >
               Create an account
             </Link>

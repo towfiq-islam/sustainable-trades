@@ -18,7 +18,8 @@ const lato = Lato({
 // Metadata
 export const metadata: Metadata = {
   title: "Sustainable Trades",
-  description: "An E-commerce Website",
+  description:
+    "An online marketplace making it easy to shop local and sustainably. Connect with local food, artisans, services, and businesses that are good for people and the planet.",
   icons: {
     icon: "/favicon.svg",
   },

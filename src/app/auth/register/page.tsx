@@ -27,12 +27,18 @@ type formData = {
 };
 
 type Props = {
-  searchParams: Promise<{ role: string }>;
+  searchParams: Promise<{ role: string; redirect?: string }>;
 };
 
 export default function page({ searchParams }: Props) {
   const router = useRouter();
-  const { role: selected_role } = use(searchParams);
+  const { role: selected_role, redirect: rawRedirect } = use(searchParams);
+  const redirectTo = rawRedirect
+    ? rawRedirect.startsWith("/")
+      ? rawRedirect
+      : `/${rawRedirect}`
+    : null;
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
@@ -58,7 +64,11 @@ export default function page({ searchParams }: Props) {
       const res = await registrationMutation(payload).unwrap();
       if (res?.success) {
         toast.success(res?.message);
-        router.push("/auth/login");
+        router.push(
+          redirectTo
+            ? `/auth/login?redirect=${encodeURIComponent(redirectTo)}`
+            : "/auth/login",
+        );
       }
     } catch (err: any) {
       toast.error(err?.data?.message);
@@ -70,8 +80,8 @@ export default function page({ searchParams }: Props) {
       {/* Left - Form */}
       <div className="flex-1 grid place-items-center side-scrollbar ">
         <div className="w-full 2xl:w-[750px] mx-auto p-5 xl:p-10">
-          <h2 className="text-xl md:text-2xl xl:text-4xl 2xl:text-5xl font-semibold text-secondary-black mb-7">
-            Welcome,
+          <h2 className="text-xl md:text-2xl xl:text-4xl font-medium text-secondary-black mb-7">
+            Welcome,{" "}
             <span className="text-primary-green">
               {selected_role === "magic_maker"
                 ? "Magic Maker!"
@@ -210,7 +220,7 @@ export default function page({ searchParams }: Props) {
                 <input
                   id="terms"
                   type="checkbox"
-                  className="mt-1 size-5"
+                  className="mt-1 size-4 cursor-pointer accent-primary-green"
                   {...register("agree_to_terms", {
                     required: "You must agree to the terms and conditions",
                   })}
@@ -219,7 +229,7 @@ export default function page({ searchParams }: Props) {
                   htmlFor="terms"
                   className="text-secondary-black text-sm md:text-base  max-w-[550px]"
                 >
-                  By continuing you agree to Sustainable Trade’s Terms of Use
+                  By continuing you agree to Sustainable Trade's Terms of Use
                   and Privacy Policy.
                   <Link
                     href="/help/terms-and-conditions"
@@ -263,7 +273,11 @@ export default function page({ searchParams }: Props) {
             <p>Already have an account?</p>
             <Link
               className="text-primary-green font-semibold underline"
-              href="/auth/login"
+              href={
+                redirectTo
+                  ? `/auth/login?redirect=${encodeURIComponent(redirectTo)}`
+                  : "/auth/login"
+              }
             >
               Sign In
             </Link>

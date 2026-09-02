@@ -2,9 +2,9 @@
 import { use, useEffect } from "react";
 import Container from "@/Components/Common/Container";
 import { useForm, FormProvider } from "react-hook-form";
-import EditFormTwo from "@/Components/PageComponents/EditForm/EditFormTwo";
-import EditFormFour from "@/Components/PageComponents/EditForm/EditFormFour";
-import EditFormThree from "@/Components/PageComponents/EditForm/EditFormThree";
+import EditFormTwo from "@/Components/EditForm/EditFormTwo";
+import EditFormFour from "@/Components/EditForm/EditFormFour";
+import EditFormThree from "@/Components/EditForm/EditFormThree";
 import { PuffLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 import useAuth from "@/Hooks/useAuth";

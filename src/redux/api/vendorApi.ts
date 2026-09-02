@@ -33,7 +33,7 @@ export const vendorApi = apiSlice.injectEndpoints({
     }),
 
     // Notifications
-    getNotifications: builder.query<any, string | undefined>({
+    getNotifications: builder.query({
       query: page => ({ url: "/api/notifications", params: { page } }),
       providesTags: ["notification"],
     }),
@@ -98,11 +98,6 @@ export const vendorApi = apiSlice.injectEndpoints({
           toast.error(err?.data?.message);
         }
       },
-    }),
-
-    reconnectPaypal: builder.mutation<any, void>({
-      query: () => ({ url: "/api/paypal/reconnect", method: "POST" }),
-      invalidatesTags: ["user"],
     }),
 
     // Shippo / shipping
@@ -179,20 +174,96 @@ export const vendorApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    arrangeLocalPickupAddress: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/api/order/${id}/local-pickup/arrange`,
-        method: "POST",
-        body: data,
-      }),
-    }),
-
     localPickupPayment: builder.mutation({
       query: ({ id, data }) => ({
         url: `/api/local-pickup/checkout/${id}`,
         method: "POST",
         body: data,
       }),
+    }),
+
+    addPickupLocation: builder.mutation({
+      query: data => ({
+        url: "/api/pickup-locations",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["pickup-locations"],
+    }),
+
+    editPickupLocation: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/api/pickup-location/${id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["pickup-locations"],
+    }),
+
+    deletePickupLocation: builder.mutation({
+      query: id => ({
+        url: `/api/pickup-location/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["pickup-locations"],
+    }),
+
+    getPickupLocations: builder.query({
+      query: () => "/api/pickup-locations",
+      providesTags: ["pickup-locations"],
+    }),
+
+    getAllPickupLocations: builder.query({
+      query: params => ({
+        url: "/api/order-pickup-locations",
+        params,
+      }),
+      providesTags: ["pickup-locations"],
+    }),
+
+    addDeliveryOrigin: builder.mutation({
+      query: data => ({
+        url: "/api/delivery-origins",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["delivery-origin"],
+    }),
+
+    getDeliveryOrigin: builder.query({
+      query: () => "/api/delivery-origin",
+      providesTags: ["delivery-origin"],
+    }),
+
+    addDeliveryRange: builder.mutation({
+      query: data => ({
+        url: "/api/delivery-ranges",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["delivery-range"],
+    }),
+
+    editDeliveryRange: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/api/delivery-range/${id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["delivery-range"],
+    }),
+
+    getDeliveryRanges: builder.query({
+      query: () => "/api/delivery-ranges",
+      providesTags: ["delivery-range"],
+    }),
+
+    deleteDeliveryRange: builder.mutation({
+      query: id => ({
+        url: `/api/delivery-range/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["delivery-range"],
     }),
   }),
 });
@@ -215,7 +286,6 @@ export const {
 
   useOnboardPaypalMutation,
   useDisconnectPaypalMutation,
-  useReconnectPaypalMutation,
 
   useConnectShippoMutation,
   useDisconnectShippoMutation,
@@ -224,6 +294,18 @@ export const {
   useChangeLabelTypeMutation,
   useSetShippingMutation,
   useLocalPickupProMutation,
-  useArrangeLocalPickupAddressMutation,
   useLocalPickupPaymentMutation,
+
+  useAddPickupLocationMutation,
+  useGetPickupLocationsQuery,
+  useDeletePickupLocationMutation,
+  useEditPickupLocationMutation,
+  useGetAllPickupLocationsQuery,
+
+  useGetDeliveryOriginQuery,
+  useAddDeliveryOriginMutation,
+  useGetDeliveryRangesQuery,
+  useDeleteDeliveryRangeMutation,
+  useEditDeliveryRangeMutation,
+  useAddDeliveryRangeMutation,
 } = vendorApi;

@@ -1,318 +1,330 @@
 "use client";
-import Link from "next/link";
-import { FaHeart } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa";
-import Container from "@/Components/Common/Container";
-import Product from "@/Components/Common/Product";
-import { ProductSkeleton } from "@/Components/Loader/Loader";
-import ShopsMap from "@/Components/PageComponents/mainPages/shopPageComponents/ShopsMap";
-import useAuth from "@/Hooks/useAuth";
-import {
-  useGetAllProductsUnderShopQuery,
-  useGetMyFavoriteQuery,
-} from "@/redux/api/productApi";
-import { useGetOrderDetailsQuery } from "@/redux/api/ordersApi";
 import { use } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  IoCheckmarkCircle,
+  IoPersonOutline,
+  IoMailOutline,
+} from "react-icons/io5";
+import Container from "@/Components/Common/Container";
+import { useGetOrderDetailsQuery } from "@/redux/api/ordersApi";
+import { fulfillmentLabel } from "@/lib/fulfillment";
+import { OrderSuccessSkeleton } from "@/Components/Loader/Loader";
+import useAuth from "@/Hooks/useAuth";
+import { BsTruck } from "react-icons/bs";
+import { useRouter } from "next/navigation";
+
+type VendorItem = {
+  id: number;
+  vendor_id: number;
+  fulfillment_type: string;
+  discount_amount: number;
+  sub_total: number;
+  delivery_amount: number;
+  shipping_amount: number;
+  total_amount: number;
+  tax_amount: number;
+  items: {
+    id: number;
+    product_name: string;
+    quantity: number;
+    total_price: number;
+  }[];
+  shop: {
+    id?: number;
+    name: string;
+    image: string;
+  };
+};
 
 type Props = {
   searchParams: Promise<{ order_id: number; shop_id: number }>;
 };
 
-export default function Page({ searchParams }: Props) {
-  const { user } = useAuth();
-  const { order_id, shop_id } = use(searchParams);
-  const { data: myFavorites, isLoading: isFavoriteLoading } =
-    useGetMyFavoriteQuery(undefined, { skip: !user });
-  const { data: singleOrder, isLoading } = useGetOrderDetailsQuery(order_id);
-  const { data: products, isLoading: isShopLoading } =
-    useGetAllProductsUnderShopQuery({
-      id: shop_id,
-    });
+const getInitials = (name: string) =>
+  name
+    ?.split(" ")
+    .map(w => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase() ?? "";
 
-  const mapShops = singleOrder?.data?.shop
-    ? [
-        {
-          id: singleOrder.data.shop.id,
-          first_name: singleOrder.data.shop.user.first_name,
-          last_name: singleOrder.data.shop.user.last_name,
-          role: "vendor",
-          shop_info: {
-            id: singleOrder.data.shop.id,
-            user_id: singleOrder.data.shop.user_id,
-            shop_name: singleOrder.data.shop.shop_name,
-            shop_image: singleOrder.data.shop.shop_image,
-            address: {
-              ...singleOrder.data.shop.address,
-            },
-          },
-        },
-      ]
-    : [];
+const fulfillmentDisplay = (type: string) =>
+  fulfillmentLabel[type as "pickup" | "delivery" | "shipping"] ?? type;
+
+export default function Page({ searchParams }: Props) {
+  const router = useRouter();
+  const { order_id } = use(searchParams);
+  const { user } = useAuth();
+  const { data: res, isLoading } = useGetOrderDetailsQuery(order_id, {
+    skip: !order_id,
+  });
+  const order = res?.data;
+
+  if (isLoading) {
+    return (
+      <section className="py-12">
+        <Container>
+          <OrderSuccessSkeleton />
+        </Container>
+      </section>
+    );
+  }
+
+  if (!order) {
+    return (
+      <section className="py-12">
+        <Container>
+          <p className="text-center text-secondary-gray py-16">
+            We couldn't find this order.
+          </p>
+        </Container>
+      </section>
+    );
+  }
+
+  const vendorOrders: VendorItem[] = order.vendor_orders ?? [];
+  const visibleVendors = vendorOrders.slice(0, 3);
+  const extraVendorCount = vendorOrders.length - visibleVendors.length;
+  const extraVendorItemCount = vendorOrders
+    .slice(3)
+    .reduce(
+      (sum, v) => sum + v.items.reduce((s, item) => s + item.quantity, 0),
+      0,
+    );
+  const extraVendorTotal = vendorOrders
+    .slice(3)
+    .reduce((sum, v) => sum + v.total_amount, 0);
 
   return (
     <section className="py-12">
       <Container>
-        {/* Header */}
-        <div className="mb-6 flex gap-3 items-center justify-between">
-          <h1 className="text-3xl font-semibold text-[#222]">
-            Thank You For Your Purchase.
-          </h1>
+        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left - informational content */}
+          <div className="lg:col-span-7">
+            <div className="flex items-center gap-3 mb-2">
+              <IoCheckmarkCircle className="text-primary-green text-3xl shrink-0" />
+              <h1 className="text-2xl font-semibold text-secondary-black">
+                Thank you for your purchase!
+              </h1>
+            </div>
+            <p className="text-secondary-gray mb-6">
+              Your order has been placed and your payment is confirmed.
+            </p>
 
-          <Link
-            href="/shop"
-            className="rounded-md bg-primary-green cursor-pointer px-5 py-3 font-medium text-white hover:scale-105 duration-300 transition-transform"
-          >
-            Continue Shopping
-          </Link>
-        </div>
-
-        {/* Order Summary */}
-        <div className="rounded-lg bg-[#F5F5F5] px-6 py-5 shadow-sm">
-          <div className="grid gap-12 lg:grid-cols-2">
-            {/* Left */}
-            <div>
-              <h3 className="mb-1 text-lg font-bold text-secondary-black">
-                Order No.
-              </h3>
-
-              {user ? (
-                <Link
-                  href={`${user?.role === "vendor" ? `/dashboard/${user?.membership?.membership_type}/orders/details/${order_id}` : `/dashboard/customer/orders/${order_id}`}`}
-                  className="mb-5 text-sm font-medium text-secondary-black/60 block hover:underline"
-                >
-                  {singleOrder?.data?.order_number}
-                </Link>
-              ) : (
-                <button className="mb-5 text-sm font-medium text-secondary-black/60 block">
-                  {singleOrder?.data?.order_number}
-                </button>
-              )}
-
-              <div className="flex items-center gap-3 mb-5 pb-5 border-b border-gray-300">
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-green text-white">
-                  <FaCheck size={18} />
+            <div className="space-y-5">
+              {/* If has account */}
+              <div className="flex gap-3.5">
+                <div className="size-10 rounded-full bg-off-green/30 grid place-items-center shrink-0">
+                  <IoPersonOutline className="text-primary-green text-lg" />
                 </div>
-                <p className="text-lg font-bold text-primary-green">
-                  Your order has been processed!
-                </p>
-              </div>
-
-              {/* Account holder */}
-              <div className="flex gap-4 items-start mb-4 pb-4 border-b border-gray-300">
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
-                  {/* person icon */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="size-5"
-                  >
-                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-semibold text-[#325b47] mb-1">
+                <div className="text-[15px] text-secondary-gray leading-relaxed">
+                  <p className="font-semibold text-secondary-black mb-1">
                     If you have a Sustainable Shopper account:
                   </p>
-                  <p className="text-sm text-gray-600 leading-6">
-                    Go to the Orders tab on your dashboard and find the order
-                    and click View Details. You can track the status of your
-                    order from there.
+                  <p className="text-sm leading-6.5">
+                    Click the View Order button above, or go to the Orders tab
+                    on your dashboard and select View Details. From there, you
+                    can view your order details, track the status of your items,
+                    and message the shop(s) directly.
                   </p>
                 </div>
               </div>
 
-              {/* Guest shopper */}
-              <div className="flex gap-4 items-start mb-6 pb-5 border-b border-gray-300">
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
-                  {/* email icon */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="size-5"
-                  >
-                    <rect x="2" y="4" width="20" height="16" rx="2" />
-                    <path d="m2 7 10 7 10-7" />
-                  </svg>
+              <hr className="border-gray-200" />
+
+              {/* If guest */}
+              <div className="flex gap-3.5">
+                <div className="size-10 rounded-full bg-off-green/30 grid place-items-center shrink-0">
+                  <IoMailOutline className="text-primary-green text-lg" />
                 </div>
-                <div>
-                  <p className="font-semibold text-[#325b47] mb-1">
-                    If you were a guest shopper:
+                <div className="text-[15px] text-secondary-gray leading-relaxed">
+                  <p className="font-semibold text-secondary-black mb-1">
+                    If you checked out as a guest:
                   </p>
-                  <p className="text-sm text-gray-600 leading-6">
+                  <p className="text-sm leading-6.5">
                     Consider creating a free Sustainable Shopper account{" "}
                     <Link
                       href="/auth/register?role=customer"
-                      className="underline font-medium"
+                      className="text-primary-green underline font-medium"
                     >
                       here.
-                    </Link>{" "}
-                    If not, check your email for order details and updates.
+                    </Link>
+                  </p>
+                  <p className="text-sm leading-6.5">
+                    Otherwise, check your email for order details and updates.
+                    If you need to communicate with the shop owner(s) about your
+                    order, simply select Message This Shop in your order
+                    confirmation email.
                   </p>
                 </div>
               </div>
-
-              {/* Footer message */}
-              <p className="text-gray-700 leading-7">
-                Thank you for choosing to shop local.
-                <br />
-                <span className="flex gap-2 items-center">
-                  Together we rise, together we thrive!
-                  <FaHeart className="text-primary-green" />
-                </span>
-              </p>
             </div>
 
-            {/* Right */}
-            <div>
-              <div className="overflow-hidden rounded-lg h-[300px] w-full">
-                {mapShops.length > 0 && (
-                  <ShopsMap
-                    height="300px"
-                    shops={mapShops}
-                    shopLoading={isLoading}
-                    shippingDistanceMiles={
-                      singleOrder?.data?.shipping_distance_miles ?? null
-                    }
-                  />
+            <hr className="border-gray-200 mt-4 mb-4" />
+
+            <p className="text-secondary-black">
+              Thank you for choosing to shop local.
+              <br />
+              <span className="text-primary-green font-medium italic">
+                Together we rise, together we thrive! ♥
+              </span>
+            </p>
+          </div>
+
+          {/* Right - order summary */}
+          <div className="lg:col-span-5">
+            <div className="flex gap-2 mb-4">
+              <button
+                disabled={!user}
+                onClick={() =>
+                  router.push(`/dashboard/customer/orders/${order_id}`)
+                }
+                className={`flex-1 text-center px-4 py-2.5 rounded-lg border border-gray-300 text-secondary-black text-sm font-medium transition-all duration-300 cursor-pointer enabled:hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60 disabled:pointer-events-none`}
+              >
+                View order
+              </button>
+
+              <Link
+                href="/shop"
+                className="flex-1 text-center px-4 py-2.5 rounded-lg bg-primary-green text-white text-sm font-medium hover:scale-95 transition-all duration-300"
+              >
+                Continue shopping
+              </Link>
+            </div>
+
+            <div className="border border-gray-200 rounded-xl p-5">
+              <h3 className="font-semibold text-secondary-black mb-1">
+                Order summary
+              </h3>
+              <p className="text-sm text-secondary-gray mb-4">
+                {order.order_number} · {order.vendor_count} shop
+                {order.vendor_count > 1 ? "s" : ""}
+              </p>
+
+              <div className="space-y-4">
+                {visibleVendors.map(vendorOrder => {
+                  const itemCount = vendorOrder.items.reduce(
+                    (sum, item) => sum + item.quantity,
+                    0,
+                  );
+
+                  return (
+                    <div
+                      key={vendorOrder.id}
+                      className="flex items-center gap-3"
+                    >
+                      {vendorOrder.shop?.image ? (
+                        <figure className="size-11 rounded-lg border border-gray-100 relative shrink-0 bg-gray-100 overflow-hidden">
+                          <Image
+                            src={`${process.env.NEXT_PUBLIC_SITE_URL}/${vendorOrder.shop.image}`}
+                            alt={vendorOrder.shop.name}
+                            fill
+                            unoptimized
+                            className="object-cover"
+                          />
+                        </figure>
+                      ) : (
+                        <div className="size-11 rounded-full bg-primary-green/10 flex items-center justify-center font-semibold text-[13px] text-primary-green shrink-0">
+                          {getInitials(vendorOrder.shop?.name)}
+                        </div>
+                      )}
+
+                      <div className="grow min-w-0">
+                        <p className="text-sm font-semibold text-secondary-black truncate">
+                          {vendorOrder.shop?.name}
+                        </p>
+                        <p className="text-xs text-primary-green">
+                          {fulfillmentDisplay(vendorOrder.fulfillment_type)}
+                        </p>
+                      </div>
+
+                      <p className="text-xs text-secondary-gray shrink-0">
+                        {itemCount} item{itemCount > 1 ? "s" : ""}
+                      </p>
+
+                      <p className="text-sm font-semibold text-secondary-black shrink-0 w-16 text-right">
+                        ${vendorOrder.total_amount.toFixed(2)}
+                      </p>
+                    </div>
+                  );
+                })}
+
+                {extraVendorCount > 0 && (
+                  <div className="flex items-center gap-3">
+                    <div className="size-11 rounded-full bg-gray-100 flex items-center justify-center font-semibold text-[13px] text-secondary-gray shrink-0">
+                      +{extraVendorCount}
+                    </div>
+                    <div className="grow min-w-0">
+                      <p className="text-sm font-semibold text-secondary-black">
+                        +{extraVendorCount} more seller
+                        {extraVendorCount > 1 ? "s" : ""}
+                      </p>
+                      <p className="text-xs text-primary-green">
+                        {fulfillmentDisplay(
+                          vendorOrders[3]?.fulfillment_type ?? "",
+                        )}
+                      </p>
+                    </div>
+                    <p className="text-xs text-secondary-gray shrink-0">
+                      {extraVendorItemCount} item
+                      {extraVendorItemCount > 1 ? "s" : ""}
+                    </p>
+                    <p className="text-sm font-semibold text-secondary-black shrink-0 w-16 text-right">
+                      ${extraVendorTotal.toFixed(2)}
+                    </p>
+                  </div>
                 )}
               </div>
 
-              {/* Progress */}
-              <div className="mt-5 flex items-center justify-center">
-                <div className="flex w-full max-w-sm items-center justify-between relative">
-                  {/* Connector left */}
-                  <div className="absolute top-5 left-[10%] w-[37%] border-t-2 border-dashed border-[#325b47]" />
-                  {/* Connector right */}
-                  <div className="absolute top-5 left-[53%] w-[37%] border-t-2 border-dashed border-gray-300" />
+              <hr className="border-gray-200 my-4" />
 
-                  {/* Step 1 — Purchased */}
-                  <div className="flex flex-col items-center z-10">
-                    <div className="flex size-10 items-center justify-center rounded-full bg-[#325b47] text-white">
-                      <FaCheck />
-                    </div>
-                    <span className="mt-2 text-xs text-gray-500">
-                      Purchased
-                    </span>
-                  </div>
-
-                  {/* Step 2 — Shipped */}
-                  <div className="flex flex-col items-center z-10">
-                    <div className="flex size-10 items-center justify-center rounded-full bg-off-green/50 text-primary-green">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="size-5"
-                      >
-                        <path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z" />
-                        <circle cx="5.5" cy="18.5" r="1.5" />
-                        <circle cx="18.5" cy="18.5" r="1.5" />
-                      </svg>
-                    </div>
-                    <span className="mt-2 text-xs text-gray-500">Shipped</span>
-                  </div>
-
-                  {/* Step 3 — Delivered */}
-                  <div className="flex flex-col items-center z-10">
-                    <div className="size-10 rounded-full bg-off-green/70" />
-                    <span className="mt-2 text-xs text-gray-500">
-                      Delivered
-                    </span>
-                  </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm text-secondary-black">
+                  <span>Subtotal</span>
+                  <span>${order.sub_total.toFixed(2)}</span>
                 </div>
+
+                {order.discount_amount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-secondary-black">Discounts</span>
+                    <span className="text-primary-green">
+                      - ${order.discount_amount.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+
+                {(order.shipping_amount > 0 || order.delivery_amount > 0) && (
+                  <div className="flex justify-between text-sm text-secondary-black">
+                    <span>Shipping &amp; Local Delivery Fees</span>
+                    <span>
+                      $
+                      {(order.shipping_amount + order.delivery_amount).toFixed(
+                        2,
+                      )}
+                    </span>
+                  </div>
+                )}
+
+                <div className="flex justify-between text-sm text-secondary-black">
+                  <span>Sales Tax</span>
+                  <span>${order.tax_amount.toFixed(2)}</span>
+                </div>
+              </div>
+
+              <hr className="border-gray-200 my-4" />
+
+              <div className="flex justify-between items-center">
+                <span className="text-secondary-black font-semibold">
+                  Order total
+                </span>
+                <span className="text-xl font-bold text-primary-green">
+                  ${order.total_amount.toFixed(2)}
+                </span>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Saved Items */}
-        {user && (
-          <div className="mt-10">
-            <h2 className="text-xl font-semibold">Your Saved Items</h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-5">
-              {isFavoriteLoading ? (
-                [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
-              ) : myFavorites?.data?.length > 0 ? (
-                myFavorites?.data?.slice(0, 4)?.map((item: any) => (
-                  <Product
-                    key={item?.id}
-                    is_feathered={false}
-                    product={
-                      {
-                        id: item?.product?.id,
-                        product_name: item?.product?.product_name,
-                        product_quantity: item?.product?.product_quantity,
-                        product_price: item?.product?.product_price,
-                        out_of_stock: item?.product?.out_of_stock,
-                        unlimited_stock: item?.product?.unlimited_stock,
-                        is_favorite: item?.product?.is_favorite,
-                        selling_option: item?.product?.selling_option,
-                        images: item?.product?.images || [],
-                      } as any
-                    }
-                  />
-                ))
-              ) : (
-                <p className="text-gray-500 text-center col-span-full">
-                  No products found in your wishlist.
-                </p>
-              )}
-            </div>
-
-            {/* <div className="mt-6 flex justify-end">
-            <button className="flex items-center gap-1 text-sm font-medium">
-              View all
-              <ChevronDown size={16} />
-            </button>
-          </div> */}
-          </div>
-        )}
-
-        {/* More From Shop */}
-        <div className="mt-14">
-          <h2 className="text-xl font-semibold">More From This Shop</h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-5">
-            {isShopLoading ? (
-              [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
-            ) : products?.data?.data?.length > 0 ? (
-              products?.data?.data?.map((item: any) => (
-                <Product
-                  key={item?.id}
-                  is_feathered={false}
-                  product={
-                    {
-                      id: item?.id,
-                      product_name: item?.product_name,
-                      product_quantity: item?.product_quantity,
-                      product_price: item?.product_price,
-                      out_of_stock: item?.out_of_stock,
-                      unlimited_stock: item?.unlimited_stock,
-                      is_favorite: item?.is_favorite,
-                      selling_option: item?.selling_option,
-                      images: item?.images || [],
-                    } as any
-                  }
-                />
-              ))
-            ) : (
-              <p className="text-gray-500 text-center col-span-full">
-                No products found.
-              </p>
-            )}
-          </div>
-
-          {/* <div className="mt-6 flex justify-end">
-            <button className="flex items-center gap-1 text-sm font-medium">
-              View all
-              <ChevronDown size={16} />
-            </button>
-          </div> */}
         </div>
       </Container>
     </section>

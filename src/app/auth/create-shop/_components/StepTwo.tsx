@@ -60,17 +60,24 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
               </p>
             )}
 
-            <ul className="mt-[2px] text-sm md:text-[16px] text-secondary-gray ml-5">
+            <div className="pt-4 text-sm md:text-[16px] text-secondary-gray/90 ml-5">
               <li className="list-disc">Between 4-30 characters</li>
               <li className="list-disc">
                 No special characters, spaces, or accented letters
               </li>
-            </ul>
+            </div>
           </div>
 
-          <h5 className="text-sm md:text-[16px] text-secondary-gray">
-            Can be your personal name/nickname or company name.  When a trade is
-            offered, this is the name that will show to others.
+          <h5 className="text-sm md:text-[16px] text-secondary-gray/80 flex flex-col gap-3">
+            <span> Can be your personal name, nickname, or company name.</span>
+            <span>
+              This is what people will see when they search by zip code. It's
+              how you will be represented on the platform.
+            </span>
+            <span>
+              When you make a sale or trade, this is the name that shows to
+              others.
+            </span>
           </h5>
 
           {/* City State */}

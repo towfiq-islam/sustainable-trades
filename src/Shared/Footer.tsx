@@ -8,7 +8,11 @@ import {
   LinkedinSvg,
   PinterestSvg,
 } from "@/Components/Svg/SvgContainer";
-import { getSiteSettings, getSocialLinks } from "@/lib/cms.api";
+import {
+  getDynamicPages,
+  getSiteSettings,
+  getSocialLinks,
+} from "@/lib/cms.api";
 
 const helpUsLinks = [
   { id: 1, label: "How-To Tutorials", path: "/help/how-to-tutorials" },
@@ -16,11 +20,12 @@ const helpUsLinks = [
   { id: 3, label: "Contacts", path: "/help/contact" },
 ];
 
-const Footer = async ({ dynamicPage }: any) => {
+const Footer = async () => {
   const footer_title_class =
     "text-xl font-bold text-accent-white leading-[ 140%] tracking-[0.2px] mb-3";
   const socialLinks = await getSocialLinks();
   const siteSettings = await getSiteSettings();
+  const dynamicPages = await getDynamicPages();
 
   return (
     <footer className="bg-primary-green pt-10 pb-5">
@@ -45,11 +50,11 @@ const Footer = async ({ dynamicPage }: any) => {
             <div>
               <h3 className={footer_title_class}>About</h3>
               <ul className="flex flex-col gap-3">
-                {dynamicPage?.map((item: any) => (
+                {dynamicPages?.data?.map((item: any) => (
                   <Link
                     key={item?.id}
                     href={`/about/${item?.page_slug}`}
-                    className="text-accent-white text-sm md:text-base tracking-[0.16px]"
+                    className="text-accent-white text-sm md:text-base tracking-[0.16px] hover:underline"
                   >
                     {item?.page_title}
                   </Link>
@@ -82,7 +87,7 @@ const Footer = async ({ dynamicPage }: any) => {
                   <Link
                     key={item?.id}
                     href={item?.path}
-                    className="text-accent-white text-sm md:text-base tracking-[0.16px]"
+                    className="text-accent-white text-sm md:text-base tracking-[0.16px] hover:underline"
                   >
                     {item?.label}
                   </Link>
@@ -98,7 +103,7 @@ const Footer = async ({ dynamicPage }: any) => {
                   <Link
                     key={item?.id}
                     href={item?.profile_link}
-                    className="text-accent-white text-sm md:text-base tracking-[0.16px] flex gap-2 items-center"
+                    className="text-accent-white text-sm md:text-base tracking-[0.16px] flex gap-2 items-center hover:underline"
                   >
                     {item?.social_media === "facebook" && <FacebookSvg />}
                     {item?.social_media === "instagram" && <InstagramSvg />}
@@ -127,7 +132,9 @@ const Footer = async ({ dynamicPage }: any) => {
           <div className="flex flex-col md:flex-row gap-2.5 sm:gap-4 md:gap-10 md:items-center md:text-base text-sm">
             {/* <Link href="/">Acceptable Use Policy</Link>
             <Link href="/">Privacy Policy</Link> */}
-            <Link href="/help/terms-and-conditions">Terms and Conditions</Link>
+            <Link href="/help/terms-and-conditions" className="hover:underline">
+              Terms and Conditions
+            </Link>
           </div>
         </div>
 

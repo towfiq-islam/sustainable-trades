@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Review from "@/Components/Common/DashboardReusable/Review";
+import Review from "@/Components/Common/Review";
 import useAuth from "@/Hooks/useAuth";
 import { useGetShopReviewsQuery } from "@/redux/api/shopApi";
 

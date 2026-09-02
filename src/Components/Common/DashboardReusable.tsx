@@ -1,0 +1,335 @@
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import useAuth from "@/Hooks/useAuth";
+import ProdashboardStatistics from "./ProdashboardStatistics";
+import moment from "moment";
+import {
+  InventoryItemSkeleton,
+  NotificationSkeleton,
+} from "@/Components/Loader/Loader";
+import { useGetLatestProductsQuery } from "@/redux/api/productApi";
+import {
+  useGetDashboardHomeDataQuery,
+  useGetTodaysNotificationsQuery,
+} from "@/redux/api/vendorApi";
+import { FaAngleRight } from "react-icons/fa";
+import { FiBox, FiBell } from "react-icons/fi";
+import { ImageItem } from "@/Types";
+
+type ItemData = {
+  id: number;
+  product_name: string;
+  unlimited_stock: boolean;
+  product_quantity: string;
+  selling_option: string;
+  out_of_stock: boolean;
+  images: ImageItem[];
+};
+
+type NotificationItem = {
+  id: number;
+  created_at: string;
+  user: {
+    avatar: string;
+    name: string;
+  };
+  data: {
+    subject: string;
+    message: string;
+  };
+};
+
+type HomeProps = {
+  isStatistics: boolean;
+  isPackage?: boolean;
+};
+
+const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
+  const { user } = useAuth();
+  const { data: homeData, isLoading: homeDataLoading } =
+    useGetDashboardHomeDataQuery();
+  const { data: notificationsData, isLoading: notificationLoading } =
+    useGetTodaysNotificationsQuery();
+  const { data: latestProductsData, isLoading: latestProductsLoading } =
+    useGetLatestProductsQuery({});
+
+  return (
+    <>
+      {/* Top Section */}
+      <div className="pb-9  flex flex-col  md:flex-row justify-between md:items-center gap-[32px] md:gap-0">
+        <div className="text-[20px] md:text-[24px] flex flex-col gap-y-2">
+          <h3 className=" font-semibold text-secondary-black tracking-[2.4px]">
+            Hi {user?.first_name},
+          </h3>
+          <h3 className=" font-semibold text-secondary-black tracking-[2.4px]">
+            Here’s your store: {user?.shop_info?.shop_name}
+          </h3>
+        </div>
+
+        <Link
+          href={`/shop-details?view=${"owner"}&id=${
+            user?.shop_info?.user_id
+          }&listing_id=${user?.shop_info?.id}`}
+          className="px-[20px] lg:px-[58px] py-2 md:py-4 rounded-[8px] bg-accent-red text-[14px] md:text-[18px] font-semibold text-secondary-black cursor-pointer hover:bg-transparent duration-500 ease-in-out border border-accent-red text-center"
+        >
+          Edit Shop
+        </Link>
+      </div>
+
+      {/* Upper section */}
+      <div className="border border-accent-gray py-3 rounded-[8px]">
+        <div className="flex flex-wrap justify-between items-center">
+          <div className="px-[40px] md:px-[65px]">
+            <p className="text-[16px] text-[#67645F] font-semibold text-center">
+              Orders
+            </p>
+            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
+              {homeDataLoading ? (
+                <p className="w-10 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+              ) : (
+                homeData?.data?.total_orders
+              )}
+            </h4>
+          </div>
+          <div className="px-[40px] md:px-[65px]">
+            <p className="text-[16px] text-[#67645F] font-semibold text-center">
+              Trades
+            </p>
+            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
+              {homeDataLoading ? (
+                <p className="w-14 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+              ) : (
+                homeData?.data?.total_trades
+              )}
+            </h4>
+          </div>
+          <div className="px-[40px] md:px-[65px]">
+            <p className="text-[16px] text-[#67645F] font-semibold text-center">
+              Revenue
+            </p>
+            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
+              {homeDataLoading ? (
+                <p className="w-20 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+              ) : (
+                `${homeData?.data?.total_revenue ? "$" : ""}${
+                  homeData?.data?.total_revenue
+                }`
+              )}
+            </h4>
+          </div>
+          <div className="px-[40px] md:px-[65px]">
+            <p className="text-[16px] text-[#67645F] font-semibold text-center">
+              Visits
+            </p>
+            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
+              {homeDataLoading ? (
+                <p className="w-10 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+              ) : (
+                homeData?.data?.total_visits
+              )}
+            </h4>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-[20px] lg:flex-row justify-between py-10">
+        {/* Latest Products */}
+        <div className="pt-[30px] md:pt-[77px] pb-8">
+          <div className="border border-accent-gray rounded-[10px] w-full md:w-[380px]">
+            <div className="p-3">
+              <div className="flex justify-between">
+                <h5 className="text-[16px] text-secondary-black font-semibold text-center">
+                  Inventory
+                </h5>
+
+                {latestProductsData?.data?.length > 0 && (
+                  <Link
+                    href={`/dashboard/${user?.membership?.membership_type}/listing`}
+                    className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+                  >
+                    More
+                    <FaAngleRight />
+                  </Link>
+                )}
+              </div>
+
+              {latestProductsLoading ? (
+                Array.from({ length: 3 }).map((_, idx) => (
+                  <InventoryItemSkeleton key={idx} />
+                ))
+              ) : latestProductsData?.data?.length > 0 ? (
+                latestProductsData?.data?.map((item: ItemData) => (
+                  <div
+                    key={item?.id}
+                    className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300 overflow-hidden"
+                  >
+                    <figure className="relative w-[80px] h-[80px] rounded-lg shrink-0">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.images?.[0]?.image}`}
+                        alt="Inventory"
+                        fill
+                        className="shrink-0 w-full h-full object-cover rounded-lg"
+                      />
+                    </figure>
+
+                    <div className="w-full">
+                      <div className="flex w-full justify-between items-center">
+                        <h4 className="text-[14px] text-secondary-black font-semibold truncate w-40">
+                          {item?.product_name}
+                        </h4>
+
+                        <h4 className="text-[14px] text-primary-green font-semibold">
+                          {item?.unlimited_stock
+                            ? "Unlimited Stock"
+                            : `${item?.product_quantity} items left`}
+                        </h4>
+                      </div>
+
+                      <p className="text-sm text-secondary-black font-normal py-1 truncate">
+                        {item?.selling_option === "for_sale_or_trade_barter"
+                          ? "For sale and trade/barter"
+                          : item?.selling_option === "trade/barter"
+                            ? "For trade/barter"
+                            : "For sale"}
+                      </p>
+
+                      <h6 className="text-[12px] text-secondary-black font-semibold">
+                        {item?.out_of_stock ? "Out of stock" : "In Stock"}
+                      </h6>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center pt-5 pb-10 px-4 text-center">
+                  <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-4">
+                    <FiBox className="text-accent-red text-2xl" />
+                  </div>
+
+                  <h6 className="text-[15px] text-secondary-black font-semibold">
+                    No inventory yet
+                  </h6>
+
+                  <p className="text-sm text-[#67645F] font-normal mt-2 max-w-[250px]">
+                    Products you add to your store will show up here.
+                  </p>
+
+                  <Link
+                    href={`/dashboard/${user?.membership?.membership_type}/create-listing`}
+                    className="mt-4 px-5 py-2 rounded-[8px] bg-accent-red text-[13px] font-semibold text-gray-50 border border-accent-red duration-300"
+                  >
+                    Add Product
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Popup */}
+        {isPackage && (
+          <div className="border border-accent-gray rounded-[8px] p-4 lg:w-1/3 text-center flex flex-col justify-center items-center">
+            <h3 className="text-[16px] md:text-[20px] font-semibold text-[#13141D">
+              Want more admin access?
+            </h3>
+            <p className="text-[13px] md:text-[16px] font-normal text-secondary-black max-w-[280px] pt-[10px] pb-2.5 lg:pb-5">
+              Upgrade at anytime to pro! All you have to do is pay the
+              difference for the remainder of the year.
+            </p>
+
+            <Link
+              href="/dashboard/basic/membership"
+              className="min-w-[250px] md:min-w-[300px] py-2 md:py-4 rounded-[8px] bg-transparent text-[14px] md:text-[18px] font-semibold text-secondary-black cursor-pointer hover:bg-accent-red  duration-500 ease-in-out border border-accent-red"
+            >
+              Upgrade To Pro
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {/* Recent Activity */}
+      <div className="border border-accent-gray rounded-[8px]">
+        <div className="flex justify-between p-4">
+          <h5 className="text-[16px] text-secondary-black font-semibold text-center">
+            Recent Activity
+          </h5>
+
+          {notificationsData?.data?.data?.length > 0 && (
+            <Link
+              href={`/dashboard/${user?.membership?.membership_type}/notification`}
+              className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+            >
+              More
+              <FaAngleRight />
+            </Link>
+          )}
+        </div>
+
+        {notificationLoading ? (
+          Array.from({ length: 3 }).map((_, idx) => (
+            <NotificationSkeleton key={idx} />
+          ))
+        ) : notificationsData?.data?.data?.length > 0 ? (
+          notificationsData?.data?.data?.map((item: NotificationItem) => (
+            <div
+              key={item?.id}
+              className="border-b last:border-b-0 border-accent-gray py-4"
+            >
+              <div className="flex flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
+                <div className="flex gap-x-2 items-center">
+                  <figure className="rounded-full size-[50px] grid place-items-center bg-accent-red text-white text-lg font-semibold relative">
+                    {item?.user?.avatar ? (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.user?.avatar}`}
+                        alt="profile"
+                        fill
+                        className="rounded-full size-full object-cover"
+                      />
+                    ) : (
+                      <h3>{item?.user?.name?.at(0)}</h3>
+                    )}
+                  </figure>
+
+                  <div className="">
+                    <h5 className="text-[14px] text-secondary-black font-semibold">
+                      {item?.user?.name}
+                    </h5>
+                    <p className="text-[14px] text-[#67645F] font-normal">
+                      {`Sent ${moment(item?.created_at).fromNow()}`}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <h5 className="text-[14px] text-secondary-black font-semibold">
+                    {item?.data?.subject}
+                  </h5>
+                  <p className="text-[14px] text-[#67645F] font-normal truncate">
+                    {item?.data?.message}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center pb-10 px-4 text-center">
+            <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-4">
+              <FiBell className="text-accent-red text-2xl" />
+            </div>
+            <h6 className="text-[15px] text-secondary-black font-semibold">
+              You&apos;re all caught up
+            </h6>
+            <p className="text-sm text-[#67645F] font-normal mt-2 max-w-[250px]">
+              New orders, trades, and messages will appear here as they happen.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Statistics */}
+      {isStatistics && <ProdashboardStatistics />}
+    </>
+  );
+};
+
+export default DashboardReusable;

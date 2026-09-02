@@ -1,4 +1,4 @@
-import CreateListing from "@/Components/PageComponents/dashboardPages/createListingComponents/CreateListing";
+import CreateListing from "@/Components/createListing/CreateListing";
 
 const page = () => {
   return <CreateListing variant="pro" />;

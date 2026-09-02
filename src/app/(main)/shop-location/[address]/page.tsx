@@ -7,8 +7,7 @@ import { Navigation } from "swiper/modules";
 import { use, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Subscribe from "@/app/(main)/_Components/Subscribe";
-import LocalMagicMarker from "@/Components/PageComponents/mainPages/shopPageComponents/LocalMagicMarker";
-import Product from "@/Components/Common/Product";
+import Product from "@/Components/Common/ProductWrapper";
 import Container from "@/Components/Common/Container";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
@@ -23,6 +22,7 @@ import {
   useGetCategoryDetailsQuery,
   useGetProductCategoriesQuery,
 } from "@/redux/api/productApi";
+import LocalMagicMarker from "@/Components/shop/LocalMagicMarker";
 
 type categoryItem = {
   id: number;

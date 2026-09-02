@@ -1,4 +1,4 @@
-import OrdersList from "@/Components/PageComponents/dashboardPages/Orders/OrdersList";
+import OrdersList from "@/Components/order/OrdersList";
 
 const page = () => {
   return (
@@ -6,7 +6,6 @@ const page = () => {
       role="customer"
       showHeader={true}
       showTabs={true}
-      reviewBasePath="/dashboard/customer/reviews"
       orderBasePath="/dashboard/customer/orders"
     />
   );

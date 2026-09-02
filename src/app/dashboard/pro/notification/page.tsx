@@ -1,4 +1,4 @@
-import ReuseableNotification from "@/Components/Common/DashboardReusable/ReuseableNotification";
+import ReuseableNotification from "@/Components/Common/ReuseableNotification";
 
 const page = () => {
   return <ReuseableNotification />;

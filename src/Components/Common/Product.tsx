@@ -3,12 +3,9 @@ import "swiper/css";
 import Link from "next/link";
 import Image from "next/image";
 import "swiper/css/pagination";
-import toast from "react-hot-toast";
-import useAuth from "@/Hooks/useAuth";
 import { FaHeart } from "react-icons/fa";
-import { Pagination } from "swiper/modules";
-import { CgSpinnerTwo } from "react-icons/cg";
 import { LuLoaderPinwheel } from "react-icons/lu";
+import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   AddToCartSvg,
@@ -16,105 +13,68 @@ import {
   LocationTwoSvg,
   SignSvg,
 } from "../Svg/SvgContainer";
-import { useAddFavoriteMutation } from "@/redux/api/productApi";
-import { useAddToCartMutation } from "@/redux/api/cartApi";
-import { useRouter } from "next/navigation";
+import { useAddFavorite } from "@/Hooks/useAddFavorite";
+import { useAddToCart } from "@/Hooks/useAddToCart";
+import { Fulfillment } from "@/lib/fulfillment";
+import { useState } from "react";
+import Modal from "./Modal";
+import LocalPickupModal from "../Modals/LocalPickupModal";
+import SuccessModal from "../Modals/SuccessModal";
 
-type imageItem = {
+type ProductItem = {
   id: number;
-  image: string;
-};
-
-type ProductData = {
-  id: number;
-  distance: number;
-  images?: imageItem[];
   product_name?: string;
   product_price?: string;
+  fulfillment?: Fulfillment[];
+  product_quantity?: number;
+  shop?: {
+    id: number;
+    shop_name: string;
+    user: {
+      membership: {
+        membership_type: string;
+      };
+    };
+  };
+  images?: {
+    id: number;
+    image: string;
+  }[];
+  distance: number;
   is_favorite?: boolean;
   selling_option?: string;
-  product_quantity?: number;
   unlimited_stock?: boolean;
   out_of_stock?: boolean;
 };
 
-type ProductProps = {
-  product: ProductData;
-  is_feathered?: boolean;
-  has_wishlist?: boolean;
-  has_cart?: boolean;
-  has_slider?: boolean;
+type Props = {
+  product: ProductItem;
   isMiles?: boolean;
 };
 
-const Product = ({
-  product,
-  is_feathered = false,
-  has_wishlist = true,
-  has_cart = true,
-  isMiles = false,
-}: ProductProps) => {
-  const router = useRouter();
-  const { user } = useAuth();
-  const [addFavoriteMutation, { isLoading: isPending }] =
-    useAddFavoriteMutation();
-  const [addToCartMutation, { isLoading: addCardPending }] =
-    useAddToCartMutation();
-
-  // Func for add to favorite
-  const handleAddFavorite = (product_id: any) => {
-    if (!user) {
-      toast.error("Please login first to proceed");
-      router.push("/auth/login");
-      return;
-    }
-    addFavoriteMutation(product_id)
-      .unwrap()
-      .then(res => {
-        toast.success(res.message);
-      })
-      .catch(err => {
-        toast.error(err?.data?.message);
-      });
-  };
-
-  // Func for add to cart
-  const handleAddToCart = (id: number) => {
-    if (!user) {
-      toast.error("Please login first to proceed");
-      router.push("/auth/login");
-      return;
-    }
-
-    addToCartMutation({ productId: id, data: { quantity: 1 } })
-      .unwrap()
-      .then(res => {
-        toast.success(res?.message);
-      })
-      .catch(err => {
-        toast.error(err?.data?.message);
-      });
-  };
+const Product = ({ product, isMiles = false }: Props) => {
+  const [openMsg, setOpenMsg] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
+  const { handleAddFavorite, isLoading: isPending } = useAddFavorite();
+  const { handleAddToCart } = useAddToCart();
 
   return (
     <div className="rounded-t-lg relative">
       {/* Wishlist btn */}
-      {has_wishlist && (
-        <button
-          onClick={() => handleAddFavorite(product?.id)}
-          className="absolute z-40 top-4 right-5 size-9 rounded-full border border-gray-300 grid place-items-center bg-primary-green cursor-pointer"
-        >
-          {isPending ? (
-            <LuLoaderPinwheel className="animate-spin text-white" />
-          ) : (
-            <FaHeart
-              className={`${
-                product?.is_favorite ? "text-accent-red" : "text-accent-white"
-              }`}
-            />
-          )}
-        </button>
-      )}
+      <button
+        onClick={() => handleAddFavorite(product?.id as number)}
+        className="absolute z-40 top-4 right-5 size-9 rounded-full grid place-items-center bg-primary-green cursor-pointer"
+      >
+        {isPending ? (
+          <LuLoaderPinwheel className="animate-spin text-white" />
+        ) : (
+          <FaHeart
+            className={`${
+              product?.is_favorite ? "text-accent-red" : "text-accent-white"
+            }`}
+          />
+        )}
+      </button>
 
       {/* Stock Info */}
       {product?.unlimited_stock ? (
@@ -140,11 +100,7 @@ const Product = ({
       >
         {product?.images?.map((img, idx) => (
           <SwiperSlide key={idx}>
-            <figure
-              className={`w-full rounded-lg border border-gray-100 relative ${
-                is_feathered ? "h-[270px] xl:h-[350px]" : "h-[270px]"
-              }`}
-            >
+            <figure className="w-full rounded-lg border border-gray-100 relative h-[270px]">
               <div className="absolute inset-0 bg-black/20 rounded-lg" />
               <Image
                 src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
@@ -206,33 +162,50 @@ const Product = ({
           ${product?.product_price}
         </p>
 
-        {/* Cart btn */}
-        {has_cart && (
+        {product?.shop?.user?.membership?.membership_type === "basic" ? (
           <button
-            onClick={() => handleAddToCart(+product?.id)}
+            onClick={() => setOpenMsg(true)}
+            className="px-3 py-1.5 rounded-[5px] bg-primary-green text-white font-medium sm:text-base text-sm cursor-pointer hover:scale-95 transition-all duration-300"
+          >
+            Contact Seller
+          </button>
+        ) : (
+          <button
+            onClick={() => handleAddToCart(product as any)}
             disabled={
-              !user ||
-              addCardPending ||
               product?.selling_option === "trade/barter" ||
               (!product?.unlimited_stock && product?.out_of_stock) ||
               (!product?.unlimited_stock && product?.product_quantity === 0)
             }
             className={`flex gap-2 items-center px-3 py-1.5 rounded-[5px] border font-semibold text-secondary-gray duration-500 transition-all sm:text-base text-sm disabled:cursor-not-allowed disabled:opacity-75 disabled:border-gray-400 cursor-pointer border-secondary-gray enabled:hover:bg-primary-green enabled:hover:text-accent-white enabled:hover:scale-95`}
           >
-            {addCardPending ? (
-              <p className="flex gap-2 items-center justify-center">
-                <CgSpinnerTwo className="animate-spin text-xl" />
-                <span>Adding...</span>
-              </p>
-            ) : (
-              <p className="flex gap-2 items-center">
-                <span>Add to Cart</span>
-                <AddToCartSvg />
-              </p>
-            )}
+            <span>Add to Cart</span>
+            <AddToCartSvg />
           </button>
         )}
       </div>
+
+      <Modal
+        open={openMsg}
+        onClose={() => setOpenMsg(false)}
+        className="max-w-xl"
+      >
+        <LocalPickupModal
+          productId={product?.id}
+          onClose={() => {
+            setOpenMsg(false);
+            setSuccessModal(true);
+          }}
+        />
+      </Modal>
+
+      <Modal
+        open={successModal}
+        onClose={() => setSuccessModal(false)}
+        className="max-w-sm"
+      >
+        <SuccessModal onClose={() => setSuccessModal(false)} />
+      </Modal>
     </div>
   );
 };

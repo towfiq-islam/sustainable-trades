@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AccountTable from "@/Components/Common/DashboardReusable/AccountTable";
+import AccountTable from "@/Components/Common/AccountTable";
 import { Download } from "@/Components/Svg/SvgContainer";
 import { CSVLink } from "react-csv";
 import { useGetTradeAndBarterDataQuery } from "@/redux/api/tradeApi";

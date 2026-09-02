@@ -6,12 +6,19 @@ import { CheckSvg, StepSvg } from "@/Components/Svg/SvgContainer";
 import toast from "react-hot-toast";
 import { useCreateShopMutation } from "@/redux/api/authApi";
 import useAuth from "@/Hooks/useAuth";
-import StepOne from "./StepOne";
-import StepTwo from "./StepTwo";
-import StepThree from "./StepThree";
-import StepFour from "./StepFour";
-import StepFive from "./StepFive";
+import dynamic from "next/dynamic";
 import Link from "next/link";
+
+const StepOne = dynamic(() => import("./StepOne"));
+const StepTwo = dynamic(() => import("./StepTwo"));
+const StepThree = dynamic(() => import("./StepThree"));
+const StepFour = dynamic(() => import("./StepFour"), {
+  ssr: false,
+  loading: () => (
+    <div className="py-24 text-center text-secondary-gray">Loading...</div>
+  ),
+});
+const StepFive = dynamic(() => import("./StepFive"));
 import { RxCross2 } from "react-icons/rx";
 
 type StepItem = {

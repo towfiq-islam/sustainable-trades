@@ -1,0 +1,347 @@
+"use client";
+import type React from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Reload } from "@/Components/Svg/SvgContainer";
+import moment from "moment";
+import toast from "react-hot-toast";
+import useAuth from "@/Hooks/useAuth";
+import { useState } from "react";
+import { ImSpinner9 } from "react-icons/im";
+import { TradeRequestSkeleton } from "@/Components/Loader/Loader";
+import {
+  useApproveTradeOfferMutation,
+  useCancelTradeOfferMutation,
+} from "@/redux/api/tradeApi";
+import { FiRepeat } from "react-icons/fi";
+import { TradeItem, TradeRequest } from "@/Types";
+import MessageToSellerModal from "@/Components/Modals/MessageToSellerModal";
+import Modal from "./Modal";
+
+type TradesTabsProps = {
+  tradeRequests: TradeRequest[];
+  isLoading: any;
+};
+
+const actionButtons: Record<TradeRequest["status"], string[]> = {
+  pending: ["Approve", "Deny", "Counter", "Message"],
+  sent: ["Message"],
+  accepted: ["Message"],
+  // cancelled: ["Message"],
+};
+const actionButtonStyles: Record<
+  string,
+  { bg?: string; border?: string; text: string }
+> = {
+  Approve: {
+    bg: "bg-primary-green",
+    text: "text-white",
+  },
+  Deny: { border: "border-primary-red", text: "text-primary-red" },
+  Counter: {
+    bg: "bg-accent-red",
+    text: "text-black",
+    border: "border-accent-red",
+  },
+  Message: { border: "border-gray-200", text: "text-black" },
+  "Write A review": {
+    bg: "bg-[#5B867B]",
+    text: "text-white",
+    border: "border-[#5B867B]",
+  },
+};
+
+const TradesTabs: React.FC<TradesTabsProps> = ({
+  tradeRequests,
+  isLoading,
+}) => {
+  const { user } = useAuth();
+  const [userId, setUserId] = useState<number | null>(null);
+  const [tradeId, setTradeId] = useState<number | null>(null);
+  const [msgOpen, setMsgOpen] = useState<boolean>(false);
+  const router = useRouter();
+  const [approveTradeMutation, { isLoading: isApproving }] =
+    useApproveTradeOfferMutation();
+  const [cancleTradeMutation, { isLoading: isCancelling }] =
+    useCancelTradeOfferMutation();
+
+  const handleTrade = (btn: any, id: any) => {
+    if (btn === "Approve") {
+      approveTradeMutation(id)
+        .unwrap()
+        .then(res => {
+          toast.success(res?.message);
+        })
+        .catch(err => {
+          toast.error(err?.data?.message);
+        });
+    }
+
+    if (btn === "Deny") {
+      cancleTradeMutation(id)
+        .unwrap()
+        .then(res => {
+          toast.success(res?.message);
+        })
+        .catch(err => {
+          toast.error(err?.data?.message);
+        });
+    }
+
+    if (btn === "Message") {
+      setMsgOpen(true);
+    }
+  };
+
+  return (
+    <>
+      {isLoading ? (
+        Array.from({ length: 1 }).map((_, i) => (
+          <TradeRequestSkeleton key={i} />
+        ))
+      ) : tradeRequests?.length === 0 ? (
+        <div className="mt-10 flex flex-col items-center justify-center text-center py-16 border border-gray-200 rounded-[8px]">
+          <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-5">
+            <FiRepeat className="text-accent-red text-2xl" />
+          </div>
+          <h6 className="text-[15px] text-secondary-black font-semibold">
+            No trade requests yet
+          </h6>
+          <p className="text-sm text-gray-500 font-normal mt-2 max-w-xs">
+            When someone offers a trade for your listings, it'll show up here.
+          </p>
+        </div>
+      ) : (
+        <div className="h-[600px] overflow-y-auto mt-2 sm:p-6 flex flex-col gap-6">
+          {tradeRequests?.map((trade: TradeRequest) => (
+            <div
+              key={trade.id}
+              className="border border-[#BFBEBE] p-3 md:p-5 rounded-[8px] flex flex-col gap-4"
+            >
+              <div className="flex flex-col gap-3.5 sm:gap-0 sm:flex-row justify-between pb-4 border-b border-[#BFBEBE]">
+                <div className="flex flex-wrap sm:flex-nowrap  gap-x-5 items-center">
+                  <h3 className="font-semibold text-[16px] text-primary-green">
+                    Trade Request
+                  </h3>
+                  <h4 className="font-semibold text-[16px] text-accent-gray">
+                    {moment(trade.created_at).format("MMMM Do YYYY, h:mm:ss a")}
+                  </h4>
+                  <h5 className="font-semibold text-[16px] text-accent-gray">
+                    Inquiry # {trade.inquiry}
+                  </h5>
+                </div>
+                <button
+                  className={`px-3 text-sm py-2 rounded-lg min-w-[100px] inline-block capitalize font-semibold ${
+                    trade.status === "pending"
+                      ? "bg-accent-red text-white"
+                      : trade.status === "sent"
+                        ? "bg-blue-500"
+                        : trade.status === "accepted"
+                          ? "bg-accent-blue text-black"
+                          : "bg-primary-red text-white"
+                  }`}
+                >
+                  {trade.status}
+                </button>
+              </div>
+
+              {(() => {
+                const requestedItems = trade?.items?.filter(
+                  (item: any) => item?.type?.trim() === "requested",
+                );
+
+                const offeredItems = trade?.items?.filter(
+                  (item: any) => item?.type?.trim() === "offered",
+                );
+
+                return (
+                  <>
+                    {/*  REQUESTED PRODUCTS (TOP) */}
+                    {requestedItems?.map((item: any, idx: number) => (
+                      <div key={`requested-${idx}`} className="mb-4">
+                        <div className="flex justify-between items-end">
+                          <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images?.[0]?.image}`}
+                              alt={item?.product?.product_name}
+                              height={100}
+                              width={100}
+                              className="h-[100px] object-cover rounded-md"
+                            />
+
+                            <div className="flex flex-col">
+                              <Link
+                                href={`/product-details/${item?.product_id}`}
+                                className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-secondary-black hover:underline"
+                              >
+                                {item?.product?.product_name}
+                              </Link>
+
+                              <h4 className="text-[16px] sm:text-[17px] font-normal text-secondary-gray">
+                                Visit Shop:{" "}
+                                <Link
+                                  href={`/shop-details?view=customer&id=${item?.product?.shop?.user_id}&listing_id=${item?.product?.shop_info_id}`}
+                                  className="hover:underline"
+                                >
+                                  {item?.product?.shop?.shop_name}
+                                </Link>
+                              </h4>
+
+                              <h5 className="text-secondary-black text-[13px] sm:text-[14px]">
+                                Qty: {item?.quantity}
+                              </h5>
+
+                              <h6 className="text-secondary-black text-[13px] sm:text-[14px]">
+                                Unit Price: $ {item?.product?.product_price}
+                              </h6>
+                            </div>
+                          </div>
+
+                          <h2 className="text-[16px] sm:text-lg font-normal text-secondary-gray">
+                            Total amount:{" "}
+                            <span className="font-semibold text-secondary-black">
+                              ${+item?.quantity * +item?.product?.product_price}
+                            </span>
+                          </h2>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/*  DIVIDER */}
+                    {requestedItems?.length > 0 && offeredItems?.length > 0 && (
+                      <div className="flex gap-x-5 items-center">
+                        <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                        <div className="inline-block bg-white">
+                          <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
+                        </div>
+                        <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                      </div>
+                    )}
+
+                    {/*  OFFERED PRODUCTS (BOTTOM) */}
+                    {offeredItems?.map((item: any, idx: number) => (
+                      <div key={`offered-${idx}`} className="mb-4">
+                        <div className="flex justify-between items-end">
+                          <div className="flex flex-col sm:flex-row gap-x-5 sm:gap-x-10">
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images?.[0]?.image}`}
+                              alt={item?.product?.product_name}
+                              height={100}
+                              width={100}
+                              className="h-[100px] object-cover rounded-md"
+                            />
+
+                            <div className="flex flex-col">
+                              <Link
+                                href={`/product-details/${item?.product_id}`}
+                                className="text-[18px] sm:text-[20px] max-w-[500px] truncate font-semibold text-secondary-black hover:underline"
+                              >
+                                {item?.product?.product_name}
+                              </Link>
+
+                              <h4 className="text-[16px] sm:text-[17px] font-normal text-secondary-gray">
+                                Visit Shop:{" "}
+                                <Link
+                                  href={`/shop-details?view=customer&id=${item?.product?.shop?.user_id}&listing_id=${item?.product?.shop_info_id}`}
+                                  className="hover:underline"
+                                >
+                                  {item?.product?.shop?.shop_name}
+                                </Link>
+                              </h4>
+
+                              <h5 className="text-secondary-black text-[13px] sm:text-[14px]">
+                                Qty: {item?.quantity}
+                              </h5>
+
+                              <h6 className="text-secondary-black text-[13px] sm:text-[14px]">
+                                Unit Price: $ {item?.product?.product_price}
+                              </h6>
+                            </div>
+                          </div>
+
+                          <h2 className="text-[16px] sm:text-lg font-normal text-secondary-gray">
+                            Total amount:{" "}
+                            <span className="font-semibold text-secondary-black">
+                              ${+item?.quantity * +item?.product?.product_price}
+                            </span>
+                          </h2>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                );
+              })()}
+
+              <div className="flex flex-wrap gap-3.5 md:gap-0 justify-between items-end border-t border-[#BFBEBE] pt-3">
+                <div className="flex gap-2.5 md:gap-5 flex-wrap">
+                  {actionButtons[trade.status]
+                    ?.filter((btn: any) => {
+                      if (btn === "Approve" && trade?.sender_id === user?.id)
+                        return false;
+                      return true;
+                    })
+                    .map((btn: any, i: number) => {
+                      const style = actionButtonStyles[btn] || {
+                        bg: "bg-gray-200",
+                        border: "border-gray-400",
+                        text: "text-black",
+                      };
+
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => {
+                            if (btn === "Counter") {
+                              router.push(
+                                `/dashboard/${user?.membership?.membership_type}/trades/counter/${trade?.id}`,
+                              );
+                            } else {
+                              setTradeId(trade?.id);
+                              setUserId(trade?.receiver_id);
+                              handleTrade(btn, trade?.id);
+                            }
+                          }}
+                          className={`relative cursor-pointer py-[10px] border px-4 rounded-md font-lato font-semibold overflow-hidden hover:scale-110 duration-500 ease-in-out 
+                            ${style.bg || ""} 
+                          ${style.border || "border-2"} ${style.text}`}
+                        >
+                          <span className="relative z-10">
+                            {btn === "Deny" &&
+                            isCancelling &&
+                            tradeId === trade?.id ? (
+                              <ImSpinner9 className="animate-spin inline-block text-lg" />
+                            ) : btn === "Approve" && isApproving ? (
+                              <ImSpinner9 className="animate-spin inline-block text-lg" />
+                            ) : (
+                              btn
+                            )}
+                          </span>
+                        </button>
+                      );
+                    })}
+                </div>
+
+                {/* <Link href={`/dashboard/basic/trades/${trade.id}`}>
+                  <div className="bg-gray-200 px-3 py-2 cursor-pointer flex items-center justify-center">
+                    <FaAnglesRight />
+                  </div>
+                </Link> */}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <Modal
+        open={msgOpen}
+        onClose={() => setMsgOpen(false)}
+        className="max-w-xl"
+      >
+        <MessageToSellerModal id={userId} setMsgOpen={setMsgOpen} />
+      </Modal>
+    </>
+  );
+};
+
+export default TradesTabs;

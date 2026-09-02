@@ -1,16 +1,13 @@
 import React from "react";
 import Footer from "@/Shared/Footer";
 import Navbar from "@/Shared/Navbar";
-import { getDynamicPages } from "@/lib/cms.api";
 
-const MainLayout = async ({ children }: { children: React.ReactNode }) => {
-  const dynamicPage = await getDynamicPages();
-
+const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <Navbar dynamicPage={dynamicPage?.data} />
+      <Navbar />
       <main>{children}</main>
-      <Footer dynamicPage={dynamicPage?.data} />
+      <Footer />
     </>
   );
 };

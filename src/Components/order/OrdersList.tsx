@@ -125,7 +125,7 @@ const OrdersList = ({
                       </p>
                       <p className="text-sm text-[#67645F]">
                         {order.vendor_count}{" "}
-                        {order.vendor_count === 1 ? "vendor" : "vendors"}
+                        {order.vendor_count === 1 ? "shop" : "shops"}
                       </p>
                     </td>
 

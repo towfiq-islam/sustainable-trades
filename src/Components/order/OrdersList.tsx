@@ -52,6 +52,7 @@ const TABS = [
 ];
 
 const OrdersList = ({
+  role,
   showHeader,
   showTabs,
   orderBasePath,
@@ -99,7 +100,9 @@ const OrdersList = ({
       {isLoading ? (
         <CustomerOrderTableSkeleton />
       ) : orders.length > 0 ? (
-        <div className="border border-[#EDEDED] rounded-[12px] overflow-hidden">
+        <div
+          className={`border border-[#EDEDED] rounded-[12px] overflow-hidden ${role === "pro" && "mt-10"}`}
+        >
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>

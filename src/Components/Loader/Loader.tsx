@@ -284,7 +284,7 @@ export const ShopCardSkeleton = () => {
 
 export const CustomerOrderTableSkeleton = () => {
   return (
-    <div className="border border-[#EDEDED] rounded-[12px] overflow-hidden">
+    <div className="border border-[#EDEDED] rounded-[12px] overflow-hidden mt-10">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -649,7 +649,10 @@ export const ShopBannerSkeleton = () => {
             </div>
             <div className="flex gap-3 items-center">
               {Array.from({ length: 5 }).map((_, idx) => (
-                <div key={idx} className="size-9 shrink-0 shadow border border-gray-300 rounded-full bg-gray-300"></div>
+                <div
+                  key={idx}
+                  className="size-9 shrink-0 shadow border border-gray-300 rounded-full bg-gray-300"
+                ></div>
               ))}
               <div className="h-5 w-8 bg-gray-300 rounded"></div>
             </div>

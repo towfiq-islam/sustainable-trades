@@ -46,10 +46,10 @@ const ReuseableFavorite = () => {
           <h3
             key={tab}
             onClick={() => setIsActive(tab)}
-            className={`text-[16px] md:text-[18px] font-bold shrink-0 cursor-pointer transition-all duration-200 uppercase ${
+            className={`text-[16px] md:text-[18px] px-2 pb-0.5 font-semibold shrink-0 cursor-pointer border-b-2 transition-all duration-200 uppercase ${
               isActive === tab
-                ? "text-secondary-black border-b-2 border-black"
-                : "text-light-green"
+                ? "text-primary-green border-primary-green"
+                : "text-secondary-black border-transparent"
             }`}
           >
             {tab}

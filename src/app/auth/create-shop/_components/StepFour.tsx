@@ -101,6 +101,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
     setSelectedLocation(location);
     setValue("latitude", location.lat);
     setValue("longitude", location.lng);
+    setValue("country", "US", { shouldValidate: true });
     setIsModalOpen(false);
   };
 

@@ -254,7 +254,6 @@ const page = () => {
                       <th className="py-3 px-4 text-left">Items</th>
                       <th className="py-3 px-4 text-left">Amount</th>
                       <th className="py-3 px-4 text-left">Payment Method</th>
-                      <th className="py-3 px-4 text-left">Payment Status</th>
                       <th className="py-3 px-4 text-left">Order Status</th>
                       <th className="py-3 px-4 text-left">FullFillment</th>
                       <th className="py-3 px-4 text-center">Action</th>
@@ -290,18 +289,6 @@ const page = () => {
                         <td className="py-4 px-4">${order?.amount}</td>
                         <td className="py-4 px-4 capitalize">
                           {order?.payment_method}
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <span
-                            className={`min-w-[100px] capitalize inline-block text-center px-3 py-1 rounded-full text-sm font-semibold ${
-                              order?.payment_status === "pending"
-                                ? "text-red-500"
-                                : "text-primary-green"
-                            }`}
-                          >
-                            {order?.payment_status}
-                          </span>
                         </td>
 
                         <td className="py-4 px-4">

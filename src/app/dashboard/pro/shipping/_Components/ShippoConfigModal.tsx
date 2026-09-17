@@ -89,7 +89,6 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
       .unwrap()
       .then(res => {
         toast.success(res.message);
-        setOpenConnectFlatModal(false);
       })
       .catch(err => {
         toast.error(err?.data?.message);
@@ -104,7 +103,6 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
       .unwrap()
       .then(res => {
         toast.success(res.message);
-        setOpenConnectFlatModal(false);
       })
       .catch(err => {
         toast.error(err?.data?.message);

@@ -61,7 +61,14 @@ export default function LocalDeliverySettingsPage() {
   const [editingRangeId, setEditingRangeId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  const origin = originRes?.data
+  const hasOrigin =
+    Boolean(originRes?.data) &&
+    !Array.isArray(originRes.data) &&
+    Boolean((originRes.data as ApiDeliveryOrigin)?.address) &&
+    originRes?.status !== false &&
+    originRes?.code !== 404;
+
+  const origin = hasOrigin
     ? mapApiOriginToOrigin(originRes.data as ApiDeliveryOrigin)
     : null;
 
@@ -82,11 +89,19 @@ export default function LocalDeliverySettingsPage() {
   }
 
   function openAddRange() {
+    if (!origin) {
+      toast.error("Please set delivery origin first");
+      return;
+    }
     setEditingRangeId(null);
     setIsRangeModalOpen(true);
   }
 
   function openEditRange(id: number) {
+    if (!origin) {
+      toast.error("Please set delivery origin first");
+      return;
+    }
     setEditingRangeId(id);
     setIsRangeModalOpen(true);
   }

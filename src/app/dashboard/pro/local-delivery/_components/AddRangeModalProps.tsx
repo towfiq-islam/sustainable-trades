@@ -200,8 +200,7 @@ export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
             </h4>
             <p className="mt-1 text-sm leading-relaxed text-neutral-600">
               If the delivery address is outside your maximum distance, the
-              customer will be redirected to choose a different fulfillment
-              option.
+              customer will be redirected to choose a different delivery option.
             </p>
           </div>
         </div>

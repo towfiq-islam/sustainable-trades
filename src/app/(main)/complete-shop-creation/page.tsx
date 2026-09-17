@@ -58,10 +58,10 @@ const CompleteShopCreationPage = () => {
           <h1 className="text-3xl sm:text-4xl font-semibold text-[#173b35] tracking-tight leading-tight">
             Your shop is created!
           </h1>
-          <h2 className="text-xl font-semibold text-[#173b35] mt-2 mb-3">
+          <h2 className="text-lg font-semibold text-[#173b35] mt-2 mb-3">
             Welcome to Sustainable Trades!
           </h2>
-          <p className="text-secondary-gray text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+          <p className="text-secondary-gray text-base leading-relaxed max-w-2xl mx-auto">
             Your shop is officially created. Before you start adding listings, take a few
             minutes to set up your shop so you’re ready to receive orders.
           </p>
@@ -69,10 +69,6 @@ const CompleteShopCreationPage = () => {
 
         {/* Setup Guide Section */}
         <div className="max-w-4xl mx-auto mt-8">
-          <h3 className="text-base sm:text-lg font-semibold text-[#173b35] mb-4 text-left">
-            # Use the menu in your Shop Dashboard to complete the following settings:
-          </h3>
-
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Step 1: Connect Payments */}
@@ -126,34 +122,20 @@ const CompleteShopCreationPage = () => {
                   Set up the options you plan to offer your customers:
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-4">
-                  <div className="bg-[#f8faf9] rounded-xl p-4 border border-gray-100">
-                    <span className="font-bold text-[#173b35] text-sm block mb-1">
-                      Shipping
-                    </span>
-                    <span className="text-xs text-secondary-gray leading-snug block">
-                      Configure your shipping method and rates, or connect to Shippo.
-                    </span>
-                  </div>
-
-                  <div className="bg-[#f8faf9] rounded-xl p-4 border border-gray-100">
-                    <span className="font-bold text-[#173b35] text-sm block mb-1">
-                      Local Pickup
-                    </span>
-                    <span className="text-xs text-secondary-gray leading-snug block">
-                      Add your pickup location(s).
-                    </span>
-                  </div>
-
-                  <div className="bg-[#f8faf9] rounded-xl p-4 border border-gray-100">
-                    <span className="font-bold text-[#173b35] text-sm block mb-1">
-                      Local Delivery
-                    </span>
-                    <span className="text-xs text-secondary-gray leading-snug block">
-                      Add your delivery origin, ranges, and fees.
-                    </span>
-                  </div>
-                </div>
+                <ul className="list-disc ml-4 mt-2 space-y-1 text-sm text-secondary-gray">
+                  <li>
+                    <strong className="font-bold text-[#173b35]">Shipping</strong>{" "}
+                    &mdash; configure your shipping method and rates, or connect to Shippo.
+                  </li>
+                  <li>
+                    <strong className="font-bold text-[#173b35]">Local Pickup</strong>{" "}
+                    &mdash; add your pickup location(s).
+                  </li>
+                  <li>
+                    <strong className="font-bold text-[#173b35]">Local Delivery</strong>{" "}
+                    &mdash; add your delivery origin, ranges, and fees.
+                  </li>
+                </ul>
 
                 <p className="text-[#656461] italic text-xs sm:text-sm mt-3">
                   You only need to set up the delivery options you plan to offer.

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import Modal from "@/Components/Common/Modal";
 import Container from "@/Components/Common/Container";
 import { PricingSkeletonCard } from "@/Components/Loader/Loader";
+import EmptyState from "@/Components/Common/EmptyState";
 import dynamic from "next/dynamic";
 
 const SubscriptionPaypalModal = dynamic(
@@ -115,121 +116,122 @@ const Pricing = ({
 
         {/* Pricing Plan */}
         <div className="flex flex-col w-full md:flex-row gap-5 lg:gap-10 justify-center">
-          {isLoading
-            ? Array.from({ length: 2 }).map((_, i) => (
-                <PricingSkeletonCard key={i} />
-              ))
-            : pricingData?.data?.map(
-                (
-                  {
-                    id,
-                    name,
-                    description,
-                    price,
-                    interval,
-                    subscription_benefit,
-                    membership_type,
-                    image,
-                  }: pricingData,
-                  idx: number,
-                ) => (
-                  <div
-                    key={id}
-                    className={`border border-off-green/40 shadow-[0_3px_5px_0_rgba(0,0,0,0.05),_0_3px_12px_0_rgba(0,0,0,0.05)] rounded-2xl p-4 md:p-6 w-full md:w-[400px] flex flex-col justify-between ${
+          {isLoading ? (
+            Array.from({ length: 2 }).map((_, i) => (
+              <PricingSkeletonCard key={i} />
+            ))
+          ) : pricingData?.data?.length ? (
+            pricingData.data.map(
+              (
+                {
+                  id,
+                  name,
+                  description,
+                  price,
+                  interval,
+                  subscription_benefit,
+                  membership_type,
+                  image,
+                }: pricingData,
+                idx: number,
+              ) => (
+                <div
+                  key={id}
+                  className={`border border-off-green/40 shadow-[0_3px_5px_0_rgba(0,0,0,0.05),_0_3px_12px_0_rgba(0,0,0,0.05)] rounded-2xl p-4 md:p-6 w-full md:w-[400px] flex flex-col justify-between ${
+                    user?.membership?.status === "active" &&
+                    user?.membership?.membership_type === membership_type &&
+                    user?.membership?.type === interval
+                      ? "bg-[#EDF3F1]"
+                      : user?.membership?.status !== "active" &&
+                        idx === 1 &&
+                        "bg-[#EDF3F1]"
+                  }`}
+                >
+                  <div>
+                    <figure className="size-8 md:size-12 rounded-full bg-accent-blue grid place-items-center">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${image}`}
+                        alt="logo"
+                        width={45}
+                        height={45}
+                        unoptimized
+                      />
+                    </figure>
+
+                    <h3 className="py-1 md:py-3 text-xl md:text-2xl font-semibold text-secondary-black">
+                      {name}
+                    </h3>
+
+                    <p className="text-secondary-gray md:mb-7 mb-4 text-sm md:text-base ">
+                      {description}
+                    </p>
+
+                    <div className="flex gap-2 items-end">
+                      <h2 className="text-3xl md:text-4xl font-semibold text-secondary-black">
+                        ${price}
+                      </h2>
+
+                      <p className="capitalize">/ {interval}</p>
+                    </div>
+
+                    <hr className="my-5 text-gray-500" />
+
+                    <div className="space-y-5 mb-10">
+                      {subscription_benefit?.map(
+                        ({
+                          id,
+                          benefit_name,
+                          benefit_description,
+                          benefit_icon,
+                        }) => (
+                          <div key={id} className="flex gap-2 md:gap-3">
+                            <figure className="size-8 md:size-10 rounded-full bg-accent-blue grid place-items-center shrink-0">
+                              <Image
+                                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${benefit_icon}`}
+                                alt="image"
+                                width={24}
+                                height={24}
+                                unoptimized
+                              />
+                            </figure>
+
+                            <div>
+                              <h4 className="text-secondary-black text-sm md:text-base font-semibold">
+                                {benefit_name}
+                              </h4>
+
+                              <p className="text-secondary-gray text-xs md:text-[15px]">
+                                {benefit_description}
+                              </p>
+                            </div>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    disabled={
                       user?.membership?.status === "active" &&
                       user?.membership?.membership_type === membership_type &&
                       user?.membership?.type === interval
-                        ? "bg-[#EDF3F1]"
-                        : user?.membership?.status !== "active" &&
-                          idx === 1 &&
-                          "bg-[#EDF3F1]"
-                    }`}
-                  >
-                    <div>
-                      <figure className="size-8 md:size-12 rounded-full bg-accent-blue grid place-items-center">
-                        <Image
-                          src={`${process.env.NEXT_PUBLIC_SITE_URL}/${image}`}
-                          alt="logo"
-                          width={45}
-                          height={45}
-                          unoptimized
-                        />
-                      </figure>
-
-                      <h3 className="py-1 md:py-3 text-xl md:text-2xl font-semibold text-secondary-black">
-                        {name}
-                      </h3>
-
-                      <p className="text-secondary-gray md:mb-7 mb-4 text-sm md:text-base ">
-                        {description}
-                      </p>
-
-                      <div className="flex gap-2 items-end">
-                        <h2 className="text-3xl md:text-4xl font-semibold text-secondary-black">
-                          ${price}
-                        </h2>
-
-                        <p className="capitalize">/ {interval}</p>
-                      </div>
-
-                      <hr className="my-5 text-gray-500" />
-
-                      <div className="space-y-5 mb-10">
-                        {subscription_benefit?.map(
-                          ({
-                            id,
-                            benefit_name,
-                            benefit_description,
-                            benefit_icon,
-                          }) => (
-                            <div key={id} className="flex gap-2 md:gap-3">
-                              <figure className="size-8 md:size-10 rounded-full bg-accent-blue grid place-items-center shrink-0">
-                                <Image
-                                  src={`${process.env.NEXT_PUBLIC_SITE_URL}/${benefit_icon}`}
-                                  alt="image"
-                                  width={24}
-                                  height={24}
-                                  unoptimized
-                                />
-                              </figure>
-
-                              <div>
-                                <h4 className="text-secondary-black text-sm md:text-base font-semibold">
-                                  {benefit_name}
-                                </h4>
-
-                                <p className="text-secondary-gray text-xs md:text-[15px]">
-                                  {benefit_description}
-                                </p>
-                              </div>
-                            </div>
-                          ),
-                        )}
-                      </div>
-                    </div>
-
-                    <button
-                      disabled={
-                        user?.membership?.status === "active" &&
-                        user?.membership?.membership_type === membership_type &&
-                        user?.membership?.type === interval
+                    }
+                    onClick={e => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (!user) {
+                        router.push("/auth/login");
+                      } else {
+                        setPlanId(id);
+                        setInterval(interval);
+                        setOpen(true);
                       }
-                      onClick={e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (!user) {
-                          router.push("/auth/login");
-                        } else {
-                          setPlanId(id);
-                          setInterval(interval);
-                          setOpen(true);
-                        }
-                      }}
-                      className={`w-full block duration-500 transition-all md:text-lg cursor-pointer py-1.5 md:py-3 border-2 border-primary-green font-semibold rounded-lg shadow-lg hover:scale-105 ${
-                        idx === 0
-                          ? "text-primary-green hover:bg-primary-green hover:text-accent-white"
-                          : "text-accent-white hover:text-primary-green bg-primary-green hover:bg-transparent"
-                      }
+                    }}
+                    className={`w-full block duration-500 transition-all md:text-lg cursor-pointer py-1.5 md:py-3 border-2 border-primary-green font-semibold rounded-lg shadow-lg hover:scale-105 ${
+                      idx === 0
+                        ? "text-primary-green hover:bg-primary-green hover:text-accent-white"
+                        : "text-accent-white hover:text-primary-green bg-primary-green hover:bg-transparent"
+                    }
                       ${
                         user?.membership?.status === "active" &&
                         user?.membership?.membership_type === membership_type &&
@@ -237,16 +239,22 @@ const Pricing = ({
                         "opacity-70 !cursor-not-allowed hover:!scale-100 !bg-primary-green !text-accent-white"
                       }
                         `}
-                    >
-                      {user?.membership?.status === "active" &&
-                      user?.membership?.membership_type === membership_type &&
-                      user?.membership?.type === interval
-                        ? "Purchased"
-                        : `Choose ${name}`}
-                    </button>
-                  </div>
-                ),
-              )}
+                  >
+                    {user?.membership?.status === "active" &&
+                    user?.membership?.membership_type === membership_type &&
+                    user?.membership?.type === interval
+                      ? "Purchased"
+                      : `Choose ${name}`}
+                  </button>
+                </div>
+              ),
+            )
+          ) : (
+            <EmptyState
+              title="No subscription plans available"
+              description={`No ${activeTab} subscription plans are currently available.`}
+            />
+          )}
         </div>
 
         {/* Cancel btn */}

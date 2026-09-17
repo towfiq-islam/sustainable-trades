@@ -52,6 +52,7 @@ const TABS = [
 ];
 
 const OrdersList = ({
+  role,
   showHeader,
   showTabs,
   orderBasePath,
@@ -99,7 +100,9 @@ const OrdersList = ({
       {isLoading ? (
         <CustomerOrderTableSkeleton />
       ) : orders.length > 0 ? (
-        <div className="border border-[#EDEDED] rounded-[12px] overflow-hidden">
+        <div
+          className={`border border-[#EDEDED] rounded-[12px] overflow-hidden ${role === "pro" && "mt-10"}`}
+        >
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -125,7 +128,7 @@ const OrdersList = ({
                       </p>
                       <p className="text-sm text-[#67645F]">
                         {order.vendor_count}{" "}
-                        {order.vendor_count === 1 ? "vendor" : "vendors"}
+                        {order.vendor_count === 1 ? "shop" : "shops"}
                       </p>
                     </td>
 

@@ -18,6 +18,10 @@ import {
   useGetSingleProductQuery,
   useUpdateProductMutation,
 } from "@/redux/api/productApi";
+import {
+  useGetDeliveryRangesQuery,
+  useGetPickupLocationsQuery,
+} from "@/redux/api/vendorApi";
 import { GoBackSvg } from "@/Components/Svg/SvgContainer";
 import { ProductData, UpdateFormData } from "@/Types";
 
@@ -61,9 +65,6 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
   const prevAutoTagsRef = useRef<string[]>([]);
 
   const hasPaymentProcessor = !!user?.onboarded;
-  const hasShippingCalculator =
-    user?.shop_info?.shipping_setting !== null &&
-    user?.shop_info?.shipping_setting !== undefined;
 
   const { data: listing, isLoading } = useGetSingleProductQuery(id, {
     skip: !id,
@@ -75,6 +76,10 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
     useDeleteProductImageMutation();
   const { data: categoriesData } = useGetProductCategoriesQuery({});
   const { data: subcategoriesData } = useGetProductSubCategoriesQuery({});
+  const { data: pickupLocationsData, isLoading: isPickupLoading } =
+    useGetPickupLocationsQuery({});
+  const { data: deliveryRangesData, isLoading: isDeliveryLoading } =
+    useGetDeliveryRangesQuery({});
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -221,34 +226,93 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
     prevAutoTagsRef.current = uniqueAuto;
   }, [categoryId, subCategoryId, categories, subcategories]);
 
-  // ── Shipping guard (pro only) ──────────────────────────────────────────────
+  // ── payment guard + pickup guard + delivery guard + shipping guard (pro only) ──
   useEffect(() => {
-    if (!config.shippingGuard) return;
+    if (!config.shippingGuard || !fulfillment) return;
+
+    // 1) payment guard — any fulfillment choice requires a connected processor
+    if (!hasPaymentProcessor) {
+      toast(
+        "Please connect a payment processor before selecting a fulfillment option.",
+        {
+          icon: <MdInfo className="text-4xl text-primary-red" />,
+        },
+      );
+      setValue("fulfillment", "");
+      return;
+    }
+
+    // 2) local pickup guard
+    const requiresPickup =
+      fulfillment === "pickup" ||
+      fulfillment === "pickup_and_delivery" ||
+      fulfillment === "pickup_and_shipping" ||
+      fulfillment === "pickup_and_delivery_and_shipping";
+
+    if (
+      requiresPickup &&
+      !isPickupLoading &&
+      (!pickupLocationsData?.data || pickupLocationsData.data.length === 0)
+    ) {
+      toast.error(
+        "No pickup location found. Please add a pickup location first.",
+        { icon: <MdInfo className="text-4xl text-primary-red" /> },
+      );
+      setValue("fulfillment", "");
+      return;
+    }
+
+    // 3) local delivery guard
+    const requiresDelivery =
+      fulfillment === "delivery" ||
+      fulfillment === "pickup_and_delivery" ||
+      fulfillment === "delivery_and_shipping" ||
+      fulfillment === "pickup_and_delivery_and_shipping";
+
+    if (
+      requiresDelivery &&
+      !isDeliveryLoading &&
+      (!deliveryRangesData?.data || deliveryRangesData.data.length === 0)
+    ) {
+      toast.error(
+        "No delivery range found. Please add a delivery range first.",
+        { icon: <MdInfo className="text-4xl text-primary-red" /> },
+      );
+      setValue("fulfillment", "");
+      return;
+    }
+
+    // 4) shipping guard
     const requiresShipping =
       fulfillment === "shipping" ||
       fulfillment === "pickup_and_shipping" ||
       fulfillment === "delivery_and_shipping" ||
       fulfillment === "pickup_and_delivery_and_shipping";
 
-    if (!requiresShipping) return;
-
-    if (!hasPaymentProcessor) {
-      toast("Please connect a payment processor before enabling shipping.", {
-        icon: <MdInfo className="text-4xl text-primary-red" />,
-      });
-      setValue("fulfillment", "");
-      return;
-    }
-    if (!hasShippingCalculator) {
+    if (
+      requiresShipping &&
+      (!user?.shop_info?.shipping_setting ||
+        (user?.shop_info?.shipping_setting === "shippo" &&
+          !user?.shop_info?.shippo_connected))
+    ) {
       toast(
-        "Please configure a shipping calculator before enabling shipping.",
-        {
-          icon: <MdInfo className="text-4xl text-primary-red" />,
-        },
+        "Please configure a shipping calculator (Flat Rate, By Weight, or Shippo) before enabling shipping.",
+        { icon: <MdInfo className="text-4xl text-primary-red" /> },
       );
       setValue("fulfillment", "");
     }
-  }, [fulfillment, config.shippingGuard]);
+  }, [
+    fulfillment,
+    config.shippingGuard,
+    hasPaymentProcessor,
+    isPickupLoading,
+    pickupLocationsData,
+    isDeliveryLoading,
+    deliveryRangesData,
+    user?.shop_info?.shipping_setting,
+    user?.shop_info?.shippo_connected,
+    setValue,
+  ]);
 
   // ── Image handlers ─────────────────────────────────────────────────────────
 
@@ -1041,6 +1105,82 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
                     render={({ field }) => (
                       <select
                         {...field}
+                        onChange={e => {
+                          const val = e.target.value;
+                          if (!val) {
+                            field.onChange(e);
+                            return;
+                          }
+
+                          if (!hasPaymentProcessor) {
+                            toast(
+                              "Please connect a payment processor before selecting a fulfillment option.",
+                              { icon: <MdInfo className="text-4xl text-primary-red" /> },
+                            );
+                            field.onChange("");
+                            return;
+                          }
+
+                          const requiresPickup =
+                            val === "pickup" ||
+                            val === "pickup_and_delivery" ||
+                            val === "pickup_and_shipping" ||
+                            val === "pickup_and_delivery_and_shipping";
+
+                          if (
+                            requiresPickup &&
+                            (!pickupLocationsData?.data ||
+                              pickupLocationsData.data.length === 0)
+                          ) {
+                            toast.error(
+                              "No pickup location found. Please add a pickup location first.",
+                              { icon: <MdInfo className="text-4xl text-primary-red" /> },
+                            );
+                            field.onChange("");
+                            return;
+                          }
+
+                          const requiresDelivery =
+                            val === "delivery" ||
+                            val === "pickup_and_delivery" ||
+                            val === "delivery_and_shipping" ||
+                            val === "pickup_and_delivery_and_shipping";
+
+                          if (
+                            requiresDelivery &&
+                            (!deliveryRangesData?.data ||
+                              deliveryRangesData.data.length === 0)
+                          ) {
+                            toast.error(
+                              "No delivery range found. Please add a delivery range first.",
+                              { icon: <MdInfo className="text-4xl text-primary-red" /> },
+                            );
+                            field.onChange("");
+                            return;
+                          }
+
+                          const requiresShipping =
+                            val === "shipping" ||
+                            val === "pickup_and_shipping" ||
+                            val === "delivery_and_shipping" ||
+                            val === "pickup_and_delivery_and_shipping";
+
+                          if (
+                            requiresShipping &&
+                            (!user?.shop_info?.shipping_setting ||
+                              (user?.shop_info?.shipping_setting === "shippo" &&
+                                !user?.shop_info?.shippo_connected))
+                          ) {
+                            toast(
+                              "Please configure a shipping calculator (Flat Rate, By Weight, or Shippo) before enabling shipping.",
+                              { icon: <MdInfo className="text-4xl text-primary-red" /> },
+                            );
+                            field.onChange("");
+                            return;
+                          }
+
+                          field.onChange(e);
+                        }}
                         className="w-full border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg p-2 md:p-4 mt-2"
                       >
                         <option value="">Select Fulfillment</option>

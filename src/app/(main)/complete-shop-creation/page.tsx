@@ -40,7 +40,7 @@ const page = () => {
             }`}
             className="auth-secondary-btn md:mt-0 mt-3 w-full md:w-fit"
           >
-            Add First Inventory
+            Add First Listing
           </Link>
         </div>
       </Container>

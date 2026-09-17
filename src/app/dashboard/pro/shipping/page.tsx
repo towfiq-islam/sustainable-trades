@@ -29,7 +29,7 @@ const Page = () => {
 
   const handleShippingMethodChange = (method: string) => {
     if (method === "shippo" && !user?.shop_info?.shippo_connected) {
-      toast.error("Please connect Shippo first");
+      toast.error("Shippo is not connected for this shop");
       return;
     }
 
@@ -129,7 +129,7 @@ const Page = () => {
               }}
               className="mt-3 text-accent-red duration-200 hover:bg-accent-red hover:text-gray-100 transition-all font-semibold cursor-pointer border px-3 py-1 rounded-full text-sm"
             >
-              Configure
+             Configure
             </button>
           </div>
 
@@ -198,7 +198,6 @@ const Page = () => {
                     user?.shop_info?.shippo_connected
                   }
                   readOnly
-                  disabled={!user?.shop_info?.shippo_connected}
                   className="h-4 w-4 accent-primary-green cursor-pointer"
                 />
 
@@ -227,13 +226,13 @@ const Page = () => {
               }}
               className="mt-3 text-accent-red duration-200 hover:bg-accent-red hover:text-gray-100 transition-all font-semibold cursor-pointer border px-3 py-1 rounded-full text-sm"
             >
-              Configure
+              {user?.shop_info?.shippo_connected ? "Configure" :  "Connect"}
             </button>
           </div>
 
           <div className="border border-off-green/40 bg-off-green/20 rounded-lg p-5">
             <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary-green text-white flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-primary-green text-white flex items-center justify-center shrink-0">
                 i
               </div>
 

@@ -12,7 +12,6 @@ import { useGetOrderDetailsQuery } from "@/redux/api/ordersApi";
 import { fulfillmentLabel } from "@/lib/fulfillment";
 import { OrderSuccessSkeleton } from "@/Components/Loader/Loader";
 import useAuth from "@/Hooks/useAuth";
-import { BsTruck } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 
 type VendorItem = {
@@ -179,7 +178,11 @@ export default function Page({ searchParams }: Props) {
               <button
                 disabled={!user}
                 onClick={() =>
-                  router.push(`/dashboard/customer/orders/${order_id}`)
+                  router.push(
+                    user?.role === "customer"
+                      ? `/dashboard/customer/orders/${order_id}`
+                      : `/dashboard/pro/orders/details/${order_id}`,
+                  )
                 }
                 className={`flex-1 text-center px-4 py-2.5 rounded-lg border border-gray-300 text-secondary-black text-sm font-medium transition-all duration-300 cursor-pointer enabled:hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60 disabled:pointer-events-none`}
               >

@@ -69,7 +69,16 @@ const CheckoutContent = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [step]);
 
-  const methods = useForm({ defaultValues: { vendors: {} }, mode: "all" });
+  const methods = useForm({
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      vendors: {},
+    },
+    mode: "all",
+  });
 
   if (!items.length) {
     return (

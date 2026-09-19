@@ -32,7 +32,11 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
     subscribe_website,
     terms_and_condition,
     vendors: vendorExtras,
+    contact: contactState,
   } = useAppSelector(state => state.checkout);
+
+  const contactEmail = getValues("email") || contactState?.email || "";
+  const contactPhone = getValues("phone") || contactState?.phone || "";
 
   const vendorTotals = items.map(vendor => {
     const pricing = pricingByVendor.find(p => p.vendor_id === vendor.vendor_id);
@@ -169,8 +173,10 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
           const isPickup = fulfillment === "pickup";
           const needsAddress =
             fulfillment === "delivery" || fulfillment === "shipping";
+          const displayEmail = formFields.email || contactEmail;
+          const displayPhone = formFields.phone || contactPhone;
           const hasContactInfo = Boolean(
-            formFields.first_name || formFields.email,
+            formFields.first_name || displayEmail,
           );
           const pickupLocation =
             vendorExtras[vendor.vendor_id]?.pickup_location;
@@ -194,11 +200,12 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
                     {formFields.first_name} {formFields.last_name}
                   </p>
 
-                  <p className="text-[13px] text-secondary-gray">
-                    <span className="block pb-1">{formFields.email}</span>
-
-                    {formFields.phone ? `${formFields.phone}` : ""}
-                  </p>
+                  {(displayEmail || displayPhone) && (
+                    <p className="text-[13px] text-secondary-gray">
+                      {displayEmail && <span className="block pb-1">{displayEmail}</span>}
+                      {displayPhone ? `${displayPhone}` : ""}
+                    </p>
+                  )}
 
                   {needsAddress && formFields.street_address && (
                     <p className="flex items-start gap-1.5 text-[13px] text-secondary-gray">

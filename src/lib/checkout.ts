@@ -49,21 +49,17 @@ const buildVendorOrders = (
       ? {
           first_name: fields.first_name ?? "",
           last_name: fields.last_name ?? "",
-          email: fields.email ?? "",
-          phone: fields.phone ?? "",
           pickup_id: Number(fields.pickup_id ?? 0),
         }
       : {
           first_name: fields.first_name ?? "",
           last_name: fields.last_name ?? "",
-          email: fields.email ?? "",
-          phone: fields.phone ?? "",
           street_address: fields.street_address ?? "",
           apt: fields.apt ?? null,
           city: fields.city ?? "",
           state: fields.state ?? "",
           postal_code: fields.postal_code ?? "",
-          country: fields.country ?? "",
+          country: fields.country ?? "US",
           latitude: fields.latitude ?? null,
           longitude: fields.longitude ?? null,
         };
@@ -97,6 +93,12 @@ export const buildCheckoutPayload = (
   items: CartItem[],
   formValues: VendorFormValues,
   vendorExtras: VendorExtrasMap,
+  contact: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone?: string | null;
+  },
   options: {
     payment_method?: "paypal";
     terms_and_condition: boolean;
@@ -107,6 +109,10 @@ export const buildCheckoutPayload = (
     payment_method: options.payment_method ?? "paypal",
     terms_and_condition: options.terms_and_condition,
     subscribe_website: options.subscribe_website,
+    first_name: contact.first_name ?? "",
+    last_name: contact.last_name ?? "",
+    email: contact.email ?? "",
+    phone: contact.phone ? contact.phone : null,
     vendor_orders: buildVendorOrders(items, formValues, vendorExtras),
   };
 };

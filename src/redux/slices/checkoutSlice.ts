@@ -21,6 +21,12 @@ interface CheckoutState {
   vendors: Record<number, VendorExtras>;
   buyNowItem: CartItem | null;
   deliveryUnavailableVendors: UnavailableVendor[];
+  contact: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+  };
 }
 
 const initialState: CheckoutState = {
@@ -31,6 +37,12 @@ const initialState: CheckoutState = {
   vendors: {},
   buyNowItem: null,
   deliveryUnavailableVendors: [],
+  contact: {
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+  },
 };
 
 const checkoutSlice = createSlice({
@@ -132,6 +144,22 @@ const checkoutSlice = createSlice({
           v => v.vendor_id !== action.payload,
         );
     },
+    setContactInfo: (
+      state,
+      action: PayloadAction<{
+        first_name: string;
+        last_name: string;
+        email: string;
+        phone?: string;
+      }>,
+    ) => {
+      state.contact = {
+        first_name: action.payload.first_name,
+        last_name: action.payload.last_name,
+        email: action.payload.email,
+        phone: action.payload.phone ?? "",
+      };
+    },
     clearCheckout: () => initialState,
   },
 });
@@ -148,5 +176,6 @@ export const {
   setBuyNowFulfillment,
   setDeliveryUnavailableVendors,
   clearDeliveryUnavailableVendor,
+  setContactInfo,
 } = checkoutSlice.actions;
 export default checkoutSlice.reducer;

@@ -8,6 +8,7 @@ import {
   proNavLinks,
 } from "@/Components/Data/navLinks";
 import CombinedNavbar from "./CombinedNavbar";
+import ShopSetupGuideModal from "@/Components/Common/ShopSetupGuideModal";
 
 type Props = {
   children: ReactNode;
@@ -61,6 +62,8 @@ export default function DashboardLayoutClient({
           }`}
         />
       </main>
+
+      <ShopSetupGuideModal />
     </section>
   );
 }

@@ -44,18 +44,30 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
     subscribe_website,
     terms_and_condition,
     vendors: vendorExtras,
+    contact: reduxContact,
   } = useAppSelector(state => state.checkout);
   const { getValues } = useFormContext();
 
-  const { vendors: formValues } = getValues() as {
-    vendors: VendorFormValues;
+  const values = getValues();
+  const formValues = (values?.vendors || {}) as VendorFormValues;
+  const contact = {
+    first_name: values?.first_name || reduxContact?.first_name || "",
+    last_name: values?.last_name || reduxContact?.last_name || "",
+    email: values?.email || reduxContact?.email || "",
+    phone: values?.phone || reduxContact?.phone || null,
   };
 
-  const payload = buildCheckoutPayload(items, formValues, vendorExtras, {
-    payment_method: "paypal",
-    terms_and_condition,
-    subscribe_website,
-  });
+  const payload = buildCheckoutPayload(
+    items,
+    formValues,
+    vendorExtras,
+    contact,
+    {
+      payment_method: "paypal",
+      terms_and_condition,
+      subscribe_website,
+    },
+  );
 
   return (
     <div className="border border-gray-300 rounded-xl p-6 bg-white text-center relative">

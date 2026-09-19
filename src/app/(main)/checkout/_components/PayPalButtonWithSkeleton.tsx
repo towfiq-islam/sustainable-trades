@@ -1,13 +1,20 @@
+"use client";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+
+interface PayPalButtonWithSkeletonProps {
+  createOrder: () => Promise<string | undefined>;
+  onApprove: (data: any) => Promise<void>;
+  onError?: (err: any) => void;
+  onCancel?: (data: any) => void;
+}
 
 export const PayPalButtonWithSkeleton = ({
   createOrder,
   onApprove,
-}: {
-  createOrder: () => Promise<string | undefined>;
-  onApprove: (data: any) => Promise<void>;
-}) => {
-  const [{ isResolved, isRejected }] = usePayPalScriptReducer();
+  onError,
+  onCancel,
+}: PayPalButtonWithSkeletonProps) => {
+  const [{ isResolved, isRejected, isPending }] = usePayPalScriptReducer();
 
   if (isRejected) {
     return (
@@ -17,9 +24,9 @@ export const PayPalButtonWithSkeleton = ({
     );
   }
 
-  if (!isResolved) {
+  if (!isResolved || isPending) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-3 py-2">
         <div className="h-12 w-full animate-pulse rounded-md bg-gray-200" />
         <div className="h-12 w-full animate-pulse rounded-md bg-gray-200" />
         <div className="h-12 w-full animate-pulse rounded-md bg-gray-200" />
@@ -37,6 +44,8 @@ export const PayPalButtonWithSkeleton = ({
       }}
       createOrder={createOrder as any}
       onApprove={onApprove}
+      onError={onError}
+      onCancel={onCancel}
     />
   );
 };

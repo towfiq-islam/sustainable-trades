@@ -38,8 +38,6 @@ export interface CheckoutProductPayload {
 export interface CheckoutDeliveryAddressPayload {
   first_name: string;
   last_name: string;
-  email: string;
-  phone: string;
   street_address: string;
   apt: string | null;
   city: string;
@@ -53,8 +51,6 @@ export interface CheckoutDeliveryAddressPayload {
 export interface CheckoutPickupAddressPayload {
   first_name: string;
   last_name: string;
-  email: string;
-  phone: string;
   pickup_id: number;
 }
 
@@ -77,10 +73,21 @@ export interface VendorOrdersPayload {
   vendor_orders: CheckoutVendorOrder[];
 }
 
+export interface CheckoutContactPayload {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string | null;
+}
+
 export interface CheckoutPayload {
   payment_method: "paypal";
   terms_and_condition: boolean;
   subscribe_website: boolean;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string | null;
   vendor_orders: CheckoutVendorOrder[];
 }
 

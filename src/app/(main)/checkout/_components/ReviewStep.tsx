@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useApplyCouponMutation } from "@/redux/api/discountApi";
 import { LuLoaderPinwheel } from "react-icons/lu";
 import { IoLocationOutline } from "react-icons/io5";
+import { FiUser } from "react-icons/fi";
 import toast from "react-hot-toast";
 import {
   setSubscribeWebsite,
@@ -35,6 +36,10 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
     contact: contactState,
   } = useAppSelector(state => state.checkout);
 
+  const contactFirstName =
+    getValues("first_name") || contactState?.first_name || "";
+  const contactLastName =
+    getValues("last_name") || contactState?.last_name || "";
   const contactEmail = getValues("email") || contactState?.email || "";
   const contactPhone = getValues("phone") || contactState?.phone || "";
 
@@ -151,6 +156,40 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
         </span>
       </label>
 
+      {/* Dedicated Contact Information */}
+      {(contactFirstName ||
+        contactLastName ||
+        contactEmail ||
+        contactPhone) && (
+        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <FiUser className="text-primary-green text-base stroke-[2.2]" />
+              <h4 className="font-semibold text-sm text-secondary-black">
+                Contact Information
+              </h4>
+            </div>
+            <button
+              type="button"
+              onClick={() => router.push(buildStepUrl("delivery-details"))}
+              className="text-[13px] text-primary-green hover:underline font-semibold cursor-pointer"
+            >
+              Edit
+            </button>
+          </div>
+
+          {(contactFirstName || contactLastName) && (
+            <p className="text-sm font-medium text-secondary-black">
+              {contactFirstName} {contactLastName}
+            </p>
+          )}
+          <div className="text-[13px] text-secondary-gray mt-0.5 space-y-0.5">
+            {contactEmail && <p>{contactEmail}</p>}
+            {contactPhone && <p>{contactPhone}</p>}
+          </div>
+        </div>
+      )}
+
       <div className="space-y-5 mt-5 mb-6">
         {vendorTotals.map(vendorTotal => {
           const {
@@ -173,13 +212,13 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
           const isPickup = fulfillment === "pickup";
           const needsAddress =
             fulfillment === "delivery" || fulfillment === "shipping";
-          const displayEmail = formFields.email || contactEmail;
-          const displayPhone = formFields.phone || contactPhone;
-          const hasContactInfo = Boolean(
-            formFields.first_name || displayEmail,
-          );
           const pickupLocation =
             vendorExtras[vendor.vendor_id]?.pickup_location;
+          const hasDeliveryInfo = Boolean(
+            formFields.first_name ||
+            formFields.street_address ||
+            (isPickup && pickupLocation),
+          );
 
           return (
             <div
@@ -194,16 +233,11 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
                 {fulfillment ? fulfillmentLabel[fulfillment] : "—"}
               </p>
 
-              {hasContactInfo && (
+              {hasDeliveryInfo && (
                 <div className="bg-gray-50 rounded-lg p-3 mb-3 space-y-1.5">
-                  <p className="text-sm text-secondary-black font-medium">
-                    {formFields.first_name} {formFields.last_name}
-                  </p>
-
-                  {(displayEmail || displayPhone) && (
-                    <p className="text-[13px] text-secondary-gray">
-                      {displayEmail && <span className="block pb-1">{displayEmail}</span>}
-                      {displayPhone ? `${displayPhone}` : ""}
+                  {(formFields.first_name || formFields.last_name) && (
+                    <p className="text-sm text-secondary-black font-medium">
+                      {formFields.first_name} {formFields.last_name}
                     </p>
                   )}
 

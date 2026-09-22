@@ -27,57 +27,62 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
 
-  const [merchantIds, setMerchantIds] = useState<string | null>(null);
+  const [singleMerchantId, setSingleMerchantId] = useState<string | null>(null);
   const [isLoadingMerchants, setIsLoadingMerchants] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
 
     async function resolveMerchants() {
-      setIsLoadingMerchants(true);
-      try {
-        const vendorIds = Array.from(new Set(items.map(i => i.vendor_id)));
-        const results = await Promise.all(
-          vendorIds.map(async id => {
-            if (merchantIdCache[id] !== undefined) {
-              return merchantIdCache[id];
-            }
-            try {
-              const res = await fetch(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/${id}`,
-                {
-                  headers: { Accept: "application/json" },
-                },
-              );
-              const json = await res.json();
-              const mId =
-                json?.data?.paypal_account?.paypal_merchant_id || null;
-              merchantIdCache[id] = mId;
-              return mId;
-            } catch (err) {
-              console.error(`[PayPal Debug] Failed to fetch shop ${id}:`, err);
-              return null;
-            }
-          }),
-        );
+      const vendorIds = Array.from(new Set(items.map(i => i.vendor_id)));
 
-        const uniqueMerchants = Array.from(
-          new Set(results.filter(Boolean)),
-        ) as string[];
+      // When multi-vendor (multiple sellers), do not pass merchant-id to PayPal SDK.
+      // Passing multiple merchant IDs causes PayPal SDK to classify the checkout as
+      // multi-seller and automatically disable Venmo and Pay Later.
+      // By omitting merchant-id for multi-vendor, PayPal renders all 4 options:
+      // PayPal, Venmo, Pay Later, and Debit/Credit Card.
+      if (vendorIds.length !== 1) {
+        if (isMounted) {
+          setSingleMerchantId(null);
+          setIsLoadingMerchants(false);
+        }
+        return;
+      }
+
+      // Single vendor: resolve merchant ID
+      setIsLoadingMerchants(true);
+      const id = vendorIds[0];
+      try {
+        if (merchantIdCache[id] !== undefined) {
+          if (isMounted) {
+            setSingleMerchantId(merchantIdCache[id]);
+            setIsLoadingMerchants(false);
+          }
+          return;
+        }
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/${id}`,
+          {
+            headers: { Accept: "application/json" },
+          },
+        );
+        const json = await res.json();
+        const mId =
+          json?.data?.paypal_account?.paypal_merchant_id || null;
+        merchantIdCache[id] = mId;
 
         console.log(
-          "[PayPal Debug] Dynamically resolved vendor PayPal merchant IDs:",
-          uniqueMerchants,
+          `[PayPal Debug] Dynamically resolved vendor PayPal merchant ID for shop ${id}:`,
+          mId,
         );
 
         if (isMounted) {
-          setMerchantIds(
-            uniqueMerchants.length > 0 ? uniqueMerchants.join(",") : "*",
-          );
+          setSingleMerchantId(mId);
         }
-      } catch (e) {
-        console.error("[PayPal Debug] Error resolving merchant IDs:", e);
-        if (isMounted) setMerchantIds("*");
+      } catch (err) {
+        console.error(`[PayPal Debug] Failed to fetch shop ${id}:`, err);
+        if (isMounted) setSingleMerchantId(null);
       } finally {
         if (isMounted) setIsLoadingMerchants(false);
       }
@@ -97,20 +102,24 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
     return `/checkout?${params.toString()}`;
   };
 
-  const initialOptions = useMemo(
-    () => ({
+  const initialOptions = useMemo(() => {
+    const options: Record<string, any> = {
       "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
-      "merchant-id": merchantIds || "*",
       currency: "USD",
       intent: "capture",
       components: "buttons",
-      "enable-funding": "venmo",
+      "enable-funding": "venmo,paylater",
       "disable-funding": "",
       "data-page-type": "checkout",
       "data-sdk-integration-source": "developer-studio",
-    }),
-    [merchantIds],
-  );
+    };
+
+    if (singleMerchantId) {
+      options["merchant-id"] = singleMerchantId;
+    }
+
+    return options;
+  }, [singleMerchantId]);
 
   const {
     subscribe_website,
@@ -138,14 +147,14 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
         per seller
       </p>
 
-      {isLoadingMerchants || !merchantIds ? (
+      {isLoadingMerchants ? (
         <div className="space-y-3 py-2">
           <div className="w-full h-12 bg-gray-200 animate-pulse rounded-md" />
           <div className="w-full h-12 bg-gray-200 animate-pulse rounded-md" />
         </div>
       ) : (
         <PayPalScriptProvider
-          key={merchantIds}
+          key={singleMerchantId || "multi-vendor"}
           options={initialOptions as any}
         >
           <PayPalButtonWithSkeleton

@@ -152,6 +152,10 @@ const Page = () => {
         title: "Delivery Address",
         content: (
           <div className="text-sm text-secondary-gray pb-3">
+            <p>
+              {singleOrder?.data?.delivery?.delivery_address?.first_name}{" "}
+              {singleOrder?.data?.delivery?.delivery_address?.last_name}
+            </p>
             <p>{deliveryAddress?.street_address}</p>
             {deliveryAddress?.apt && <p>{deliveryAddress.apt}</p>}
             <p>
@@ -194,6 +198,10 @@ const Page = () => {
       title: "Shipping Address",
       content: (
         <div className="text-sm text-secondary-gray pb-3">
+          <p>
+            {singleOrder?.data?.shipping_address?.first_name}{" "}
+            {singleOrder?.data?.shipping_address?.last_name}
+          </p>
           <p>{singleOrder?.data?.shipping_address?.street_address}</p>
           {singleOrder?.data?.shipping_address?.apt && (
             <p>{singleOrder?.data?.shipping_address.apt}</p>
@@ -225,9 +233,11 @@ const Page = () => {
           <p>
             <strong>Email:</strong> {singleOrder?.data?.customer?.email}
           </p>
-          <p>
-            <strong>Phone:</strong> {singleOrder?.data?.customer?.phone}
-          </p>
+          {singleOrder?.data?.customer?.phone && (
+            <p>
+              <strong>Phone:</strong> {singleOrder?.data?.customer?.phone}
+            </p>
+          )}
         </div>
       ),
     },

@@ -19,7 +19,16 @@ type Props = {
 };
 
 // Module-level cache to avoid refetching shop info multiple times
-const merchantIdCache: Record<number, string | null> = {};
+const merchantCache: Record<
+  number,
+  {
+    merchantId: string | null;
+    shopName: string;
+    isConnected: boolean;
+    isReceivable: boolean;
+    status: string | null;
+  }
+> = {};
 
 const PaymentStep = ({ items, isBuyNow }: Props) => {
   const dispatch = useAppDispatch();
@@ -27,68 +36,115 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
 
-  const [singleMerchantId, setSingleMerchantId] = useState<string | null>(null);
+  const [resolvedMerchantIds, setResolvedMerchantIds] = useState<string[]>([]);
   const [isLoadingMerchants, setIsLoadingMerchants] = useState(true);
+  const [merchantError, setMerchantError] = useState<string | null>(null);
+  const [merchantWarning, setMerchantWarning] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
 
-    async function resolveMerchants() {
-      const vendorIds = Array.from(new Set(items.map(i => i.vendor_id)));
+    async function resolveVendors() {
+      setIsLoadingMerchants(true);
+      setMerchantError(null);
+      setMerchantWarning(null);
 
-      // When multi-vendor (multiple sellers), do not pass merchant-id to PayPal SDK.
-      // Passing multiple merchant IDs causes PayPal SDK to classify the checkout as
-      // multi-seller and automatically disable Venmo and Pay Later.
-      // By omitting merchant-id for multi-vendor, PayPal renders all 4 options:
-      // PayPal, Venmo, Pay Later, and Debit/Credit Card.
-      if (vendorIds.length !== 1) {
+      // Distinct vendors in the current checkout
+      const uniqueVendors = Array.from(
+        new Map(items.map(item => [item.vendor_id, item])).values(),
+      );
+
+      const collectedMerchantIds: string[] = [];
+      const restrictedSellers: string[] = [];
+
+      try {
+        for (const vendor of uniqueVendors) {
+          const vendorId = vendor.vendor_id;
+          let cached = merchantCache[vendorId];
+
+          if (!cached) {
+            try {
+              const res = await fetch(
+                `${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/${vendorId}`,
+                {
+                  headers: { Accept: "application/json" },
+                },
+              );
+              const data = await res.json();
+              const paypal = data?.data?.paypal_account;
+              const merchantId = paypal?.paypal_merchant_id || null;
+              const isConnected =
+                paypal?.paypal_connected === 1 ||
+                paypal?.paypal_connected === true;
+              const isReceivable =
+                paypal?.paypal_payments_receivable === "1" ||
+                paypal?.paypal_payments_receivable === 1 ||
+                paypal?.paypal_payments_receivable === true;
+              const status = paypal?.paypal_status || null;
+
+              const shopName =
+                data?.data?.shop_info?.shop_name ||
+                vendor.shop_name ||
+                `Vendor #${vendorId}`;
+
+              cached = { merchantId, shopName, isConnected, isReceivable, status };
+              merchantCache[vendorId] = cached;
+            } catch (err) {
+              console.error(`Failed to fetch shop info for vendor ${vendorId}:`, err);
+              cached = {
+                merchantId: null,
+                shopName: vendor.shop_name || `Vendor #${vendorId}`,
+                isConnected: false,
+                isReceivable: false,
+                status: null,
+              };
+            }
+          }
+
+          if (!cached.merchantId) {
+            if (isMounted) {
+              setMerchantError(
+                `The seller "${cached.shopName}" has not connected their PayPal account yet. Please remove their items to proceed with checkout.`,
+              );
+              setIsLoadingMerchants(false);
+            }
+            return;
+          }
+
+          if (cached.status === "restricted" || !cached.isReceivable) {
+            restrictedSellers.push(cached.shopName);
+          }
+
+          collectedMerchantIds.push(cached.merchantId);
+        }
+
         if (isMounted) {
-          setSingleMerchantId(null);
+          // Deduplicate in case multiple vendor entries point to the same merchant account
+          const distinctMerchantIds = Array.from(new Set(collectedMerchantIds));
+          setResolvedMerchantIds(distinctMerchantIds);
+
+          if (restrictedSellers.length > 0) {
+            setMerchantWarning(
+              `Notice: Seller(s) [${restrictedSellers.join(", ")}] have restricted or unverified sandbox PayPal accounts (payments receivable = 0). In PayPal Sandbox, multi-seller orders to restricted merchant accounts will be blocked by PayPal ("Something went wrong"). Please ensure these sellers complete PayPal sandbox onboarding.`,
+            );
+          }
+
           setIsLoadingMerchants(false);
         }
-        return;
-      }
-
-      // Single vendor: resolve merchant ID
-      setIsLoadingMerchants(true);
-      const id = vendorIds[0];
-      try {
-        if (merchantIdCache[id] !== undefined) {
-          if (isMounted) {
-            setSingleMerchantId(merchantIdCache[id]);
-            setIsLoadingMerchants(false);
-          }
-          return;
-        }
-
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SITE_URL}/api/shop/${id}`,
-          {
-            headers: { Accept: "application/json" },
-          },
-        );
-        const json = await res.json();
-        const mId =
-          json?.data?.paypal_account?.paypal_merchant_id || null;
-        merchantIdCache[id] = mId;
-
-        console.log(
-          `[PayPal Debug] Dynamically resolved vendor PayPal merchant ID for shop ${id}:`,
-          mId,
-        );
-
-        if (isMounted) {
-          setSingleMerchantId(mId);
-        }
       } catch (err) {
-        console.error(`[PayPal Debug] Failed to fetch shop ${id}:`, err);
-        if (isMounted) setSingleMerchantId(null);
-      } finally {
-        if (isMounted) setIsLoadingMerchants(false);
+        console.error("Error resolving vendor merchants:", err);
+        if (isMounted) {
+          setMerchantError("Failed to verify vendor payment settings. Please try again.");
+          setIsLoadingMerchants(false);
+        }
       }
     }
 
-    resolveMerchants();
+    if (items.length > 0) {
+      resolveVendors();
+    } else {
+      setIsLoadingMerchants(false);
+    }
 
     return () => {
       isMounted = false;
@@ -102,24 +158,35 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
     return `/checkout?${params.toString()}`;
   };
 
+  const merchantIdsKey = resolvedMerchantIds.join(",");
+  const isMultiSeller = resolvedMerchantIds.length > 1;
+
+  // PayPal JavaScript SDK Configuration (per PayPal Multiparty / Multi-Seller specifications)
   const initialOptions = useMemo(() => {
     const options: Record<string, any> = {
       "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "",
       currency: "USD",
       intent: "capture",
       components: "buttons",
-      "enable-funding": "venmo,paylater",
+      // Multi-seller payments do NOT support Venmo or Pay Later per PayPal specifications
+      "enable-funding": isMultiSeller ? "" : "venmo",
       "disable-funding": "",
       "data-page-type": "checkout",
       "data-sdk-integration-source": "developer-studio",
     };
 
-    if (singleMerchantId) {
-      options["merchant-id"] = singleMerchantId;
+    if (resolvedMerchantIds.length === 1) {
+      // Single Seller Checkout
+      options["merchant-id"] = resolvedMerchantIds[0];
+      options["data-merchant-id"] = resolvedMerchantIds[0];
+    } else if (isMultiSeller) {
+      // Multi-Seller Checkout: pass comma-separated IDs to both merchant-id and data-merchant-id
+      options["merchant-id"] = resolvedMerchantIds.join(",");
+      options["data-merchant-id"] = resolvedMerchantIds.join(",");
     }
 
     return options;
-  }, [singleMerchantId]);
+  }, [merchantIdsKey, resolvedMerchantIds, isMultiSeller]);
 
   const {
     subscribe_website,
@@ -151,127 +218,152 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
         <div className="space-y-3 py-2">
           <div className="w-full h-12 bg-gray-200 animate-pulse rounded-md" />
           <div className="w-full h-12 bg-gray-200 animate-pulse rounded-md" />
+          <div className="w-full h-12 bg-gray-200 animate-pulse rounded-md" />
+        </div>
+      ) : merchantError || resolvedMerchantIds.length === 0 ? (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 text-left my-4">
+          <p className="font-semibold mb-1">Payment Temporarily Unavailable</p>
+          <p>
+            {merchantError ||
+              "One or more sellers have not connected their PayPal account yet. Please contact support or the seller."}
+          </p>
         </div>
       ) : (
-        <PayPalScriptProvider
-          key={singleMerchantId || "multi-vendor"}
-          options={initialOptions as any}
-        >
-          <PayPalButtonWithSkeleton
-          createOrder={async () => {
-            console.log("[PayPal Debug] createOrder triggered. Fetching latest form values...");
-            try {
-              const values = getValues();
-              const formValues = (values?.vendors || {}) as VendorFormValues;
-              const contact = {
-                first_name: values?.first_name || reduxContact?.first_name || "",
-                last_name: values?.last_name || reduxContact?.last_name || "",
-                email: values?.email || reduxContact?.email || "",
-                phone: values?.phone || reduxContact?.phone || null,
-              };
+        <>
+          {merchantWarning && (
+            <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900 text-left mb-4">
+              <p className="font-semibold mb-0.5">Sandbox Seller Notice</p>
+              <p>{merchantWarning}</p>
+            </div>
+          )}
 
-              const payload = buildCheckoutPayload(
-                items,
-                formValues,
-                vendorExtras,
-                contact,
-                {
-                  payment_method: "paypal",
-                  terms_and_condition,
-                  subscribe_website,
-                },
-              );
+          <PayPalScriptProvider
+            key={merchantIdsKey}
+            options={initialOptions as any}
+          >
+            <PayPalButtonWithSkeleton
+              createOrder={async () => {
+                try {
+                  // Dynamically build fresh checkout payload on click
+                  const values = getValues();
+                  const formValues = (values?.vendors || {}) as VendorFormValues;
+                  const contact = {
+                    first_name: values?.first_name || reduxContact?.first_name || "",
+                    last_name: values?.last_name || reduxContact?.last_name || "",
+                    email: values?.email || reduxContact?.email || "",
+                    phone: values?.phone || reduxContact?.phone || null,
+                  };
 
-              console.log("[PayPal Debug] Sending checkout payload:", payload);
+                  const payload = buildCheckoutPayload(
+                    items,
+                    formValues,
+                    vendorExtras,
+                    contact,
+                    {
+                      payment_method: "paypal",
+                      terms_and_condition,
+                      subscribe_website,
+                    },
+                  );
 
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/multi-vendor-checkout`,
-                {
-                  method: "POST",
-                  credentials: "include",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                  },
-                  body: JSON.stringify(payload),
-                },
-              );
+                  const response = await fetch(
+                    `${process.env.NEXT_PUBLIC_SITE_URL}/api/multi-vendor-checkout`,
+                    {
+                      method: "POST",
+                      credentials: "include",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                      },
+                      body: JSON.stringify(payload),
+                    },
+                  );
 
-              const orderData = await response.json();
-              console.log("[PayPal Debug] /api/multi-vendor-checkout response:", orderData);
+                  const orderData = await response.json();
 
-              if (orderData?.paypal_order_id) {
-                console.log("[PayPal Debug] Returning paypal_order_id to SDK:", orderData.paypal_order_id);
-                return orderData.paypal_order_id;
-              }
+                  if (orderData?.paypal_order_id) {
+                    return orderData.paypal_order_id;
+                  }
 
-              const errorMsg = orderData?.message || "Unable to create PayPal order";
-              toast.error(errorMsg);
-              throw new Error(errorMsg);
-            } catch (error: any) {
-              console.error("[PayPal Debug] createOrder failed:", error);
-              if (!error?.message) {
-                toast.error("Unable to initialize payment");
-              }
-              throw error;
-            }
-          }}
-          onApprove={async data => {
-            console.log("[PayPal Debug] onApprove triggered! Buyer approved in popup. Data:", data);
-            const toastId = toast.loading("Processing payment capture...");
-            try {
-              console.log("[PayPal Debug] Calling /api/paypal/capture with paypal_order_id:", data?.orderID);
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture`,
-                {
-                  method: "POST",
-                  credentials: "include",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                  },
-                  body: JSON.stringify({
-                    paypal_order_id: data?.orderID,
-                  }),
-                },
-              );
-
-              const orderData = await response.json();
-              console.log("[PayPal Debug] /api/paypal/capture response:", orderData);
-
-              if (orderData?.success) {
-                toast.success(orderData?.message || "Payment successful!", { id: toastId });
-                dispatch(apiSlice.util.invalidateTags(["user"]));
-
-                if (isBuyNow) {
-                  dispatch(setBuyNowItem(null));
-                } else {
-                  dispatch(clearCart());
+                  const errorMsg =
+                    orderData?.message || "Unable to create PayPal order";
+                  toast.error(errorMsg);
+                  throw new Error(errorMsg);
+                } catch (error: any) {
+                  console.error("Order creation failed:", error);
+                  if (!error?.message) {
+                    toast.error("Unable to initialize payment");
+                  }
+                  throw error;
                 }
+              }}
+              onApprove={async data => {
+                const toastId = toast.loading("Processing payment capture...");
+                try {
+                  const response = await fetch(
+                    `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture`,
+                    {
+                      method: "POST",
+                      credentials: "include",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                      },
+                      body: JSON.stringify({
+                        paypal_order_id: data?.orderID,
+                      }),
+                    },
+                  );
 
-                dispatch(clearCheckout());
-                router.replace(
-                  `/order-success?order_id=${orderData?.data?.id}`,
+                  const orderData = await response.json();
+                  const isSuccess = Boolean(
+                    orderData?.success ?? orderData?.status,
+                  );
+                  const orderId =
+                    orderData?.data?.id ??
+                    orderData?.order_id ??
+                    orderData?.data?.order_id;
+
+                  if (isSuccess && orderId) {
+                    toast.success(
+                      orderData?.message || "Payment completed successfully!",
+                      {
+                        id: toastId,
+                      },
+                    );
+                    dispatch(apiSlice.util.invalidateTags(["user"]));
+
+                    if (isBuyNow) {
+                      dispatch(setBuyNowItem(null));
+                    } else {
+                      dispatch(clearCart());
+                    }
+
+                    dispatch(clearCheckout());
+                    router.replace(`/order-success?order_id=${orderId}`);
+                  } else {
+                    toast.error(orderData?.message || "Payment capture failed", {
+                      id: toastId,
+                    });
+                  }
+                } catch (error) {
+                  console.error("Capture call failed:", error);
+                  toast.error("Payment capture failed", { id: toastId });
+                }
+              }}
+              onError={err => {
+                console.error("PayPal SDK encountered an error:", err);
+                toast.error(
+                  "PayPal encountered an error. If purchasing from multiple sellers, please ensure all sellers have active and verified PayPal merchant accounts.",
                 );
-              } else {
-                toast.error(orderData?.message || "Payment capture failed", { id: toastId });
-              }
-            } catch (error) {
-              console.error("[PayPal Debug] Capture call failed:", error);
-              toast.error("Payment capture failed", { id: toastId });
-            }
-          }}
-          onError={err => {
-            console.error("[PayPal Debug] onError event fired from PayPal SDK:", err);
-            toast.error("PayPal encountered an error. Check console for details.");
-          }}
-          onCancel={data => {
-            console.warn("[PayPal Debug] onCancel event fired. Buyer closed or cancelled popup:", data);
-            toast("Payment was cancelled.", { icon: "ℹ️" });
-          }}
-        />
-        </PayPalScriptProvider>
+              }}
+              onCancel={() => {
+                toast("Payment cancelled by buyer.", { icon: "ℹ️" });
+              }}
+            />
+          </PayPalScriptProvider>
+        </>
       )}
     </div>
   );

@@ -248,7 +248,7 @@ export default function Page({ searchParams }: Props) {
                       </p>
 
                       <p className="text-sm font-semibold text-secondary-black shrink-0 w-16 text-right">
-                        ${vendorOrder.total_amount.toFixed(2)}
+                        ${vendorOrder.sub_total.toFixed(2)}
                       </p>
                     </div>
                   );

@@ -217,7 +217,7 @@ const CounterTrades = ({ id }: { id: string }) => {
   if (offerLoading || requestLoading) {
     return (
       <div className="h-[80vh] flex justify-center items-center">
-        <PuffLoader color="#274f45" />
+        <PuffLoader color="var(--color-primary-green)" />
       </div>
     );
   }
@@ -375,7 +375,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                     {(addonProducts[itemId] || []).map((addon, idx) => (
                       <div
                         key={idx}
-                        className="flex w-full flex-wrap gap-2 items-center mt-2 border border-[#E5E5E5] rounded-lg p-2"
+                        className="flex w-full flex-wrap gap-2 items-center mt-2 border border-divider-gray rounded-lg p-2"
                       >
                         <select
                           value={addon.productId}
@@ -475,11 +475,11 @@ const CounterTrades = ({ id }: { id: string }) => {
                 {/* Dynamic divider */}
                 {showReloadBetween && (
                   <div className="flex gap-x-5 items-center my-4">
-                    <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                    <div className="bg-border-gray w-full h-[1px]"></div>
                     <div className="inline-block bg-white">
                       <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
                     </div>
-                    <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                    <div className="bg-border-gray w-full h-[1px]"></div>
                   </div>
                 )}
               </div>

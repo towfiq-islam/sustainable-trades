@@ -88,7 +88,7 @@ const ProductLocation = () => {
                   <ShopListSkeleton key={idx} />
                 ))
               ) : products.length === 0 ? (
-                <div className="text-gray-700 font-semibold text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-[#d4e2cb2f]">
+                <div className="text-gray-700 font-semibold text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-off-green/20">
                   <LuFileQuestion className="text-5xl text-gray-600" />
                   No Product Found
                 </div>
@@ -193,7 +193,7 @@ const ProductLocation = () => {
               )}
             </div>
           ) : (
-            <div className="text-gray-700 font-semibold xl:text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-[#d4e2cb2f]">
+            <div className="text-gray-700 font-semibold xl:text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-off-green/20">
               <LuFileQuestion className="text-4xl xl:text-5xl text-gray-600" />
               No Product Found
             </div>

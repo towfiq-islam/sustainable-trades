@@ -50,7 +50,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
   if (isLoading) {
     return (
       <div className="h-[80vh] flex justify-center items-center">
-        <PuffLoader color="#274f45" />
+        <PuffLoader color="var(--color-primary-green)" />
       </div>
     );
   }
@@ -76,9 +76,9 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
         {/* ============ LEFT: main column ============ */}
         <div className="w-full lg:w-[68%] 2xl:w-[75%]">
           {/* Meta bar */}
-          <div className="border border-[#E1E2E2] rounded-[10px] px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+          <div className="border border-card-border rounded-[10px] px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
             <div>
-              <h3 className="text-[#67645F] text-[15px] font-semibold mb-1">
+              <h3 className="text-muted-gray text-[15px] font-semibold mb-1">
                 Order Placed
               </h3>
               <p className="font-sans text-secondary-black text-sm">
@@ -87,7 +87,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
             </div>
 
             <div>
-              <h3 className="text-[#67645F] text-[15px] font-semibold mb-1">
+              <h3 className="text-muted-gray text-[15px] font-semibold mb-1">
                 Order Number
               </h3>
               <p className="font-sans text-secondary-black text-sm">
@@ -96,7 +96,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
             </div>
 
             <div>
-              <h3 className="text-[#67645F] text-[15px] font-semibold mb-1.5">
+              <h3 className="text-muted-gray text-[15px] font-semibold mb-1.5">
                 Payment Status
               </h3>
               <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize bg-primary-green/10 text-primary-green">
@@ -105,7 +105,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
             </div>
 
             <div>
-              <h3 className="text-[#67645F] text-[15px] font-semibold mb-1">
+              <h3 className="text-muted-gray text-[15px] font-semibold mb-1">
                 View Invoice
               </h3>
 
@@ -158,10 +158,10 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
               return (
                 <div
                   key={vendorOrder.id}
-                  className="border border-[#E1E2E2] rounded-[10px] overflow-hidden"
+                  className="border border-card-border rounded-[10px] overflow-hidden"
                 >
                   {/* Header */}
-                  <div className="flex items-center gap-2 px-5 py-3 bg-[#FAFAF9] border-b border-[#E1E2E2]">
+                  <div className="flex items-center gap-2 px-5 py-3 bg-table-header border-b border-card-border">
                     <figure className="size-9 rounded-full relative">
                       <Image
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${vendorOrder?.shop?.image}`}
@@ -175,7 +175,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                       Sold by {shopName}
                     </h4>
                     <span className="text-gray-400">•</span>
-                    <p className="text-sm font-sans text-[#67645F]">
+                    <p className="text-sm font-sans text-muted-gray">
                       Delivery Method:{" "}
                       {fulfillmentLabel(vendorOrder.fulfillment_type)}
                     </p>
@@ -206,7 +206,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                               <h5 className="text-[15px] font-semibold text-secondary-black font-sans">
                                 {item?.product_name}
                               </h5>
-                              <p className="text-[#67645F] text-sm font-sans">
+                              <p className="text-muted-gray text-sm font-sans">
                                 Qty: {item?.quantity}
                               </p>
                               {vendorOrder.status === "delivered" && (
@@ -231,41 +231,41 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                         ))}
                       </div>
 
-                      <div className="text-sm font-sans space-y-1.5 border-t border-[#EDEDED] pt-3">
-                        <div className="flex justify-between text-[#67645F]">
+                      <div className="text-sm font-sans space-y-1.5 border-t border-light-gray pt-3">
+                        <div className="flex justify-between text-muted-gray">
                           <span>Items Subtotal</span>
                           <span>${vendorOrder.sub_total}</span>
                         </div>
 
                         {vendorOrder.discount_amount > 0 && (
-                          <div className="flex justify-between text-[#67645F]">
+                          <div className="flex justify-between text-muted-gray">
                             <span>Discount</span>
                             <span>${vendorOrder.discount_amount}</span>
                           </div>
                         )}
 
                         {vendorOrder.fulfillment_type === "shipping" && (
-                          <div className="flex justify-between text-[#67645F]">
+                          <div className="flex justify-between text-muted-gray">
                             <span>Shipping</span>
                             <span>${vendorOrder.shipping_amount}</span>
                           </div>
                         )}
 
                         {vendorOrder.fulfillment_type === "delivery" && (
-                          <div className="flex justify-between text-[#67645F]">
+                          <div className="flex justify-between text-muted-gray">
                             <span>Local Delivery</span>
                             <span>${vendorOrder.delivery_amount}</span>
                           </div>
                         )}
 
                         {vendorOrder.fulfillment_type === "pickup" && (
-                          <div className="flex justify-between text-[#67645F]">
+                          <div className="flex justify-between text-muted-gray">
                             <span>Local Pickup</span>
                             <span>$0.00</span>
                           </div>
                         )}
 
-                        <div className="flex justify-between text-[#67645F]">
+                        <div className="flex justify-between text-muted-gray">
                           <span>Sales Tax</span>
                           <span>${vendorOrder.tax_amount}</span>
                         </div>
@@ -277,7 +277,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                       </div>
 
                       {address && (
-                        <div className="mt-4 pt-4 border-t border-[#EDEDED] text-sm font-sans">
+                        <div className="mt-4 pt-4 border-t border-light-gray text-sm font-sans">
                           <h5 className="font-semibold text-secondary-black mb-1">
                             {vendorOrder.fulfillment_type === "pickup"
                               ? "Pickup Location"
@@ -285,7 +285,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                                 ? "Delivery Address"
                                 : "Shipping Address"}
                           </h5>
-                          <div className="text-[#67645F]">
+                          <div className="text-muted-gray">
                             {address?.pickup_name && (
                               <p className="text-secondary-black font-medium">
                                 {address.pickup_name}
@@ -320,7 +320,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                           onClick={() =>
                             setTrackingHistory(vendorOrder.order_status_history)
                           }
-                          className="p-2.5 rounded-[8px] border border-[#BFBEBE] text-sm font-semibold text-secondary-black hover:border-primary-green duration-300 ease-in-out cursor-pointer"
+                          className="p-2.5 rounded-[8px] border border-border-gray text-sm font-semibold text-secondary-black hover:border-primary-green duration-300 ease-in-out cursor-pointer"
                         >
                           {vendorOrder.fulfillment_type === "pickup"
                             ? "View Pickup Details"
@@ -349,7 +349,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
         {/* ============ RIGHT: sticky sidebar ============ */}
         <div className="w-full lg:w-[32%] 2xl:w-[25%]">
           <div className="sticky top-6 flex flex-col gap-4">
-            <div className="border border-[#E1E2E2] rounded-[10px] p-5">
+            <div className="border border-card-border rounded-[10px] p-5">
               <h4 className="font-sans font-bold text-secondary-black mb-4">
                 Order Summary ({order?.item_count} items)
               </h4>
@@ -378,7 +378,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                           {shopName} ({vendorOrder.items?.length ?? 0}{" "}
                           {vendorOrder.items?.length === 1 ? "item" : "items"})
                         </p>
-                        <p className="text-xs text-[#67645F] font-sans">
+                        <p className="text-xs text-muted-gray font-sans">
                           {fulfillmentLabel(vendorOrder.fulfillment_type)}
                         </p>
                       </div>
@@ -390,33 +390,33 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                 })}
               </div>
 
-              <div className="text-sm font-sans space-y-1.5 border-t border-[#EDEDED] pt-3">
-                <div className="flex justify-between text-[#67645F]">
+              <div className="text-sm font-sans space-y-1.5 border-t border-light-gray pt-3">
+                <div className="flex justify-between text-muted-gray">
                   <span>Subtotal</span>
                   <span>${order?.sub_total}</span>
                 </div>
                 {order?.discount_amount > 0 && (
-                  <div className="flex justify-between text-[#67645F]">
+                  <div className="flex justify-between text-muted-gray">
                     <span>Discount</span>
                     <span>-${order?.discount_amount}</span>
                   </div>
                 )}
 
-                <div className="flex justify-between text-[#67645F]">
+                <div className="flex justify-between text-muted-gray">
                   <span>Sales Tax</span>
                   <span>${order?.tax_amount}</span>
                 </div>
-                <div className="flex justify-between text-[#67645F]">
+                <div className="flex justify-between text-muted-gray">
                   <span>Shipping</span>
                   <span>${order?.shipping_amount}</span>
                 </div>
-                <div className="flex justify-between text-[#67645F]">
+                <div className="flex justify-between text-muted-gray">
                   <span>Local Delivery Fee</span>
                   <span>${order?.delivery_amount}</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center border-t border-[#EDEDED] mt-3 pt-3">
+              <div className="flex justify-between items-center border-t border-light-gray mt-3 pt-3">
                 <span className="font-bold font-sans text-secondary-black">
                   Total
                 </span>
@@ -426,17 +426,17 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
               </div>
             </div>
 
-            <div className="border border-[#E1E2E2] rounded-[10px] p-5">
+            <div className="border border-card-border rounded-[10px] p-5">
               <h4 className="font-sans font-bold text-secondary-black mb-2">
                 Need Help?
               </h4>
-              <p className="text-sm text-[#67645F] font-sans">
+              <p className="text-sm text-muted-gray font-sans">
                 If you need help with one of your items in your order, reach out
                 to the vendor via the chat box.
               </p>
             </div>
 
-            <div className="border border-[#E1E2E2] rounded-[10px] p-5">
+            <div className="border border-card-border rounded-[10px] p-5">
               <p className="text-[15px] font-semibold text-secondary-black font-sans">
                 Thank you for shopping local!
               </p>

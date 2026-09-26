@@ -35,16 +35,16 @@ const page = () => {
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <div className="relative w-full sm:w-[300px]">
-            <div className="flex items-center border border-[#BFBEBE] rounded-[8px] overflow-hidden">
+            <div className="flex items-center border border-border-gray rounded-[8px] overflow-hidden">
               <input
                 type="search"
                 placeholder="Search Payments"
-                className="flex-1 py-[10px] pl-4 pr-2 outline-0 text-[16px] text-[#67645F] font-normal"
+                className="flex-1 py-[10px] pl-4 pr-2 outline-0 text-[16px] text-muted-gray font-normal"
               />
               {/* Divider */}
-              <div className="w-[1px] h-6 bg-[#BFBEBE]" />
+              <div className="w-[1px] h-6 bg-border-gray" />
               {/* Icon */}
-              <button className="p-3 text-[#67645F]">
+              <button className="p-3 text-muted-gray">
                 <FaSearch />
               </button>
             </div>

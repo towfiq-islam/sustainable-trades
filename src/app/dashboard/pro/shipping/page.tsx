@@ -95,7 +95,7 @@ const Page = () => {
             onClick={() => handleShippingMethodChange("flat_rate")}
             className={`px-4 py-4 border rounded-lg w-full cursor-pointer transition-all ${isSetting && "animate-pulse"} ${
               user?.shop_info?.shipping_setting === "flat_rate"
-                ? "border-primary-green bg-[#F2EFE8]"
+                ? "border-primary-green bg-warm-card"
                 : "border-gray-300 hover:border-primary-green"
             }`}
           >
@@ -118,7 +118,7 @@ const Page = () => {
               )}
             </div>
 
-            <p className="text-[#3D3D3D] mt-2">
+            <p className="text-dark-gray mt-2">
               Charge a fixed shipping amount per order and/or per item.
             </p>
 
@@ -138,7 +138,7 @@ const Page = () => {
             className={`px-4 py-4 border rounded-lg w-full cursor-pointer transition-all ${isSetting && "animate-pulse"}
                  ${
                    user?.shop_info?.shipping_setting === "weight_based"
-                     ? "border-primary-green bg-[#F2EFE8]"
+                     ? "border-primary-green bg-warm-card"
                      : "border-gray-300 hover:border-primary-green"
                  }`}
           >
@@ -163,7 +163,7 @@ const Page = () => {
               )}
             </div>
 
-            <p className="text-[#3D3D3D] mt-2">
+            <p className="text-dark-gray mt-2">
               Calculate shipping costs based on the total weight of the items in
               the order.
             </p>
@@ -185,7 +185,7 @@ const Page = () => {
                    ${
                      user?.shop_info?.shipping_setting === "shippo" &&
                      user?.shop_info?.shippo_connected
-                       ? "border-primary-green bg-[#F2EFE8]"
+                       ? "border-primary-green bg-warm-card"
                        : "border-gray-300 hover:border-primary-green"
                    }`}
           >
@@ -214,7 +214,7 @@ const Page = () => {
               </div>
             </div>
 
-            <p className="text-[#3D3D3D] mt-2">
+            <p className="text-dark-gray mt-2">
               Connect your Shippo account to automatically calculate rates and
               generate shipping labels.
             </p>
@@ -236,7 +236,7 @@ const Page = () => {
                 i
               </div>
 
-              <p className="text-[#374151] leading-7">
+              <p className="text-secondary-gray leading-7">
                 <span className="font-semibold">Important:</span> Only one
                 shipping calculator can be active at a time. <br />
                 The active option determines how shipping charges are calculated

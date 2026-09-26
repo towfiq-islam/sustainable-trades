@@ -46,9 +46,9 @@ const actionButtonStyles: Record<
   },
   Message: { border: "border-gray-200", text: "text-black" },
   "Write A review": {
-    bg: "bg-[#5B867B]",
+    bg: "bg-sage-green",
     text: "text-white",
-    border: "border-[#5B867B]",
+    border: "border-sage-green",
   },
 };
 
@@ -117,9 +117,9 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
           {tradeRequests?.map((trade: TradeRequest) => (
             <div
               key={trade.id}
-              className="border border-[#BFBEBE] p-3 md:p-5 rounded-[8px] flex flex-col gap-4"
+              className="border border-border-gray p-3 md:p-5 rounded-[8px] flex flex-col gap-4"
             >
-              <div className="flex flex-col gap-3.5 sm:gap-0 sm:flex-row justify-between pb-4 border-b border-[#BFBEBE]">
+              <div className="flex flex-col gap-3.5 sm:gap-0 sm:flex-row justify-between pb-4 border-b border-border-gray">
                 <div className="flex flex-wrap sm:flex-nowrap  gap-x-5 items-center">
                   <h3 className="font-semibold text-[16px] text-primary-green">
                     Trade Request
@@ -211,11 +211,11 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                     {/*  DIVIDER */}
                     {requestedItems?.length > 0 && offeredItems?.length > 0 && (
                       <div className="flex gap-x-5 items-center">
-                        <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                        <div className="bg-border-gray w-full h-[1px]"></div>
                         <div className="inline-block bg-white">
                           <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
                         </div>
-                        <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                        <div className="bg-border-gray w-full h-[1px]"></div>
                       </div>
                     )}
 
@@ -273,7 +273,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                 );
               })()}
 
-              <div className="flex flex-wrap gap-3.5 md:gap-0 justify-between items-end border-t border-[#BFBEBE] pt-3">
+              <div className="flex flex-wrap gap-3.5 md:gap-0 justify-between items-end border-t border-border-gray pt-3">
                 <div className="flex gap-2.5 md:gap-5 flex-wrap">
                   {actionButtons[trade.status]
                     ?.filter((btn: any) => {

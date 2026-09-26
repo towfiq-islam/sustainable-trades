@@ -295,7 +295,7 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
               i
             </div>
 
-            <p className="text-[#374151] leading-6">
+            <p className="text-secondary-gray leading-6">
               <span className="font-bold block mb-1">
                 You're currently using a Basic Membership.
               </span>
@@ -369,7 +369,7 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
             <div>
               <p className="font-semibold text-[20px] md:text-[24px] text-secondary-black">
                 Listing Status:{" "}
-                <span className="px-3 py-2 text-white text-sm rounded-full bg-[#757575]">
+                <span className="px-3 py-2 text-white text-sm rounded-full bg-badge-gray">
                   Pending
                 </span>
               </p>
@@ -598,7 +598,7 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
           <button
             type="submit"
             disabled={isLoading}
-            className={`bg-accent-red duration-500 ease-in-out text-white py-2.5 md:py-5 px-6 md:px-12 flex items-center justify-center gap-2 cursor-pointer rounded-lg font-semibold hover:bg-[#a34739] mt-6 ${
+            className={`bg-accent-red duration-500 ease-in-out text-white py-2.5 md:py-5 px-6 md:px-12 flex items-center justify-center gap-2 cursor-pointer rounded-lg font-semibold hover:bg-accent-red-hover mt-6 ${
               isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >

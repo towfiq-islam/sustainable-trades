@@ -192,7 +192,7 @@ const CombinedNavbar = ({
               const isDisabled = item?.id == 4 || item?.id == 5;
               return (
                 <Link
-                  className={`text-lg text-[#FEFEFE] ${isActive && "font-semibold "}`}
+                  className={`text-lg text-pure-white ${isActive && "font-semibold "}`}
                   key={item?.id}
                   href={isDisabled ? "#" : item?.path}
                   onClick={e => {

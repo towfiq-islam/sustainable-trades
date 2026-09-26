@@ -141,10 +141,10 @@ const Pricing = ({
                     user?.membership?.status === "active" &&
                     user?.membership?.membership_type === membership_type &&
                     user?.membership?.type === interval
-                      ? "bg-[#EDF3F1]"
+                      ? "bg-mint-bg"
                       : user?.membership?.status !== "active" &&
                         idx === 1 &&
-                        "bg-[#EDF3F1]"
+                        "bg-mint-bg"
                   }`}
                 >
                   <div>
@@ -260,10 +260,10 @@ const Pricing = ({
         {/* Cancel btn */}
         {isCancel && user?.membership?.status === "active" && (
           <div className="mt-10 border border-primary-green rounded-lg p-6 max-w-[850px] mx-auto">
-            <p className="text-[#2D2D2D] font-semibold text-2xl capitalize mb-4">
+            <p className="text-secondary-black font-semibold text-2xl capitalize mb-4">
               {user?.membership?.membership_type}
             </p>
-            <p className="text-[#2D2D2D] mb-6">
+            <p className="text-secondary-black mb-6">
               Cancel or upgrade to Pro by choosing premium above. Refunds will
               not be issued for canceled memberships, however we will prorate
               the Pro membership if you are upgrading from Basic.

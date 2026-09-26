@@ -149,10 +149,10 @@ const StepFour = ({ setStep, step, isPending }: any) => {
                 center={selectedLocation}
                 radius={804.672}
                 options={{
-                  strokeColor: "#41695a",
+                  strokeColor: "#274f45",
                   strokeOpacity: 0.8,
                   strokeWeight: 2,
-                  fillColor: selectedOption === 2 ? "#41695a" : "#bac7b1",
+                  fillColor: selectedOption === 2 ? "#274f45" : "#bfbebe",
                   fillOpacity: 0.25,
                 }}
               />
@@ -239,7 +239,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
       <Modal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        className="bg-[#f7f7f7] max-w-lg"
+        className="bg-table-header max-w-lg"
       >
         <div>
           <p className="mb-4 text-sm">

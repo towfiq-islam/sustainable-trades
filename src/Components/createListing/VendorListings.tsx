@@ -142,9 +142,9 @@ export default function VendorListings({
               onChange={e => setSearch(e.target.value)}
               placeholder="Search listings..."
               type="search"
-              className="py-[10px] pl-4 pr-10 outline-0 border border-accent-gray focus:border-primary-green rounded-[8px] text-[15px] text-[#67645F] font-normal w-full transition-colors duration-200"
+              className="py-[10px] pl-4 pr-10 outline-0 border border-accent-gray focus:border-primary-green rounded-[8px] text-[15px] text-muted-gray font-normal w-full transition-colors duration-200"
             />
-            <FaSearch className="absolute top-1/2 right-4 -translate-y-1/2 text-[#67645F] text-sm pointer-events-none" />
+            <FaSearch className="absolute top-1/2 right-4 -translate-y-1/2 text-muted-gray text-sm pointer-events-none" />
           </div>
 
           {/* Status */}
@@ -240,7 +240,7 @@ export default function VendorListings({
           {products.map(product => (
             <div
               key={product.id}
-              className="relative border border-[#e5e5e5] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 group"
+              className="relative border border-divider-gray rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 group"
             >
               <div className="relative w-full h-[270px]">
                 <Image

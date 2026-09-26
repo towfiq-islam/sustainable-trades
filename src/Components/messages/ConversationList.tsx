@@ -165,13 +165,13 @@ const ConversationList = ({ search, activeTab }: Props) => {
 
                 {/* Right */}
                 <div className="shrink-0 flex flex-col items-end gap-2">
-                  <p className="font-semibold text-sm text-[#1AA884]">
+                  <p className="font-semibold text-sm text-bright-green">
                     {moment(conversation?.last_message?.created_at).format(
                       "ll",
                     )}
                   </p>
 
-                  <p className="bg-[#1AA884] text-white font-bold px-1.5 text-xs py-0.5 rounded grid place-items-center">
+                  <p className="bg-bright-green text-white font-bold px-1.5 text-xs py-0.5 rounded grid place-items-center">
                     {conversation?.unread_messages_count}
                   </p>
                 </div>

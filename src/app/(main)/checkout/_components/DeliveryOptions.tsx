@@ -189,7 +189,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                         i
                       </div>
 
-                      <p className="text-[#374151] leading-6 text-[14px]">
+                      <p className="text-secondary-gray leading-6 text-[14px]">
                         These products don't share a compatible delivery option.
                         To continue, remove one or more conflicting items or
                         purchase them in separate orders.

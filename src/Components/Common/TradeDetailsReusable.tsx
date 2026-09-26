@@ -23,7 +23,7 @@ const TradeDetailsReusable = () => {
     Approve: {
       bg: "bg-primary-green",
       text: "text-white",
-      border: "#274F45",
+      border: "border-primary-green",
     },
     Deny: { border: "border-primary-red", text: "text-primary-red" },
     Counter: {
@@ -33,7 +33,7 @@ const TradeDetailsReusable = () => {
     },
     Message: { border: "border-gray-200", text: "text-black" },
     "Write A review": {
-      bg: "#5B867B",
+      bg: "bg-sage-green",
       text: "text-black",
     },
   };
@@ -195,15 +195,15 @@ const TradeDetailsReusable = () => {
         </div>
       </div>
       <div className="flex gap-x-5 items-center mt-16">
-        <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+        <div className="bg-border-gray w-full h-[1px]"></div>
         <div className="inline-block">
           <Reload
             className={`cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out`}
           />
         </div>
-        <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+        <div className="bg-border-gray w-full h-[1px]"></div>
       </div>
-      <div className="mt-14 py-6 border-b border-[#BFBEBE]">
+      <div className="mt-14 py-6 border-b border-border-gray">
         <div className="flex gap-x-4">
           <Image
             src={DetailsImage}

@@ -185,7 +185,7 @@ export default function TaxRatePage() {
                 Add Local Tax Rate
               </h2>
 
-              <p className="text-[#67645F] mt-2 mb-8">
+              <p className="text-muted-gray mt-2 mb-8">
                 The local tax rate you enter here will be applied to every order
                 at checkout.
               </p>
@@ -326,7 +326,7 @@ export default function TaxRatePage() {
             </div>
 
             {/* Right Info Panel */}
-            <div className="bg-[#F9FCF9] border border-primary-green/20 rounded-2xl p-5">
+            <div className="bg-card-white border border-primary-green/20 rounded-2xl p-5">
               <div className="">
                 <div className="border-b border-primary-green pb-3">
                   <div className="flex items-center gap-2 mb-2">
@@ -408,7 +408,7 @@ export default function TaxRatePage() {
           </div>
 
           {/* Bottom Banner */}
-          <div className="mt-6 bg-[#F4F9FF] border border-[#D7E8FF] rounded-xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div className="mt-6 bg-cyan-light border border-accent-blue/40 rounded-xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div>
               <h4 className="font-semibold text-secondary-black">
                 Need to calculate sales tax based on your customer's address or
@@ -432,7 +432,7 @@ export default function TaxRatePage() {
       ) : (
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Top Info Card */}
-          <div className="border border-primary-green/30 rounded-2xl bg-[#FAFFFB] px-5 py-6 relative">
+          <div className="border border-primary-green/30 rounded-2xl bg-card-white px-5 py-6 relative">
             {/* Active Status */}
             {user?.shop_info?.tax_provider === "ziptax" && (
               <p className="absolute right-3 top-3 rounded-full px-3.5 py-1 text-sm text-white bg-accent-red">
@@ -551,7 +551,7 @@ export default function TaxRatePage() {
               </div>
 
               {/* Right */}
-              <div className="border border-primary-green/30 bg-[#FAFFFB] rounded-xl p-4">
+              <div className="border border-primary-green/30 bg-card-white rounded-xl p-4">
                 <h4 className="font-semibold text-lg mb-2 flex gap-1 items-center">
                   <FaLightbulb className="text-primary-green" />
                   How it works

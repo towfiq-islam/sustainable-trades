@@ -49,7 +49,7 @@ const DashboardSidebar = ({
     <aside
       className={`${
         open ? "translate-x-0" : "-translate-x-full xl:translate-x-0"
-      } fixed top-0 left-0 z-[999] xl:static h-screen xl:h-[calc(100vh-80px)] w-72 duration-500 transition-transform border-r border-[#E4E4E4] bg-[#FFFCF9] py-5 px-4 shrink-0 overflow-y-auto side-scrollbar`}
+      } fixed top-0 left-0 z-[999] xl:static h-screen xl:h-[calc(100vh-80px)] w-72 duration-500 transition-transform border-r border-light-gray bg-dashboard-bg py-5 px-4 shrink-0 overflow-y-auto side-scrollbar`}
     >
       {/* Nav Links */}
       <nav className="flex flex-col gap-3.5">

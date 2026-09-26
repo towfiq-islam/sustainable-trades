@@ -50,7 +50,7 @@ export default function DashboardLayoutClient({
         />
 
         {/* Right - Outlet */}
-        <section className="flex-1 h-[calc(100vh-80px)] p-4 md:p-8 lg:p-10 bg-[#FFFCF9]  overflow-y-auto">
+        <section className="flex-1 h-[calc(100vh-80px)] p-4 md:p-8 lg:p-10 bg-dashboard-bg  overflow-y-auto">
           {children}
         </section>
 

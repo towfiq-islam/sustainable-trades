@@ -100,8 +100,8 @@ const Page = () => {
             {data.map(item => (
               <div
                 key={item.id}
-                className={`flex-1 px-4 py-3 2xl:py-5 border border-[#D1D1D1] rounded-xl transition-colors duration-300 ${
-                  selectedRole === item.role ? "bg-[#EDF3F1]" : "bg-[#F7F7F7]"
+                className={`flex-1 px-4 py-3 2xl:py-5 border border-border-gray rounded-xl transition-colors duration-300 ${
+                  selectedRole === item.role ? "bg-mint-bg" : "bg-table-header"
                 }`}
               >
                 <div className="flex justify-between items-center gap-3 mb-5 2xl:mb-7">

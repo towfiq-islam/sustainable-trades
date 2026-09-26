@@ -36,7 +36,7 @@ const FlatConfigModal = ({ flatRateRanges, setOpenFlatModal }: any) => {
 
   return (
     <div>
-      <h3 className="text-[#3D3D3D] text-[18px] md:text-[24px] font-bold text-center">
+      <h3 className="text-dark-gray text-[18px] md:text-[24px] font-bold text-center">
         ADD FLAT RATE
       </h3>
 
@@ -44,7 +44,7 @@ const FlatConfigModal = ({ flatRateRanges, setOpenFlatModal }: any) => {
         onSubmit={handleFlatSubmit(onFlatSubmit)}
         className="mt-2.5 md:mt-5 flex flex-col gap-y-5"
       >
-        <h5 className="text-[#3D3D3D] font-semibold text-[16px] text-center pb-4 border-b border-[#3D3D3D]">
+        <h5 className="text-dark-gray font-semibold text-[16px] text-center pb-4 border-b border-dark-gray">
           Formula
         </h5>
 

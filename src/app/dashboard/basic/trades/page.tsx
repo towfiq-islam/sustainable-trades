@@ -49,12 +49,12 @@ const Page = () => {
           <input
             placeholder="Search..."
             type="search"
-            className="py-[10px] pl-4 outline-0 border border-[#BFBEBE] rounded-[8px] text-[16px] text-[#67645F] font-normal w-full  md:w-[500px]"
+            className="py-[10px] pl-4 outline-0 border border-border-gray rounded-[8px] text-[16px] text-muted-gray font-normal w-full  md:w-[500px]"
           />
           <div className="absolute top-4 right-3">
             <FaSearch />
           </div>
-          <div className="absolute top-0 right-10 w-[2px] bg-[#BFBEBE] h-[45px]"></div>
+          <div className="absolute top-0 right-10 w-[2px] bg-border-gray h-[45px]"></div>
         </div>
       </div>
 

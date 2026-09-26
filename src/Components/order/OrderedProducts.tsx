@@ -39,13 +39,13 @@ const OrderedProducts = ({ data, order_id }: OrderProps) => {
     <div className="pt-10 pb-6">
       <div className="flex flex-col-reverse md:flex-row justify-between">
         <div className="flex gap-x-1 items-center">
-          <h5 className="text-[16px] font-bold text-[#67645F]">Order ID</h5>
+          <h5 className="text-[16px] font-bold text-muted-gray">Order ID</h5>
           <p className="text-[14px] font-normal text-secondary-black">
             {data?.order_number}
           </p>
         </div>
         <div className="flex gap-x-1 items-center">
-          <h5 className="text-[16px] font-bold text-[#67645F]">Date Ordered</h5>
+          <h5 className="text-[16px] font-bold text-muted-gray">Date Ordered</h5>
           <p className="text-[14px] font-normal text-secondary-black">
             {moment(data?.order_date).format("ll")}
           </p>
@@ -56,7 +56,7 @@ const OrderedProducts = ({ data, order_id }: OrderProps) => {
             onClick={() => {
               handleDownloadInvoice(order_id);
             }}
-            className={`text-[#1F4038] font-sans font-bold ${
+            className={`text-deep-green font-sans font-bold ${
               isPending ? "cursor-not-allowed" : "cursor-pointer underline"
             }`}
           >
@@ -72,7 +72,7 @@ const OrderedProducts = ({ data, order_id }: OrderProps) => {
         </div>
       </div>
 
-      <div className="mt-6 border border-[#CCCED0] rounded-xl">
+      <div className="mt-6 border border-border-gray rounded-xl">
         <div className="flex flex-col">
           {data?.items?.map(item => (
             <div

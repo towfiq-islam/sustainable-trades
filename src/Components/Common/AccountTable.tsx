@@ -100,7 +100,7 @@ const AccountTable = ({
         {isLoading ? (
           <table className="w-full min-w-[800px] border-collapse">
             <thead>
-              <tr className="bg-primary-green text-[#fff] text-[14px] sm:text-[16px] font-semibold">
+              <tr className="bg-primary-green text-pure-white text-[14px] sm:text-[16px] font-semibold">
                 <th className="py-2 px-4 text-left"># Order</th>
                 <th className="py-2 px-4 text-left">Revenue</th>
                 <th className="py-2 px-4 text-left">Profit</th>
@@ -157,7 +157,7 @@ const AccountTable = ({
         ) : data?.length > 0 ? (
           <table className="w-full min-w-[800px] border-collapse">
             <thead>
-              <tr className="bg-primary-green text-[#fff] text-[14px] sm:text-[16px] font-semibold">
+              <tr className="bg-primary-green text-pure-white text-[14px] sm:text-[16px] font-semibold">
                 <th className="py-2 px-4 text-left"># Order</th>
                 <th className="py-2 px-4 text-left">Revenue</th>
                 <th className="py-2 px-4 text-left">Profit</th>
@@ -177,7 +177,7 @@ const AccountTable = ({
                   key={idx}
                   className="border-b border-gray-300 text-secondary-black text-[14px] font-medium"
                 >
-                  <td className="text-[#3470E5]">
+                  <td className="text-blue-600">
                     <Link
                       href={`${isTradeAndBarter ? "" : `/dashboard/pro/orders/${row?.id}`}`}
                       className="py-3 px-4 hover:underline cursor-pointer"

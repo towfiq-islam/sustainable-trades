@@ -252,7 +252,7 @@ const Page = () => {
   if (isLoading) {
     return (
       <div className="h-[80vh] flex justify-center items-center">
-        <PuffLoader color="#274f45" />
+        <PuffLoader color="var(--color-primary-green)" />
       </div>
     );
   }
@@ -409,8 +409,8 @@ const Page = () => {
                                   ? "text-primary-red group-hover:text-primary-red"
                                   : "text-primary-red"
                                 : isEnabled
-                                  ? "text-[#222] group-hover:text-primary-green"
-                                  : "text-[#222]"
+                                  ? "text-secondary-black group-hover:text-primary-green"
+                                  : "text-secondary-black"
                             }`}
                           >
                             {STATUS_LABELS[statusKey] ?? statusKey}
@@ -512,7 +512,7 @@ const Page = () => {
           {accordionData?.map((item, idx) => (
             <div
               key={item.title}
-              className="border border-[#E1E2E2] rounded-lg overflow-hidden"
+              className="border border-card-border rounded-lg overflow-hidden"
             >
               <div
                 className="flex justify-between items-center p-3 cursor-pointer"

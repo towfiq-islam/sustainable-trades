@@ -17,7 +17,7 @@ const page = async ({ params }: any) => {
             Blog details
           </span>
 
-          <h1 className="mt-4 mb-3 md:mb-4 text-lg md:text-2xl xl:text-3xl font-semibold text-[#333] text-center leading-[150%] max-w-4xl mx-auto">
+          <h1 className="mt-4 mb-3 md:mb-4 text-lg md:text-2xl xl:text-3xl font-semibold text-secondary-black text-center leading-[150%] max-w-4xl mx-auto">
             {blogDetailsData?.data?.title}
           </h1>
 

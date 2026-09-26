@@ -53,7 +53,7 @@ const WeightConfigModal = ({ weightRanges }: any) => {
 
   return (
     <div>
-      <h3 className="text-[#3D3D3D] text-[24px] font-bold text-center pb-4 border-b border-[#3D3D3D]">
+      <h3 className="text-dark-gray text-[24px] font-bold text-center pb-4 border-b border-dark-gray">
         ADD WEIGHT RANGE RATE
       </h3>
 
@@ -147,7 +147,7 @@ const WeightConfigModal = ({ weightRanges }: any) => {
       <h4 className="text-[20px] font-semibold text-primary-green mt-5">
         Weight Ranges
       </h4>
-      <p className="font-normal text-[16px] text-[#3D3D3D]">
+      <p className="font-normal text-[16px] text-dark-gray">
         Depending on the total weight, you can charge different amounts for
         shipping.
       </p>
@@ -165,7 +165,7 @@ const WeightConfigModal = ({ weightRanges }: any) => {
         <tbody>
           {weightRanges?.data?.length ? (
             weightRanges.data.map((range: any) => (
-              <tr key={range.id} className="group hover:bg-[#C2D5D0]">
+              <tr key={range.id} className="group hover:bg-soft-teal">
                 <td className="p-2 text-sm">
                   {range.min_weight} to {range.max_weight}
                 </td>

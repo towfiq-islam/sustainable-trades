@@ -11,9 +11,9 @@ export default function ToastProvider() {
       toastOptions={{
         duration: 2000,
         style: {
-          background: "#ffffff",
-          color: "#111827",
-          border: "1px solid #e5e7eb",
+          background: "var(--color-accent-white)",
+          color: "var(--color-secondary-black)",
+          border: "1px solid var(--color-light-gray)",
           borderRadius: "8px",
           padding: "14px 16px",
           fontSize: "15px",
@@ -24,15 +24,15 @@ export default function ToastProvider() {
 
         success: {
           iconTheme: {
-            primary: "#274f45",
-            secondary: "#ffffff",
+            primary: "var(--color-primary-green)",
+            secondary: "var(--color-pure-white)",
           },
         },
 
         error: {
           iconTheme: {
-            primary: "#8b200c",
-            secondary: "#ffffff",
+            primary: "var(--color-primary-red)",
+            secondary: "var(--color-pure-white)",
           },
         },
       }}

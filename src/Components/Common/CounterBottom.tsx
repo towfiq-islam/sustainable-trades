@@ -65,10 +65,10 @@ const CounterBottom = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="flex flex-col lg:flex-row justify-between gap-10 border-b border-[#BFBEBE] md:pb-8 ">
-      <div className="w-full lg:w-1/2 border border-[#BFBEBE]  rounded-lg shadow-sm flex flex-col bg-white mt-10">
+    <div className="flex flex-col lg:flex-row justify-between gap-10 border-b border-border-gray md:pb-8 ">
+      <div className="w-full lg:w-1/2 border border-border-gray  rounded-lg shadow-sm flex flex-col bg-white mt-10">
         {/* Header */}
-        <div className="bg-off-green px-4 py-3 border-b border-[#BFBEBE] flex items-center gap-3 rounded-t-lg">
+        <div className="bg-off-green px-4 py-3 border-b border-border-gray flex items-center gap-3 rounded-t-lg">
           <img
             src="https://i.pravatar.cc/40?img=1"
             alt="Linda Anderson"
@@ -104,7 +104,7 @@ const CounterBottom = () => {
         </div>
 
         {/* Input */}
-        <div className="border-t border-[#BFBEBE] px-3 py-3 flex items-center gap-2 mt-20">
+        <div className="border-t border-border-gray px-3 py-3 flex items-center gap-2 mt-20">
           <button className="text-gray-400 hover:text-gray-600 p-2">
             <FaPlus size={16} />
           </button>
@@ -115,7 +115,7 @@ const CounterBottom = () => {
               value={message}
               onChange={e => setMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="w-full border border-[#BFBEBE] rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
+              className="w-full border border-border-gray rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
             />
             <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
               <FaMicrophone size={14} />
@@ -123,7 +123,7 @@ const CounterBottom = () => {
           </div>
           <button
             onClick={handleSendMessage}
-            className="bg-primary-green text-white p-2 rounded-md hover:bg-[#1e3a32] transition-colors"
+            className="bg-primary-green text-white p-2 rounded-md hover:bg-dark-green-hover transition-colors"
           >
             <FaPaperPlane size={16} />
           </button>
@@ -190,13 +190,13 @@ const CounterBottom = () => {
             </div>
           </div>
           <div className="flex gap-x-5 items-center mt-5">
-            <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+            <div className="bg-border-gray w-full h-[1px]"></div>
             <div className="inline-block">
               <Reload
                 className={`cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out`}
               />
             </div>
-            <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+            <div className="bg-border-gray w-full h-[1px]"></div>
           </div>
           <div className="">
             <h4 className="text-[18px] lg:text-[20px] font-semibold text-primary-green">
@@ -239,7 +239,7 @@ const CounterBottom = () => {
                 Denver, CO
               </h5>
             </div>
-            <div className="border-b border-[#BFBEBE]">
+            <div className="border-b border-border-gray">
               {/* Header */}
               <div
                 className="flex justify-between py-4 cursor-pointer items-center"

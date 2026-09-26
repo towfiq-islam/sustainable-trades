@@ -1,18 +1,78 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
+  /* Brand Colors */
+  --color-primary: #274f45;              /* Japanese Indigo */
+  --color-secondary: #d4e2cb;            /* Honeydew */
+
+  /* Accent Colors */
+  --color-accent-1: #77978f;             /* Japanese Indigo Lightened */
+  --color-accent-2: #b0dedb;             /* Cruise */
+  --color-accent-3: #e48872;             /* Middle Red */
+
+  /* System Colors */
+  --color-error: #8b200c;                /* Totem Red */
+  --color-warning: #8b200c;              /* Totem Red */
+  --color-success: #274f45;              /* Japanese Indigo */
+
+  /* B&W Colors */
+  --color-black-chocolate: #13141d;      /* Black Chocolate */
+  --color-vanilla-powder: #fffdf8;       /* Vanilla Powder */
+  --color-almost-white: #fefefe;         /* Almost White */
+
+  /* Grey Colors */
+  --color-gray-1: #4b4a47;               /* Gray 1 */
+  --color-gray-2: #67645f;               /* Gray 2 */
+  --color-gray-3: #a7a39c;               /* Gray 3 */
+  --color-gray-4: #f0eee9;               /* Gray 4 */
+  --color-gray-5: #bfbebe;               /* Gray 5 */
+
+  /* Semantic Aliases for backwards compatibility */
   --color-primary-green: #274f45;
+  --color-off-green: #d4e2cb;
   --color-light-green: #77978f;
+  --color-accent-blue: #b0dedb;
   --color-accent-red: #e48872;
   --color-primary-red: #8b200c;
-  --color-secondary-gray: #4b4a47;
-  --color-dark-green: #274f4561;
-  --color-off-green: #d4e2cb;
   --color-secondary-black: #13141d;
   --color-accent-white: #fffdf8;
+  --color-pure-white: #fefefe;
+  --color-secondary-gray: #4b4a47;
+  --color-muted-gray: #67645f;
   --color-accent-gray: #a7a39c;
-  --color-accent-blue: #b0dedb;
+  --color-warm-beige: #f0eee9;
+  --color-border-gray: #bfbebe;
+
+  /* Auxiliary UI shades used in components */
+  --color-dark-green: #274f4561;
+  --color-deep-green: #173b35;
+  --color-forest-green: #0b3c32;
+  --color-sage-green: #5b867b;
+  --color-dark-green-hover: #1e3a32;
+  --color-bright-green: #1aa884;
+  --color-medium-green: #5c7f60;
+  --color-accent-red-hover: #a34739;
+  --color-dark-gray: #3d3d3d;
+  --color-light-gray: #ededed;
+  --color-card-border: #e1e2e2;
+  --color-divider-gray: #e5e5e5;
+  --color-border-stone: #cbc8c2;
+  --color-badge-gray: #757575;
+  --color-overlay-gray: #626161;
+  --color-dashboard-bg: #fffcf9;
+  --color-table-header: #fafaf9;
+  --color-card-white: #fafffb;
+  --color-soft-teal: #d6f0eb;
+  --color-mint-bg: #edf3f1;
+  --color-modal-teal: #d8f1ec;
+  --color-modal-divider: #d6ece6;
+  --color-callout-bg: #ebf5f2;
+  --color-cyan-light: #e6f5f4;
+  --color-warm-card: #f2efe8;
+
+  /* Shadows from Design System */
+  --shadow-general: 0 3px 12px 0 rgba(0, 0, 0, 0.10), 0 3px 8px 0 rgba(0, 0, 0, 0.08);
+  --shadow-error-state: 0 4px 8px 0 rgba(139, 32, 12, 0.12);
 
   /* Font Family */
   --font-lato: var(--font-lato);
@@ -122,7 +182,7 @@ html {
 }
 
 option:hover {
-  background: #d4e2cb !important;
+  background: var(--color-off-green) !important;
 }
 
 .scroll-to-top {
@@ -132,7 +192,7 @@ option:hover {
 
 .chat-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #274f45;
+  scrollbar-color: var(--color-primary-green) transparent;
 }
 
 .stsearch-box input {

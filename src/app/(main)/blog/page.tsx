@@ -37,7 +37,7 @@ const page = async () => {
               </figure>
 
               <div className="sm:px-2 pb-3 sm:pb-4">
-                <h3 className="font-semibold text-[#333] text-[15px] sm:text-base xl:text-lg line-clamp-2 mb-2 sm:mb-4">
+                <h3 className="font-semibold text-secondary-black text-[15px] sm:text-base xl:text-lg line-clamp-2 mb-2 sm:mb-4">
                   {blog?.title}
                 </h3>
 

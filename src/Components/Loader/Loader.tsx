@@ -284,11 +284,11 @@ export const ShopCardSkeleton = () => {
 
 export const CustomerOrderTableSkeleton = () => {
   return (
-    <div className="border border-[#EDEDED] rounded-[12px] overflow-hidden mt-10">
+    <div className="border border-light-gray rounded-[12px] overflow-hidden mt-10">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-[#FAFAF9] text-[15px] text-[#67645F] font-semibold">
+            <tr className="bg-table-header text-[15px] text-muted-gray font-semibold">
               <th className="px-6 py-4">Order</th>
               <th className="px-6 py-4">Items</th>
               <th className="px-6 py-4">Total</th>
@@ -302,7 +302,7 @@ export const CustomerOrderTableSkeleton = () => {
             {Array.from({ length: 4 }).map((_, index) => (
               <tr
                 key={index}
-                className="border-t border-[#EDEDED] animate-pulse"
+                className="border-t border-light-gray animate-pulse"
               >
                 {/* Order */}
                 <td className="px-6 py-4">
@@ -367,7 +367,7 @@ export const CustomerReviewCardSkeleton = () => {
 
 export const NotificationSkeleton = () => {
   return (
-    <div className="border-b border-[#E5E5E5] flex justify-between p-2.5 md:p-5 items-center animate-pulse">
+    <div className="border-b border-divider-gray flex justify-between p-2.5 md:p-5 items-center animate-pulse">
       <div className="flex gap-2.5 md:gap-x-5 items-center">
         <div className="rounded-full size-[50px] md:size-[65px] bg-gray-300" />
         <div className="space-y-2">
@@ -483,8 +483,8 @@ export const DiscountSkeleton = () => {
 
 export const TradeRequestSkeleton = () => {
   return (
-    <div className="border border-[#BFBEBE] p-3 md:p-6 rounded-[8px] flex flex-col gap-4 animate-pulse mt-10">
-      <div className="flex flex-col sm:flex-row justify-between gap-3 pb-4 border-b border-[#BFBEBE]">
+    <div className="border border-border-gray p-3 md:p-6 rounded-[8px] flex flex-col gap-4 animate-pulse mt-10">
+      <div className="flex flex-col sm:flex-row justify-between gap-3 pb-4 border-b border-border-gray">
         <div className="flex flex-wrap gap-x-5 items-center">
           <div className="h-4 w-32 bg-gray-300 rounded" />
           <div className="h-4 w-44 bg-gray-300 rounded" />
@@ -517,7 +517,7 @@ export const TradeRequestSkeleton = () => {
           </div>
         </div>
       ))}
-      <div className="flex flex-wrap justify-between items-end border-t border-[#BFBEBE] pt-3">
+      <div className="flex flex-wrap justify-between items-end border-t border-border-gray pt-3">
         <div className="flex gap-3">
           {Array(3)
             .fill(null)

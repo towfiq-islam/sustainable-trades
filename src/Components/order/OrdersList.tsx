@@ -101,12 +101,12 @@ const OrdersList = ({
         <CustomerOrderTableSkeleton />
       ) : orders.length > 0 ? (
         <div
-          className={`border border-[#EDEDED] rounded-[12px] overflow-hidden ${role === "pro" && "mt-10"}`}
+          className={`border border-light-gray rounded-[12px] overflow-hidden ${role === "pro" && "mt-10"}`}
         >
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-[#FAFAF9] text-[15px] text-[#67645F] font-semibold">
+                <tr className="bg-table-header text-[15px] text-muted-gray font-semibold">
                   <th className="px-6 py-4">Order</th>
                   <th className="px-6 py-4">Items</th>
                   <th className="px-6 py-4">Total</th>
@@ -120,13 +120,13 @@ const OrdersList = ({
                 {orders.map((order: OrderRow) => (
                   <tr
                     key={order.id}
-                    className="border-t border-[#EDEDED] hover:bg-[#FAFAF9] transition-colors"
+                    className="border-t border-light-gray hover:bg-table-header transition-colors"
                   >
                     <td className="px-6 py-4">
                       <p className="font-bold text-black text-[15px] pb-1">
                         #{order.order_number}
                       </p>
-                      <p className="text-sm text-[#67645F]">
+                      <p className="text-sm text-muted-gray">
                         {order.vendor_count}{" "}
                         {order.vendor_count === 1 ? "shop" : "shops"}
                       </p>
@@ -134,7 +134,7 @@ const OrdersList = ({
 
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2 text-black text-sm">
-                        <FiPackage className="text-[#67645F]" />
+                        <FiPackage className="text-muted-gray" />
                         <span>
                           {order.item_count}{" "}
                           {order.item_count === 1 ? "item" : "items"}
@@ -152,7 +152,7 @@ const OrdersList = ({
                       </span>
                     </td>
 
-                    <td className="px-6 py-4 text-sm text-[#67645F]">
+                    <td className="px-6 py-4 text-sm text-muted-gray">
                       <p>{moment(order.created_at).format("MMM D, YYYY")}</p>
                     </td>
 

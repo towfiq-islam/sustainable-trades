@@ -48,7 +48,7 @@ const PaymentOptions = () => {
                   i
                 </div>
 
-                <p className="text-[#374151] leading-6 text-[14px]">
+                <p className="text-secondary-gray leading-6 text-[14px]">
                   After you click Proceed to Checkout, you'll choose from the
                   available delivery options. Options may include Local Pickup,
                   Local Delivery, or Shipping. If the items in your order are

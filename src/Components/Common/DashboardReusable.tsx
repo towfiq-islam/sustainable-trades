@@ -81,7 +81,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
       <div className="border border-accent-gray py-3 rounded-[8px]">
         <div className="flex flex-wrap justify-between items-center">
           <div className="px-[40px] md:px-[65px]">
-            <p className="text-[16px] text-[#67645F] font-semibold text-center">
+            <p className="text-[16px] text-muted-gray font-semibold text-center">
               Orders
             </p>
             <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
@@ -93,7 +93,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             </h4>
           </div>
           <div className="px-[40px] md:px-[65px]">
-            <p className="text-[16px] text-[#67645F] font-semibold text-center">
+            <p className="text-[16px] text-muted-gray font-semibold text-center">
               Trades
             </p>
             <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
@@ -105,7 +105,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             </h4>
           </div>
           <div className="px-[40px] md:px-[65px]">
-            <p className="text-[16px] text-[#67645F] font-semibold text-center">
+            <p className="text-[16px] text-muted-gray font-semibold text-center">
               Revenue
             </p>
             <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
@@ -119,7 +119,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             </h4>
           </div>
           <div className="px-[40px] md:px-[65px]">
-            <p className="text-[16px] text-[#67645F] font-semibold text-center">
+            <p className="text-[16px] text-muted-gray font-semibold text-center">
               Visits
             </p>
             <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
@@ -210,7 +210,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                     No inventory yet
                   </h6>
 
-                  <p className="text-sm text-[#67645F] font-normal mt-2 max-w-[250px]">
+                  <p className="text-sm text-muted-gray font-normal mt-2 max-w-[250px]">
                     Products you add to your store will show up here.
                   </p>
 
@@ -229,7 +229,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
         {/* Popup */}
         {isPackage && (
           <div className="border border-accent-gray rounded-[8px] p-4 lg:w-1/3 text-center flex flex-col justify-center items-center">
-            <h3 className="text-[16px] md:text-[20px] font-semibold text-[#13141D">
+            <h3 className="text-[16px] md:text-[20px] font-semibold text-secondary-black">
               Want more admin access?
             </h3>
             <p className="text-[13px] md:text-[16px] font-normal text-secondary-black max-w-[280px] pt-[10px] pb-2.5 lg:pb-5">
@@ -294,7 +294,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                     <h5 className="text-[14px] text-secondary-black font-semibold">
                       {item?.user?.name}
                     </h5>
-                    <p className="text-[14px] text-[#67645F] font-normal">
+                    <p className="text-[14px] text-muted-gray font-normal">
                       {`Sent ${moment(item?.created_at).fromNow()}`}
                     </p>
                   </div>
@@ -304,7 +304,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                   <h5 className="text-[14px] text-secondary-black font-semibold">
                     {item?.data?.subject}
                   </h5>
-                  <p className="text-[14px] text-[#67645F] font-normal truncate">
+                  <p className="text-[14px] text-muted-gray font-normal truncate">
                     {item?.data?.message}
                   </p>
                 </div>
@@ -319,7 +319,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             <h6 className="text-[15px] text-secondary-black font-semibold">
               You&apos;re all caught up
             </h6>
-            <p className="text-sm text-[#67645F] font-normal mt-2 max-w-[250px]">
+            <p className="text-sm text-muted-gray font-normal mt-2 max-w-[250px]">
               New orders, trades, and messages will appear here as they happen.
             </p>
           </div>

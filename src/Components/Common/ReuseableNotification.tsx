@@ -33,7 +33,7 @@ const ReuseableNotification = () => {
 
   return (
     <div className="">
-      <div className="border-b border-[#E5E5E5] flex gap-3 items-center justify-between pb-2">
+      <div className="border-b border-divider-gray flex gap-3 items-center justify-between pb-2">
         <h3 className="text-[30px] md:text-[36px] font-semibold text-secondary-black flex items-center gap-x-2">
           Notifications
         </h3>
@@ -69,7 +69,7 @@ const ReuseableNotification = () => {
             return (
               <div
                 key={notification?.id}
-                className="border-b last:border-b-0 border-[#E5E5E5] flex justify-between py-2.5 md:py-5 items-center"
+                className="border-b last:border-b-0 border-divider-gray flex justify-between py-2.5 md:py-5 items-center"
               >
                 <div className="flex gap-2.5 md:gap-x-4 items-center">
                   <figure className="rounded-full size-12 grid place-items-center bg-accent-red text-white font-semibold relative">
@@ -95,7 +95,7 @@ const ReuseableNotification = () => {
                     </h4>
                   </div>
                 </div>
-                <p className="text-[#969696] text-sm font-semibold">
+                <p className="text-accent-gray text-sm font-semibold">
                   {moment(notification?.created_at).fromNow()}
                 </p>
               </div>

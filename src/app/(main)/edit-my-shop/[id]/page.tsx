@@ -241,7 +241,7 @@ const Page = ({ params }: Props) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-[80vh]">
-        <PuffLoader color="#274F45" />
+        <PuffLoader color="var(--color-primary-green)" />
       </div>
     );
   }

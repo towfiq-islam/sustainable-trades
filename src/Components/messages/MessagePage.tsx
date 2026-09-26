@@ -334,11 +334,11 @@ const MessagePage = ({
       {/* Body */}
       <div
         ref={chatContainerRef}
-        className={`grow bg-[#eff4ebd3] my-4 rounded space-y-3 overflow-y-auto chat-scrollbar  ${compact ? "p-3" : "p-5"}`}
+        className={`grow bg-off-green/30 my-4 rounded space-y-3 overflow-y-auto chat-scrollbar  ${compact ? "p-3" : "p-5"}`}
       >
         {chatLoading ? (
           <div className="h-full flex justify-center items-center">
-            <PuffLoader color="#274f45" />
+            <PuffLoader color="var(--color-primary-green)" />
           </div>
         ) : (
           chats.map(msg => {
@@ -501,7 +501,7 @@ const MessagePage = ({
       {/* Footer */}
       <form onSubmit={handleSend} className="flex items-center gap-3">
         <p
-          className={`${compact ? "px-3 py-2.5" : "px-5 py-3"} border border-gray-300 text-sm text-[#071431] w-full rounded-lg relative`}
+          className={`${compact ? "px-3 py-2.5" : "px-5 py-3"} border border-gray-300 text-sm text-secondary-black w-full rounded-lg relative`}
         >
           <input
             type="text"

@@ -491,7 +491,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-full">
-        <PuffLoader color="#274F45" />
+        <PuffLoader color="var(--color-primary-green)" />
       </div>
     );
   }
@@ -611,7 +611,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
                     </div>
                   );
                 })}
-                <label className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-[#F5F5F5] rounded-lg cursor-pointer hover:bg-gray-100">
+                <label className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-table-header rounded-lg cursor-pointer hover:bg-gray-100">
                   <FaPlus />
                   <input
                     type="file"
@@ -727,13 +727,13 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
               <h3 className="text-[17px] md:text-[20px] text-secondary-black font-semibold">
                 Listing Approval Process
               </h3>
-              <p className="text-[16px] text-[#67645F] mt-2 max-w-[400px]">
+              <p className="text-[16px] text-muted-gray mt-2 max-w-[400px]">
                 In the video, share details about how and where your product was
                 made, how your food was grown, and how it aligns with our
                 sustainability guidelines.
               </p>
               <div className="flex gap-4 mt-3">
-                <label className="px-4 md:px-8 py-2.5 md:py-5 bg-[#F0EEE9] rounded-lg cursor-pointer text-[16px] text-secondary-black hover:bg-gray-100">
+                <label className="px-4 md:px-8 py-2.5 md:py-5 bg-warm-beige rounded-lg cursor-pointer text-[16px] text-secondary-black hover:bg-gray-100">
                   Upload video
                   <input
                     type="file"
@@ -765,7 +765,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
                   {showPlayButton && (
                     <button
                       type="button"
-                      className="h-24 w-24 bg-[#626161] text-white rounded-full absolute cursor-pointer top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex justify-center items-center"
+                      className="h-24 w-24 bg-overlay-gray text-white rounded-full absolute cursor-pointer top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex justify-center items-center"
                       onClick={e => {
                         e.stopPropagation();
                         handlePlay();
@@ -790,7 +790,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
             {/* Status */}
             <p className="font-semibold text-[20px] md:text-[24px] text-secondary-black">
               Listing Status:{" "}
-              <span className="px-3 py-2 text-white text-sm rounded-full bg-[#757575] capitalize">
+              <span className="px-3 py-2 text-white text-sm rounded-full bg-badge-gray capitalize">
                 {statusBadge}
               </span>
             </p>
@@ -1300,7 +1300,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
           <button
             type="submit"
             disabled={isUpdating}
-            className="bg-accent-red w-full sm:w-fit text-white py-2.5 md:py-5 px-12 cursor-pointer rounded-lg font-semibold hover:bg-[#a34739] mt-3 md:mt-6 disabled:opacity-50"
+            className="bg-accent-red w-full sm:w-fit text-white py-2.5 md:py-5 px-12 cursor-pointer rounded-lg font-semibold hover:bg-accent-red-hover mt-3 md:mt-6 disabled:opacity-50"
           >
             {isUpdating ? "Updating..." : "Update Listing"}
           </button>
@@ -1314,7 +1314,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
             <h3 className="text-lg font-semibold text-secondary-black mb-4">
               Delete Listing
             </h3>
-            <p className="text-[#67645F] mb-6">
+            <p className="text-muted-gray mb-6">
               Are you sure you want to delete this listing? This action cannot
               be undone.
             </p>

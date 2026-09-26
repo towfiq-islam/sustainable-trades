@@ -90,7 +90,7 @@ const DiscountsPage = () => {
             <input
               placeholder={"Search..."}
               type="search"
-              className="py-1.5 md:py-3 pl-4 outline-0 border border-primary-green rounded-[8px] text-[16px] text-[#67645F] font-normal w-full md:w-[300px]"
+              className="py-1.5 md:py-3 pl-4 outline-0 border border-primary-green rounded-[8px] text-[16px] text-muted-gray font-normal w-full md:w-[300px]"
             />
             <div className="absolute top-4 right-3">
               <FaSearch />
@@ -108,7 +108,7 @@ const DiscountsPage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 flex-wrap border-t border-b border-[#BFBEBE] py-4">
+      <div className="flex gap-2 flex-wrap border-t border-b border-border-gray py-4">
         {tabs?.map((tab, idx) => (
           <button
             key={idx}
@@ -180,7 +180,7 @@ const DiscountsPage = () => {
                     Discount Name: {d?.name}
                   </h3>
 
-                  <p className="text-[#67645F] font-bold text-[16px]">
+                  <p className="text-muted-gray font-bold text-[16px]">
                     {d?.promotion_type === "percentage"
                       ? `${d?.amount}% off ${
                           d?.applies === "any_order"

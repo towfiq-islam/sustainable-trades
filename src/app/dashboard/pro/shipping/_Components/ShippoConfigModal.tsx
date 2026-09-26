@@ -129,7 +129,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
           <div className="mt-5 bg-off-green/10 border border-gray-200 rounded-xl p-5">
             {/* Section header */}
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-7 h-7 rounded-full bg-[#0B3C32] flex items-center justify-center flex-shrink-0">
+              <div className="w-7 h-7 rounded-full bg-forest-green flex items-center justify-center flex-shrink-0">
                 <BsInfoLg className="text-white text-base" />
               </div>
               <span className="font-bold text-primary-green">How it works</span>
@@ -164,7 +164,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
                 <div className="flex flex-col gap-3">
                   {THINGS_TO_KNOW.map((text, i) => (
                     <div key={i} className="flex items-start gap-2.5">
-                      <MdCheckCircle className="text-[#0B3C32] text-xl flex-shrink-0 mt-0.5" />
+                      <MdCheckCircle className="text-forest-green text-xl flex-shrink-0 mt-0.5" />
                       <p className="text-[13px] text-gray-700 leading-relaxed">
                         {text}
                       </p>
@@ -215,7 +215,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
                           type="button"
                           disabled={!isAvailable || isPickingCarrier}
                           onClick={() => handleCarrierToggle(carrier)}
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${carrier.active ? "bg-[#0B3C32]" : "bg-gray-300"} ${!isAvailable ? "cursor-not-allowed" : "cursor-pointer"}`}
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${carrier.active ? "bg-forest-green" : "bg-gray-300"} ${!isAvailable ? "cursor-not-allowed" : "cursor-pointer"}`}
                         >
                           <span
                             className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${carrier.active ? "translate-x-6" : "translate-x-1"}`}
@@ -244,7 +244,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
                       checked={rate.active}
                       disabled={isChangingLabelType}
                       onChange={() => handleLabelTypeChange(rate)}
-                      className="size-4 mt-0.5 accent-[#0B3C32] flex-shrink-0 cursor-pointer"
+                      className="size-4 mt-0.5 accent-forest-green flex-shrink-0 cursor-pointer"
                     />
 
                     <div>
@@ -325,7 +325,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
               <button
                 disabled={isSyncing}
                 onClick={() => syncShippo(user?.id).unwrap()}
-                className="flex items-center gap-2 bg-[#0B3C32] text-white px-5 py-2.5 rounded-lg text-[14px] font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed hover:bg-[#0a3329] transition"
+                className="flex items-center gap-2 bg-forest-green text-white px-5 py-2.5 rounded-lg text-[14px] font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed hover:bg-forest-green transition"
               >
                 <MdSync className="text-base" />
                 Sync now
@@ -341,7 +341,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
         <div>
           <Image src={shippoImg} alt="shippo" className="w-2/5 mx-auto" />
 
-          <h3 className="text-[#3D3D3D] text-[18px] md:text-[24px] font-bold text-center">
+          <h3 className="text-dark-gray text-[18px] md:text-[24px] font-bold text-center">
             CONNECT TO SHIPPO
           </h3>
 
@@ -401,7 +401,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
             <button
               disabled={isConnecting}
               onClick={() => connectShippo().unwrap()}
-              className="bg-[#0B3C32] text-white px-6 py-2 rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
+              className="bg-forest-green text-white px-6 py-2 rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
             >
               Connect to Shippo
             </button>

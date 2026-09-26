@@ -104,7 +104,7 @@ const PriceSection = ({
                 i
               </div>
 
-              <p className="text-[#374151] leading-6">
+              <p className="text-secondary-gray leading-6">
                 <span className="font-bold block mb-1">
                   Use Shippo for shipping?
                 </span>

@@ -115,7 +115,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
             </p>
 
             <div
-              className="relative bg-[#F0EEE9] sm:h-[270px] sm:w-[270px] w-[220px] h-[220px] rounded-full mt-6 flex flex-col justify-center items-center cursor-pointer overflow-hidden md:mx-start mx-auto"
+              className="relative bg-warm-beige sm:h-[270px] sm:w-[270px] w-[220px] h-[220px] rounded-full mt-6 flex flex-col justify-center items-center cursor-pointer overflow-hidden md:mx-start mx-auto"
               onClick={() => document.getElementById("shopPhotoInput")?.click()}
             >
               {shopPhotoPreview ? (
@@ -171,7 +171,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
             </p>
 
             <div
-              className="relative bg-[#F0EEE9] h-[270px] w-full rounded-[8px] mt-6 flex flex-col justify-center items-center cursor-pointer overflow-hidden"
+              className="relative bg-warm-beige h-[270px] w-full rounded-[8px] mt-6 flex flex-col justify-center items-center cursor-pointer overflow-hidden"
               onClick={() =>
                 document.getElementById("coverPhotoInput")?.click()
               }

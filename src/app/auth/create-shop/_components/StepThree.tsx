@@ -98,7 +98,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
           </div>
 
           <div
-            className="relative bg-[#F0EEE9] lg:mx-0 mx-auto h-[150px] w-[150px] rounded-full lg:mt-4 flex flex-col justify-center items-center cursor-pointer overflow-hidden border border-accent-gray"
+            className="relative bg-warm-beige lg:mx-0 mx-auto h-[150px] w-[150px] rounded-full lg:mt-4 flex flex-col justify-center items-center cursor-pointer overflow-hidden border border-accent-gray"
             onClick={() =>
               document.getElementById("profilePhotoInput")?.click()
             }
@@ -138,7 +138,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             </p>
           )}
 
-          <h5 className="text-[#67645F] text-[14px] mt-2 lg:text-start text-center">
+          <h5 className="text-muted-gray text-[14px] mt-2 lg:text-start text-center">
             Max file size: 10 MB
           </h5>
         </div>
@@ -401,7 +401,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
       {/* Link Your Shop Section */}
       <div>
         <p className="text-[20px] font-normal text-secondary-black pb-4 pt-2">
-          Link Your Shop <span className="text-[#67645F]">(Optional)</span>
+          Link Your Shop <span className="text-muted-gray">(Optional)</span>
         </p>
         <div className="flex flex-col gap-4">
           <div className="flex gap-x-4 items-center">
@@ -409,7 +409,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             <input
               type="url"
               placeholder="Type Your Website link here"
-              className="outline-0 underline w-fit text-[#67645F] font-bold"
+              className="outline-0 underline w-fit text-muted-gray font-bold"
               {...register("website_url")}
             />
           </div>
@@ -418,7 +418,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             <input
               type="url"
               placeholder="Type Your Facebook link here"
-              className="outline-0 underline w-fit text-[#67645F] font-bold"
+              className="outline-0 underline w-fit text-muted-gray font-bold"
               {...register("facebook_url")}
             />
           </div>
@@ -427,7 +427,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             <input
               type="url"
               placeholder="Type Your Instagram link here"
-              className="outline-0 underline w-fit text-[#67645F] font-bold"
+              className="outline-0 underline w-fit text-muted-gray font-bold"
               {...register("instagram_url")}
             />
           </div>
@@ -436,7 +436,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             <input
               type="url"
               placeholder="Type Your Pinterest link here"
-              className="outline-0 underline w-fit text-[#67645F] font-bold"
+              className="outline-0 underline w-fit text-muted-gray font-bold"
               {...register("pinterest_url")}
             />
           </div>

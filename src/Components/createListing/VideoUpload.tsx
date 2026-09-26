@@ -42,7 +42,7 @@ const VideoUpload = ({ video, setVideo, setValue }: VideoUploadProps) => {
       <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
         Listing Approval Process
       </h3>
-      <p className="text-[16px] text-[#67645F] mt-2 w-full md:max-w-[400px]">
+      <p className="text-[16px] text-muted-gray mt-2 w-full md:max-w-[400px]">
         To ensure all products and services on Sustainable Trades meet our
         sustainability standards, each listing must be approved before it goes
         live. Please upload a short video introducing yourself and your product
@@ -52,7 +52,7 @@ const VideoUpload = ({ video, setVideo, setValue }: VideoUploadProps) => {
         integrity of our marketplace.
       </p>
       <div className="flex gap-4 mt-3 w-full">
-        <label className="px-4 md:px-8 py-2.5 md:py-5 bg-[#F0EEE9] rounded-lg cursor-pointer text-[14px] md:text-[16px] text-secondary-black">
+        <label className="px-4 md:px-8 py-2.5 md:py-5 bg-warm-beige rounded-lg cursor-pointer text-[14px] md:text-[16px] text-secondary-black">
           Upload video
           <input
             type="file"
@@ -84,7 +84,7 @@ const VideoUpload = ({ video, setVideo, setValue }: VideoUploadProps) => {
           />
           {showPlayButton && (
             <button
-              className="h-24 w-24 bg-[#626161] text-white rounded-full absolute cursor-pointer top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex justify-center items-center"
+              className="h-24 w-24 bg-overlay-gray text-white rounded-full absolute cursor-pointer top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex justify-center items-center"
               onClick={e => {
                 e.stopPropagation();
                 videoRef.current?.play().then(() => setShowPlayButton(false));

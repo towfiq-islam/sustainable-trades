@@ -1,11 +1,9 @@
 "use client";
 import { useFormContext } from "react-hook-form";
 import React, { useEffect, useState } from "react";
-import { Country } from "country-state-city";
 import StateSelect from "@/Components/Common/StateSelect";
-const allowedCountries = Country.getAllCountries().filter(
-  country => country.isoCode === "US" || country.isoCode === "CA",
-);
+
+const US_COUNTRY_CODE = "US";
 type FormValues = {
   address_line_1: string;
   address_line_2: string;
@@ -21,7 +19,6 @@ type FormValues = {
 };
 
 const EditFormFour = ({ data }: any) => {
-  const [country, setCountry] = useState<string>("US");
   const [state, setState] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState<string>("");
 
@@ -39,7 +36,6 @@ const EditFormFour = ({ data }: any) => {
     const postalCode = data?.shop_info?.address?.postal_code || "";
     const city = data?.shop_info?.address?.city || "";
     const savedState = data?.shop_info?.address?.state || "";
-    const savedCountry = data?.shop_info?.address?.country || "US";
     const lat = data?.shop_info?.address?.latitude || "";
     const lng = data?.shop_info?.address?.longitude || "";
 
@@ -53,7 +49,7 @@ const EditFormFour = ({ data }: any) => {
     setValue("address_line_2", addressLine2);
     setValue("postal_code", postalCode);
     setValue("city", city);
-    setValue("country", savedCountry);
+    setValue("country", US_COUNTRY_CODE);
     setValue("state", savedState);
     setValue("latitude", lat);
     setValue("longitude", lng);
@@ -61,7 +57,6 @@ const EditFormFour = ({ data }: any) => {
     setValue("address_10_mile", addressRadius);
     setValue("do_not_display", doNotDisplay);
 
-    setCountry(savedCountry);
     setState(savedState);
 
     if (displayMyAddress === 1) setSelectedOption("display_my_address");
@@ -80,14 +75,6 @@ const EditFormFour = ({ data }: any) => {
     if (value === "display_my_address") setValue("display_my_address", 1);
     if (value === "address_10_mile") setValue("address_10_mile", 1);
     if (value === "do_not_display") setValue("do_not_display", 1);
-  };
-
-  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCountry = e.target.value;
-    setCountry(newCountry);
-    setValue("country", newCountry, { shouldValidate: true });
-    setState("");
-    setValue("state", "", { shouldValidate: true });
   };
 
   return (
@@ -173,21 +160,18 @@ const EditFormFour = ({ data }: any) => {
         <div className="flex flex-wrap gap-4">
           <div className="flex-1">
             <p className="form-label">Country *</p>
-            <select
-              {...register("country", { required: "Country is required" })}
-              className="form-input"
-              value={country}
-              onChange={handleCountryChange}
-            >
-              {allowedCountries.map(item => (
-                <option key={item.isoCode} value={item.isoCode}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-            {errors.country && (
-              <p className="text-red-600">{errors.country.message}</p>
-            )}
+            <input
+              type="text"
+              value="United States"
+              disabled
+              readOnly
+              className="form-input bg-gray-100 text-gray-500 cursor-not-allowed"
+            />
+            <input
+              type="hidden"
+              {...register("country")}
+              value={US_COUNTRY_CODE}
+            />
           </div>
 
           <div className="flex-1">
@@ -195,7 +179,7 @@ const EditFormFour = ({ data }: any) => {
             <StateSelect
               id="edit-form-four-state"
               name="state"
-              countryCode={country}
+              countryCode={US_COUNTRY_CODE}
               value={state}
               error={!!errors.state}
               variant="form-input"

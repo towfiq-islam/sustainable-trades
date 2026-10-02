@@ -2,6 +2,7 @@
 import { useForm } from "react-hook-form";
 import { State } from "country-state-city";
 import { useEffect, useState } from "react";
+import StateSelect from "@/Components/Common/StateSelect";
 import { FiMapPin } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
@@ -167,29 +168,29 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
               State <span className="text-red-500">*</span>
             </label>
 
-            <select
-              className={`w-full border rounded-lg px-3.5 py-2.5 text-sm outline-none bg-white ${
-                errors.state
-                  ? "border-red-500 placeholder:text-red-500"
-                  : "border-gray-300"
-              }`}
-              {...register("state", { required: true })}
+            <StateSelect
+              id="edit-origin-state"
+              name="state"
+              countryCode={US_COUNTRY_CODE}
               value={state}
-              onChange={e => {
-                const selectedState = e.target.value;
+              error={!!errors.state}
+              variant="modal"
+              onChange={selectedState => {
                 setState(selectedState);
                 setValue("state", selectedState, {
                   shouldValidate: true,
                 });
               }}
-            >
-              <option value="">Select State</option>
-              {usStates.map(item => (
-                <option key={item.isoCode} value={item.isoCode}>
-                  {item.name} ({item.isoCode})
-                </option>
-              ))}
-            </select>
+            />
+            <input
+              type="hidden"
+              {...register("state", { required: true })}
+            />
+            {errors.state && (
+              <span className="text-red-500 text-xs mt-1 block">
+                State is required
+              </span>
+            )}
           </div>
         </div>
 

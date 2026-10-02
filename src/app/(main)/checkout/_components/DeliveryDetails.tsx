@@ -24,6 +24,7 @@ import Modal from "@/Components/Common/Modal";
 import { IoIosInformationCircle } from "react-icons/io";
 import { CiShop } from "react-icons/ci";
 import { FiUser } from "react-icons/fi";
+import StateSelect from "@/Components/Common/StateSelect";
 
 const US_COUNTRY_CODE = "US";
 const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
@@ -494,19 +495,25 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
                 </div>
 
                 <div className="relative flex-1 w-full">
-                  <select
-                    {...register(`${base}.state`, { required: true })}
+                  <StateSelect
+                    id={`checkout-state-${vendor.vendor_id}`}
+                    name={`${base}.state`}
+                    countryCode={US_COUNTRY_CODE}
                     value={selectedState ?? ""}
-                    autoComplete="address-level1"
-                    className={fieldClass(!!vendorErrors.state)}
-                  >
-                    <option value="">Select State *</option>
-                    {usStates.map(item => (
-                      <option key={item.isoCode} value={item.isoCode}>
-                        {item.name} ({item.isoCode})
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="Select State *"
+                    error={!!vendorErrors.state}
+                    variant="checkout"
+                    onChange={val => {
+                      setValue(`${base}.state`, val, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }}
+                  />
+                  <input
+                    type="hidden"
+                    {...register(`${base}.state`, { required: true })}
+                  />
                 </div>
               </div>
 

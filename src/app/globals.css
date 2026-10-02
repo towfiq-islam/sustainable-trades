@@ -2,30 +2,30 @@
 
 @theme {
   /* Brand Colors */
-  --color-primary: #274f45;              /* Japanese Indigo */
-  --color-secondary: #d4e2cb;            /* Honeydew */
+  --color-primary: #274f45; /* Japanese Indigo */
+  --color-secondary: #d4e2cb; /* Honeydew */
 
   /* Accent Colors */
-  --color-accent-1: #77978f;             /* Japanese Indigo Lightened */
-  --color-accent-2: #b0dedb;             /* Cruise */
-  --color-accent-3: #e48872;             /* Middle Red */
+  --color-accent-1: #77978f; /* Japanese Indigo Lightened */
+  --color-accent-2: #b0dedb; /* Cruise */
+  --color-accent-3: #e48872; /* Middle Red */
 
   /* System Colors */
-  --color-error: #8b200c;                /* Totem Red */
-  --color-warning: #8b200c;              /* Totem Red */
-  --color-success: #274f45;              /* Japanese Indigo */
+  --color-error: #8b200c; /* Totem Red */
+  --color-warning: #8b200c; /* Totem Red */
+  --color-success: #274f45; /* Japanese Indigo */
 
   /* B&W Colors */
-  --color-black-chocolate: #13141d;      /* Black Chocolate */
-  --color-vanilla-powder: #fffdf8;       /* Vanilla Powder */
-  --color-almost-white: #fefefe;         /* Almost White */
+  --color-black-chocolate: #13141d; /* Black Chocolate */
+  --color-vanilla-powder: #fffdf8; /* Vanilla Powder */
+  --color-almost-white: #fefefe; /* Almost White */
 
   /* Grey Colors */
-  --color-gray-1: #4b4a47;               /* Gray 1 */
-  --color-gray-2: #67645f;               /* Gray 2 */
-  --color-gray-3: #a7a39c;               /* Gray 3 */
-  --color-gray-4: #f0eee9;               /* Gray 4 */
-  --color-gray-5: #bfbebe;               /* Gray 5 */
+  --color-gray-1: #4b4a47; /* Gray 1 */
+  --color-gray-2: #67645f; /* Gray 2 */
+  --color-gray-3: #a7a39c; /* Gray 3 */
+  --color-gray-4: #f0eee9; /* Gray 4 */
+  --color-gray-5: #bfbebe; /* Gray 5 */
 
   /* Semantic Aliases for backwards compatibility */
   --color-primary-green: #274f45;
@@ -71,7 +71,8 @@
   --color-warm-card: #f2efe8;
 
   /* Shadows from Design System */
-  --shadow-general: 0 3px 12px 0 rgba(0, 0, 0, 0.10), 0 3px 8px 0 rgba(0, 0, 0, 0.08);
+  --shadow-general:
+    0 3px 12px 0 rgba(0, 0, 0, 0.1), 0 3px 8px 0 rgba(0, 0, 0, 0.08);
   --shadow-error-state: 0 4px 8px 0 rgba(139, 32, 12, 0.12);
 
   /* Font Family */
@@ -120,7 +121,7 @@ html {
 }
 
 .form-label {
-  @apply text-secondary-black text-sm md:text-[15px] block w-full font-semibold;
+  @apply text-secondary-black text-sm md:text-[15px] block w-full font-semibold mb-1.5;
 }
 
 .form-label span {
@@ -197,4 +198,8 @@ option:hover {
 
 .stsearch-box input {
   @apply !border-none !outline-none;
+}
+
+.css-17plnzj-indicatorSeparator {
+  @apply !hidden;
 }

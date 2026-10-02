@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { State } from "country-state-city";
+import StateSelect from "@/Components/Common/StateSelect";
 import Link from "next/link";
 import useAuth from "@/Hooks/useAuth";
 import { FaLightbulb } from "react-icons/fa";
@@ -213,28 +213,26 @@ export default function TaxRatePage() {
                     State *
                   </label>
 
-                  <select
-                    {...register("state", {
-                      required: "State is required",
-                    })}
-                    className="w-full h-12 px-4 border border-gray-300 rounded-lg"
+                  <StateSelect
+                    id="taxes-state"
+                    name="state"
+                    countryCode={country}
                     value={state}
-                    onChange={e => {
-                      const selectedState = e.target.value;
+                    error={!!errors.state}
+                    variant="default"
+                    onChange={selectedState => {
                       setState(selectedState);
                       setValue("state", selectedState, {
                         shouldValidate: true,
                       });
                     }}
-                  >
-                    <option value="">Select State</option>
-
-                    {State.getStatesOfCountry(country).map(item => (
-                      <option key={item.isoCode} value={item.isoCode}>
-                        {item.name} ({item.isoCode})
-                      </option>
-                    ))}
-                  </select>
+                  />
+                  <input
+                    type="hidden"
+                    {...register("state", {
+                      required: "State is required",
+                    })}
+                  />
 
                   {errors.state && (
                     <p className="text-red-500 text-sm mt-1">

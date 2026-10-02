@@ -1,7 +1,8 @@
 "use client";
 import { useFormContext } from "react-hook-form";
 import React, { useEffect, useState } from "react";
-import { Country, State } from "country-state-city";
+import { Country } from "country-state-city";
+import StateSelect from "@/Components/Common/StateSelect";
 const allowedCountries = Country.getAllCountries().filter(
   country => country.isoCode === "US" || country.isoCode === "CA",
 );
@@ -191,27 +192,26 @@ const EditFormFour = ({ data }: any) => {
 
           <div className="flex-1">
             <p className="form-label">State *</p>
-            <select
-              {...register("state", {
-                required: "State is required",
-              })}
-              className="form-input"
+            <StateSelect
+              id="edit-form-four-state"
+              name="state"
+              countryCode={country}
               value={state}
-              onChange={e => {
-                const selectedState = e.target.value;
+              error={!!errors.state}
+              variant="form-input"
+              onChange={selectedState => {
                 setState(selectedState);
                 setValue("state", selectedState, {
                   shouldValidate: true,
                 });
               }}
-            >
-              <option value="">Select State</option>
-              {State.getStatesOfCountry(country).map(item => (
-                <option key={item.isoCode} value={item.isoCode}>
-                  {item.name} ({item.isoCode})
-                </option>
-              ))}
-            </select>
+            />
+            <input
+              type="hidden"
+              {...register("state", {
+                required: "State is required",
+              })}
+            />
 
             {errors.state && (
               <p className="text-red-600">{errors.state.message}</p>

@@ -40,7 +40,7 @@ const page = () => {
   const { data: spotlightData } = useGetMembershipSpotlightQuery({});
   const { data: allCategory, isLoading: categoryLoading } =
     useGetProductCategoriesQuery({});
-  const { data: categoryDetails, isFetching } = useGetCategoryDetailsQuery({
+  const { data: categoryDetails, isLoading } = useGetCategoryDetailsQuery({
     id: categoryId,
     lat: latitude,
     lng: longitude,
@@ -144,7 +144,7 @@ const page = () => {
       </section>
 
       <Container>
-        {isFetching ? (
+        {isLoading ? (
           <h2 className="w-60 h-6 mb-7 animate-pulse bg-gray-200 rounded"></h2>
         ) : (
           <h2 className="text-lg md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5 xl:mb-7">
@@ -152,7 +152,7 @@ const page = () => {
           </h2>
         )}
 
-        {isFetching ? (
+        {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {Array.from({ length: 4 }).map((_, idx) => (
               <ProductSkeleton key={idx} />
@@ -174,7 +174,7 @@ const page = () => {
           </div>
         )}
 
-        {!isFetching && categoryDetails?.data?.products && (
+        {!isLoading && categoryDetails?.data?.products && (
           <div className="py-8">
             <PaginationControl
               currentPage={categoryDetails.data.products.current_page}

@@ -61,7 +61,7 @@ const ShopListing = ({ id }: { id: number }) => {
 
   const { data: featuredListings, isLoading: featuredLoading } =
     useGetFeaturedListingsQuery(id);
-  const { data: products, isFetching: listingsLoading } =
+  const { data: products, isLoading: listingsLoading } =
     useGetAllProductsUnderShopQuery(
       {
         id,

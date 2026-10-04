@@ -12,6 +12,7 @@ import { CartItem } from "@/Types";
 import { clearCart } from "@/redux/slices/cartSlice";
 import { clearCheckout, setBuyNowItem } from "@/redux/slices/checkoutSlice";
 import { PayPalButtonWithSkeleton } from "./PayPalButtonWithSkeleton";
+import { getLatLng } from "@/lib/getLatLng";
 
 type Props = {
   items: CartItem[];
@@ -246,7 +247,35 @@ const PaymentStep = ({ items, isBuyNow }: Props) => {
                 try {
                   // Dynamically build fresh checkout payload on click
                   const values = getValues();
-                  const formValues = (values?.vendors || {}) as VendorFormValues;
+                  const currentVendors = (values?.vendors || {}) as VendorFormValues;
+                  const formValues: VendorFormValues = { ...currentVendors };
+
+                  // Ensure every delivery/shipping vendor order has accurate coordinates for backend distance and processing
+                  await Promise.all(
+                    Object.entries(formValues).map(async ([vId, vData]) => {
+                      if (
+                        (!vData.latitude || !vData.longitude) &&
+                        vData.street_address &&
+                        vData.city
+                      ) {
+                        const coords = await getLatLng({
+                          street_address: vData.street_address,
+                          city: vData.city,
+                          state: vData.state,
+                          zip_code: vData.postal_code,
+                          country: vData.country || "United States",
+                        });
+                        if (coords.lat !== null && coords.lng !== null) {
+                          formValues[vId] = {
+                            ...vData,
+                            latitude: coords.lat,
+                            longitude: coords.lng,
+                          };
+                        }
+                      }
+                    }),
+                  );
+
                   const contact = {
                     first_name: values?.first_name || reduxContact?.first_name || "",
                     last_name: values?.last_name || reduxContact?.last_name || "",

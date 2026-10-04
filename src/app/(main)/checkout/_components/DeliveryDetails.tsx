@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
@@ -9,7 +9,11 @@ import { State } from "country-state-city";
 import { useGetAllPickupLocationsQuery } from "@/redux/api/vendorApi";
 import useAuth from "@/Hooks/useAuth";
 import PickupLocationSelect from "./PickupLocationSelect";
-import { buildVendorOrdersPayload, VendorFormValues } from "@/lib/checkout";
+import {
+  buildVendorOrdersPayload,
+  VendorFormValues,
+  VendorFormFields,
+} from "@/lib/checkout";
 import { useGetShippingTaxMutation } from "@/redux/api/taxApi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
@@ -121,18 +125,21 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
     });
   };
 
-  const watchedAddressFields = watch([
-    `${base}.street_address`,
-    `${base}.apt`,
-    `${base}.city`,
-    `${base}.state`,
-    `${base}.postal_code`,
-  ]);
+  const streetVal = watch(`${base}.street_address`);
+  const cityVal = watch(`${base}.city`);
+  const stateVal = watch(`${base}.state`);
+  const postalVal = watch(`${base}.postal_code`);
+  const currentAddressKey = `${streetVal || ""}|${cityVal || ""}|${stateVal || ""}|${postalVal || ""}`;
+
+  const prevAddressKeyRef = useRef(currentAddressKey);
 
   useEffect(() => {
-    setValue(`${base}.latitude`, undefined);
-    setValue(`${base}.longitude`, undefined);
-  }, watchedAddressFields);
+    if (prevAddressKeyRef.current && prevAddressKeyRef.current !== currentAddressKey) {
+      setValue(`${base}.latitude`, undefined);
+      setValue(`${base}.longitude`, undefined);
+    }
+    prevAddressKeyRef.current = currentAddressKey;
+  }, [currentAddressKey, base, setValue]);
 
   // Pre-fill contact & vendor recipient from logged in user or Redux state
   useEffect(() => {
@@ -224,39 +231,59 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
     if (isLastVendor) {
       setIsGeocoding(true);
       try {
+        const currentVendors = (getValues("vendors") || {}) as VendorFormValues;
+        const formValues: VendorFormValues = { ...currentVendors };
+
+        // Deduplicate vendors to avoid duplicate geocode requests
+        const uniqueVendorIds = Array.from(
+          new Set(items.map(item => item.vendor_id)),
+        );
+
         await Promise.all(
-          items.map(async v => {
+          uniqueVendorIds.map(async vendorId => {
+            const vendorItem = items.find(it => it.vendor_id === vendorId);
             const vendorNeedsAddress =
-              v.selectedFulfillment === "delivery" ||
-              v.selectedFulfillment === "shipping";
+              vendorItem?.selectedFulfillment === "delivery" ||
+              vendorItem?.selectedFulfillment === "shipping";
             if (!vendorNeedsAddress) return;
 
-            const vBase = `vendors.${v.vendor_id}`;
-            const vValues = getValues(vBase);
-            if (vValues?.latitude && vValues?.longitude) return;
+            const vBase = `vendors.${vendorId}`;
+            const vValues = (getValues(vBase) || {}) as VendorFormFields;
 
-            const fullAddress = [
-              vValues?.street_address,
-              vValues?.apt,
-              vValues?.city,
-              vValues?.state,
-              vValues?.postal_code,
-              "United States",
-            ]
-              .filter(Boolean)
-              .join(", ");
+            // If already accurately geocoded, keep existing coordinates
+            if (
+              vValues?.latitude &&
+              vValues?.longitude &&
+              !isNaN(Number(vValues.latitude)) &&
+              !isNaN(Number(vValues.longitude))
+            ) {
+              if (!formValues[vendorId]) formValues[vendorId] = { ...vValues };
+              formValues[vendorId].latitude = Number(vValues.latitude);
+              formValues[vendorId].longitude = Number(vValues.longitude);
+              return;
+            }
 
-            if (!fullAddress) return;
+            const { lat, lng } = await getLatLng({
+              street_address: vValues?.street_address,
+              city: vValues?.city,
+              state: vValues?.state,
+              zip_code: vValues?.postal_code,
+              country: vValues?.country || "United States",
+            });
 
-            const { lat, lng } = await getLatLng(fullAddress);
-            if (lat !== null) setValue(`${vBase}.latitude`, lat);
-            if (lng !== null) setValue(`${vBase}.longitude`, lng);
+            if (lat !== null && lng !== null) {
+              setValue(`${vBase}.latitude`, lat);
+              setValue(`${vBase}.longitude`, lng);
+
+              if (!formValues[vendorId]) {
+                formValues[vendorId] = { ...vValues };
+              }
+              formValues[vendorId].latitude = lat;
+              formValues[vendorId].longitude = lng;
+            }
           }),
         );
 
-        const { vendors: formValues } = getValues() as {
-          vendors: VendorFormValues;
-        };
         const payload = buildVendorOrdersPayload(items, formValues);
         const res = await calculateTaxAndShippingCost(payload).unwrap();
 

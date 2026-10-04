@@ -13,6 +13,7 @@ import { useEditShopMutation } from "@/redux/api/authApi";
 import toast from "react-hot-toast";
 import { apiSlice } from "@/redux/api/apiSlice";
 import { useAppDispatch } from "@/redux/store";
+import { getLatLng, normalizeStateCode } from "@/lib/getLatLng";
 
 type ProfileFormValues = {
   first_name: string;
@@ -108,44 +109,40 @@ const Page = ({ params }: Props) => {
     }
   }, [shopDetailsData, reset]);
 
-  const getCoordinates = async (address: string) => {
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          address,
-        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
-      );
-      const data = await response.json();
-      if (data.status === "OK" && data.results.length > 0) {
-        return data.results[0].geometry.location;
-      }
-      return null;
-    } catch (err) {
-      console.error("Geocoding failed:", err);
-      return null;
-    }
-  };
-
   const onSubmit = async (formData: ProfileFormValues) => {
     const previousAddress = shopDetailsData?.data?.shop_info?.address;
 
-    const newAddressString = `${formData.address_line_1 || ""}, ${
-      formData.address_line_2 || ""
-    }, ${formData.city || ""}, ${formData.state || ""}, ${formData.country || ""}, ${
-      formData.postal_code || ""
-    }`;
-    const oldAddressString = `${previousAddress?.address_line_1 || ""}, ${
-      previousAddress?.address_line_2 || ""
-    }, ${previousAddress?.city || ""}, ${previousAddress?.state || ""}, ${formData.country || ""}, ${
-      previousAddress?.postal_code || ""
-    }`;
+    const addressChanged =
+      (formData.address_line_1 || "").trim() !==
+        (previousAddress?.address_line_1 || "").trim() ||
+      (formData.city || "").trim() !== (previousAddress?.city || "").trim() ||
+      (formData.state || "").trim() !== (previousAddress?.state || "").trim() ||
+      (formData.postal_code || "").trim() !==
+        (previousAddress?.postal_code || "").trim();
 
     let finalLat = previousAddress?.latitude;
     let finalLng = previousAddress?.longitude;
 
-    if (newAddressString.trim() && newAddressString !== oldAddressString) {
-      const location = await getCoordinates(newAddressString);
-      if (location) {
+    const hasValidCoordinates =
+      finalLat &&
+      finalLng &&
+      finalLat !== "0" &&
+      finalLng !== "0" &&
+      !isNaN(Number(finalLat)) &&
+      !isNaN(Number(finalLng));
+
+    const stateVal = normalizeStateCode(formData.state || "");
+    const countryVal = "US";
+
+    if (formData.address_line_1 && (addressChanged || !hasValidCoordinates)) {
+      const location = await getLatLng({
+        street_address: formData.address_line_1,
+        city: formData.city,
+        state: stateVal,
+        zip_code: formData.postal_code,
+        country: countryVal,
+      });
+      if (location && location.lat !== null && location.lng !== null) {
         finalLat = String(location.lat);
         finalLng = String(location.lng);
       }
@@ -209,8 +206,8 @@ const Page = ({ params }: Props) => {
     fd.append("address_line_1", formData.address_line_1 || "");
     fd.append("address_line_2", formData.address_line_2 || "");
     fd.append("city", formData.city || "");
-    fd.append("state", formData.state || "");
-    fd.append("country", formData.country || "");
+    fd.append("state", stateVal);
+    fd.append("country", countryVal);
     fd.append("postal_code", formData.postal_code || "");
     fd.append("latitude", finalLat ? String(finalLat) : "");
     fd.append("longitude", finalLng ? String(finalLng) : "");

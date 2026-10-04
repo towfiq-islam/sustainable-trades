@@ -11,6 +11,7 @@ import { CgSpinnerTwo } from "react-icons/cg";
 import { useFormContext } from "react-hook-form";
 import AddressForm from "@/Components/Modals/LocatorModal";
 import Modal from "@/Components/Common/Modal";
+import { getLatLng, normalizeStateCode } from "@/lib/getLatLng";
 
 const containerStyle = {
   width: "100%",
@@ -44,32 +45,6 @@ const StepFour = ({ setStep, step, isPending }: any) => {
     setIsModalOpen(true);
   };
 
-  // Geocode function
-  const fetchLatLngFromAddress = async (address: string) => {
-    if (!API_KEY) {
-      toast.error("Google Maps API key is missing.");
-      return null;
-    }
-
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-      address,
-    )}&key=${API_KEY}`;
-
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      if (data.status === "OK" && data.results.length > 0) {
-        return data.results[0].geometry.location;
-      } else {
-        toast.error("Address not found. Please enter a valid address.");
-        return null;
-      }
-    } catch {
-      toast.error("Failed to fetch location. Try again.");
-      return null;
-    }
-  };
-
   // Save button logic
   const handleSave = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -85,19 +60,30 @@ const StepFour = ({ setStep, step, isPending }: any) => {
 
     if (!isValid) return;
 
-    const { address_line_1, address_line_2, city, state, zip_code, country } =
+    const { address_line_1, city, state, zip_code } =
       getValues();
-    let address = `${address_line_1} ${
-      address_line_2 ?? ""
-    }, ${city}, ${state} ${zip_code}, ${country ?? "USA"}`;
 
-    const location = await fetchLatLngFromAddress(address);
-    if (!location) return;
+    const normalizedState = normalizeStateCode(state);
+    const normalizedCountry = "US";
 
-    setSelectedLocation(location);
-    setValue("latitude", location.lat);
-    setValue("longitude", location.lng);
-    setValue("country", "US", { shouldValidate: true });
+    const location = await getLatLng({
+      street_address: address_line_1,
+      city,
+      state: normalizedState,
+      zip_code,
+      country: normalizedCountry,
+    });
+
+    if (!location || location.lat === null || location.lng === null) {
+      toast.error("Address not found. Please enter a valid address.");
+      return;
+    }
+
+    setSelectedLocation({ lat: location.lat, lng: location.lng });
+    setValue("latitude", location.lat, { shouldValidate: true });
+    setValue("longitude", location.lng, { shouldValidate: true });
+    setValue("state", normalizedState, { shouldValidate: true });
+    setValue("country", normalizedCountry, { shouldValidate: true });
     setIsModalOpen(false);
   };
 

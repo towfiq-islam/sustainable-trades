@@ -25,6 +25,8 @@ export interface DeliveryOrigin {
   state: string;
   zip: string;
   country: string;
+  latitude?: string;
+  longitude?: string;
 }
 
 export interface DeliveryRange {
@@ -41,7 +43,9 @@ export function mapApiOriginToOrigin(api: ApiDeliveryOrigin): DeliveryOrigin {
     city: api.city,
     state: api.state,
     zip: api.zip_code,
-    country: api.country === "US" ? "United States" : api.country,
+    country: api.country === "United States" || !api.country ? "US" : api.country,
+    latitude: api.latitude,
+    longitude: api.longitude,
   };
 }
 

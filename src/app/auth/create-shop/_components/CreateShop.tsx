@@ -14,12 +14,13 @@ const StepTwo = dynamic(() => import("./StepTwo"));
 const StepThree = dynamic(() => import("./StepThree"));
 const StepFour = dynamic(() => import("./StepFour"), {
   ssr: false,
-  loading: () => (
-    <div className="py-24 text-center text-secondary-gray">Loading...</div>
-  ),
+  // loading: () => (
+  //   <div className="py-24 text-center text-secondary-gray">Loading...</div>
+  // ),
 });
 const StepFive = dynamic(() => import("./StepFive"));
 import { RxCross2 } from "react-icons/rx";
+import { getLatLng, normalizeStateCode } from "@/lib/getLatLng";
 
 type StepItem = {
   smLabel: string;
@@ -118,6 +119,27 @@ const CreateShop = ({ newStep }: { newStep: number }) => {
       delete payload.coverPhotoPreview;
       delete payload.shopPhotoPreview;
       delete payload.profilePhotoPreview;
+
+      // Standardize state and country to 2-letter ISO codes (e.g. "NY", "US")
+      if (payload.state) {
+        payload.state = normalizeStateCode(payload.state);
+      }
+      payload.country = "US";
+
+      // Ensure accurate coordinates are present for distance calculation
+      if ((!payload.latitude || !payload.longitude) && payload.address_line_1) {
+        const coords = await getLatLng({
+          street_address: payload.address_line_1,
+          city: payload.city,
+          state: payload.state,
+          zip_code: payload.zip_code,
+          country: payload.country,
+        });
+        if (coords.lat !== null && coords.lng !== null) {
+          payload.latitude = coords.lat;
+          payload.longitude = coords.lng;
+        }
+      }
 
       const formData = new FormData();
 

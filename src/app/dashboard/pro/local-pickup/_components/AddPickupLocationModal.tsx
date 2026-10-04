@@ -59,32 +59,39 @@ const AddPickupLocationModal = ({
     const stateName =
       usStates.find(s => s.isoCode === values.state)?.name ?? values.state;
 
-    const fullAddress = [
-      values?.address,
-      values?.unit,
-      values?.city,
-      stateName,
-      values?.zip_code,
-      "United States",
-    ]
-      .filter(Boolean)
-      .join(", ");
-
-    const { lat, lng } = await getLatLng(fullAddress);
+    const { lat, lng } = await getLatLng({
+      street_address: values.address,
+      city: values.city,
+      state: stateName,
+      zip_code: values.zip_code,
+      country: "United States",
+    });
     setIsGeocoding(false);
 
-    if (lat === null || lng === null) {
+    let finalLat = lat !== null ? lat.toString() : null;
+    let finalLng = lng !== null ? lng.toString() : null;
+
+    // Fallback to existing valid coordinates if editing
+    if (!finalLat && editingLocation?.latitude && editingLocation.latitude !== "0") {
+      finalLat = editingLocation.latitude;
+    }
+    if (!finalLng && editingLocation?.longitude && editingLocation.longitude !== "0") {
+      finalLng = editingLocation.longitude;
+    }
+
+    if (!finalLat || !finalLng) {
       toast.error(
-        "Couldn't verify this address's map location — the location will still be saved, but you may want to double check the address.",
+        "Could not verify this pickup address's map location. Please check the street address, city, state, and zip code.",
       );
+      return;
     }
 
     const formData = new FormData();
     formData.append("location_name", values?.location_name);
     formData.append("address", values?.address);
-    formData.append("latitude", lat !== null ? lat.toString() : "0");
-    formData.append("longitude", lng !== null ? lng.toString() : "0");
-    formData.append("unit", values.unit);
+    formData.append("latitude", finalLat);
+    formData.append("longitude", finalLng);
+    formData.append("unit", values.unit || "");
     formData.append("city", values.city);
     formData.append("zip_code", values.zip_code);
     formData.append("state", values.state);

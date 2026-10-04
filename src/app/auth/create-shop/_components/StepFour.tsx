@@ -91,10 +91,6 @@ const StepFour = ({ setStep, step, isPending }: any) => {
       address_line_2 ?? ""
     }, ${city}, ${state} ${zip_code}, ${country ?? "USA"}`;
 
-    if (selectedOption === 3) {
-      address = `${city}, ${state}, ${country ?? "USA"}`;
-    }
-
     const location = await fetchLatLngFromAddress(address);
     if (!location) return;
 

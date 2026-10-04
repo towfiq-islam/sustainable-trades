@@ -14,9 +14,9 @@ const StepTwo = dynamic(() => import("./StepTwo"));
 const StepThree = dynamic(() => import("./StepThree"));
 const StepFour = dynamic(() => import("./StepFour"), {
   ssr: false,
-  loading: () => (
-    <div className="py-24 text-center text-secondary-gray">Loading...</div>
-  ),
+  // loading: () => (
+  //   <div className="py-24 text-center text-secondary-gray">Loading...</div>
+  // ),
 });
 const StepFive = dynamic(() => import("./StepFive"));
 import { RxCross2 } from "react-icons/rx";

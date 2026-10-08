@@ -21,7 +21,7 @@ const StepOne = ({ step, totalSteps }: any) => {
         Lets set up your shop! Fill in all required fields below to get started.
       </p>
 
-      <div className="border border-accent-gray rounded-[20px] my-8 md:my-[56px] lg:p-20 p-5">
+      <div className="border border-accent-gray rounded-[20px] my-10 xl:my-[56px] xl:p-20 p-10">
         <p className="text-sm md:text-[16px] text-secondary-gray font-normal font-lato">
           <span className="text-primary-red">*</span>Indicates a required field
         </p>
@@ -29,7 +29,7 @@ const StepOne = ({ step, totalSteps }: any) => {
           Note: Email and password entered here will be your login credentials
         </h6>
 
-        <div className="mt-5 md:mt-12 grid lg:grid-cols-2 grid-cols-1 gap-x-20 lg:gap-y-10 gap-y-3 font-lato">
+        <div className="mt-5 md:mt-12 grid lg:grid-cols-2 grid-cols-1 gap-x-10 xl:gap-x-20 gap-y-3 md:gap-y-5 xl:gap-y-10 font-lato">
           {/* First Name */}
           <div>
             <p className="form-label">

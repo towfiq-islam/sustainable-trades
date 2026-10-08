@@ -37,7 +37,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
       <h2 className="auth_title">Your Shop</h2>
 
       {/* Shop Info */}
-      <div className="border border-accent-gray rounded-[20px] lg:my-[56px] my-6 p-5 md:p-10 xl:p-20">
+      <div className="border border-accent-gray rounded-[20px] xl:my-[56px] my-8 p-5 md:p-10 xl:p-20">
         <div className="mt-5 grid lg:grid-cols-2 grid-cols-1 xl:gap-x-[96px] gap-x-10 items-center lg:gap-y-10 gap-y-5 font-lato">
           {/* Shop Name */}
           <div>

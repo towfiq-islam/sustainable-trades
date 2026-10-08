@@ -269,7 +269,7 @@ export default function page({ searchParams }: Props) {
           </form>
 
           {/* Sign in link */}
-          <div className="flex gap-1 items-center xl:text-lg text-secondary-black mt-3 text-sm xl:text-base">
+          <div className="flex gap-1 items-center xl:text-lg text-secondary-black mt-3 text-sm">
             <p>Already have an account?</p>
             <Link
               className="text-primary-green font-semibold underline"

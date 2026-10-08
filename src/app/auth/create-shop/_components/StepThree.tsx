@@ -81,9 +81,9 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
     <>
       <h2 className="auth_title lg:mt-16 mt-8">About Your Shop</h2>
 
-      <div className="border border-accent-gray rounded-[20px] my-8 lg:my-[56px] py-5 lg:p-20 px-5">
+      <div className="border border-accent-gray rounded-[20px] my-8 xl:my-[56px] p-8 xl:p-20">
         {/* Profile Picture */}
-        <div className="lg:mt-8 mt-5">
+        <div className="xl:mt-8">
           <p className="form-label text-center lg:text-start">
             About Your Shop Photo *
           </p>
@@ -144,7 +144,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
         </div>
 
         {/* About Your Shop */}
-        <div className="my-5 md:my-8 md:border rounded-lg lg:p-8">
+        <div className="my-5 md:my-8 md:border rounded-lg p-6 xl:p-8">
           <p className="text-[20px] font-normal text-secondary-black mb-4">
             About Shop
           </p>
@@ -212,7 +212,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
         </div>
 
         {/* Shop Policies */}
-        <div className="md:border rounded-lg lg:p-8">
+        <div className="md:border rounded-lg p-6 xl:p-8">
           <p className="text-[20px] font-normal text-secondary-black mb-4">
             Shop Policies
           </p>

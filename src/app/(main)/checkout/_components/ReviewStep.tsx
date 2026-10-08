@@ -122,7 +122,7 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
   };
 
   return (
-    <div className="border border-gray-300 rounded-xl p-6 bg-white">
+    <div className="border border-gray-300 rounded-xl p-4 xl:p-6 bg-white">
       <h3 className="text-xl font-semibold text-secondary-black mb-3">
         Review your order
       </h3>

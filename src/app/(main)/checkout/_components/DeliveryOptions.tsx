@@ -100,13 +100,13 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
   };
 
   return (
-    <div className="border border-gray-300 rounded-xl p-6 bg-white">
-      <div className="flex gap-10 items-center justify-between">
+    <div className="border border-gray-300 rounded-xl p-4 xl:p-6 bg-white">
+      <div className="flex gap-5 xl:gap-10 items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-secondary-black mb-1">
+          <h3 className="xl:text-lg font-semibold text-secondary-black mb-1">
             Choose Local Delivery, Local Pickup, or Shipping
           </h3>
-          <p className="text-secondary-gray text-[15px] mb-6">
+          <p className="text-secondary-gray text-sm xl:text-[15px] mb-6">
             Choose how you'd like to receive your order. Available delivery
             options are determined at the listing level by each shop owner.
           </p>
@@ -152,7 +152,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
           return (
             <div
               key={vendor.vendor_id}
-              className={`border rounded-xl p-4 ${
+              className={`border rounded-xl p-3 xl:p-4 ${
                 status === "blocked"
                   ? "border-off-green/40 bg-off-green/10"
                   : "border-gray-200"
@@ -170,7 +170,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                   />
                 </figure>
                 <div>
-                  <p className="font-semibold text-[15px] text-secondary-black">
+                  <p className="font-semibold text-sm xl:text-[15px] text-secondary-black">
                     Sold by {vendor.shop_name}
                   </p>
                   <p className="text-sm text-secondary-gray">
@@ -291,7 +291,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                         <span>
                           <span className="flex items-center gap-2">
                             <span
-                              className={`block font-semibold text-[15px] ${
+                              className={`block font-semibold text-sm xl:text-[15px] ${
                                 isSelected
                                   ? "text-primary-green"
                                   : "text-secondary-black"

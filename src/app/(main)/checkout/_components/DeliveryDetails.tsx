@@ -346,7 +346,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
   return (
     <div>
       {/* Contact Information Card */}
-      <div className="border border-gray-300 rounded-xl p-6 bg-white mb-5">
+      <div className="border border-gray-300 rounded-xl p-4 xl:p-6 bg-white mb-5">
         <div className="flex items-center gap-2 mb-2">
           <FiUser className="text-xl text-primary-green stroke-[2.2]" />
           <h3 className="text-lg font-semibold text-secondary-black">

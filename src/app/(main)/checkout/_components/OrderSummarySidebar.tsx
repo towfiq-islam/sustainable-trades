@@ -27,7 +27,7 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
   const total = Math.max((master?.total_amount ?? subtotal) - totalDiscount, 0);
 
   return (
-    <aside className="border border-gray-300 rounded-xl p-5 space-y-4 h-fit">
+    <aside className="border border-gray-300 rounded-xl p-4 xl:p-5 space-y-4 h-fit">
       <h3 className="text-lg font-semibold text-secondary-black">
         Order Summary
       </h3>
@@ -38,7 +38,7 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
             key={vendor.vendor_id}
             className="space-y-2.5 border-b pb-4 last:pb-1 border-gray-200 last:border-b-0"
           >
-            <h3 className="text-sm font-semibold text-secondary-black">
+            <h3 className="text-sm font-medium xl:font-semibold text-secondary-black">
               Sold by {vendor.shop_name} ({vendor.products.length} item
               {vendor.products.length > 1 ? "s" : ""})
             </h3>
@@ -60,14 +60,14 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
                   )}
                 </figure>
                 <div className="grow">
-                  <p className="text-sm font-medium text-secondary-black">
+                  <p className="text-sm font-medium text-secondary-black line-clamp-1">
                     {product.name}
                   </p>
                   <p className="text-xs text-secondary-gray pt-0.5">
                     Qty {product.quantity}
                   </p>
                 </div>
-                <p className="text-sm font-semibold text-secondary-black">
+                <p className="text-sm font-semibold text-secondary-black shrink-0">
                   ${(product.price * product.quantity).toFixed(2)}
                 </p>
               </div>

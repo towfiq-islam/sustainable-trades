@@ -64,7 +64,7 @@ const PaymentOptions = () => {
             ))}
           </div>
 
-          <div className="col-span-4 border border-gray-300 rounded-xl p-5 space-y-4 sticky top-40">
+          <div className="col-span-4 border border-gray-300 rounded-xl p-4 xl:p-5 space-y-4 sticky top-40">
             <h3 className="text-lg font-semibold text-secondary-black">
               Order Summary
             </h3>
@@ -91,7 +91,7 @@ const PaymentOptions = () => {
             <button
               disabled={!items?.length}
               onClick={() => router.push("/checkout")}
-              className="w-full mt-2 py-3 rounded-[5px] bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300"
+              className="w-full mt-2 py-2.5 xl:py-3 rounded-[5px] bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300 text-sm xl:text-base"
             >
               Proceed to Checkout
             </button>

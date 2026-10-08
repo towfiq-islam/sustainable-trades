@@ -227,7 +227,7 @@ export default function page({ searchParams }: Props) {
                 />
                 <label
                   htmlFor="terms"
-                  className="text-secondary-black text-sm md:text-base  max-w-[550px]"
+                  className="text-secondary-black text-sm xl:text-base max-w-[550px]"
                 >
                   By continuing you agree to Sustainable Trade's Terms of Use
                   and Privacy Policy.
@@ -251,7 +251,7 @@ export default function page({ searchParams }: Props) {
             <button
               type="submit"
               disabled={isLoading}
-              className={`px-10 py-1.5 sm:py-3 xl:py-4 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white md:font-medium duration-500 transition-all hover:bg-transparent hover:text-primary-green xl:text-lg block w-full ${
+              className={`px-10 py-1.5 sm:py-2.5 xl:py-4 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white xl:font-medium duration-500 transition-all hover:bg-transparent hover:text-primary-green xl:text-lg block w-full ${
                 isLoading ? "cursor-not-allowed" : "cursor-pointer"
               }`}
             >
@@ -269,7 +269,7 @@ export default function page({ searchParams }: Props) {
           </form>
 
           {/* Sign in link */}
-          <div className="flex gap-1 items-center xl:text-lg text-secondary-black mt-3">
+          <div className="flex gap-1 items-center xl:text-lg text-secondary-black mt-3 text-sm xl:text-base">
             <p>Already have an account?</p>
             <Link
               className="text-primary-green font-semibold underline"
@@ -284,7 +284,7 @@ export default function page({ searchParams }: Props) {
           </div>
 
           {/* Divider */}
-          <div className="my-5 xl:my-7 flex gap-1 items-center text-gray-400 font-semibold">
+          <div className="my-5 xl:my-7 flex gap-1 items-center text-gray-400 font-semibold text-sm xl:text-base">
             <div className="border-b border-gray-300 flex-1"></div>
             <div>OR</div>
             <div className="border-b border-gray-300 flex-1"></div>

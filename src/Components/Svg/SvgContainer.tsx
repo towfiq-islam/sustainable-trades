@@ -732,8 +732,7 @@ export function FacebookLogoSvg() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
+      className="size-8 xl:size-10"
       viewBox="0 0 44 44"
       fill="none"
     >
@@ -878,8 +877,7 @@ export function GoogleLogoSvg() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
+      className="size-8 xl:size-10"
       viewBox="0 0 44 44"
       fill="none"
     >
@@ -907,8 +905,7 @@ export function AppleLogoSvg() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
+      className="size-8 xl:size-10"
       viewBox="0 0 44 44"
       fill="none"
     >

@@ -273,7 +273,7 @@ const CombinedNavbar = ({
                             key={id}
                             href={itemPath}
                             onClick={() => setActiveSubMenu(null)}
-                            className={`flex gap-3 items-center px-3 py-2.5 rounded-lg text-[15px] transition-colors duration-150 ${
+                            className={`flex gap-3 items-center px-3 py-2 xl:py-2.5 rounded-lg text-sm xl:text-[15px] transition-colors duration-150 ${
                               itemIsActive
                                 ? "bg-primary-green/10 text-primary-green font-semibold"
                                 : "text-gray-700 hover:bg-gray-100 hover:text-primary-green"

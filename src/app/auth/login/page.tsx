@@ -80,7 +80,7 @@ const Page = () => {
             <IoArrowBackOutline className="text-primary-green" />
             <Link
               href="/"
-              className="text-primary-green text-sm sm:text-base cursor-pointer font-semibold"
+              className="text-primary-green text-sm xl:text-base cursor-pointer font-semibold"
             >
               Back to home
             </Link>
@@ -144,9 +144,9 @@ const Page = () => {
               </div>
             </div>
 
-            <div className="py-3 flex justify-between items-center">
+            <div className="xl:py-3 flex justify-between items-center">
               {/* Remember me */}
-              <div className="flex gap-3 items-center">
+              <div className="flex gap-3 items-center text-sm xl:text-base">
                 <input
                   id="terms"
                   type="checkbox"
@@ -163,7 +163,7 @@ const Page = () => {
               {/* Forget Pass */}
               <Link
                 href="/auth/verify-email"
-                className="text-gray-500 underline"
+                className="text-gray-500 underline text-sm xl:text-base"
               >
                 Forgot your password?
               </Link>
@@ -173,7 +173,7 @@ const Page = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`px-10 py-1.5 sm:py-3 xl:py-4 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green xl:text-lg block w-full ${
+              className={`px-10 py-1.5 sm:py-2.5 xl:py-4 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-medium xl:font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green xl:text-lg block w-full ${
                 isLoading ? "cursor-not-allowed" : "cursor-pointer"
               }`}
             >
@@ -188,7 +188,7 @@ const Page = () => {
             </button>
           </form>
 
-          <div className="flex gap-1 justify-center items-center md:text-lg text-secondary-black mt-7">
+          <div className="flex gap-1 justify-center items-center text-sm xl:text-lg text-secondary-black mt-5 xl:mt-7">
             <p>New Member?</p>
             <Link
               className="text-primary-green font-semibold underline"
@@ -202,14 +202,14 @@ const Page = () => {
             </Link>
           </div>
 
-          <div className="my-7 flex gap-1 items-center text-gray-400 font-semibold">
+          <div className="my-4 text-sm xl:text-base xl:my-7 flex gap-1 items-center text-gray-400 font-semibold">
             <div className="border-b border-gray-300 flex-1"></div>
             <div className="">OR</div>
             <div className="border-b border-gray-300 flex-1"></div>
           </div>
 
           {/* Social items */}
-          <div className="flex justify-center items-center gap-4 md:gap-10">
+          <div className="flex justify-center items-center gap-7 xl:gap-10">
             <button className="cursor-pointer">
               <FacebookLogoSvg />
             </button>

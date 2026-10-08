@@ -63,7 +63,7 @@ const Page = () => {
   };
 
   return (
-    <section className="h-screen max-h-screen flex flex-col lg:flex-row">
+    <section className="min-h-screen max-h-screen flex flex-col lg:flex-row">
       {/* Left */}
       <div className="hidden lg:block flex-1 relative">
         <Image
@@ -96,7 +96,7 @@ const Page = () => {
           </p>
 
           {/* packages */}
-          <div className="flex flex-col sm:flex-row gap-5 2xl:gap-8 mb-8 2xl:mb-20">
+          <div className="flex flex-col xl:flex-row gap-5 2xl:gap-8 mb-8 2xl:mb-20">
             {data.map(item => (
               <div
                 key={item.id}
@@ -105,7 +105,7 @@ const Page = () => {
                 }`}
               >
                 <div className="flex justify-between items-center gap-3 mb-5 2xl:mb-7">
-                  <h3 className="2xl:text-[22px] font-semibold text-secondary-black">
+                  <h3 className="text-[15px] xl:text-base 2xl:text-[22px] font-semibold text-secondary-black">
                     {item.package_name}
                   </h3>
 

@@ -42,7 +42,7 @@ const page = () => {
         className="w-full min-h-screen flex items-center justify-center"
       >
         <div className="w-full sm:w-[450px]">
-          <h2 className="text-xl sm:text-2xl md:text-3xl  lg:text-4xl font-semibold text-secondary-black mb-5">
+          <h2 className="text-xl sm:text-2xl md:text-3xl xl:text-4xl font-semibold text-secondary-black mb-5">
             Verify email address
           </h2>
 
@@ -65,7 +65,7 @@ const page = () => {
           <button
             disabled={isLoading}
             type="submit"
-            className={`px-10 sm:py-3 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green md:text-lg block w-full ${
+            className={`px-10 py-2.5 xl:py-3 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-medium xl:font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green xl:text-lg block w-full ${
               isLoading ? "cursor-not-allowed" : "cursor-pointer"
             }`}
           >

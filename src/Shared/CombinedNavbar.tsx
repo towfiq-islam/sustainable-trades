@@ -50,7 +50,9 @@ const CombinedNavbar = ({
   const [activeSubMenu, setActiveSubMenu] = useState<number | null>(null);
   const [logout, { isLoading }] = useLogoutMutation();
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isLoggedIn = !!user;
+  const isVendorWithoutMembership =
+    user?.role === "vendor" && !user?.membership;
+  const isLoggedIn = !!user && !isVendorWithoutMembership;
 
   const openSubMenu = (id: number) => {
     if (closeTimeoutRef.current) {
@@ -333,7 +335,7 @@ const CombinedNavbar = ({
           </Link>
         )}
 
-        {!isDashboard && !user && (
+        {!isDashboard && !isLoggedIn && (
           <Link
             href="/auth/create-shop"
             className="px-2 lg:px-4 py-1 md:py-2 block rounded-lg bg-accent-red text-secondary-black cursor-pointer shadow-[0_3px_10px_0_rgba(0,0,0,0.12),_0_3px_8px_0_rgba(0,0,0,0.08)] duration-300 transition-all hover:text-accent-red hover:bg-transparent border border-accent-red text-[15px]"
@@ -481,7 +483,7 @@ const CombinedNavbar = ({
           </div>
         </div>
 
-        {isDashboard && user?.role !== "customer" && (
+        {isDashboard && isLoggedIn && user?.role !== "customer" && (
           <Link
             href={`/shop-details?view=customer&id=${user?.shop_info?.user_id}&listing_id=${user?.shop_info?.id}`}
             className="px-5 py-2 rounded-lg bg-accent-red text-secondary-black cursor-pointer shadow-[0_3px_10px_0_rgba(0,0,0,0.12),_0_3px_8px_0_rgba(0,0,0,0.08)] duration-300 transition-all hover:text-accent-red hover:bg-transparent border border-accent-red hover:scale-95 hidden lg:block"

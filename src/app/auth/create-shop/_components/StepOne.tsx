@@ -1,9 +1,11 @@
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { BsEyeFill } from "react-icons/bs";
 import { PiEyeClosed } from "react-icons/pi";
 
 const StepOne = ({ step, totalSteps }: any) => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showRePassword, setShowRePassword] = useState<boolean>(false);
 
@@ -193,7 +195,16 @@ const StepOne = ({ step, totalSteps }: any) => {
         </div>
       </div>
 
-      <div className="flex justify-end">
+      {/* Buttons */}
+      <div className="md:flex justify-between items-center">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="auth-primary-btn w-full md:w-fit"
+        >
+          Back
+        </button>
+
         <button type="submit" className="auth-secondary-btn w-full md:w-fit">
           {step < totalSteps ? "Save and Continue" : "Submit"}
         </button>

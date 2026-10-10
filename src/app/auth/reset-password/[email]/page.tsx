@@ -68,7 +68,7 @@ const page = () => {
                 {...register("password", {
                   required: "New Password is required",
                 })}
-                className="form-input !pr-8 md:!pr-10 lg:!pr-14"
+                className="form-input !pr-8 md:!pr-10"
               />
               {errors.password && (
                 <span className="text-red-600 mt-1 text-sm">
@@ -76,16 +76,16 @@ const page = () => {
                 </span>
               )}
               <button
-                className="absolute top-2.5 md:top-3.5 lg:top-5 right-2 md:right-3 lg:right-5 cursor-pointer"
+                className="absolute top-3.5 md:top-4 xl:top-5 right-2 md:right-3 cursor-pointer"
                 onClick={e => {
                   e.preventDefault();
                   setShowPassword(!showPassword);
                 }}
               >
                 {showPassword ? (
-                  <LuEye className="text-lg lg:text-2xl text-gray-500" />
+                  <LuEye className="text-lg lg:text-xl text-gray-500" />
                 ) : (
-                  <FaRegEyeSlash className="text-lg lg:text-2xl text-gray-500" />
+                  <FaRegEyeSlash className="text-lg lg:text-xl text-gray-500" />
                 )}
               </button>
             </div>
@@ -100,7 +100,7 @@ const page = () => {
                   validate: value =>
                     value === password || "Passwords do not match",
                 })}
-                className="form-input !pr-8 md:!pr-10 lg:!pr-14"
+                className="form-input !pr-8 md:!pr-10"
               />
               {errors.password_confirmation && (
                 <span className="text-red-600 mt-1 text-sm">
@@ -108,37 +108,47 @@ const page = () => {
                 </span>
               )}
               <button
-                className="absolute top-2.5 md:top-3.5 lg:top-5 right-2 md:right-3 lg:right-5 cursor-pointer"
+                className="absolute top-3.5 md:top-4 xl:top-5 right-2 md:right-3 cursor-pointer"
                 onClick={e => {
                   e.preventDefault();
                   setShowConfirmPassword(!showConfirmPassword);
                 }}
               >
                 {showConfirmPassword ? (
-                  <LuEye className="text-lg lg:text-2xl text-gray-500" />
+                  <LuEye className="text-lg lg:text-xl text-gray-500" />
                 ) : (
-                  <FaRegEyeSlash className="text-lg lg:text-2xl text-gray-500" />
+                  <FaRegEyeSlash className="text-lg lg:text-xl text-gray-500" />
                 )}
               </button>
             </div>
 
-            {/* Submit btn */}
-            <button
-              disabled={isLoading}
-              type="submit"
-              className={`px-10 py-2 xl:py-3 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-medium xl:font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green block w-full text-sm xl:text-lg ${
-                isLoading ? "cursor-not-allowed" : "cursor-pointer"
-              }`}
-            >
-              {isLoading ? (
-                <div className="flex gap-2 items-center justify-center">
-                  <CgSpinnerTwo className="animate-spin text-xl" />
-                  <span>Changing...</span>
-                </div>
-              ) : (
-                "Reset Password"
-              )}
-            </button>
+            {/* Buttons */}
+            <div className="flex gap-3 sm:gap-4 items-center mt-2">
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="auth-primary-btn flex-1 text-center py-2 xl:py-3 !px-4 !rounded-lg text-sm sm:text-base font-medium xl:font-semibold"
+              >
+                Back
+              </button>
+
+              <button
+                disabled={isLoading}
+                type="submit"
+                className={`flex-1 px-4 py-2 xl:py-3 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-medium xl:font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green text-sm sm:text-base text-center ${
+                  isLoading ? "cursor-not-allowed" : "cursor-pointer"
+                }`}
+              >
+                {isLoading ? (
+                  <div className="flex gap-2 items-center justify-center">
+                    <CgSpinnerTwo className="animate-spin text-xl" />
+                    <span>Changing...</span>
+                  </div>
+                ) : (
+                  "Reset Password"
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </form>

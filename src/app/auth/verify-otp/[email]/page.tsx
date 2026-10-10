@@ -83,23 +83,33 @@ const page = () => {
             )}
           </div>
 
-          {/* Verify OTP btn */}
-          <button
-            disabled={isLoading}
-            type="submit"
-            className={`px-10 py-2.5 xl:py-3 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-medium xl:font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green xl:text-lg block w-full ${
-              isLoading ? "cursor-not-allowed" : "cursor-pointer"
-            }`}
-          >
-            {isLoading ? (
-              <div className="flex gap-2 items-center justify-center">
-                <CgSpinnerTwo className="animate-spin text-xl" />
-                <span>Verifying...</span>
-              </div>
-            ) : (
-              "Verify OTP"
-            )}
-          </button>
+          {/* Buttons */}
+          <div className="flex gap-3 sm:gap-4 items-center">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="auth-primary-btn flex-1 text-center py-2.5 xl:py-3 !px-4 !rounded-lg text-sm sm:text-base font-medium xl:font-semibold"
+            >
+              Back
+            </button>
+
+            <button
+              disabled={isLoading}
+              type="submit"
+              className={`flex-1 px-4 py-2.5 xl:py-3 border-2 border-primary-green rounded-lg bg-primary-green text-accent-white font-medium xl:font-semibold duration-500 transition-all hover:bg-transparent hover:text-primary-green text-sm sm:text-base text-center ${
+                isLoading ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
+            >
+              {isLoading ? (
+                <div className="flex gap-2 items-center justify-center">
+                  <CgSpinnerTwo className="animate-spin text-xl" />
+                  <span>Verifying...</span>
+                </div>
+              ) : (
+                "Verify OTP"
+              )}
+            </button>
+          </div>
         </div>
       </form>
     </Container>

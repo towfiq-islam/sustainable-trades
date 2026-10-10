@@ -88,7 +88,7 @@ const BannerSlider = ({ data }: bannerProps) => {
 
                       <Link
                         href={sliderData?.btn_link}
-                        className="md:w-[416px] text-center bg-primary-green text-white duration-500 transition-all mx-auto block text-base md:text-lg cursor-pointer py-2 md:py-4 rounded-lg shadow-lg hover:scale-105"
+                        className="md:w-[416px] text-center bg-primary-green text-white duration-500 transition-all mx-auto block text-base md:text-lg cursor-pointer py-3 lg:py-4 rounded-lg shadow-lg hover:scale-105"
                       >
                         {sliderData?.btn_text}
                       </Link>

@@ -34,7 +34,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
   };
 
   return (
-    <section className="relative h-[450px] md:h-[400px] lg:h-[470px] 2xl:h-[600px] py-10 mb-10 overflow-hidden">
+    <section className="relative h-[450px] md:h-[430px] lg:h-[470px] 2xl:h-[600px] py-10 mb-10 overflow-hidden">
       {/* Banner image */}
       <Image
         src={bannerUrl}
@@ -103,7 +103,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
             </div>
 
             {/* Btns */}
-            <div className="flex flex-col md:flex-row gap-2.5 md:gap-5 items-center xl:pt-5">
+            <div className="flex flex-col md:flex-row gap-2.5 md:gap-5 items-center pt-5">
               <button
                 onClick={() => handleFollowShop(data?.shop_info?.id, id)}
                 disabled={isPending}

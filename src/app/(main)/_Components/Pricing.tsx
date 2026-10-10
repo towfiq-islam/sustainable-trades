@@ -227,7 +227,7 @@ const Pricing = ({
                         setOpen(true);
                       }
                     }}
-                    className={`w-full block duration-500 transition-all md:text-lg cursor-pointer py-1.5 md:py-3 border-2 border-primary-green font-semibold rounded-lg shadow-lg hover:scale-105 ${
+                    className={`w-full block duration-500 transition-all lg:text-lg cursor-pointer py-2 lg:py-3 border-2 border-primary-green font-medium lg:font-semibold rounded-lg shadow-lg hover:scale-105 ${
                       idx === 0
                         ? "text-primary-green hover:bg-primary-green hover:text-accent-white"
                         : "text-accent-white hover:text-primary-green bg-primary-green hover:bg-transparent"

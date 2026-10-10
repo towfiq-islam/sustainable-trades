@@ -22,7 +22,7 @@ const LowerNavbar = () => {
         <div className="flex md:gap-5 justify-between items-center">
           <Link
             href="/"
-            className={`text-base xl:text-lg text-primary-green font-semibold `}
+            className={`hidden lg:block text-base xl:text-lg text-primary-green font-semibold `}
           >
             Home
           </Link>

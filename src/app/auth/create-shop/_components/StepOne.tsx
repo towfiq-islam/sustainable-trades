@@ -23,7 +23,7 @@ const StepOne = ({ step, totalSteps }: any) => {
         Lets set up your shop! Fill in all required fields below to get started.
       </p>
 
-      <div className="border border-accent-gray rounded-[20px] my-10 xl:my-[56px] xl:p-20 p-10">
+      <div className="border border-accent-gray rounded-xl md:rounded-[20px] my-10 xl:my-[56px] p-5 md:p-10 xl:p-20">
         <p className="text-sm md:text-[16px] text-secondary-gray font-normal font-lato">
           <span className="text-primary-red">*</span>Indicates a required field
         </p>
@@ -132,7 +132,7 @@ const StepOne = ({ step, totalSteps }: any) => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-[45px] cursor-pointer"
+              className="absolute right-3 top-[41px] md:top-[45px] cursor-pointer"
             >
               {showPassword ? (
                 <PiEyeClosed size={20} />
@@ -167,7 +167,7 @@ const StepOne = ({ step, totalSteps }: any) => {
             <button
               type="button"
               onClick={() => setShowRePassword(!showRePassword)}
-              className="absolute right-3 top-[45px] cursor-pointer"
+              className="absolute right-3 top-[41px] md:top-[45px] cursor-pointer"
             >
               {showRePassword ? (
                 <PiEyeClosed size={20} />
@@ -196,11 +196,11 @@ const StepOne = ({ step, totalSteps }: any) => {
       </div>
 
       {/* Buttons */}
-      <div className="md:flex justify-between items-center">
+      <div className="flex justify-between items-center gap-4">
         <button
           type="button"
           onClick={() => router.back()}
-          className="auth-primary-btn w-full md:w-fit"
+          className="auth-primary-btn w-fit"
         >
           Back
         </button>

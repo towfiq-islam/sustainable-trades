@@ -30,7 +30,10 @@ const PaymentOptions = () => {
 
         {items?.length > 0 && (
           <button
-            onClick={() => { dispatch(clearCart()); dispatch(clearCheckout()); }}
+            onClick={() => {
+              dispatch(clearCart());
+              dispatch(clearCheckout());
+            }}
             className="px-3 py-1.5 text-xs xl:text-sm rounded-full font-medium bg-primary-red cursor-pointer text-white flex gap-1 items-center"
           >
             <TiDelete className="text-lg" />
@@ -40,8 +43,8 @@ const PaymentOptions = () => {
       </div>
 
       {items?.length > 0 ? (
-        <div className="grid grid-cols-12 gap-5 items-start">
-          <div className="space-y-5 col-span-8">
+        <div className="grid lg:grid-cols-12 gap-5 items-start">
+          <div className="order-1 lg:order-0 space-y-5 lg:col-span-8">
             <div className="border border-off-green/40 bg-off-green/20 max-w-4xl rounded-lg p-3">
               <div className="flex gap-3">
                 <div className="size-7 shrink-0 rounded-full bg-primary-green text-sm text-white flex items-center justify-center">
@@ -64,7 +67,7 @@ const PaymentOptions = () => {
             ))}
           </div>
 
-          <div className="col-span-4 border border-gray-300 rounded-xl p-4 xl:p-5 space-y-4 sticky top-40">
+          <div className="order-0 lg:order-1 lg:col-span-4 border border-gray-300 rounded-xl p-4 xl:p-5 space-y-4 lg:sticky top-40">
             <h3 className="text-lg font-semibold text-secondary-black">
               Order Summary
             </h3>

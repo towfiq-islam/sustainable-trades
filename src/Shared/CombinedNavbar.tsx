@@ -404,7 +404,7 @@ const CombinedNavbar = ({
           <div
             onClick={e => e.stopPropagation()}
             className={`bg-white border border-gray-100 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.18)] z-50 rounded-xl absolute right-0 top-full mt-3 translate-y-2 overflow-hidden duration-300 transition-all ${
-              isLoggedIn ? "w-60" : "w-40"
+              isLoggedIn ? "w-60" : "w-32 md:w-40"
             } ${isDashboard ? "hidden lg:block" : ""} ${
               showPopover
                 ? "opacity-100 scale-100"
@@ -461,7 +461,7 @@ const CombinedNavbar = ({
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col text-gray-700 p-2 text-[15px]">
+              <div className="flex flex-col text-gray-700 p-2 text-sm md:text-[15px]">
                 <Link
                   href="/auth/login"
                   onClick={() => setShowPopover(false)}

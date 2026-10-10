@@ -164,7 +164,7 @@ const CheckoutContent = () => {
 
       <FormProvider {...methods}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <div className="lg:col-span-8">
+          <div className="order-1 lg:order-0 lg:col-span-8">
             {step === "delivery-options" && <DeliveryOptions items={items} />}
             {step === "delivery-details" && <DeliveryDetails items={items} />}
             {step === "review-order" && <ReviewStep items={items} />}
@@ -173,7 +173,7 @@ const CheckoutContent = () => {
             )}
           </div>
 
-          <div className="lg:col-span-4 sticky top-40">
+          <div className="order-0 lg:order-1 lg:col-span-4 lg:sticky top-40">
             <OrderSummarySidebar items={items} />
           </div>
         </div>

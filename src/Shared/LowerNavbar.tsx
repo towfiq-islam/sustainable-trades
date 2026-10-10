@@ -29,7 +29,7 @@ const LowerNavbar = () => {
 
           <form
             onSubmit={handleSearch}
-            className="flex gap-2 items-center border border-off-green px-2 md:px-3 py-1.5 md:py-2 rounded-lg w-full lg:w-[450px] 2xl:w-[528px] transition-shadow duration-200"
+            className="flex gap-2 items-center border border-off-green px-2.5 md:px-3 py-1 md:py-2 rounded-lg w-full lg:w-[450px] 2xl:w-[528px] transition-shadow duration-200 text-sm md:text-base"
           >
             <input
               type="text"

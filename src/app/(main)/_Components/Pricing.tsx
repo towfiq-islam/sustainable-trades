@@ -5,7 +5,6 @@ import { useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { useRouter } from "next/navigation";
 import Modal from "@/Components/Common/Modal";
-import Container from "@/Components/Common/Container";
 import { PricingSkeletonCard } from "@/Components/Loader/Loader";
 import EmptyState from "@/Components/Common/EmptyState";
 import dynamic from "next/dynamic";
@@ -70,7 +69,6 @@ const Pricing = ({
 
   return (
     <section id="membership_plan" className="py-10 xl:py-20">
-      <Container>
         <h2 className="section_title text-center !mb-4 xl:!mb-7">
           Plans & Benefits
         </h2>
@@ -289,7 +287,6 @@ const Pricing = ({
             </div>
           </div>
         )}
-      </Container>
 
       <Modal open={isOpen} onClose={() => setOpen(false)}>
         <SubscriptionPaypalModal planId={planId} interval={interval} />

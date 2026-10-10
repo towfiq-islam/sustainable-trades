@@ -81,7 +81,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
     <>
       <h2 className="auth_title lg:mt-16 mt-8">About Your Shop</h2>
 
-      <div className="border border-accent-gray rounded-[20px] my-8 xl:my-[56px] p-8 xl:p-20">
+      <div className="border border-accent-gray rounded-[20px] my-8 xl:my-[56px] p-4 md:p-8 xl:p-20">
         {/* Profile Picture */}
         <div className="xl:mt-8">
           <p className="form-label text-center lg:text-start">
@@ -144,7 +144,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
         </div>
 
         {/* About Your Shop */}
-        <div className="my-5 md:my-8 md:border rounded-lg p-6 xl:p-8">
+        <div className="my-5 md:my-8 md:border rounded-lg xl:p-8">
           <p className="text-[20px] font-normal text-secondary-black mb-4">
             About Shop
           </p>
@@ -155,8 +155,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
               Tagline
             </label>
 
-            <input
-              type="text"
+            <textarea
               {...register("tagline", {
                 required: "Write a tagline",
               })}
@@ -212,7 +211,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
         </div>
 
         {/* Shop Policies */}
-        <div className="md:border rounded-lg p-6 xl:p-8">
+        <div className="md:border rounded-lg md:p-6 xl:p-8">
           <p className="text-[20px] font-normal text-secondary-black mb-4">
             Shop Policies
           </p>
@@ -400,7 +399,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
 
       {/* Link Your Shop Section */}
       <div>
-        <p className="text-[20px] font-normal text-secondary-black pb-4 pt-2">
+        <p className="text-lg md:text-[20px] font-normal text-secondary-black pb-4 pt-2">
           Link Your Shop <span className="text-muted-gray">(Optional)</span>
         </p>
         <div className="flex flex-col gap-4">
@@ -409,7 +408,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             <input
               type="url"
               placeholder="Type Your Website link here"
-              className="outline-0 underline w-fit text-muted-gray font-bold"
+              className="outline-0 underline w-fit text-muted-gray font-medium md:font-bold"
               {...register("website_url")}
             />
           </div>
@@ -418,7 +417,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             <input
               type="url"
               placeholder="Type Your Facebook link here"
-              className="outline-0 underline w-fit text-muted-gray font-bold"
+              className="outline-0 underline w-fit text-muted-gray font-medium md:font-bold"
               {...register("facebook_url")}
             />
           </div>
@@ -427,7 +426,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             <input
               type="url"
               placeholder="Type Your Instagram link here"
-              className="outline-0 underline w-fit text-muted-gray font-bold"
+              className="outline-0 underline w-fit text-muted-gray font-medium md:font-bold"
               {...register("instagram_url")}
             />
           </div>
@@ -436,7 +435,7 @@ const StepThree = ({ step, totalSteps, setStep }: any) => {
             <input
               type="url"
               placeholder="Type Your Pinterest link here"
-              className="outline-0 underline w-fit text-muted-gray font-bold"
+              className="outline-0 underline w-fit text-muted-gray font-medium md:font-bold"
               {...register("pinterest_url")}
             />
           </div>

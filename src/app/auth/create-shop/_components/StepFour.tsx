@@ -221,7 +221,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
       <Modal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        className="bg-table-header max-w-lg"
+        className="max-w-lg"
       >
         <div>
           <p className="mb-4 text-sm">

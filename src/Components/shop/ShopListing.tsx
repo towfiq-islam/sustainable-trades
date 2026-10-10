@@ -95,7 +95,7 @@ const ShopListing = ({ id }: { id: number }) => {
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-7 mb-5 lg:mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-7 mb-5 lg:mb-10">
             {featuredListings?.data?.slice(0, 4)?.map((product: any) => (
               <Product key={product?.id} product={product} />
             ))}

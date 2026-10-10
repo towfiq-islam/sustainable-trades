@@ -103,7 +103,7 @@ const ProductLocation = () => {
                       onMouseLeave={() => setHoveredProduct(null)}
                     >
                       {/* Product Image */}
-                      <figure className="size-20 xl:size-24 shrink-0 rounded-lg relative">
+                      <figure className="size-18 md:size-20 xl:size-24 shrink-0 rounded-lg relative">
                         <Image
                           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product?.images[0]?.image}`}
                           alt="product_image"
@@ -116,7 +116,7 @@ const ProductLocation = () => {
                       <div className="flex flex-col md:flex-row gap-2.5 md:gap-5 md:items-center grow">
                         <div className="grow">
                           {/* Product Name */}
-                          <h3 className="font-semibold text-primary-green text-sm xl:text-base">
+                          <h3 className="font-semibold text-primary-green text-xs md:text-sm xl:text-base line-clamp-1">
                             {product?.product_name}
                           </h3>
 
@@ -142,7 +142,7 @@ const ProductLocation = () => {
                           </div>
 
                           {/* Distance */}
-                          <p className="text-secondary-gray font-semibold text-xs xl:text-sm mb-0.5">
+                          <p className="text-secondary-gray md:font-semibold text-xs xl:text-sm mb-0.5">
                             {Number(product?.distance).toFixed(1)} mi
                           </p>
 
@@ -150,22 +150,22 @@ const ProductLocation = () => {
                           <div className="text-secondary-gray text-xs md:text-sm mt-2">
                             <div>
                               {product?.selling_option === "trade/barter" && (
-                                <p className="size-5.5 shrink-0 rounded-full bg-off-green grid place-items-center">
+                                <p className="size-4.5 md:size-5.5 shrink-0 rounded-full bg-off-green grid place-items-center">
                                   <SignSvg />
                                 </p>
                               )}
                               {product?.selling_option === "for_sale" && (
-                                <p className="size-5.5 shrink-0 rounded-full bg-accent-red grid place-items-center">
+                                <p className="size-4.5 md:size-5.5 shrink-0 rounded-full bg-accent-red grid place-items-center">
                                   <DollarSvg />
                                 </p>
                               )}
                               {product?.selling_option ===
                                 "for_sale_or_trade_barter" && (
                                 <div className="flex gap-2 items-center">
-                                  <p className="size-5.5 shrink-0 rounded-full bg-accent-red grid place-items-center">
+                                  <p className="size-4.5 md:size-5.5 shrink-0 rounded-full bg-accent-red grid place-items-center">
                                     <DollarSvg />
                                   </p>
-                                  <p className="size-5.5 shrink-0 rounded-full bg-off-green grid place-items-center">
+                                  <p className="size-4.5 md:size-5.5 shrink-0 rounded-full bg-off-green grid place-items-center">
                                     <SignSvg />
                                   </p>
                                 </div>
@@ -200,7 +200,7 @@ const ProductLocation = () => {
           )}
 
           {/* Right - Google Map */}
-          <div className="h-[350px] md:h-[450px] xl:h-[550px] overflow-hidden rounded">
+          <div className="hidden lg:block h-[350px] md:h-[450px] xl:h-[550px] overflow-hidden rounded">
             {products.length > 0 ? (
               <ProductMap
                 products={products}

@@ -69,167 +69,167 @@ const Pricing = ({
 
   return (
     <section id="membership_plan" className="py-10 xl:py-20">
-        <h2 className="section_title text-center !mb-4 xl:!mb-7">
-          Plans & Benefits
-        </h2>
+      <h2 className="section_title text-center !mb-4 xl:!mb-7">
+        Plans & Benefits
+      </h2>
 
-        <p className="text-center text-base sm:text-lg xl:text-xl text-secondary-gray mb-4 lg:mb-7">
-          {description}
-        </p>
+      <p className="text-center text-base sm:text-lg xl:text-xl text-secondary-gray mb-4 lg:mb-7">
+        {description}
+      </p>
 
-        {/* Tabs */}
-        <div className="flex md:gap-5 p-1.5 md:p-3 rounded-xl shadow w-full md:w-[380px] mx-auto bg-primary-green mb-7 md:mb-14">
-          <button
-            type="button"
-            onClick={e => {
-              e.preventDefault();
-              e.stopPropagation();
-              setActiveTab("yearly");
-            }}
-            className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm lg:text-base ${
-              activeTab === "yearly"
-                ? "text-primary-green bg-accent-white"
-                : "text-accent-white bg-transparent"
-            }`}
-          >
-            {button1}
-          </button>
+      {/* Tabs */}
+      <div className="flex md:gap-5 p-1.5 md:p-3 rounded-xl shadow w-full md:w-[380px] mx-auto bg-primary-green mb-7 md:mb-14">
+        <button
+          type="button"
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            setActiveTab("yearly");
+          }}
+          className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm lg:text-base ${
+            activeTab === "yearly"
+              ? "text-primary-green bg-accent-white"
+              : "text-accent-white bg-transparent"
+          }`}
+        >
+          {button1}
+        </button>
 
-          <button
-            type="button"
-            onClick={e => {
-              e.preventDefault();
-              e.stopPropagation();
-              setActiveTab("monthly");
-            }}
-            className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm lg:text-base ${
-              activeTab === "monthly"
-                ? "text-primary-green bg-accent-white"
-                : "text-accent-white bg-transparent"
-            }`}
-          >
-            {button2}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            setActiveTab("monthly");
+          }}
+          className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm lg:text-base ${
+            activeTab === "monthly"
+              ? "text-primary-green bg-accent-white"
+              : "text-accent-white bg-transparent"
+          }`}
+        >
+          {button2}
+        </button>
+      </div>
 
-        {/* Pricing Plan */}
-        <div className="flex flex-col w-full md:flex-row gap-5 lg:gap-10 justify-center">
-          {isLoading ? (
-            Array.from({ length: 2 }).map((_, i) => (
-              <PricingSkeletonCard key={i} />
-            ))
-          ) : pricingData?.data?.length ? (
-            pricingData.data.map(
-              (
-                {
-                  id,
-                  name,
-                  description,
-                  price,
-                  interval,
-                  subscription_benefit,
-                  membership_type,
-                  image,
-                }: pricingData,
-                idx: number,
-              ) => (
-                <div
-                  key={id}
-                  className={`border border-off-green/40 shadow-[0_3px_5px_0_rgba(0,0,0,0.05),_0_3px_12px_0_rgba(0,0,0,0.05)] rounded-2xl p-4 md:p-6 w-full md:w-[400px] flex flex-col justify-between ${
+      {/* Pricing Plan */}
+      <div className="flex flex-col w-full md:flex-row gap-5 lg:gap-10 justify-center">
+        {isLoading ? (
+          Array.from({ length: 2 }).map((_, i) => (
+            <PricingSkeletonCard key={i} />
+          ))
+        ) : pricingData?.data?.length ? (
+          pricingData.data.map(
+            (
+              {
+                id,
+                name,
+                description,
+                price,
+                interval,
+                subscription_benefit,
+                membership_type,
+                image,
+              }: pricingData,
+              idx: number,
+            ) => (
+              <div
+                key={id}
+                className={`border border-off-green/40 shadow-[0_3px_5px_0_rgba(0,0,0,0.05),_0_3px_12px_0_rgba(0,0,0,0.05)] rounded-2xl p-4 md:p-6 w-full md:w-[400px] flex flex-col justify-between ${
+                  user?.membership?.status === "active" &&
+                  user?.membership?.membership_type === membership_type &&
+                  user?.membership?.type === interval
+                    ? "bg-mint-bg"
+                    : user?.membership?.status !== "active" &&
+                      idx === 1 &&
+                      "bg-mint-bg"
+                }`}
+              >
+                <div>
+                  <figure className="size-8 md:size-12 rounded-full bg-accent-blue grid place-items-center">
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_SITE_URL}/${image}`}
+                      alt="logo"
+                      width={45}
+                      height={45}
+                      unoptimized
+                    />
+                  </figure>
+
+                  <h3 className="py-1 md:py-3 text-xl md:text-2xl font-semibold text-secondary-black">
+                    {name}
+                  </h3>
+
+                  <p className="text-secondary-gray md:mb-7 mb-4 text-sm md:text-base ">
+                    {description}
+                  </p>
+
+                  <div className="flex gap-2 items-end">
+                    <h2 className="text-3xl md:text-4xl font-semibold text-secondary-black">
+                      ${price}
+                    </h2>
+
+                    <p className="capitalize">/ {interval}</p>
+                  </div>
+
+                  <hr className="my-5 text-gray-500" />
+
+                  <div className="space-y-5 mb-10">
+                    {subscription_benefit?.map(
+                      ({
+                        id,
+                        benefit_name,
+                        benefit_description,
+                        benefit_icon,
+                      }) => (
+                        <div key={id} className="flex gap-2 md:gap-3">
+                          <figure className="size-8 md:size-10 rounded-full bg-accent-blue grid place-items-center shrink-0">
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_SITE_URL}/${benefit_icon}`}
+                              alt="image"
+                              width={24}
+                              height={24}
+                              unoptimized
+                            />
+                          </figure>
+
+                          <div>
+                            <h4 className="text-secondary-black text-sm md:text-base font-semibold">
+                              {benefit_name}
+                            </h4>
+
+                            <p className="text-secondary-gray text-xs md:text-[15px]">
+                              {benefit_description}
+                            </p>
+                          </div>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  disabled={
                     user?.membership?.status === "active" &&
                     user?.membership?.membership_type === membership_type &&
                     user?.membership?.type === interval
-                      ? "bg-mint-bg"
-                      : user?.membership?.status !== "active" &&
-                        idx === 1 &&
-                        "bg-mint-bg"
-                  }`}
-                >
-                  <div>
-                    <figure className="size-8 md:size-12 rounded-full bg-accent-blue grid place-items-center">
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${image}`}
-                        alt="logo"
-                        width={45}
-                        height={45}
-                        unoptimized
-                      />
-                    </figure>
-
-                    <h3 className="py-1 md:py-3 text-xl md:text-2xl font-semibold text-secondary-black">
-                      {name}
-                    </h3>
-
-                    <p className="text-secondary-gray md:mb-7 mb-4 text-sm md:text-base ">
-                      {description}
-                    </p>
-
-                    <div className="flex gap-2 items-end">
-                      <h2 className="text-3xl md:text-4xl font-semibold text-secondary-black">
-                        ${price}
-                      </h2>
-
-                      <p className="capitalize">/ {interval}</p>
-                    </div>
-
-                    <hr className="my-5 text-gray-500" />
-
-                    <div className="space-y-5 mb-10">
-                      {subscription_benefit?.map(
-                        ({
-                          id,
-                          benefit_name,
-                          benefit_description,
-                          benefit_icon,
-                        }) => (
-                          <div key={id} className="flex gap-2 md:gap-3">
-                            <figure className="size-8 md:size-10 rounded-full bg-accent-blue grid place-items-center shrink-0">
-                              <Image
-                                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${benefit_icon}`}
-                                alt="image"
-                                width={24}
-                                height={24}
-                                unoptimized
-                              />
-                            </figure>
-
-                            <div>
-                              <h4 className="text-secondary-black text-sm md:text-base font-semibold">
-                                {benefit_name}
-                              </h4>
-
-                              <p className="text-secondary-gray text-xs md:text-[15px]">
-                                {benefit_description}
-                              </p>
-                            </div>
-                          </div>
-                        ),
-                      )}
-                    </div>
-                  </div>
-
-                  <button
-                    disabled={
-                      user?.membership?.status === "active" &&
-                      user?.membership?.membership_type === membership_type &&
-                      user?.membership?.type === interval
+                  }
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (!user) {
+                      router.push("/auth/login");
+                    } else {
+                      setPlanId(id);
+                      setInterval(interval);
+                      setOpen(true);
                     }
-                    onClick={e => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      if (!user) {
-                        router.push("/auth/login");
-                      } else {
-                        setPlanId(id);
-                        setInterval(interval);
-                        setOpen(true);
-                      }
-                    }}
-                    className={`w-full block duration-500 transition-all lg:text-lg cursor-pointer py-2 lg:py-3 border-2 border-primary-green font-medium lg:font-semibold rounded-lg shadow-lg hover:scale-105 ${
-                      idx === 0
-                        ? "text-primary-green hover:bg-primary-green hover:text-accent-white"
-                        : "text-accent-white hover:text-primary-green bg-primary-green hover:bg-transparent"
-                    }
+                  }}
+                  className={`w-full block duration-500 transition-all lg:text-lg cursor-pointer py-2 lg:py-3 border-2 border-primary-green font-medium lg:font-semibold rounded-lg shadow-lg hover:scale-105 ${
+                    idx === 0
+                      ? "text-primary-green hover:bg-primary-green hover:text-accent-white"
+                      : "text-accent-white hover:text-primary-green bg-primary-green hover:bg-transparent"
+                  }
                       ${
                         user?.membership?.status === "active" &&
                         user?.membership?.membership_type === membership_type &&
@@ -237,56 +237,56 @@ const Pricing = ({
                         "opacity-70 !cursor-not-allowed hover:!scale-100 !bg-primary-green !text-accent-white"
                       }
                         `}
-                  >
-                    {user?.membership?.status === "active" &&
-                    user?.membership?.membership_type === membership_type &&
-                    user?.membership?.type === interval
-                      ? "Purchased"
-                      : `Choose ${name}`}
-                  </button>
-                </div>
-              ),
-            )
-          ) : (
-            <EmptyState
-              title="No subscription plans available"
-              description={`No ${activeTab} subscription plans are currently available.`}
-            />
-          )}
-        </div>
-
-        {/* Cancel btn */}
-        {isCancel && user?.membership?.status === "active" && (
-          <div className="mt-10 border border-primary-green rounded-lg p-6 max-w-[850px] mx-auto">
-            <p className="text-secondary-black font-semibold text-2xl capitalize mb-4">
-              {user?.membership?.membership_type}
-            </p>
-            <p className="text-secondary-black mb-6">
-              Cancel or upgrade to Pro by choosing premium above. Refunds will
-              not be issued for canceled memberships, however we will prorate
-              the Pro membership if you are upgrading from Basic.
-            </p>
-
-            <div className="flex justify-end gap-4">
-              <button
-                disabled={isPending}
-                onClick={() => cancelMembership({}).unwrap()}
-                className={`px-6 py-2 bg-primary-red rounded-lg shadow hover:bg-primary-red text-white font-semibold text-[16px] ${
-                  isPending ? "cursor-not-allowed" : "cursor-pointer"
-                }`}
-              >
-                {isPending ? (
-                  <p className="flex gap-2 items-center justify-center">
-                    <CgSpinnerTwo className="animate-spin text-xl" />
-                    <span>Please wait....</span>
-                  </p>
-                ) : (
-                  "Cancel"
-                )}
-              </button>
-            </div>
-          </div>
+                >
+                  {user?.membership?.status === "active" &&
+                  user?.membership?.membership_type === membership_type &&
+                  user?.membership?.type === interval
+                    ? "Purchased"
+                    : `Choose ${name}`}
+                </button>
+              </div>
+            ),
+          )
+        ) : (
+          <EmptyState
+            title="No subscription plans available"
+            description={`No ${activeTab} subscription plans are currently available.`}
+          />
         )}
+      </div>
+
+      {/* Cancel btn */}
+      {isCancel && user?.membership?.status === "active" && (
+        <div className="mt-10 border border-primary-green rounded-lg p-6 max-w-[850px] mx-auto">
+          <p className="text-secondary-black font-semibold text-2xl capitalize mb-4">
+            {user?.membership?.membership_type}
+          </p>
+          <p className="text-secondary-black mb-6">
+            Cancel or upgrade to Pro by choosing premium above. Refunds will not
+            be issued for canceled memberships, however we will prorate the Pro
+            membership if you are upgrading from Basic.
+          </p>
+
+          <div className="flex justify-end gap-4">
+            <button
+              disabled={isPending}
+              onClick={() => cancelMembership({}).unwrap()}
+              className={`px-6 py-2 bg-primary-red rounded-lg shadow hover:bg-primary-red text-white font-semibold text-[16px] ${
+                isPending ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
+            >
+              {isPending ? (
+                <p className="flex gap-2 items-center justify-center">
+                  <CgSpinnerTwo className="animate-spin text-xl" />
+                  <span>Please wait....</span>
+                </p>
+              ) : (
+                "Cancel"
+              )}
+            </button>
+          </div>
+        </div>
+      )}
 
       <Modal open={isOpen} onClose={() => setOpen(false)}>
         <SubscriptionPaypalModal planId={planId} interval={interval} />

@@ -101,7 +101,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
 
   return (
     <div className="border border-gray-300 rounded-xl p-4 xl:p-6 bg-white">
-      <div className="flex gap-5 xl:gap-10 items-center justify-between">
+      <div className="mb-5 md:mb-0 flex flex-col md:flex-row md:gap-5 xl:gap-10 items-center justify-between">
         <div>
           <h3 className="xl:text-lg font-semibold text-secondary-black mb-1">
             Choose Local Delivery, Local Pickup, or Shipping
@@ -235,10 +235,10 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                     <span className="size-2.5 rounded-full bg-primary-green" />
                   </span>
                   <span>
-                    <span className="block text-[15px] font-semibold text-primary-green">
+                    <span className="block text-sm md:text-[15px] font-semibold text-primary-green">
                       {fulfillmentLabel[options[0]]}
                     </span>
-                    <span className="block text-sm text-secondary-gray">
+                    <span className="block text-xs md:text-sm text-secondary-gray">
                       {fulfillmentDescription[options[0]]}
                       {!isDeliveryUnavailable &&
                         " · This is the only delivery option available for this product."}
@@ -307,7 +307,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                             )}
                           </span>
 
-                          <span className="block text-sm text-secondary-gray">
+                          <span className="block text-xs md:text-sm text-secondary-gray">
                             {fulfillmentDescription[option]}
                           </span>
                         </span>

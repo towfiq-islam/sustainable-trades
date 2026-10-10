@@ -19,7 +19,7 @@ const page = () => {
       <Container>
         <Image src={setupBg} alt="setup" unoptimized className="mx-auto my-9" />
 
-        <p className="text-lg text-secondary-gray font-medium text-center max-w-[700px] w-full mx-auto">
+        <p className="md:text-lg text-secondary-gray font-medium text-center max-w-[700px] w-full mx-auto">
           Now that we have your preferences all sorted out, it's time to unveil
           your amazing selection of products!
         </p>
@@ -27,7 +27,7 @@ const page = () => {
         <div className="lg:flex justify-center gap-x-10 items-center mt-9">
           <Link
             href={dashboardUrl}
-            className="primary_btn !w-fit px-7 !inline-flex items-center justify-center gap-2 group"
+            className="primary_btn !w-fit mx-auto px-4 md:px-7 !flex items-center justify-center gap-2 group"
           >
             <span>Go to Dashboard</span>
             <FiArrowRight className="text-lg group-hover:translate-x-1 duration-300 ease-in-out" />

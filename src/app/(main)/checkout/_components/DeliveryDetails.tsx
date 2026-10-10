@@ -427,17 +427,17 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
       </div>
 
       {/* Vendor Fulfillment Card */}
-      <div className="border border-gray-300 rounded-xl p-6 bg-white">
+      <div className="border border-gray-300 rounded-xl p-4 md:p-6 bg-white">
         <VendorProgressBar current={vendorIndex + 1} total={items.length} />
 
-        <h3 className="text-lg font-semibold text-secondary-black mb-1 flex gap-3 items-center">
+        <h3 className="text-sm md:text-lg font-semibold text-secondary-black mb-1 flex flex-col md:flex-row gap-2 md:gap-3 items-center">
           Sold by {vendor.shop_name}
           <p className="size-2 rounded-full bg-primary-green" />
           Delivery Method:{" "}
           {fulfillment ? fulfillmentLabel[fulfillment] : "Fulfillment"}
         </h3>
 
-        <p className="text-gray-500 text-[15px] mb-5 max-w-lg">
+        <p className="text-gray-500 text-sm md:text-[15px] mb-5 max-w-lg">
           {fulfillment === "pickup"
             ? "Please select your pickup location below. You'll review everything before your order is placed."
             : fulfillment === "delivery"

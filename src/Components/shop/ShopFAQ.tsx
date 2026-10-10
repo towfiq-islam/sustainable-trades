@@ -37,7 +37,7 @@ const ShopFAQ = ({ data }: FaqProps) => {
               >
                 {/* Question */}
                 <div className="flex justify-between items-center">
-                  <h3 className=" md:text-lg lg:text-xl font-semibold text-primary-green">
+                  <h3 className="text-sm md:text-lg lg:text-xl font-semibold text-primary-green">
                     {item?.question}
                   </h3>
                   <span

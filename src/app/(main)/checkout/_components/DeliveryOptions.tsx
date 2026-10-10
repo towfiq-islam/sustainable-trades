@@ -201,7 +201,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                     {vendor.products.map(product => (
                       <div
                         key={product.id}
-                        className="flex items-center justify-between text-sm border border-gray-200 rounded-lg px-3 py-2"
+                        className="flex items-center justify-between text-sm border border-gray-200 rounded-lg px-2.5 xl:px-4 py-2 xl:py-3"
                       >
                         <span className="text-secondary-black">
                           {product.name}
@@ -230,7 +230,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
               )}
 
               {status === "auto" && (
-                <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-off-green/70 bg-off-green/40">
+                <div className="flex items-center gap-3 px-2.5 xl:px-4 py-2 xl:py-3 rounded-lg border border-off-green/70 bg-off-green/40">
                   <span className="size-5 rounded-full border-2 border-primary-green grid place-items-center shrink-0">
                     <span className="size-2.5 rounded-full bg-primary-green" />
                   </span>
@@ -270,7 +270,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                         key={option}
                         type="button"
                         onClick={() => handleSelect(vendor.vendor_id, option)}
-                        className={`w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg border transition-colors cursor-pointer ${
+                        className={`w-full flex items-center gap-3 text-left px-2.5 xl:px-4 py-2 xl:py-3 rounded-lg border transition-colors cursor-pointer ${
                           isSelected
                             ? "bg-off-green/40 border-off-green/70"
                             : "border-gray-200 hover:border-off-green hover:bg-off-green/20"
@@ -325,7 +325,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
         <button
           type="button"
           onClick={() => router.push(mode === "buy-now" ? "/" : "/cart")}
-          className="px-6 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
+          className="px-5 xl:px-6 py-2 xl:py-3 text-sm xl:text-base rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
         >
           Back
         </button>
@@ -334,7 +334,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
           type="button"
           disabled={!allResolved || blockedVendors.length > 0}
           onClick={handleContinue}
-          className="px-6 py-3 rounded-lg bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:scale-95 transition-all duration-300"
+          className="px-5 xl:px-6 py-2 xl:py-3 text-sm xl:text-base rounded-lg bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:scale-95 transition-all duration-300"
         >
           Continue
         </button>

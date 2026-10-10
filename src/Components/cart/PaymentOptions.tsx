@@ -22,7 +22,7 @@ const PaymentOptions = () => {
   return (
     <section className="">
       <div className="flex items-center justify-between gap-3 mb-3">
-        <h3 className="text-xl md:text-2xl lg:text-[28px] text-secondary-black font-semibold">
+        <h3 className="text-xl md:text-2xl xl:text-[28px] text-secondary-black font-semibold">
           {totalQuantity
             ? `${totalQuantity} Items from ${items?.length} Sellers`
             : "Cart is empty"}
@@ -31,7 +31,7 @@ const PaymentOptions = () => {
         {items?.length > 0 && (
           <button
             onClick={() => { dispatch(clearCart()); dispatch(clearCheckout()); }}
-            className="px-3 py-1.5 text-sm rounded-full font-medium bg-primary-red cursor-pointer text-white flex gap-1 items-center"
+            className="px-3 py-1.5 text-xs xl:text-sm rounded-full font-medium bg-primary-red cursor-pointer text-white flex gap-1 items-center"
           >
             <TiDelete className="text-lg" />
             Clear Cart
@@ -48,7 +48,7 @@ const PaymentOptions = () => {
                   i
                 </div>
 
-                <p className="text-secondary-gray leading-6 text-[14px]">
+                <p className="text-secondary-gray leading-6 text-[13px] xl:text-[14px]">
                   After you click Proceed to Checkout, you'll choose from the
                   available delivery options. Options may include Local Pickup,
                   Local Delivery, or Shipping. If the items in your order are

@@ -383,7 +383,7 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
         <button
           type="button"
           onClick={() => router.push(buildStepUrl("delivery-details"))}
-          className="px-6 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
+          className="px-5 xl:px-6 py-2 xl:py-3 text-sm xl:text-base rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
         >
           Back
         </button>
@@ -397,7 +397,7 @@ const ReviewStep = ({ items }: { items: CartItem[] }) => {
             }
             router.push(buildStepUrl("payment"));
           }}
-          className="px-6 py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="px-5 xl:px-6 py-2 xl:py-3 text-sm xl:text-base rounded-lg bg-primary-green text-white font-semibold cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           Confirm and pay
         </button>

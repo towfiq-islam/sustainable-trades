@@ -34,7 +34,7 @@
     "react-select": "^5.10.2",
     "react-spinners": "^0.17.0",
     "redux-persist": "^6.0.0",
-    "swiper": "^11.2.10",
+    "swiper": "^12.2.0",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {

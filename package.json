@@ -18,7 +18,7 @@
     "laravel-echo": "^2.2.4",
     "lottie-react": "^2.4.1",
     "moment": "^2.30.1",
-    "next": "16.0.10",
+    "next": "^16.4.0",
     "postcss": "^8.5.4",
     "prop-types": "^15.8.1",
     "pusher-js": "^8.4.0",

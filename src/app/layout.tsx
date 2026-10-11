@@ -5,6 +5,7 @@ import { Lato, Geist } from "next/font/google";
 import ToastProvider from "@/Provider/ToastProvider/ToastProvider";
 import ReduxProvider from "@/Provider/ReduxProvider/ReduxProvider";
 import LocationProvider from "@/Provider/LocationProvider/LocationProvider";
+import ScrollToTop from "@/Shared/ScrollToTop";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 // Fonts
@@ -31,8 +32,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
+    <html
+      lang="en"
+      className={cn("font-sans", geist.variable)}
+      data-scroll-behavior="smooth"
+    >
       <body className={`${lato.variable} antialiased`}>
+        <ScrollToTop />
         <ReduxProvider>
           <LocationProvider>
             <ToastProvider />

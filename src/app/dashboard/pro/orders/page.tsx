@@ -217,10 +217,10 @@ const page = () => {
         <OrdersList role="pro" orderBasePath="/dashboard/pro/orders/details" />
       ) : (
         <div className="w-full pt-10">
-          {/* Desktop Table */}
-          <div className="hidden lg:block overflow-x-auto">
+          {/* Table */}
+          <div className="w-full overflow-x-auto">
             {isLoading ? (
-              <table className="w-full border-collapse text-nowrap">
+              <table className="w-full min-w-[850px] border-collapse text-nowrap">
                 <thead>
                   <tr className="border-b-2 border-gray-300 text-secondary-black text-[15px] xl:text-[16px] font-semibold">
                     <th className="py-3 px-4 text-left">Order #</th>
@@ -244,7 +244,7 @@ const page = () => {
               </table>
             ) : allOrders?.data?.length > 0 ? (
               <>
-                <table className="w-full border-collapse text-nowrap">
+                <table className="w-full min-w-[850px] border-collapse text-nowrap">
                   <thead>
                     <tr className="border-b-2 border-gray-300 text-secondary-black text-[15px] xl:text-[16px] font-semibold">
                       <th className="py-3 px-4 text-left">Order #</th>

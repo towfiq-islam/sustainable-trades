@@ -176,34 +176,58 @@ export default function VendorListings({
       {/* Content */}
       {isLoading ? (
         view === "table" ? (
-          <table className="w-full border-collapse mt-10 hidden lg:table">
-            <thead>
-              <tr className="text-left border-b border-accent-gray">
-                {[
-                  "Product",
-                  "Approval Status",
-                  "Stock",
-                  "Price",
-                  ...(variant === "pro" ? ["Cost"] : []),
-                  "Action",
-                ].map(h => (
-                  <th
-                    key={h}
-                    className="text-secondary-black font-semibold text-[16px] pb-5"
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            <div className="hidden lg:block mt-10">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="text-left border-b border-accent-gray">
+                    {[
+                      "Product",
+                      "Approval Status",
+                      "Stock",
+                      "Price",
+                      ...(variant === "pro" ? ["Cost"] : []),
+                      "Action",
+                    ].map(h => (
+                      <th
+                        key={h}
+                        className="text-secondary-black font-semibold text-[16px] pb-5"
+                      >
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 4 }).map((_, idx) => (
+                    <ProductRowSkeleton key={idx} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile skeleton fallback */}
+            <div className="block lg:hidden space-y-4 mt-6">
               {Array.from({ length: 4 }).map((_, idx) => (
-                <ProductRowSkeleton key={idx} />
+                <div
+                  key={idx}
+                  className="flex items-start justify-between border border-gray-200 rounded-lg p-4 shadow-sm animate-pulse"
+                >
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <div className="size-[50px] bg-gray-200 rounded-md shrink-0" />
+                    <div className="space-y-2 flex-1 min-w-0">
+                      <div className="h-4 w-3/4 bg-gray-200 rounded" />
+                      <div className="h-3 w-1/2 bg-gray-200 rounded" />
+                      <div className="h-3 w-1/3 bg-gray-200 rounded" />
+                    </div>
+                  </div>
+                  <div className="h-5 w-12 bg-gray-200 rounded shrink-0 ml-3" />
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 xl:gap-6 mt-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 xl:gap-6 mt-10">
             {Array.from({ length: 4 }).map((_, idx) => (
               <ProductSkeleton key={idx} />
             ))}

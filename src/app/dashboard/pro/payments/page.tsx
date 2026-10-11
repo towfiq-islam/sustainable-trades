@@ -74,10 +74,10 @@ const page = () => {
         </div>
 
         <div className="w-full mt-7">
-          {/* Desktop Table */}
-          <div className="hidden md:block overflow-x-auto">
+          {/* Table */}
+          <div className="w-full overflow-x-auto">
             {isLoading ? (
-              <table className="w-full border-collapse">
+              <table className="w-full min-w-[700px] text-nowrap border-collapse">
                 <thead>
                   <tr className="border-b-2 border-gray-300 text-secondary-black text-[16px] font-semibold">
                     <th className="py-3 px-4 text-left"># Order ID</th>
@@ -95,7 +95,7 @@ const page = () => {
                 </tbody>
               </table>
             ) : allPayments?.data?.length > 0 ? (
-              <table className="w-full border-collapse">
+              <table className="w-full min-w-[700px] text-nowrap border-collapse">
                 <thead>
                   <tr className="border-b-2 border-gray-300 text-secondary-black text-[16px] font-semibold">
                     <th className="py-3 px-4 text-left"># Order ID</th>

@@ -45,7 +45,9 @@ const OrderedProducts = ({ data, order_id }: OrderProps) => {
           </p>
         </div>
         <div className="flex gap-x-1 items-center">
-          <h5 className="text-[16px] font-bold text-muted-gray">Date Ordered</h5>
+          <h5 className="text-[16px] font-bold text-muted-gray">
+            Date Ordered
+          </h5>
           <p className="text-[14px] font-normal text-secondary-black">
             {moment(data?.order_date).format("ll")}
           </p>
@@ -56,7 +58,7 @@ const OrderedProducts = ({ data, order_id }: OrderProps) => {
             onClick={() => {
               handleDownloadInvoice(order_id);
             }}
-            className={`text-deep-green font-sans font-bold ${
+            className={`text-deep-green  font-bold ${
               isPending ? "cursor-not-allowed" : "cursor-pointer underline"
             }`}
           >

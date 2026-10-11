@@ -83,7 +83,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
               <h3 className="text-muted-gray text-[15px] font-semibold mb-1">
                 Order Placed
               </h3>
-              <p className="font-sans text-secondary-black text-sm">
+              <p className=" text-secondary-black text-sm">
                 {moment(order?.created_at).format("MMMM D, YYYY")}
               </p>
             </div>
@@ -92,7 +92,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
               <h3 className="text-muted-gray text-[15px] font-semibold mb-1">
                 Order Number
               </h3>
-              <p className="font-sans text-secondary-black text-sm">
+              <p className=" text-secondary-black text-sm">
                 {order?.order_number}
               </p>
             </div>
@@ -136,7 +136,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                 className="text-primary-green mt-0.5 shrink-0"
                 size={18}
               />
-              <p className="text-sm text-secondary-black font-sans leading-6">
+              <p className="text-sm text-secondary-black  leading-6">
                 This is a multi-vendor order from {order.vendor_count} shops.
                 <br />
                 You&apos;ll find details for each vendor and delivery method
@@ -173,11 +173,11 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                       />
                     </figure>
 
-                    <h4 className="font-sans font-semibold text-secondary-black text-[15px]">
+                    <h4 className=" font-semibold text-secondary-black text-[15px]">
                       Sold by {shopName}
                     </h4>
                     <span className="text-gray-400">•</span>
-                    <p className="text-sm font-sans text-muted-gray">
+                    <p className="text-sm  text-muted-gray">
                       Delivery Method:{" "}
                       {fulfillmentLabel(vendorOrder.fulfillment_type)}
                     </p>
@@ -186,7 +186,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                   <div className="grid md:grid-cols-5 gap-12 p-5">
                     {/* Left: items + totals + address */}
                     <div className="col-span-3">
-                      <h5 className="font-sans font-semibold text-secondary-black text-sm mb-3">
+                      <h5 className=" font-semibold text-secondary-black text-sm mb-3">
                         Items
                       </h5>
 
@@ -205,10 +205,10 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                             </figure>
 
                             <div className="flex flex-col gap-0.5 flex-1">
-                              <h5 className="text-[15px] font-semibold text-secondary-black font-sans">
+                              <h5 className="text-[15px] font-semibold text-secondary-black ">
                                 {item?.product_name}
                               </h5>
-                              <p className="text-muted-gray text-sm font-sans">
+                              <p className="text-muted-gray text-sm ">
                                 Qty: {item?.quantity}
                               </p>
                               {vendorOrder.status === "delivered" && (
@@ -226,14 +226,14 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                               )}
                             </div>
 
-                            <p className="font-sans font-semibold text-secondary-black text-sm shrink-0">
+                            <p className=" font-semibold text-secondary-black text-sm shrink-0">
                               ${item?.total_price}
                             </p>
                           </div>
                         ))}
                       </div>
 
-                      <div className="text-sm font-sans space-y-1.5 border-t border-light-gray pt-3">
+                      <div className="text-sm  space-y-1.5 border-t border-light-gray pt-3">
                         <div className="flex justify-between text-muted-gray">
                           <span>Items Subtotal</span>
                           <span>${vendorOrder.sub_total}</span>
@@ -279,7 +279,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                       </div>
 
                       {address && (
-                        <div className="mt-4 pt-4 border-t border-light-gray text-sm font-sans">
+                        <div className="mt-4 pt-4 border-t border-light-gray text-sm ">
                           <h5 className="font-semibold text-secondary-black mb-1">
                             {vendorOrder.fulfillment_type === "pickup"
                               ? "Pickup Location"
@@ -352,7 +352,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
         <div className="w-full lg:w-[32%] 2xl:w-[25%]">
           <div className="sticky top-6 flex flex-col gap-4">
             <div className="border border-card-border rounded-[10px] p-5">
-              <h4 className="font-sans font-bold text-secondary-black mb-4">
+              <h4 className=" font-bold text-secondary-black mb-4">
                 Order Summary ({order?.item_count} items)
               </h4>
 
@@ -376,11 +376,11 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                       </figure>
 
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-secondary-black font-sans truncate">
+                        <p className="text-sm font-semibold text-secondary-black  truncate">
                           {shopName} ({vendorOrder.items?.length ?? 0}{" "}
                           {vendorOrder.items?.length === 1 ? "item" : "items"})
                         </p>
-                        <p className="text-xs text-muted-gray font-sans">
+                        <p className="text-xs text-muted-gray ">
                           {fulfillmentLabel(vendorOrder.fulfillment_type)}
                         </p>
                       </div>
@@ -392,7 +392,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                 })}
               </div>
 
-              <div className="text-sm font-sans space-y-1.5 border-t border-light-gray pt-3">
+              <div className="text-sm  space-y-1.5 border-t border-light-gray pt-3">
                 <div className="flex justify-between text-muted-gray">
                   <span>Subtotal</span>
                   <span>${order?.sub_total}</span>
@@ -419,27 +419,25 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
               </div>
 
               <div className="flex justify-between items-center border-t border-light-gray mt-3 pt-3">
-                <span className="font-bold font-sans text-secondary-black">
-                  Total
-                </span>
-                <span className="font-bold text-primary-green text-lg font-sans">
+                <span className="font-bold  text-secondary-black">Total</span>
+                <span className="font-bold text-primary-green text-lg ">
                   ${order?.total_amount}
                 </span>
               </div>
             </div>
 
             <div className="border border-card-border rounded-[10px] p-5">
-              <h4 className="font-sans font-bold text-secondary-black mb-2">
+              <h4 className=" font-bold text-secondary-black mb-2">
                 Need Help?
               </h4>
-              <p className="text-sm text-muted-gray font-sans">
+              <p className="text-sm text-muted-gray ">
                 If you need help with one of your items in your order, reach out
                 to the vendor via the chat box.
               </p>
             </div>
 
             <div className="border border-card-border rounded-[10px] p-5">
-              <p className="text-[15px] font-semibold text-secondary-black font-sans">
+              <p className="text-[15px] font-semibold text-secondary-black ">
                 Thank you for shopping local!
               </p>
 

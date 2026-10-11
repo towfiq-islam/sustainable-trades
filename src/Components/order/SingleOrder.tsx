@@ -43,7 +43,9 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
   const handleDownloadInvoice = () => {
     downloadInvoicePdf(orderId)
       .unwrap()
-      .then(blob => downloadBlob(blob, `invoice-${order?.order_number ?? orderId}.pdf`))
+      .then(blob =>
+        downloadBlob(blob, `invoice-${order?.order_number ?? orderId}.pdf`),
+      )
       .catch(() => toast.error("Couldn't download invoice"));
   };
 
@@ -68,7 +70,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
         <span>Back</span>
       </button>
 
-      <h2 className="text-3xl font-lato font-semibold text-secondary-black mb-5">
+      <h2 className="text-3xl  font-semibold text-secondary-black mb-5">
         Order Details
       </h2>
 

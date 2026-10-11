@@ -95,7 +95,7 @@ export default function VendorListings({
     <>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-[25px] md:text-[36px] font-lato font-semibold text-secondary-black">
+        <h2 className="text-[25px] md:text-[36px]  font-semibold text-secondary-black">
           Listings
         </h2>
 

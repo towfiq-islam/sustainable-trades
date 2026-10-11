@@ -45,7 +45,7 @@ const page = () => {
 
   return (
     <>
-      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-secondary-black">
+      <h2 className="text-[30px] md:text-[40px]  font-semibold text-secondary-black">
         Store Payments
       </h2>
 
@@ -109,8 +109,6 @@ const page = () => {
               )}
             </button>
           )}
-
-
         </div>
       </div>
     </>

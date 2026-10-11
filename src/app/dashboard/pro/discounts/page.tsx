@@ -80,7 +80,7 @@ const DiscountsPage = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-black">
+        <h2 className="text-[30px] md:text-[40px]  font-semibold text-black">
           Discounts
         </h2>
 

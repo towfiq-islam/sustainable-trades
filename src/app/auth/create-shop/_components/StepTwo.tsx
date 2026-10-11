@@ -38,7 +38,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
 
       {/* Shop Info */}
       <div className="border border-accent-gray rounded-[20px] xl:my-[56px] my-8 p-5 md:p-10 xl:p-20">
-        <div className="mt-5 grid lg:grid-cols-2 grid-cols-1 xl:gap-x-[96px] gap-x-10 items-center lg:gap-y-10 gap-y-5 font-lato">
+        <div className="mt-5 grid lg:grid-cols-2 grid-cols-1 xl:gap-x-[96px] gap-x-10 items-center lg:gap-y-10 gap-y-5 ">
           {/* Shop Name */}
           <div>
             <p className="form-label">
@@ -109,7 +109,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
         <div className="lg:flex gap-x-8">
           {/* Shop Photo */}
           <div>
-            <p className="md:text-[18px] text-secondary-black font-lato lg:text-start text-center">
+            <p className="md:text-[18px] text-secondary-black  lg:text-start text-center">
               Add A Profile Photo{" "}
               <span className="text-red-600 text-xl">*</span>
             </p>
@@ -166,7 +166,7 @@ const StepTwo = ({ step, setStep, totalSteps }: any) => {
 
           {/* Cover Photo */}
           <div className="w-full lg:mt-0 mt-10">
-            <p className="md:text-[18px] text-secondary-black font-lato lg:text-start text-center">
+            <p className="md:text-[18px] text-secondary-black  lg:text-start text-center">
               Add A Shop Banner <span className="text-red-600 text-xl">*</span>
             </p>
 

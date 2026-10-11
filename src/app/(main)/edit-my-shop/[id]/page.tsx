@@ -258,7 +258,7 @@ const Page = ({ params }: Props) => {
                 <h2 className="mt-5 text-primary-green text-[20px] font-semibold">
                   Profile Info
                 </h2>
-                <p className="text-[16px] text-secondary-gray font-normal font-lato">
+                <p className="text-[16px] text-secondary-gray font-normal ">
                   <span className="text-primary-red">*</span>Indicates a
                   required field
                 </p>

@@ -116,7 +116,7 @@ const page = () => {
   return (
     <>
       <div className="flex flex-wrap justify-between items-center gap-3.5 lg:gap-0 mb-7">
-        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-secondary-black">
+        <h2 className="text-[30px] md:text-[40px]  font-semibold text-secondary-black">
           Orders
         </h2>
 

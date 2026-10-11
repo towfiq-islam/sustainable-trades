@@ -76,11 +76,15 @@
   --shadow-error-state: 0 4px 8px 0 rgba(139, 32, 12, 0.12);
 
   /* Font Family */
-  --font-lato: var(--font-lato);
+  --font-geist: var(--font-geist), sans-serif;
 }
 
 html {
   @apply scroll-smooth;
+}
+
+body {
+  @apply font-geist;
 }
 
 /* Custom CSS */

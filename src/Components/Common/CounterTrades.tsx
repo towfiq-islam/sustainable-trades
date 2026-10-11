@@ -283,7 +283,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                         {product?.product?.shop?.shop_name}
                         <Link
                           href={`/shop-details?view=coustomer&id=${product?.product?.shop?.user_id}&listing_id=${product?.product?.shop_info_id}`}
-                          className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray font-lato"
+                          className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray "
                         >
                           View Shop
                         </Link>
@@ -308,7 +308,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                       </div>
                       <div className="flex gap-x-2 items-center">
                         <LocationSvg1 />
-                        <h5 className="text-[12px] lg:text-[14px] text-accent-gray font-lato">
+                        <h5 className="text-[12px] lg:text-[14px] text-accent-gray ">
                           {product?.type === "offered"
                             ? data?.data?.receiver?.shop_info?.address
                                 ?.address_line_1
@@ -509,7 +509,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                   if (btn === "Go Back") router.back();
                   else if (btn === "Send Counter") handleSendCounter();
                 }}
-                className={`relative cursor-pointer py-[8px] px-6 rounded-md font-lato font-semibold overflow-hidden hover:scale-105 duration-300 ease-in-out text-sm md:text-base ${
+                className={`relative cursor-pointer py-[8px] px-6 rounded-md  font-semibold overflow-hidden hover:scale-105 duration-300 ease-in-out text-sm md:text-base ${
                   style.bg || ""
                 } ${style.border || "border-2"} ${
                   style.text

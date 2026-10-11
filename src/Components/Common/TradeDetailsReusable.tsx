@@ -89,7 +89,7 @@ const TradeDetailsReusable = () => {
             </h3>
             <h4 className="text-[20px] font-normal text-secondary-gray flex gap-x-5 items-center">
               {tradeSenderProduct?.product?.shop?.shop_name}
-              <span className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
+              <span className="text-[14px] underline cursor-pointer text-accent-gray ">
                 View Shop
               </span>
             </h4>
@@ -102,10 +102,10 @@ const TradeDetailsReusable = () => {
             </div>
             <div className="flex gap-x-2 items-center">
               <LocationSvg1 />
-              <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-accent-gray ">
                 13 mi. away -
               </h5>
-              <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-accent-gray ">
                 Denver, CO
               </h5>
             </div>
@@ -143,7 +143,7 @@ const TradeDetailsReusable = () => {
           </div>
           <div className="flex gap-x-2 items-center mt-1">
             <LocationSvg1 />
-            <h5 className="text-[14px] underline cursor-pointer text-secondary-black font-lato">
+            <h5 className="text-[14px] underline cursor-pointer text-secondary-black ">
               {tradeSenderShopData?.data?.shop_info?.address?.display_my_address
                 ? tradeSenderShopData?.data?.shop_info?.address?.address_line_1
                 : `${tradeSenderShopData?.data?.shop_info?.address?.city}, ${tradeSenderShopData?.data?.shop_info?.address?.state}`}
@@ -218,7 +218,7 @@ const TradeDetailsReusable = () => {
             </h3>
             <h4 className="text-[20px] font-normal text-secondary-gray flex gap-x-5 items-center">
               The Soap Shop
-              <span className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
+              <span className="text-[14px] underline cursor-pointer text-accent-gray ">
                 View Shop
               </span>
             </h4>
@@ -231,10 +231,10 @@ const TradeDetailsReusable = () => {
             </div>
             <div className="flex gap-x-2 items-center">
               <LocationSvg1 />
-              <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-accent-gray ">
                 13 mi. away -
               </h5>
-              <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-accent-gray ">
                 Denver, CO
               </h5>
             </div>
@@ -271,7 +271,7 @@ const TradeDetailsReusable = () => {
                 } else {
                 }
               }}
-              className={`relative cursor-pointer py-[10px] border px-4 rounded-md font-lato font-semibold overflow-hidden
+              className={`relative cursor-pointer py-[10px] border px-4 rounded-md  font-semibold overflow-hidden
         hover:scale-110 duration-500 ease-in-out
         ${style.bg || ""} ${
           style.border ? `border-2 ${style.border}` : "border-2 border-gray-300"

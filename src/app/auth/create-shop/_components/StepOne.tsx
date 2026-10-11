@@ -24,14 +24,14 @@ const StepOne = ({ step, totalSteps }: any) => {
       </p>
 
       <div className="border border-accent-gray rounded-xl md:rounded-[20px] my-10 xl:my-[56px] p-5 md:p-10 xl:p-20">
-        <p className="text-sm md:text-[16px] text-secondary-gray font-normal font-lato">
+        <p className="text-sm md:text-[16px] text-secondary-gray font-normal ">
           <span className="text-primary-red">*</span>Indicates a required field
         </p>
-        <h6 className="text-sm md:text-[16px] text-secondary-gray font-normal font-lato">
+        <h6 className="text-sm md:text-[16px] text-secondary-gray font-normal ">
           Note: Email and password entered here will be your login credentials
         </h6>
 
-        <div className="mt-5 md:mt-12 grid lg:grid-cols-2 grid-cols-1 gap-x-10 xl:gap-x-20 gap-y-3 md:gap-y-5 xl:gap-y-10 font-lato">
+        <div className="mt-5 md:mt-12 grid lg:grid-cols-2 grid-cols-1 gap-x-10 xl:gap-x-20 gap-y-3 md:gap-y-5 xl:gap-y-10 ">
           {/* First Name */}
           <div>
             <p className="form-label">

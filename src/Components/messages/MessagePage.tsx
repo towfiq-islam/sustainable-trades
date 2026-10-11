@@ -387,7 +387,7 @@ const MessagePage = ({
                   {/* Plain message */}
                   {!msg.cart && !msg.order && (
                     <div
-                      className={`${compact ? "text-sm py-2 px-3" : "text-[15px] py-3 px-3.5"} relative font-lato leading-[160%] rounded-[6px] shadow ${bubbleClass}`}
+                      className={`${compact ? "text-sm py-2 px-3" : "text-[15px] py-3 px-3.5"} relative  leading-[160%] rounded-[6px] shadow ${bubbleClass}`}
                     >
                       <div>
                         {msg.message && (

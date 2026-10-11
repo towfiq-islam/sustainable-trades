@@ -106,7 +106,7 @@ const Settings = () => {
 
   return (
     <>
-      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-black">
+      <h2 className="text-[30px] md:text-[40px]  font-semibold text-black">
         Settings
       </h2>
 

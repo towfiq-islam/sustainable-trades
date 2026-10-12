@@ -526,12 +526,12 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
 
       {/* Header */}
       <div className="flex justify-between items-center gap-3">
-        <h3 className="text-3xl font-semibold text-secondary-black">
+        <h3 className="text-xl md:text-3xl font-semibold text-secondary-black">
           Edit Listing
         </h3>
 
         <Link href={config.listingHref} className="shrink-0">
-          <button className="text-accent-red font-semibold flex gap-x-1 items-center border-2 border-accent-red rounded-lg py-1.5 md:py-3 px-6 hover:bg-accent-red hover:text-white duration-300 cursor-pointer">
+          <button className="text-accent-red font-semibold flex gap-x-1 items-center border-2 border-accent-red rounded-lg py-1.5 md:py-3 px-3 md:px-6 text-sm md:text-base hover:bg-accent-red hover:text-white duration-300 cursor-pointer">
             <MdArrowOutward />
             View Listings
           </button>

@@ -47,7 +47,7 @@ const AccountTable = ({
       <div
         className={`flex flex-col sm:flex-row justify-between gap-3 ${data?.length > 0 && "border-b pb-2"} border-gray-400`}
       >
-        <h4 className="text-[20px] sm:text-[24px] font-semibold text-secondary-black">
+        <h4 className="text-lg md:text-[20px] sm:text-[24px] font-semibold text-secondary-black">
           {title}
         </h4>
 

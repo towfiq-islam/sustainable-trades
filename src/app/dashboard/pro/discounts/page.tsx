@@ -80,7 +80,7 @@ const DiscountsPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+      <div className="flex flex-col gap-3 md:flex-row md:justify-between md:items-center">
         <DashBoardHeader heading="Discounts " />
 
         <div className="flex flex-col md:flex-row gap-4 md:items-center">
@@ -194,22 +194,28 @@ const DiscountsPage = () => {
                     {d.description}
                   </p>
 
-                  <div className="mt-3 md:mt-7 text-[14px] md:text-[16px] flex gap-1 items-center">
-                    <span className="font-bold text-[12px] md:text-[16px] text-secondary-black">
-                      STARTS:
-                    </span>
-                    <span className="text-gray-600">{`${moment(
-                      d?.start_datetime,
-                    ).format("MMMM Do YYYY, h:mm:ss a")}`}</span>
+                  <div className="mt-3 md:mt-7 text-[14px] md:text-[16px] flex flex-col md:flex-row gap-1 md:items-center">
+                    <p>
+                      <span className="font-bold text-[12px] md:text-[16px] text-secondary-black">
+                        STARTS:
+                      </span>
+                      <span className="text-gray-600">
+                        {`${moment(d?.start_datetime).format(
+                          " MMMM Do YYYY, h:mm:ss a",
+                        )}`}
+                      </span>
+                    </p>
 
-                    <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-secondary-black">
-                      ENDS:
-                    </span>
-                    <span className="text-gray-600">
-                      {d?.never_expires || !d?.end_datetime
-                        ? "Never Expires"
-                        : `${moment(d?.end_datetime).format("MMMM Do YYYY, h:mm:ss a")}`}
-                    </span>
+                    <p>
+                      <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-secondary-black">
+                        ENDS:
+                      </span>
+                      <span className="text-gray-600">
+                        {d?.never_expires || !d?.end_datetime
+                          ? "Never Expires"
+                          : `${moment(d?.end_datetime).format(" MMMM Do YYYY, h:mm:ss a")}`}
+                      </span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -224,7 +230,7 @@ const DiscountsPage = () => {
                   <Link
                     href={`/dashboard/pro/discounts/create-discount/${d?.id}`}
                   >
-                    <button className="py-2 px-2 md:text-sm rounded bg-off-green text-primary-green cursor-pointer flex gap-x-2 font-semibold">
+                    <button className="py-2 px-2 text-xs md:text-sm rounded bg-off-green text-primary-green cursor-pointer flex gap-x-2 font-semibold">
                       <Pen />
                       Edit
                     </button>

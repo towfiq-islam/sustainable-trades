@@ -198,26 +198,10 @@ const CreateDiscount = () => {
           ? { discount_limits: parseInt(totalUses.trim()) }
           : {}),
 
-      // discount_limits: limitPerCustomer
-      //   ? 1
-      //   : totalUsesLimit && totalUses.trim()
-      //     ? parseInt(totalUses.trim())
-      //     : null,
-
-      // start_date: startDate,
-      // start_time: startTime || null,
 
       start_datetime: startDatetimeUtc,
       never_expires: neverExpires,
       end_datetime: neverExpires ? null : endDatetimeUtc,
-
-      // ...(neverExpires
-      //   ? { end_date: null, end_time: null }
-      //   : {
-      //       end_date: endDate || null,
-      //       end_time: endTime || null,
-      //     }),
-
       ...(isEditMode && { id: parseInt(id!) }),
     };
 
@@ -323,10 +307,10 @@ const CreateDiscount = () => {
         <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
           Discount Type
         </h4>
-        <div className="flex mt-3 ">
+        <div className="flex mt-3">
           <button
             onClick={() => setDiscountType("code")}
-            className={`px-4 py-[9px] md:py-[18px] rounded-l-md cursor-pointer text-[16px] md:text-[20px] text-primary-green font-semibold ${
+            className={`px-4 py-[9px] md:py-[18px] rounded-l-md cursor-pointer text-sm md:text-[16px] lg:text-[20px] text-primary-green font-semibold ${
               discountType === "code"
                 ? "bg-off-green border-2 border-primary-green "
                 : "bg-white border-2 border-muted-gray"
@@ -336,7 +320,7 @@ const CreateDiscount = () => {
           </button>
           <button
             onClick={() => setDiscountType("auto")}
-            className={`px-6 py-2 rounded-r-md cursor-pointer  text-[16px] md:text-[20px] text-primary-green font-semibold ${
+            className={`px-6 py-2 rounded-r-md cursor-pointer  text-sm md:text-[16px] lg:text-[20px] text-primary-green font-semibold ${
               discountType === "auto"
                 ? "bg-off-green border-2 border-primary-green "
                 : "bg-white border-2 border-muted-gray"
@@ -353,7 +337,7 @@ const CreateDiscount = () => {
           <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
             Discount Code
           </h4>
-          <div className="flex gap-2 mt-3 w-full lg:w-[750px] relative">
+          <div className="flex gap-2 md:mt-3 w-full lg:w-[750px] relative">
             <input
               type="text"
               placeholder="Discount Code (Ex. SALE15)"

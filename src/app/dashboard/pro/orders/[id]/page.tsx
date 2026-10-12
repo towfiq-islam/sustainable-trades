@@ -259,7 +259,7 @@ const Page = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row justify-between gap-10">
+      <div className="flex flex-col lg:flex-row justify-between gap-5 md:gap-10">
         {/* Left Side */}
         <div className="w-full lg:w-[65%] 2xl:w-[75%]">
           <button
@@ -273,8 +273,8 @@ const Page = () => {
           </button>
 
           {/* Header */}
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
-            <h3 className="text-3xl font-semibold text-secondary-black">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-2 md:gap-4">
+            <h3 className="text-2xl md:text-3xl font-semibold text-secondary-black">
               Order Details
             </h3>
 
@@ -283,14 +283,14 @@ const Page = () => {
                 <Link
                   href={singleOrder?.data?.tracking?.label_url}
                   target="_blank"
-                  className="text-sm lg:text-base py-2.5 lg:py-3 px-3 lg:px-4 rounded-[8px] border border-accent-red font-semibold text-accent-red cursor-pointer hover:border-accent-red duration-300 ease-in-out"
+                  className="text-sm lg:text-base py-2 md:py-2.5 lg:py-3 px-3 lg:px-4 rounded-[8px] border border-accent-red font-semibold text-accent-red cursor-pointer hover:border-accent-red duration-300 ease-in-out"
                 >
                   Shipping Label
                 </Link>
               )}
 
               <button
-                className="text-sm lg:text-base py-2.5 lg:py-3 px-3 lg:px-4 rounded-[8px] border font-medium text-secondary-black cursor-pointer border-primary-green duration-300 ease-in-out hover:bg-primary-green hover:text-white"
+                className="text-sm lg:text-base py-2 md:py-2.5 lg:py-3 px-3 lg:px-4 rounded-[8px] border font-medium text-secondary-black cursor-pointer border-primary-green duration-300 ease-in-out hover:bg-primary-green hover:text-white"
                 onClick={() =>
                   setTrackingHistory(singleOrder?.data?.order_status_history)
                 }
@@ -302,7 +302,7 @@ const Page = () => {
 
           {/* Order Status Dropdown */}
           <div className="my-4">
-            <h4 className="text-secondary-black font-bold text-[16px] mb-3">
+            <h4 className="text-secondary-black font-semibold md:font-bold text-[16px] mb-2 md:mb-3">
               Order Status
             </h4>
 
@@ -323,7 +323,7 @@ const Page = () => {
                     <p className="text-[12px] text-gray-500">Current Status</p>
 
                     <h5
-                      className={`text-[15px] font-semibold capitalize ${
+                      className={`text-sm md:text-[15px] font-semibold capitalize ${
                         isCancelled ? "text-primary-red" : "text-primary-green"
                       }`}
                     >
@@ -435,7 +435,7 @@ const Page = () => {
           </div>
 
           {/* Progress Bar - steps and their count match fulfillment type */}
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start mt-6">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start md:mt-6">
             {steps.map((step, index) => {
               const isCompleted = !isCancelled && index <= currentStepIndex;
 
@@ -497,7 +497,7 @@ const Page = () => {
           </div>
 
           {/* Products */}
-          <div className="mt-6">
+          <div className="md:mt-6">
             <OrderedProducts data={singleOrder?.data} order_id={order_id} />
           </div>
 

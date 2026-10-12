@@ -42,7 +42,7 @@ const page = () => {
 
   return (
     <>
-      <div className="flex flex-wrap w-full justify-between">
+      <div className="flex flex-wrap gap-3 w-full justify-between">
         <DashBoardHeader heading="Accounting" />
 
         <div className="flex flex-wrap gap-3 md:gap-6 items-center w-full md:w-fit">
@@ -58,7 +58,7 @@ const page = () => {
         </div>
       </div>
 
-      <div className="mt-10">
+      <div className="mt-5 md:mt-10">
         <AccountTable
           title="Sales"
           data={accountingData?.data?.orders}
@@ -71,7 +71,7 @@ const page = () => {
         />
       </div>
 
-      <div className="mt-12">
+      <div className="mt-7 md:mt-12">
         <AccountTable
           title="Barters and Trades"
           data={tradeAndBarterData?.data?.trades}

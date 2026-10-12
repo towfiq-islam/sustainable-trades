@@ -266,7 +266,7 @@ export default function VendorListings({
               key={product.id}
               className="relative border border-divider-gray rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 group"
             >
-              <div className="relative w-full h-[270px]">
+              <div className="relative w-full h-[230px] xl:h-[270px]">
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product.images?.[0]?.image}`}
                   alt={product.product_name}
@@ -390,39 +390,32 @@ export default function VendorListings({
                 className="flex items-start justify-between border border-gray-200 rounded-lg p-4 shadow-sm"
               >
                 <div className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(p.id)}
-                    onChange={() => toggleSelect(p.id)}
-                    className="mt-2"
-                  />
                   <Image
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${p.images?.[0]?.image}`}
                     alt={p.product_name}
                     height={50}
                     width={50}
                     unoptimized
-                    className="rounded-md object-cover size-[50px]"
+                    className="rounded-md object-cover size-14"
                   />
                   <div>
                     <h3 className="font-semibold text-secondary-black text-sm">
                       {p.product_name}
                     </h3>
-                    <p className="text-xs text-gray-500">SKU: {p.sku}</p>
                     <p className="text-xs text-gray-500">
                       Stock: {StockLabel(p)}
                     </p>
                     <p className="text-xs text-gray-500">
                       Price: ${Number(p.product_price).toFixed(2)}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      <StatusBadge status={p.status} />
-                    </p>
                     {variant === "pro" && (
                       <p className="text-xs text-gray-500 mt-1">
                         Cost: ${Number(p.cost).toFixed(2)}
                       </p>
                     )}
+                    <p className="text-xs text-gray-500 mt-3">
+                      <StatusBadge status={p.status} />
+                    </p>
                   </div>
                 </div>
               </div>

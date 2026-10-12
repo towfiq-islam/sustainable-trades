@@ -273,7 +273,7 @@ const Page = () => {
           </button>
 
           {/* Header */}
-          <div className="flex flex-col lg:flex-row items-center justify-between">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
             <h3 className="text-3xl font-semibold text-secondary-black">
               Order Details
             </h3>
@@ -283,14 +283,14 @@ const Page = () => {
                 <Link
                   href={singleOrder?.data?.tracking?.label_url}
                   target="_blank"
-                  className="py-3 px-4 rounded-[8px] border border-accent-red font-semibold text-accent-red cursor-pointer hover:border-accent-red duration-300 ease-in-out"
+                  className="text-sm lg:text-base py-2.5 lg:py-3 px-3 lg:px-4 rounded-[8px] border border-accent-red font-semibold text-accent-red cursor-pointer hover:border-accent-red duration-300 ease-in-out"
                 >
                   Shipping Label
                 </Link>
               )}
 
               <button
-                className="py-3 px-4 rounded-[8px] border font-medium text-secondary-black cursor-pointer border-primary-green duration-300 ease-in-out hover:bg-primary-green hover:text-white"
+                className="text-sm lg:text-base py-2.5 lg:py-3 px-3 lg:px-4 rounded-[8px] border font-medium text-secondary-black cursor-pointer border-primary-green duration-300 ease-in-out hover:bg-primary-green hover:text-white"
                 onClick={() =>
                   setTrackingHistory(singleOrder?.data?.order_status_history)
                 }
@@ -310,7 +310,7 @@ const Page = () => {
               {/* Trigger */}
               <button
                 onClick={() => setOpenStatusPopover(prev => !prev)}
-                className="min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-2 hover:border-primary-green transition-all duration-300 cursor-pointer"
+                className="min-w[220px] lg:min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-3 lg:px-4 py-2 hover:border-primary-green transition-all duration-300 cursor-pointer"
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -379,7 +379,7 @@ const Page = () => {
 
                           setOpenStatusPopover(false);
                         }}
-                        className={`group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition-all ${
+                        className={`group flex w-full items-center justify-between rounded-xl px-4 py-2 lg:py-3 text-left transition-all ${
                           isEnabled
                             ? `cursor-pointer ${
                                 isCancelledOption

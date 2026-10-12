@@ -189,7 +189,7 @@ const page = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex flex-wrap justify-center sm:justify-start sm:flex-nowrap gap-2.5 sm:gap-5 2xl:gap-x-10">
+      <div className="flex flex-wrap justify-center sm:justify-start sm:flex-nowrap gap-2.5 lg:gap-5 2xl:gap-x-10">
         {tabs?.map(tab => (
           <h3
             key={tab}
@@ -201,7 +201,7 @@ const page = () => {
                   : tab,
               );
             }}
-            className={`cursor-pointer px-2 2xl:px-3 capitalize text-base xl:text-lg 2xl:text-xl font-medium 2xl:font-semibold ${
+            className={`cursor-pointer px-2 lg:px-3 capitalize text-[15px] lg:text-base xl:text-lg 2xl:text-xl font-medium 2xl:font-semibold ${
               isActive === tab
                 ? "border-b-2 border-secondary-black text-secondary-black"
                 : "text-light-green"

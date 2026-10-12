@@ -55,9 +55,9 @@ const Page = () => {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-8">
         {/* Left */}
-        <div className="col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-4">
           <div>
             <h4 className="text-secondary-black text-[20px] md:text-[24px] font-semibold mb-2">
               Shipping Settings
@@ -247,7 +247,7 @@ const Page = () => {
         </div>
 
         {/* Right */}
-        <div className="space-y-6">
+        <div className="space-y-3 lg:space-y-6">
           {/* Card 1 */}
           <div className="border rounded-xl p-4 2xl:p-5 border-off-green/40 bg-off-green/20 text-[15px]">
             <div className="flex gap-4">

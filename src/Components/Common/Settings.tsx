@@ -111,7 +111,7 @@ const Settings = () => {
       </h2>
 
       <div className="lg:mt-6 flex flex-col-reverse lg:flex-row gap-x-[72.5px] xl:gap-x-[145px]">
-        <div className="mt-5 lg:mt-0 xl:w-2/3 2xl:w-1/2">
+        <div className="mt-5 lg:mt-0 w-full xl:w-2/3 2xl:w-1/2">
           <form
             id="settings-form"
             onSubmit={handleSubmit(onSubmit)}

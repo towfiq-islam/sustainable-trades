@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { FaSearch, FaPlus } from "react-icons/fa";
 import { FiEdit2, FiGrid, FiList, FiPackage } from "react-icons/fi";
 import { TbEdit } from "react-icons/tb";
@@ -58,22 +58,10 @@ export default function VendorListings({
   const [view, setView] = useState<ViewMode>("table");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [selected, setSelected] = useState<number[]>([]);
-  const [openMenu, setOpenMenu] = useState<number | null>(null);
 
   const { data: allListings, isLoading } = useGetProductsQuery({
     status: statusFilter,
   });
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (!(e.target as HTMLElement).closest(".product-menu")) {
-        setOpenMenu(null);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const products: ProductItem[] = useMemo(() => {
     const list = allListings?.data ?? [];
@@ -83,24 +71,18 @@ export default function VendorListings({
     );
   }, [allListings, search]);
 
-  const toggleSelect = (id: number) => {
-    setSelected(prev =>
-      prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id],
-    );
-  };
-
   const isFiltered = !!search || !!statusFilter;
 
   return (
     <>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-row sm:items-center justify-between gap-4">
         <h2 className="text-[25px] md:text-[36px]  font-semibold text-secondary-black">
           Listings
         </h2>
 
         {/* View toggle */}
-        <div className="hidden sm:flex gap-2 items-center border border-gray-300 rounded-lg p-1 w-fit self-start sm:self-auto">
+        <div className="flex gap-2 items-center border border-gray-300 rounded-lg p-1 w-fit self-start sm:self-auto">
           <button
             onClick={() => setView("table")}
             aria-pressed={view === "table"}
@@ -134,9 +116,7 @@ export default function VendorListings({
         <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 flex-1">
           {/* Search */}
           <div className="relative w-full sm:max-w-[320px]">
-            <p className="text-secondary-black text-[15px] font-semibold mb-2 sm:hidden">
-              Search
-            </p>
+          
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}

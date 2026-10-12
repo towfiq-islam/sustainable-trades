@@ -314,7 +314,7 @@ const CombinedNavbar = ({
       </div>
 
       {/* Right */}
-      <div className="flex gap-3 2xl:gap-5 items-center">
+      <div className="flex gap-5 lg:gap-3 2xl:gap-5 items-center">
         {isLoggedIn && (
           <Link
             href={messagesHref}
@@ -349,7 +349,7 @@ const CombinedNavbar = ({
           aria-label={`Cart, ${totalQuantity ?? 0} items`}
           className="cursor-pointer relative hover:opacity-80 transition-opacity duration-200"
         >
-          <span className="absolute -top-4 -right-4 min-w-5 h-5 px-1 font-semibold text-[11px] grid place-items-center rounded-full bg-accent-red text-white">
+          <span className="absolute -top-4 -right-4 size-4.5 md:size-5 px-1 font-semibold text-[11px] grid place-items-center rounded-full bg-accent-red text-white">
             {totalQuantity ?? 0}
           </span>
           <CartSvg2 />
@@ -405,7 +405,7 @@ const CombinedNavbar = ({
             onClick={e => e.stopPropagation()}
             className={`bg-white border border-gray-100 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.18)] z-50 rounded-xl absolute right-0 top-full mt-3 translate-y-2 overflow-hidden duration-300 transition-all ${
               isLoggedIn ? "w-60" : "w-32 md:w-40"
-            } ${isDashboard ? "hidden lg:block" : ""} ${
+            } ${isDashboard ? "block" : ""} ${
               showPopover
                 ? "opacity-100 scale-100"
                 : "opacity-0 pointer-events-none scale-95"

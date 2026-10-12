@@ -84,7 +84,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             <p className="text-[16px] text-muted-gray font-semibold text-center">
               Orders
             </p>
-            <h4 className="text-[25px] lg:text-[40px] text-primary-green font-semibold text-center">
+            <h4 className="text-xl md:text-[25px] lg:text-[40px] text-primary-green font-semibold text-center">
               {homeDataLoading ? (
                 <p className="w-10 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
               ) : (
@@ -96,7 +96,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             <p className="text-[16px] text-muted-gray font-semibold text-center">
               Trades
             </p>
-            <h4 className="text-[25px] lg:text-[40px] text-primary-green font-semibold text-center">
+            <h4 className="text-xl md:text-[25px] lg:text-[40px] text-primary-green font-semibold text-center">
               {homeDataLoading ? (
                 <p className="w-14 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
               ) : (
@@ -108,7 +108,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             <p className="text-[16px] text-muted-gray font-semibold text-center">
               Revenue
             </p>
-            <h4 className="text-[25px] lg:text-[40px] text-primary-green font-semibold text-center">
+            <h4 className="text-xl md:text-[25px] lg:text-[40px] text-primary-green font-semibold text-center">
               {homeDataLoading ? (
                 <p className="w-20 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
               ) : (
@@ -122,7 +122,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             <p className="text-[16px] text-muted-gray font-semibold text-center">
               Visits
             </p>
-            <h4 className="text-[25px] lg:text-[40px] text-primary-green font-semibold text-center">
+            <h4 className="text-xl md:text-[25px] lg:text-[40px] text-primary-green font-semibold text-center">
               {homeDataLoading ? (
                 <p className="w-10 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
               ) : (
@@ -135,7 +135,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
 
       <div className="flex flex-col gap-[20px] lg:flex-row justify-between 2xl:py-10">
         {/* Latest Products */}
-        <div className="pt-[30px] lg:pt-[77px] pb-8">
+        <div className="pt-5 md:pt-[30px] lg:pt-[77px] pb-5 md:pb-8">
           <div className="border border-accent-gray rounded-[10px] w-full lg:w-[380px]">
             <div className="p-3">
               <div className="flex justify-between">

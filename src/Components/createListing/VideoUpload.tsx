@@ -39,10 +39,10 @@ const VideoUpload = ({ video, setVideo, setValue }: VideoUploadProps) => {
 
   return (
     <div>
-      <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
+      <h3 className="text-lg lg:text-[20px] md:text-[24px] font-semibold text-secondary-black">
         Listing Approval Process
       </h3>
-      <p className="text-[16px] text-muted-gray mt-2 w-full md:max-w-[400px]">
+      <p className="text-sm md:text-[16px] text-muted-gray mt-2 w-full md:max-w-[400px]">
         To ensure all products and services on Sustainable Trades meet our
         sustainability standards, each listing must be approved before it goes
         live. Please upload a short video introducing yourself and your product

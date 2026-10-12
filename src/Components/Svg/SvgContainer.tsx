@@ -1327,8 +1327,7 @@ export function CartSvg2() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="26"
-      height="25"
+     className="size-5.5 md:size-6"
       viewBox="0 0 26 25"
       fill="none"
     >

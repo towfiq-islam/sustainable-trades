@@ -367,9 +367,9 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
             />
 
             <div>
-              <p className="font-semibold text-[20px] md:text-[24px] text-secondary-black">
+              <p className="font-semibold text-lg lg:text-[20px] md:text-[24px] text-secondary-black">
                 Listing Status:{" "}
-                <span className="px-3 py-2 text-white text-sm rounded-full bg-badge-gray">
+                <span className="px-2.5 md:px-3 py-1.5 md:py-2 text-white text-xs md:text-sm rounded-full bg-badge-gray">
                   Pending
                 </span>
               </p>

@@ -52,7 +52,7 @@ const DashboardSidebar = ({
       } fixed top-0 left-0 z-[999] xl:static h-screen xl:h-[calc(100vh-80px)] w-68 2xl:w-72 duration-500 transition-transform border-r border-light-gray bg-dashboard-bg py-5 px-4 shrink-0 overflow-y-auto side-scrollbar`}
     >
       {/* Nav Links */}
-      <nav className="flex flex-col gap-3.5">
+      <nav className="flex flex-col gap-2.5 md:gap-3.5">
         {dashboardNavLinks?.map(item => {
           const isActiveParent = pathname === item.path;
           const isActiveSub = item.subMenus?.some(m => pathname === m.path);

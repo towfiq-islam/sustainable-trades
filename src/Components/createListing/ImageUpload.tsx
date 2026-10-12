@@ -49,12 +49,12 @@ const ImageUpload = ({
               <img
                 src={img}
                 alt={`Image ${idx + 1}`}
-                className="w-full h-[200px] md:h-[250px] object-cover rounded-lg border"
+                className="w-full h-[150px] md:h-[250px] object-cover rounded-lg border border-gray-300"
               />
               <button
                 type="button"
                 onClick={() => handleRemoveImage(idx)}
-                className="absolute top-2 right-2 bg-black text-white px-2 py-1 rounded cursor-pointer"
+                className="absolute top-2 right-2 bg-black text-white px-2 rounded cursor-pointer"
               >
                 ×
               </button>

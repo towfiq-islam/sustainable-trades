@@ -19,7 +19,7 @@ const PriceSection = ({
 
   return (
     <div>
-      <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
+      <h3 className="text-lg md:text-[20px] lg:text-[24px] font-semibold text-secondary-black">
         Price
       </h3>
       <Controller
@@ -52,7 +52,7 @@ const PriceSection = ({
 
       <div className="mt-4">
         <h3
-          className={`text-[20px] md:text-[24px] font-semibold ${
+          className={`text-lg md:text-[20px] lg:text-[24px] font-semibold ${
             isBasicMember ? "text-gray-400" : "text-secondary-black"
           }`}
         >
@@ -104,7 +104,7 @@ const PriceSection = ({
                 i
               </div>
 
-              <p className="text-secondary-gray leading-6">
+              <p className="text-secondary-gray leading-6 text-sm md:text-base">
                 <span className="font-bold block mb-1">
                   Use Shippo for shipping?
                 </span>

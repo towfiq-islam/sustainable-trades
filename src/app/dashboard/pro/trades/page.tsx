@@ -48,7 +48,7 @@ const Page = () => {
           <input
             placeholder="Search..."
             type="search"
-            className="py-[10px] pl-4 outline-0 border border-border-gray rounded-[8px] text-[16px] text-muted-gray font-normal w-full  md:w-[500px]"
+            className="py-2 md:py-[10px] pl-4 outline-0 border border-border-gray rounded-[8px] text-[16px] text-muted-gray font-normal w-full  md:w-[500px]"
           />
           <div className="absolute top-4 right-3">
             <FaSearch />
@@ -58,7 +58,7 @@ const Page = () => {
       </div>
 
       {/* Tabs */}
-      <div className="mt-14">
+      <div className="mt-8 md:mt-14">
         <ul className="flex justify-between relative after:content-[''] after:block after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:p-[3px] after:border after:border-accent-gray after:rounded-lg">
           {tradetabs?.map(tab => (
             <li

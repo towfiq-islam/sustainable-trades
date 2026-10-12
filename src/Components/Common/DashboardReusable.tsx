@@ -71,7 +71,7 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
           href={`/shop-details?view=${"owner"}&id=${
             user?.shop_info?.user_id
           }&listing_id=${user?.shop_info?.id}`}
-          className="px-[20px] lg:px-[58px] py-2 md:py-4 rounded-[8px] bg-accent-red text-[14px] md:text-[18px] font-semibold text-secondary-black cursor-pointer hover:bg-transparent duration-500 ease-in-out border border-accent-red text-center"
+          className="px-10 2xl:px-[58px] py-2 md:py-4 rounded-[8px] bg-accent-red text-[14px] xl:text-base 2xl:text-[18px] font-semibold text-secondary-black cursor-pointer hover:bg-transparent duration-500 ease-in-out border border-accent-red text-center"
         >
           Edit Shop
         </Link>

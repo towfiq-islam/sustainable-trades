@@ -50,7 +50,7 @@ const Page = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-semibold text-secondary-black mb-2">
+      <h1 className="text-2xl 2xl:text-3xl font-semibold text-secondary-black mb-2">
         Local Pickup Locations
       </h1>
 

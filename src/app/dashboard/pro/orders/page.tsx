@@ -16,6 +16,7 @@ import { Download } from "@/Components/Svg/SvgContainer";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import PaginationControl from "@/Components/Common/PaginationControl";
 import OrdersList from "@/Components/order/OrdersList";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 
 type orderItem = {
   id: number;
@@ -116,9 +117,7 @@ const page = () => {
   return (
     <>
       <div className="flex flex-wrap justify-between items-center gap-3.5 lg:gap-0 mb-7">
-        <h2 className="text-[30px] md:text-[40px]  font-semibold text-secondary-black">
-          Orders
-        </h2>
+        <DashBoardHeader heading="Orders" />
 
         <div className="flex flex-wrap gap-2.5 md:gap-x-4 items-center">
           <div className="flex flex-wrap gap-3 md:gap-6 items-center w-full md:w-fit">
@@ -190,7 +189,7 @@ const page = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex flex-wrap justify-center sm:justify-start sm:flex-nowrap gap-2.5 sm:gap-5 md:gap-x-10">
+      <div className="flex flex-wrap justify-center sm:justify-start sm:flex-nowrap gap-2.5 sm:gap-5 2xl:gap-x-10">
         {tabs?.map(tab => (
           <h3
             key={tab}
@@ -202,7 +201,7 @@ const page = () => {
                   : tab,
               );
             }}
-            className={`cursor-pointer px-3 capitalize text-base xl:text-lg 2xl:text-xl font-semibold ${
+            className={`cursor-pointer px-2 2xl:px-3 capitalize text-base xl:text-lg 2xl:text-xl font-medium 2xl:font-semibold ${
               isActive === tab
                 ? "border-b-2 border-secondary-black text-secondary-black"
                 : "text-light-green"

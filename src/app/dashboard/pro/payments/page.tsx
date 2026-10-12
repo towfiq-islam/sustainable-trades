@@ -5,6 +5,7 @@ import { FaSearch } from "react-icons/fa";
 import { PaymentRowSkeleton } from "@/Components/Loader/Loader";
 import { useGetPaymentsQuery } from "@/redux/api/vendorApi";
 import { FiCreditCard } from "react-icons/fi";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 
 type orderItem = {
   payment_method: string;
@@ -29,9 +30,7 @@ const page = () => {
   return (
     <>
       <div className="flex flex-col gap-2.5 md:gap-0 md:flex-row justify-between md:items-center">
-        <h2 className="text-[40px]  font-semibold text-secondary-black">
-          Payments
-        </h2>
+        <DashBoardHeader heading="Payments" />
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <div className="relative w-full sm:w-[300px]">

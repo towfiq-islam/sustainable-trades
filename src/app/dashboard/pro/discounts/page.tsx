@@ -13,6 +13,7 @@ import {
   useGetDiscountsQuery,
 } from "@/redux/api/discountApi";
 import { FiTag } from "react-icons/fi";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 
 const DiscountsPage = () => {
   const [status, setStatus] = useState<string>("active");
@@ -80,9 +81,7 @@ const DiscountsPage = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-        <h2 className="text-[30px] md:text-[40px]  font-semibold text-black">
-          Discounts
-        </h2>
+        <DashBoardHeader heading="Discounts " />
 
         <div className="flex flex-col md:flex-row gap-4 md:items-center">
           {/* Search */}

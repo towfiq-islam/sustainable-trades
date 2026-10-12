@@ -110,7 +110,7 @@ export default function LocalDeliverySettingsPage() {
 
   return (
     <>
-      <h1 className="text-3xl font-semibold text-secondary-black mb-2.5">
+      <h1 className="text-2xl 2xl:text-3xl font-semibold text-secondary-black mb-2.5">
         Local Delivery Settings
       </h1>
 
@@ -133,7 +133,7 @@ export default function LocalDeliverySettingsPage() {
         </Link>
       </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_390px] gap-7 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_390px] gap-5 2xl:gap-7 items-start">
         {/* Left */}
         <div className="space-y-4">
           {/* How it works */}

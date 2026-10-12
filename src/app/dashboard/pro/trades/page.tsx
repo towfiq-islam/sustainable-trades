@@ -9,6 +9,7 @@ import {
   useGetTradeCountsQuery,
   useGetTradesQuery,
 } from "@/redux/api/tradeApi";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 
 const Page = () => {
   const { data } = useGetTradeCountsQuery({});
@@ -41,9 +42,8 @@ const Page = () => {
   return (
     <div>
       <div className="flex flex-wrap gap-2.5 md:flex-nowrap justify-between items-center">
-        <h3 className="text-[30px] md:text-[40px] font-semibold text-secondary-black">
-          Trades
-        </h3>
+        <DashBoardHeader heading="Trades" />
+
         <div className="relative w-full md:w-fit">
           <input
             placeholder="Search..."

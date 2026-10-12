@@ -1,4 +1,5 @@
 "use client";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { Paypal } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 import {
@@ -45,11 +46,9 @@ const page = () => {
 
   return (
     <>
-      <h2 className="text-[30px] md:text-[40px]  font-semibold text-secondary-black">
-        Store Payments
-      </h2>
+      <DashBoardHeader heading=" Store Payments " />
 
-      <h5 className="text-[15px] md:text-[20px] text-secondary-gray font-normal pt-4">
+      <h5 className="text-[15px] xl:text-lg 2xl:text-[20px] text-secondary-gray font-normal pt-4">
         Connect and manage how you'd like to receive
         <br />
         payments from buyers.

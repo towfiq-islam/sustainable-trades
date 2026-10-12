@@ -497,7 +497,7 @@ const CombinedNavbar = ({
 
   if (isDashboard) {
     return (
-      <header className="bg-primary-green py-3 px-5 lg:px-20 relative">
+      <header className="bg-primary-green py-3 px-5 lg:px-10 xl:px-12 2xl:px-20 relative">
         {content}
       </header>
     );

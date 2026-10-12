@@ -202,7 +202,7 @@ const page = () => {
                   : tab,
               );
             }}
-            className={`cursor-pointer px-3 capitalize text-[16px] md:text-[20px] font-semibold ${
+            className={`cursor-pointer px-3 capitalize text-base xl:text-lg 2xl:text-xl font-semibold ${
               isActive === tab
                 ? "border-b-2 border-secondary-black text-secondary-black"
                 : "text-light-green"

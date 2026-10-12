@@ -129,7 +129,7 @@ const Page = () => {
               }}
               className="mt-3 text-accent-red duration-200 hover:bg-accent-red hover:text-gray-100 transition-all font-semibold cursor-pointer border px-3 py-1 rounded-full text-sm"
             >
-             Configure
+              Configure
             </button>
           </div>
 
@@ -226,7 +226,7 @@ const Page = () => {
               }}
               className="mt-3 text-accent-red duration-200 hover:bg-accent-red hover:text-gray-100 transition-all font-semibold cursor-pointer border px-3 py-1 rounded-full text-sm"
             >
-              {user?.shop_info?.shippo_connected ? "Configure" :  "Connect"}
+              {user?.shop_info?.shippo_connected ? "Configure" : "Connect"}
             </button>
           </div>
 
@@ -249,23 +249,23 @@ const Page = () => {
         {/* Right */}
         <div className="space-y-6">
           {/* Card 1 */}
-          <div className="border rounded-xl p-5 border-off-green/40 bg-off-green/20 text-[15px]">
+          <div className="border rounded-xl p-4 2xl:p-5 border-off-green/40 bg-off-green/20 text-[15px]">
             <div className="flex gap-4">
-              <div className="w-16 h-16 rounded-full bg-off-green/50 text-primary-green flex items-center justify-center shrink-0 text-2xl">
+              <div className="w-12 h-12 2xl:w-16 2xl:h-16 rounded-full bg-off-green/50 text-primary-green flex items-center justify-center shrink-0 text-xl 2xl:text-2xl">
                 <BsCartPlus />
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-base 2xl:text-lg">
                   How it works at checkout
                 </h3>
 
-                <p className="mt-1.5 text-gray-800 leading-7">
+                <p className="mt-1.5 text-gray-800 leading-7 text-sm 2xl:text-base">
                   The shipping option you choose will be used to calculate
                   shipping costs during checkout.
                 </p>
 
-                <p className="mt-2 text-gray-800 leading-7">
+                <p className="mt-2 text-gray-800 leading-7 text-sm 2xl:text-base">
                   Customers will see the final shipping cost before they
                   complete their order.
                 </p>
@@ -274,14 +274,14 @@ const Page = () => {
           </div>
 
           {/* Card 2 */}
-          <div className="border rounded-xl p-5 border-off-green/40 bg-off-green/20  text-[15px]">
+          <div className="border rounded-xl p-4 2xl:p-5 border-off-green/40 bg-off-green/20  text-[15px]">
             <div className="flex gap-4">
-              <div className="w-16 h-16 rounded-full shrink-0 bg-off-green/50 text-primary-green flex items-center justify-center text-2xl">
+              <div className="w-12 h-12 2xl:w-16 2xl:h-16 rounded-full shrink-0 bg-off-green/50 text-primary-green flex items-center justify-center text-xl 2xl:text-2xl">
                 <FaTruck />
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-base 2xl:text-lg">
                   Offering local delivery?
                 </h3>
 
@@ -300,7 +300,7 @@ const Page = () => {
 
                 <Link
                   href="/help"
-                  className="inline-flex items-center gap-2 mt-4 text-sm font-bold text-primary-green"
+                  className="inline-flex items-center gap-2 mt-4 text-sm font-semibold 2xl:font-bold text-primary-green"
                 >
                   Go to How-To Videos →
                 </Link>
@@ -311,12 +311,12 @@ const Page = () => {
           {/* Card 3 */}
           <div className="border rounded-xl p-5 border-off-green/40 bg-off-green/20 text-[15px]">
             <div className="flex gap-4">
-              <div className="w-16 h-16 rounded-full bg-off-green/50 text-primary-green flex items-center justify-center shrink-0 text-2xl">
+              <div className="w-12 h-12 2xl:w-16 2xl:h-16 rounded-full bg-off-green/50 text-primary-green flex items-center justify-center shrink-0 text-xl 2xl:text-2xl">
                 <GiOpenBook />
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg">Need help?</h3>
+                <h3 className="font-semibold text-base 2xl:text-lg">Need help?</h3>
 
                 <p className="mt-1.5 text-gray-800 leading-7">
                   Check out our how-to videos in the Help Center for

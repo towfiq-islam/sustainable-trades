@@ -49,7 +49,7 @@ const MembershipApplicationModal = ({ setOpen }: any) => {
   };
 
   return (
-    <div className="p-5 ">
+    <div className="2xl:p-5">
       <h2 className="md:text-xl text-lg xl:text-2xl font-semibold text-secondary-black mb-5">
         Membership Spotlight Application
       </h2>

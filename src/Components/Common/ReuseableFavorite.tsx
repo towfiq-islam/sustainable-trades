@@ -37,7 +37,6 @@ const ReuseableFavorite = () => {
     <>
       <DashBoardHeader
         heading="Your Favorites"
-        placeholder="Search favorites"
       />
 
       {/* Tabs */}

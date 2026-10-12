@@ -5,6 +5,7 @@ import { Download } from "@/Components/Svg/SvgContainer";
 import { CSVLink } from "react-csv";
 import { useGetTradeAndBarterDataQuery } from "@/redux/api/tradeApi";
 import { useGetAccountingDataQuery } from "@/redux/api/vendorApi";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 
 const headers = [
   { label: "Order#", key: "order_number" },
@@ -42,9 +43,7 @@ const page = () => {
   return (
     <>
       <div className="flex flex-wrap w-full justify-between">
-        <h3 className="text-[30px] lg:text-4xl font-semibold text-black flex items-center gap-x-2">
-          Accounting
-        </h3>
+        <DashBoardHeader heading="Accounting" />
 
         <div className="flex flex-wrap gap-3 md:gap-6 items-center w-full md:w-fit">
           <CSVLink

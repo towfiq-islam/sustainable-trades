@@ -11,6 +11,7 @@ import {
 import { FiInbox } from "react-icons/fi";
 import EmptyState from "@/Components/Common/EmptyState";
 import PaginationControl from "./PaginationControl";
+import DashBoardHeader from "./DashBoardHeader";
 
 type notificationItem = {
   id: number;
@@ -34,20 +35,18 @@ const ReuseableNotification = () => {
   return (
     <div className="">
       <div className="border-b border-divider-gray flex gap-3 items-center justify-between pb-2">
-        <h3 className="text-[30px] md:text-[36px] font-semibold text-secondary-black flex items-center gap-x-2">
-          Notifications
-        </h3>
+        <DashBoardHeader heading="Notifications" />
 
         {notificationsData?.data?.notifications?.data?.length !== 0 && (
           <button
             disabled={isPending}
             onClick={() => deleteAllNotifications().unwrap()}
-            className="size-10 grid place-items-center rounded-lg cursor-pointer bg-primary-red disabled:cursor-not-allowed disabled:opacity-85"
+            className="size-9 grid place-items-center rounded-lg cursor-pointer bg-primary-red disabled:cursor-not-allowed disabled:opacity-85"
           >
             {isPending ? (
               <span className="inline-block animate-spin">⏳</span>
             ) : (
-              <RiDeleteBin6Line className="text-xl text-white" />
+              <RiDeleteBin6Line className="text-lg text-white" />
             )}
           </button>
         )}

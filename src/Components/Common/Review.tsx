@@ -22,8 +22,9 @@ interface ReviewProps {
 const Review = ({ reviews, isLoading, setPage }: ReviewProps) => {
   return (
     <>
-      <DashBoardHeader heading="Your Reviews" placeholder="Search" />
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <DashBoardHeader heading="Your Reviews" />
+
+      <div className="mt-7 2xl:mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, idx) => (
             <CustomerReviewCardSkeleton key={idx} />
@@ -32,7 +33,7 @@ const Review = ({ reviews, isLoading, setPage }: ReviewProps) => {
           reviews?.data?.data?.map((item: ReviewItem) => (
             <div
               key={item?.id}
-              className="border border-gray-300 rounded-xl p-6 shadow-md bg-white flex flex-col items-center text-center"
+              className="border border-gray-300 rounded-xl p-5 2xl:p-6 shadow-md bg-white flex flex-col items-center text-center"
             >
               <figure className="size-16 rounded-full mb-4 border border-gray-100">
                 <Image
@@ -51,7 +52,7 @@ const Review = ({ reviews, isLoading, setPage }: ReviewProps) => {
 
               <p className="text-sm text-gray-500">Product Review</p>
 
-              <p className="mt-3 text-gray-700 italic">“{item.message}”</p>
+              <p className="mt-3 text-gray-700 italic text-[15px] 2xl:text-base">“{item.message}”</p>
               <div className="mt-3 text-yellow-500">
                 {"★".repeat(item?.rating)}
                 {"☆".repeat(5 - item?.rating)}

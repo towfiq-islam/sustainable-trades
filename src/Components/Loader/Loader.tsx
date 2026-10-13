@@ -832,15 +832,15 @@ export const ProductRowSkeleton = () => {
 
 export function InventoryItemSkeleton() {
   return (
-    <div className="py-3.5 sm:py-4 flex gap-3 items-center border-b last:border-b-0 border-gray-300 animate-pulse w-full">
-      <div className="size-16 sm:size-20 bg-gray-300 rounded-lg shrink-0" />
+    <div className="py-3.5 sm:py-4 flex gap-3 items-center border-b last:border-b-0 border-gray-200 animate-pulse w-full">
+      <div className="size-16 sm:size-20 bg-gray-200 rounded-lg shrink-0" />
       <div className="w-full min-w-0 space-y-1.5 sm:space-y-2">
         <div className="flex w-full justify-between items-center gap-2">
-          <div className="h-3.5 w-1/2 bg-gray-300 rounded" />
-          <div className="h-3.5 w-1/4 bg-gray-300 rounded" />
+          <div className="h-3.5 w-1/2 bg-gray-200 rounded" />
+          <div className="h-3.5 w-1/4 bg-gray-200 rounded" />
         </div>
-        <div className="h-3 w-3/5 bg-gray-300 rounded" />
-        <div className="h-3 w-1/4 bg-gray-300 rounded" />
+        <div className="h-3 w-3/5 bg-gray-200 rounded" />
+        <div className="h-3 w-1/4 bg-gray-200 rounded" />
       </div>
     </div>
   );

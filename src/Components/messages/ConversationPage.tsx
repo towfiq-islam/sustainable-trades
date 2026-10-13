@@ -16,8 +16,8 @@ const ConversationPage = () => {
   return (
     <>
       {/* Upper Part */}
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-3xl text-secondary-black font-semibold">
+      <div className="flex items-center justify-between gap-3 mb-5">
+        <h3 className="text-xl md:text-3xl text-secondary-black font-semibold">
           Messages
         </h3>
 
@@ -36,12 +36,12 @@ const ConversationPage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-10 items-center mb-5">
+      <div className="flex gap-5 md:gap-10 items-center mb-3 md:mb-5">
         {tabs?.map(tab => (
           <button
             key={tab?.id}
             onClick={() => setActiveTab(tab?.path)}
-            className={`font-semibold cursor-pointer border-b-2 px-2 text-lg ${
+            className={`font-semibold cursor-pointer border-b-2 px-2 md:text-lg ${
               activeTab === tab?.path
                 ? "text-secondary-black border-secondary-black"
                 : "text-light-green border-transparent"

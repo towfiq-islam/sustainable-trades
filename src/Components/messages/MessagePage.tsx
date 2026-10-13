@@ -53,7 +53,7 @@ function ProductCard({
 }) {
   return (
     <Link href={href} className="flex items-center gap-3 group">
-      <figure className="size-16 rounded-lg overflow-hidden relative shrink-0 bg-gray-100">
+      <figure className="size-11 md:size-16 rounded-lg overflow-hidden relative shrink-0 bg-gray-100">
         {image && (
           <Image
             src={`${process.env.NEXT_PUBLIC_SITE_URL}/${image}`}
@@ -65,11 +65,13 @@ function ProductCard({
         )}
       </figure>
       <div className="flex-1">
-        <h4 className="font-semibold text-sm text-secondary-black group-hover:underline">
+        <h4 className="font-semibold text-xs md:text-sm text-secondary-black group-hover:underline">
           {name}
         </h4>
-        <p className="text-sm text-gray-500">Qty: {qty}</p>
-        <p className="text-sm font-bold text-primary-green">${price}</p>
+        <p className="text-xs md:text-sm text-gray-500">Qty: {qty}</p>
+        <p className="text-xs md:text-sm font-bold text-primary-green">
+          ${price}
+        </p>
       </div>
     </Link>
   );
@@ -88,13 +90,17 @@ function AttachedItemCard({
 }) {
   return (
     <div className="bg-accent-white rounded-xl shadow border border-gray-200 overflow-hidden">
-      <div className={`${compact ? "p-4" : "p-3"} border-b border-gray-200`}>
-        <p className="text-sm text-gray-700">{message}</p>
+      <div
+        className={`${compact ? "p-2 md:p-4" : "p-2 md:p-3"} border-b border-gray-200`}
+      >
+        <p className="text-xs md:text-sm text-gray-700">{message}</p>
       </div>
-      <div className={`${compact ? "p-4 space-y-4" : "p-3 space-y-3.5"}`}>
+      <div
+        className={`${compact ? "p-2 md:p-4 space-y-4" : "p-2 md:p-3 space-y-3.5"}`}
+      >
         {children}
       </div>
-      <div className="px-4 pb-3 text-right">
+      <div className="px-4 pb-1 md:pb-3 text-right">
         <span className="text-xs text-gray-500">{time}</span>
       </div>
     </div>
@@ -286,7 +292,7 @@ const MessagePage = ({
         {!compact && (
           <button
             onClick={() => router.back()}
-            className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
+            className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group text-sm md:text-base"
           >
             <span className="group-hover:-translate-x-1 duration-300 transition-transform">
               <GoBackSvg />
@@ -296,11 +302,11 @@ const MessagePage = ({
         )}
 
         <div
-          className={`border-t-2 border-b-2 py-2.5 border-gray-200 flex items-center  ${compact ? "gap-3" : "gap-5"}`}
+          className={`border-t-2 border-b-2 py-2.5 border-gray-200 flex items-center  ${compact ? "gap-3" : "gap-3 md:gap-5"}`}
         >
           <figure
             className={`rounded-full border border-gray-100 grid place-items-center relative
-              ${compact ? "size-12" : "size-14"}
+              ${compact ? "size-10 md:size-12" : "size-10 md:size-14"}
               ${chatLoading ? "bg-gray-200 animate-pulse" : "bg-accent-red"}`}
           >
             {participant?.avatar ? (
@@ -312,7 +318,7 @@ const MessagePage = ({
                 className="size-full rounded-full"
               />
             ) : (
-              <span className="text-xl font-semibold text-white">
+              <span className="md:text-xl font-semibold text-white">
                 {isGuest ? "G" : participant?.first_name?.at(0)}
               </span>
             )}
@@ -322,7 +328,7 @@ const MessagePage = ({
             <h3 className="animate-pulse w-40 h-5 rounded bg-gray-200" />
           ) : (
             <h3
-              className={`${compact ? "text-base" : "text-xl"} font-bold text-secondary-black flex gap-1 items-center`}
+              className={`${compact ? "text-base" : "md:text-xl"} font-bold text-secondary-black flex gap-1 items-center`}
             >
               <span>{isGuest ? "Guest" : participant?.first_name}</span>
               <span>{isGuest ? "User" : participant?.last_name}</span>
@@ -366,7 +372,7 @@ const MessagePage = ({
                 className={`flex gap-3 ${isSender ? "justify-end" : "justify-start"}`}
               >
                 {!compact && !isSender && (
-                  <figure className="size-11 rounded-full relative shrink-0 grid place-items-center bg-accent-red">
+                  <figure className="size-9 md:size-11 rounded-full relative shrink-0 grid place-items-center bg-accent-red">
                     {msg.sender?.avatar ? (
                       <Image
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${msg.sender.avatar}`}
@@ -376,7 +382,7 @@ const MessagePage = ({
                         className="size-full rounded-full"
                       />
                     ) : (
-                      <span className="text-xl font-bold text-white">
+                      <span className="md:text-xl font-bold text-white">
                         {msg.sender?.first_name?.at(0)}
                       </span>
                     )}
@@ -387,7 +393,7 @@ const MessagePage = ({
                   {/* Plain message */}
                   {!msg.cart && !msg.order && (
                     <div
-                      className={`${compact ? "text-sm py-2 px-3" : "text-[15px] py-3 px-3.5"} relative  leading-[160%] rounded-[6px] shadow ${bubbleClass}`}
+                      className={`${compact ? "text-xs md:text-sm py-2 px-3" : "text-xs md:text-[15px] py-3 md:py-3 px-3 md:px-3.5"} relative  leading-[160%] rounded-[6px] shadow ${bubbleClass}`}
                     >
                       <div>
                         {msg.message && (
@@ -501,7 +507,7 @@ const MessagePage = ({
       {/* Footer */}
       <form onSubmit={handleSend} className="flex items-center gap-3">
         <p
-          className={`${compact ? "px-3 py-2.5" : "px-5 py-3"} border border-gray-300 text-sm text-secondary-black w-full rounded-lg relative`}
+          className={`${compact ? "px-3 py-2 md:py-2.5" : "px-3 md:px-5 py-2 md:py-3"} border border-gray-300 text-sm text-secondary-black w-full rounded-lg relative`}
         >
           <input
             type="text"
@@ -516,13 +522,13 @@ const MessagePage = ({
 
           {/* Emoji */}
           {!compact && (
-            <div className="absolute top-3 right-14 text-secondary-gray cursor-pointer">
+            <div className="absolute top-2.5 md:top-3 right-12 md:right-14 text-secondary-gray cursor-pointer">
               <button
                 type="button"
                 onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                 className="cursor-pointer"
               >
-                <FiSmile size={20} />
+                <FiSmile className="size-4 md:size-5" />
               </button>
 
               {showEmojiPicker && (
@@ -540,7 +546,7 @@ const MessagePage = ({
                 htmlFor="attachment"
                 className="absolute top-1/2 -translate-y-1/2 right-4 text-secondary-gray cursor-pointer"
               >
-                <FiPaperclip size={20} />
+                <FiPaperclip className="size-4 md:size-5" />
               </label>
 
               <input
@@ -566,8 +572,8 @@ const MessagePage = ({
             <ImSpinner9 className="text-white text-lg animate-spin" />
           ) : (
             <span className="flex gap-2 items-center">
-              <FiSend size={18} />
-              Send
+              <FiSend className="size-4 md:size-5" />
+              <span className="hidden md:block">Send</span>
             </span>
           )}
         </button>

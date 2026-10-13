@@ -34,7 +34,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
   };
 
   return (
-    <section className="relative h-[450px] md:h-[430px] lg:h-[470px] 2xl:h-[600px] py-10 mb-10 overflow-hidden">
+    <section className="relative min-h-[440px] md:h-[430px] lg:h-[470px] 2xl:h-[600px] py-8 sm:py-10 mb-8 sm:mb-10 overflow-hidden flex items-center">
       {/* Banner image */}
       <Image
         src={bannerUrl}
@@ -49,12 +49,12 @@ const ShopBanner = ({ id, data }: BannerProps) => {
       <div className="absolute inset-0 bg-black/50 -z-10" />
 
       <Container>
-        <div className="flex flex-col md:flex-row justify-between">
+        <div className="flex flex-col md:flex-row justify-between w-full">
           {/* Left - Shop Info */}
-          <div className="space-y-1.5 lg:space-y-3.5 2xl:space-y-4">
+          <div className="space-y-2 lg:space-y-3.5 2xl:space-y-4">
             {/* Shop Profile */}
-            <div className="flex md:justify-start justify-center items-center">
-              <figure className="size-23 xl:size-25 2xl:size-[153px] rounded-full relative">
+            <div className="flex md:justify-start justify-start items-center">
+              <figure className="size-20 sm:size-24 xl:size-25 2xl:size-[153px] rounded-full relative border-2 border-white/50 shadow-md">
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.shop_info?.shop_image}`}
                   alt="profile image"
@@ -65,21 +65,23 @@ const ShopBanner = ({ id, data }: BannerProps) => {
               </figure>
             </div>
 
-            <h3 className="text-white text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-semibold leading-[36px]">
+            <h3 className="text-white text-xl sm:text-2xl lg:text-3xl 2xl:text-4xl font-semibold leading-tight">
               {data?.shop_info?.shop_name}
             </h3>
 
             {/* Description */}
-            <p className="md:max-w-[350px] text-accent-white 2xl:text-lg">
+            <p className="max-w-[420px] text-accent-white text-xs sm:text-sm 2xl:text-lg leading-relaxed">
               {data?.shop_info?.about?.statement?.length > 100
                 ? data?.shop_info?.about?.statement?.slice(0, 100) + "...."
                 : data?.shop_info?.about?.statement}
             </p>
 
             {/* Location */}
-            <div className="flex gap-3 items-center md:pt-3">
-              <LocationSvg />
-              <p className="text-accent-white xl:text-lg">
+            <div className="flex gap-2 sm:gap-3 items-center pt-1 md:pt-2">
+              <span className="shrink-0">
+                <LocationSvg />
+              </span>
+              <p className="text-accent-white text-xs sm:text-sm xl:text-lg">
                 {data?.shop_info?.address?.display_my_address
                   ? data?.shop_info?.address?.address_line_1
                   : `${data?.shop_info?.address?.city}, ${data?.shop_info?.address?.state}`}
@@ -87,27 +89,27 @@ const ShopBanner = ({ id, data }: BannerProps) => {
             </div>
 
             {/* Reviews */}
-            <div className="flex gap-2.5 items-center">
+            <div className="flex gap-2 items-center flex-wrap">
               {Array.from({ length: +data?.rating_avg }).map((_, idx) => (
                 <p
                   key={idx}
-                  className="size-9 shrink-0 shadow border border-gray-600 rounded-full bg-primary-green grid place-items-center"
+                  className="size-7 sm:size-8 shrink-0 shadow border border-gray-600 rounded-full bg-primary-green grid place-items-center"
                 >
                   <StarSvg />
                 </p>
               ))}
 
-              <p className="font-semibold text-lg text-gray-200">
+              <p className="font-semibold text-base sm:text-lg text-gray-200 ml-1">
                 {data?.rating_avg ? Number(data.rating_avg).toFixed(1) : "0.0"}
               </p>
             </div>
 
             {/* Btns */}
-            <div className="flex flex-col md:flex-row gap-2.5 md:gap-5 items-center pt-5">
+            <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 items-stretch sm:items-center pt-3 sm:pt-5 w-full sm:w-auto">
               <button
                 onClick={() => handleFollowShop(data?.shop_info?.id, id)}
                 disabled={isPending}
-                className="px-5 2xl:px-8 py-2.5 2xl:py-3.5 rounded-lg cursor-pointer shadow 2xl:text-lg font-semibold text-primary-green bg-off-green duration-300 transition-transform hover:scale-105 w-full md:w-auto"
+                className="px-5 2xl:px-8 py-2.5 2xl:py-3.5 rounded-lg cursor-pointer shadow text-sm sm:text-base 2xl:text-lg font-semibold text-primary-green bg-off-green duration-300 transition-transform hover:scale-105 w-full sm:w-auto text-center"
               >
                 {isPending ? (
                   <p className="flex gap-2 items-center justify-center">
@@ -123,7 +125,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
 
               <button
                 onClick={handleMessage}
-                className="px-5 2xl:px-8 py-2.5 2xl:py-3.5 rounded-lg cursor-pointer shadow 2xl:text-lg font-semibold text-accent-white bg-black/10 duration-300 transition-transform hover:scale-105 border border-accent-white w-full md:w-auto"
+                className="px-5 2xl:px-8 py-2.5 2xl:py-3.5 rounded-lg cursor-pointer shadow text-sm sm:text-base 2xl:text-lg font-semibold text-accent-white bg-black/20 duration-300 transition-transform hover:scale-105 border border-accent-white w-full sm:w-auto text-center"
               >
                 Message Seller
               </button>

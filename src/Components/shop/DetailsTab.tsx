@@ -3,10 +3,10 @@ import Link from "next/link";
 import { useState } from "react";
 import Container from "@/Components/Common/Container";
 const tabs = [
-  { id: 1, label: "Listings" },
-  { id: 2, label: "About" },
-  { id: 3, label: "Reviews" },
-  { id: 4, label: "Shop_policies" },
+  { id: 1, label: "Listings", name: "Listings" },
+  { id: 2, label: "About", name: "About" },
+  { id: 3, label: "Reviews", name: "Reviews" },
+  { id: 4, label: "Shop_policies", name: "Shop Policies" },
 ];
 
 const DetailsTab = () => {
@@ -14,8 +14,8 @@ const DetailsTab = () => {
 
   return (
     <Container>
-      <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div className="inline-flex flex-wrap md:flex-nowrap items-center border border-gray-300 shadow rounded-lg w-full md:w-auto">
+      <div className="mt-6 sm:mt-8 flex justify-start items-center w-full">
+        <div className="flex items-center overflow-x-auto no-scrollbar border border-gray-200 shadow-sm rounded-xl w-full md:w-auto bg-white divide-x divide-gray-200">
           {tabs?.map((tab, idx) => (
             <Link
               key={tab?.id}
@@ -34,17 +34,17 @@ const DetailsTab = () => {
                   window.scrollTo({ top: y, behavior: "smooth" });
                 }
               }}
-              className={`flex-1 text-sm md:text-base text-center px-3 md:px-14 py-3 md:py-4 font-semibold
+              className={`flex-1 whitespace-nowrap text-xs sm:text-sm md:text-base text-center px-2.5 sm:px-6 md:px-12 py-2.5 sm:py-3.5 md:py-4 font-semibold transition-colors duration-200
           ${
             activeTab === tab?.id
               ? "bg-off-green text-secondary-black"
-              : "text-secondary-gray"
+              : "text-secondary-gray hover:text-secondary-black hover:bg-gray-50"
           }
-          ${idx === 0 && "rounded-tl-lg rounded-bl-none md:rounded-tr-none"}
-          ${idx === tabs.length - 1 && "rounded-r-lg md:rounded-bl-none"}
+          ${idx === 0 ? "rounded-l-xl" : ""}
+          ${idx === tabs.length - 1 ? "rounded-r-xl" : ""}
         `}
             >
-              {tab?.label}
+              {tab?.name}
             </Link>
           ))}
         </div>

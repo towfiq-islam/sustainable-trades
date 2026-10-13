@@ -54,7 +54,7 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
   };
 
   return (
-    <section className="mb-12">
+    <section className="mb-8 sm:mb-12">
       {/* Shop Profile and Cover photo */}
       <div
         style={{
@@ -62,20 +62,23 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
             bannerPending ? "" : previewCover || bannerUrl
           })`,
         }}
-        className={`h-[250px] lg:h-[350px] bg-no-repeat bg-center bg-cover bg-black/50 bg-blend-overlay relative ${
+        className={`h-[180px] sm:h-[240px] md:h-[290px] lg:h-[350px] bg-no-repeat bg-center bg-cover bg-black/50 bg-blend-overlay relative ${
           bannerPending && "animate-pulse"
         }`}
       >
         <Container>
-          <div className="flex h-[250px] lg:h-[350px] items-end relative">
+          <div className="flex h-[180px] sm:h-[240px] md:h-[290px] lg:h-[350px] items-end relative">
             <label
               htmlFor="cover"
-              className="absolute top-10 right-0 bg-primary-green size-10 cursor-pointer rounded-full grid place-items-center z-30 border border-gray-500 shadow"
+              aria-label="Edit cover photo"
+              className="absolute top-4 sm:top-6 lg:top-10 right-2 sm:right-4 lg:right-0 bg-primary-green size-8 sm:size-10 cursor-pointer rounded-full grid place-items-center z-30 border border-gray-500 shadow hover:scale-105 transition-transform"
             >
               {bannerPending ? (
-                <ImSpinner9 className="animate-spin text-white text-xl" />
+                <ImSpinner9 className="animate-spin text-white text-base sm:text-xl" />
               ) : (
-                <EditIconDarkSvg />
+                <div className="scale-75 sm:scale-100">
+                  <EditIconDarkSvg />
+                </div>
               )}
             </label>
 
@@ -87,13 +90,16 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
               onChange={handleBannerChange}
             />
 
-            <figure className="size-[180px] -mb-10 bg-gray-300 grid place-items-center rounded-full border-[5px] border-white relative">
+            <figure className="size-24 sm:size-32 md:size-[150px] lg:size-[180px] -mb-6 sm:-mb-8 lg:-mb-10 bg-gray-300 grid place-items-center rounded-full border-4 lg:border-[5px] border-white relative shrink-0 shadow-md">
               {!profilePending && (
                 <label
                   htmlFor="profile"
-                  className="absolute right-2 top-1 bg-white size-10 cursor-pointer rounded-full grid place-items-center z-10 border border-gray-200"
+                  aria-label="Edit profile photo"
+                  className="absolute right-0 sm:right-1 lg:right-2 top-0 sm:top-1 bg-white size-7 sm:size-8 lg:size-10 cursor-pointer rounded-full grid place-items-center z-10 border border-gray-200 shadow-sm hover:scale-105 transition-transform"
                 >
-                  <EditIconSvg />
+                  <div className="scale-75 sm:scale-90 lg:scale-100">
+                    <EditIconSvg />
+                  </div>
                 </label>
               )}
 
@@ -106,7 +112,7 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
               />
 
               {profilePending ? (
-                <ImSpinner9 className="animate-spin text-6xl text-primary-blue" />
+                <ImSpinner9 className="animate-spin text-3xl sm:text-5xl lg:text-6xl text-primary-blue" />
               ) : (
                 <Image
                   src={previewProfile || profileUrl}
@@ -122,61 +128,62 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
       </div>
 
       <Container>
-        <div className="flex justify-between items-center mt-14">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-9 sm:mt-12 lg:mt-14 gap-5 sm:gap-6">
           {/* Left */}
-          <div>
+          <div className="w-full md:w-auto">
             {/* Shop Name */}
-            <div className="flex gap-6 items-center">
-              <h3 className="text-secondary-black text-xl lg:text-3xl font-semibold">
+            <div className="flex gap-4 sm:gap-6 items-center">
+              <h3 className="text-secondary-black text-xl sm:text-2xl lg:text-3xl font-semibold break-words">
                 {data?.shop_info?.shop_name}
               </h3>
             </div>
 
             {/* Location */}
-            <div className="flex gap-3 items-center py-2 lg:py-4">
-              <LocationTwoSvg />
-              <p className="text-secondary-gray lg:text-lg">
+            <div className="flex gap-2 sm:gap-3 items-center py-1.5 sm:py-2 lg:py-3.5">
+              <span className="shrink-0">
+                <LocationTwoSvg />
+              </span>
+              <p className="text-secondary-gray text-xs sm:text-sm lg:text-lg break-words">
                 {data?.shop_info?.address?.display_my_address
                   ? data?.shop_info?.address?.address_line_1
                   : `${data?.shop_info?.address?.city}, ${data?.shop_info?.address?.state}`}
               </p>
             </div>
 
-            {/* Counts */}
-            <div className="flex gap-5 lg:gap-8 items-center text-sm lg:text-base">
-              <div className="flex gap-2 items-center">
-                <p className="flex justify-center items-center size-7 rounded-full bg-primary-green">
+            {/* Counts & Actions */}
+            <div className="flex flex-wrap gap-3 sm:gap-5 lg:gap-8 items-center text-xs sm:text-sm lg:text-base">
+              <div className="flex gap-1.5 sm:gap-2 items-center">
+                <p className="flex justify-center items-center size-6 sm:size-7 rounded-full bg-primary-green shrink-0">
                   <StarSvg />
                 </p>
                 <p className="text-secondary-black font-semibold">
-                  {" "}
                   {data?.rating_avg
                     ? Number(data.rating_avg).toFixed(1)
                     : "0.0"}
                 </p>
               </div>
 
-              <div className="flex gap-2 items-center">
-                <p className="flex justify-center items-center size-7 rounded-full bg-accent-red">
+              <div className="flex gap-1.5 sm:gap-2 items-center">
+                <p className="flex justify-center items-center size-6 sm:size-7 rounded-full bg-accent-red shrink-0">
                   <DollarSvg />
                 </p>
-                <p className="text-secondary-black font-semibold">
+                <p className="text-secondary-black font-semibold whitespace-nowrap">
                   {data?.shop_info?.order_count} Sales
                 </p>
               </div>
 
-              <div className="flex gap-2 items-center">
-                <p className="flex justify-center items-center size-7 rounded-full bg-off-green">
+              <div className="flex gap-1.5 sm:gap-2 items-center">
+                <p className="flex justify-center items-center size-6 sm:size-7 rounded-full bg-off-green shrink-0">
                   <DThreeSvg />
                 </p>
-                <p className="text-secondary-black font-semibold">
+                <p className="text-secondary-black font-semibold whitespace-nowrap">
                   {data?.trade_offers_count} Trades
                 </p>
               </div>
 
               <Link
                 href={`/edit-my-shop/${shop_id}`}
-                className="underline font-semibold text-primary-green duration-300 hover:scale-95 transition-transform"
+                className="underline font-semibold text-primary-green duration-300 hover:scale-95 transition-transform whitespace-nowrap ml-1 sm:ml-0"
               >
                 Edit Shop
               </Link>
@@ -184,17 +191,17 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
           </div>
 
           {/* Right */}
-          <div>
-            <div className="flex gap-5 items-center justify-between mb-5">
-              <div>
-                <h3 className="text-secondary-black font-semibold text-xl mb-1">
+          <div className="w-full md:w-auto pt-3 md:pt-0 border-t md:border-t-0 border-gray-100">
+            <div className="flex gap-4 sm:gap-5 items-center justify-between md:justify-end">
+              <div className="text-left md:text-right">
+                <h3 className="text-secondary-black font-semibold text-base sm:text-lg lg:text-xl mb-0.5 sm:mb-1">
                   {data?.first_name} {data?.last_name}
                 </h3>
-                <p className="text-secondary-gray">
+                <p className="text-secondary-gray text-xs sm:text-sm">
                   {data?.shop_info?.shop_name}
                 </p>
               </div>
-              <figure className="size-14 shrink-0 rounded-full bg-accent-red grid place-items-center font-semibold text-lg overflow-hidden relative">
+              <figure className="size-11 sm:size-14 shrink-0 rounded-full bg-accent-red grid place-items-center font-semibold text-base sm:text-lg text-white overflow-hidden relative shadow-sm">
                 {data?.avatar ? (
                   <Image
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.avatar}`}

@@ -81,13 +81,13 @@ const ShopListing = ({ id }: { id: number }) => {
         <h2 className="section_sub_title">Featured Listings</h2>
 
         {featuredLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 mb-5 lg:mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-7 mb-6 sm:mb-8 lg:mb-10">
             {Array.from({ length: 3 }).map((_, idx) => (
               <ProductSkeleton key={idx} />
             ))}
           </div>
         ) : featuredListings?.data?.length === 0 ? (
-          <div className="mb-5 lg:mb-10">
+          <div className="mb-6 sm:mb-8 lg:mb-10">
             <EmptyState
               icon={<FiStar />}
               title="No featured listings right now"
@@ -95,7 +95,7 @@ const ShopListing = ({ id }: { id: number }) => {
             />
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-7 mb-5 lg:mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-7 mb-6 sm:mb-8 lg:mb-10">
             {featuredListings?.data?.slice(0, 4)?.map((product: any) => (
               <Product key={product?.id} product={product} />
             ))}
@@ -109,9 +109,9 @@ const ShopListing = ({ id }: { id: number }) => {
         {categoriesLoading ? (
           <FilteringSkeleton />
         ) : (
-          <div className="flex flex-col gap-3 flex-wrap lg:flex-row lg:justify-between lg:items-end mb-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-end mb-6 sm:mb-8">
             {/* Left - Filter */}
-            <div className="flex flex-col md:flex-row gap-4 xl:gap-7 md:items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 xl:gap-7 items-end w-full lg:w-auto">
               <div className="w-full">
                 <h3 className="text-secondary-gray md:text-base text-xs font-semibold mb-1.5">
                   Product Category
@@ -120,7 +120,7 @@ const ShopListing = ({ id }: { id: number }) => {
                 <select
                   value={category_id || ""}
                   onChange={e => handleCategoryChange(e.target.value)}
-                  className="border w-full md:w-[192px] md:text-base text-xs rounded-lg px-3 py-1.5 md:py-3 border-gray-400 outline-none text-secondary-gray"
+                  className="border w-full lg:w-[192px] md:text-base text-xs rounded-lg px-3 py-2 md:py-3 border-gray-400 outline-none text-secondary-gray bg-white"
                 >
                   <option value="">All Categories</option>
                   {categoriesWithSubCategories?.data?.map(
@@ -142,7 +142,7 @@ const ShopListing = ({ id }: { id: number }) => {
                   <select
                     value={sub_category_id || ""}
                     onChange={e => setSubCategory(e.target.value)}
-                    className="border w-full md:w-[192px] md:text-base text-xs rounded-lg px-3 py-1.5 md:py-3 border-gray-400 outline-none text-secondary-gray"
+                    className="border w-full lg:w-[192px] md:text-base text-xs rounded-lg px-3 py-2 md:py-3 border-gray-400 outline-none text-secondary-gray bg-white"
                   >
                     <option value="">All Sub Categories</option>
                     {subCategoryOptions.map(
@@ -162,7 +162,7 @@ const ShopListing = ({ id }: { id: number }) => {
                 </h3>
                 <select
                   onChange={e => setSortBy(e.target.value)}
-                  className="border w-full md:w-[192px] md:text-base text-xs rounded-lg px-3 py-1.5 md:py-3 border-gray-400 outline-none text-secondary-gray"
+                  className="border w-full lg:w-[192px] md:text-base text-xs rounded-lg px-3 py-2 md:py-3 border-gray-400 outline-none text-secondary-gray bg-white"
                 >
                   <option value="recently_added">Recently added</option>
                   <option value="ascending">Ascending</option>
@@ -172,22 +172,22 @@ const ShopListing = ({ id }: { id: number }) => {
             </div>
 
             {/* Right - Search */}
-            <div className="flex gap-3 items-center">
+            <div className="flex gap-2.5 sm:gap-3 items-center w-full lg:w-auto">
               {/* Search bar */}
-              <div className="flex justify-end gap-1 items-center border border-gray-400 px-2 py-1.5 md:py-3 rounded-[6px] w-full md:w-[280px]">
+              <div className="flex flex-1 sm:flex-initial items-center gap-2 border border-gray-400 px-3 py-2 md:py-3 rounded-[6px] w-full sm:w-[240px] md:w-[280px] bg-white">
                 <SearchSvg />
                 <input
                   type="text"
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search all listings..."
-                  className="w-full border-none outline-none md:text-base text-xs"
+                  className="w-full border-none outline-none md:text-base text-xs bg-transparent"
                 />
               </div>
 
               {/* Reset */}
               <button
                 onClick={resetFilters}
-                className="flex gap-2 items-center cursor-pointer px-4 py-2 md:py-3 rounded-lg border-gray-200 relative duration-300 transition-all hover:bg-secondary-blue hover:text-white border hover:border-transparent text-white bg-primary-green"
+                className="flex gap-2 items-center justify-center cursor-pointer px-3.5 sm:px-4 py-2 md:py-3 rounded-lg border-gray-200 relative duration-300 transition-all hover:bg-secondary-blue hover:text-white border hover:border-transparent text-white bg-primary-green shrink-0 text-xs sm:text-sm md:text-base font-medium"
               >
                 <GrPowerReset />
                 <span>Reset</span>
@@ -198,7 +198,7 @@ const ShopListing = ({ id }: { id: number }) => {
 
         {/* Map */}
         {listingsLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-x-6 lg:gap-y-10">
             {Array.from({ length: 4 }).map((_, idx) => (
               <ProductSkeleton key={idx} />
             ))}
@@ -212,7 +212,7 @@ const ShopListing = ({ id }: { id: number }) => {
             onAction={resetFilters}
           />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-x-6 lg:gap-y-10">
             {products?.data?.data?.map((product: any) => (
               <Product key={product?.id} product={product} />
             ))}

@@ -61,40 +61,6 @@ body {
   @apply font-geist;
 }
 
-/* Custom Modern Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-primary-green);
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-}
-
-/* Utility to completely hide scrollbars while preserving scroll functionality */
-.no-scrollbar::-webkit-scrollbar {
-  display: none !important;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
-}
-
 /* Custom CSS */
 .section_title {
   @apply font-medium text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-[45px] text-primary-green mb-5 lg:mb-8 xl:mb-12;

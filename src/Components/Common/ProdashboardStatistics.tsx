@@ -15,148 +15,172 @@ const ProdashboardStatistics = () => {
     useGetVisitorDataQuery();
 
   return (
-    <div className="border border-accent-gray rounded-[8px] pt-4 md:pt-5 px-4 md:px-6 mt-5 md:mt-10">
-      <h3 className="text-secondary-black text-[16px] font-semibold">
-        Order/Store Statistics
+    <div className="border border-gray-200 rounded-[8px] p-4 sm:p-6 mb-6 sm:mb-8">
+      <h3 className="text-secondary-black text-base sm:text-lg font-semibold">
+        Order / Store Statistics
       </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-x-20 lg:gap-y-12 pt-4 lg:pt-8 pb-8 lg:pb-24 lg:px-20">
-        <div className="border border-accent-gray p-4 rounded-[8px]">
-          <div className="flex flex-col gap-y-4">
-            <h5 className="text-[16px] text-secondary-black font-semibold">
-              Listings
-            </h5>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-4">
+        {/* Listings */}
+        <div className="border border-gray-200 rounded-[8px] p-4 flex flex-col gap-3.5">
+          <h5 className="text-sm sm:text-base text-secondary-black font-semibold pb-2 border-b border-accent-gray/30">
+            Listings
+          </h5>
 
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Active
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {listingData?.data?.active_listings}
-              </h6>
-            </div>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">Active</span>
+            <span className="font-semibold text-primary-green">
+              {listingLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (listingData?.data?.active_listings ?? 0)
+              )}
+            </span>
+          </div>
 
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Expired
-              </h5>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">Expired</span>
+            <span className="font-semibold text-secondary-black">
+              {listingLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (listingData?.data?.inactive_listings ?? 0)
+              )}
+            </span>
+          </div>
 
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {listingData?.data?.inactive_listings}
-              </h6>
-            </div>
-
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Sold out
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {listingData?.data?.sold_out_listings}
-              </h6>
-            </div>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">Sold out</span>
+            <span className="font-semibold text-accent-red">
+              {listingLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (listingData?.data?.sold_out_listings ?? 0)
+              )}
+            </span>
           </div>
         </div>
 
-        <div className="border border-accent-gray p-4 rounded-[8px]">
-          <div className="flex flex-col gap-y-4">
-            <h5 className="text-[16px] text-secondary-black font-semibold">
-              Orders
-            </h5>
+        {/* Orders */}
+        <div className="border border-gray-200 rounded-[8px] p-4 flex flex-col gap-3.5">
+          <h5 className="text-sm sm:text-base text-secondary-black font-semibold pb-2 border-b border-accent-gray/30">
+            Orders
+          </h5>
 
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                New
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {orderData?.data?.new_orders}
-              </h6>
-            </div>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">New</span>
+            <span className="font-semibold text-primary-green">
+              {orderLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (orderData?.data?.new_orders ?? 0)
+              )}
+            </span>
+          </div>
 
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Shipped
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {orderData?.data?.shipped_orders}
-              </h6>
-            </div>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">Shipped</span>
+            <span className="font-semibold text-secondary-black">
+              {orderLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (orderData?.data?.shipped_orders ?? 0)
+              )}
+            </span>
+          </div>
 
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Completed
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {orderData?.data?.completed_orders}
-              </h6>
-            </div>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">Completed</span>
+            <span className="font-semibold text-primary-green">
+              {orderLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (orderData?.data?.completed_orders ?? 0)
+              )}
+            </span>
           </div>
         </div>
 
-        <div className="border border-accent-gray p-4 rounded-[8px]">
-          <div className="flex flex-col gap-y-4">
-            <h5 className="text-[16px] text-secondary-black font-semibold">
-              Trades
-            </h5>
+        {/* Trades */}
+        <div className="border border-gray-200 rounded-[8px] p-4 flex flex-col gap-3.5">
+          <h5 className="text-sm sm:text-base text-secondary-black font-semibold pb-2 border-b border-accent-gray/30">
+            Trades
+          </h5>
 
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Pending
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {tradeData?.data?.pending_trades}
-              </h6>
-            </div>
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Accepted
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {tradeData?.data?.accepted_trades}
-              </h6>
-            </div>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">Pending</span>
+            <span className="font-semibold text-accent-red">
+              {tradeLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (tradeData?.data?.pending_trades ?? 0)
+              )}
+            </span>
+          </div>
 
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Completed
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {tradeData?.data?.completed_trades}
-              </h6>
-            </div>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">Accepted</span>
+            <span className="font-semibold text-primary-green">
+              {tradeLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (tradeData?.data?.accepted_trades ?? 0)
+              )}
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">Completed</span>
+            <span className="font-semibold text-primary-green">
+              {tradeLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (tradeData?.data?.completed_trades ?? 0)
+              )}
+            </span>
           </div>
         </div>
 
-        <div className="border border-accent-gray p-4 rounded-[8px]">
-          <div className="flex flex-col gap-y-4">
-            <h5 className="text-[16px] text-secondary-black font-semibold">
-              Visitors
-            </h5>
+        {/* Visitors */}
+        <div className="border border-gray-200 rounded-[8px] p-4 flex flex-col gap-3.5">
+          <h5 className="text-sm sm:text-base text-secondary-black font-semibold pb-2 border-b border-accent-gray/30">
+            Visitors
+          </h5>
 
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Total Visits
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {visitorData?.data?.total_visits}
-              </h6>
-            </div>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">
+              Total Visits
+            </span>
+            <span className="font-semibold text-primary-green">
+              {visitorLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (visitorData?.data?.total_visits ?? 0)
+              )}
+            </span>
+          </div>
 
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Today's visit
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {visitorData?.data?.today_visits}
-              </h6>
-            </div>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">
+              Today&apos;s visit
+            </span>
+            <span className="font-semibold text-secondary-black">
+              {visitorLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (visitorData?.data?.today_visits ?? 0)
+              )}
+            </span>
+          </div>
 
-            <div className="flex justify-between">
-              <h5 className="text-[14px] text-secondary-black font-semibold text-center">
-                Last Month Visit
-              </h5>
-              <h6 className="text-[14px] text-secondary-black font-semibold">
-                {visitorData?.data?.last_month_visits}
-              </h6>
-            </div>
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-secondary-gray font-medium">Last Month</span>
+            <span className="font-semibold text-secondary-black">
+              {visitorLoading ? (
+                <span className="inline-block w-6 h-4 bg-warm-beige rounded animate-pulse" />
+              ) : (
+                (visitorData?.data?.last_month_visits ?? 0)
+              )}
+            </span>
           </div>
         </div>
       </div>

@@ -157,7 +157,7 @@ const CombinedNavbar = ({
               handleOpenSidebar();
             }}
             aria-label="Open menu"
-            className={`${isDashboard ? "xl:hidden" : "block lg:hidden"} text-white text-2xl cursor-pointer`}
+            className={`${isDashboard ? "lg:hidden" : "block lg:hidden"} text-white text-2xl cursor-pointer`}
           >
             ☰
           </button>
@@ -186,7 +186,7 @@ const CombinedNavbar = ({
         {/* NavLinks */}
         {isDashboard ? (
           <div
-            className="hidden xl:flex static top-0 left-0 h-auto w-auto bg-transparent transform transition-transform duration-300 ease-in-out z-40 flex-row gap-6 xl:gap-10 items-center p-0"
+            className="hidden lg:flex static top-0 left-0 h-auto w-auto bg-transparent transform transition-transform duration-300 ease-in-out z-40 flex-row gap-6 xl:gap-10 items-center p-0"
             onClick={e => e.stopPropagation()}
           >
             {navLins?.slice(0, 3)?.map(item => {

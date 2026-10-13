@@ -62,12 +62,12 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
             bannerPending ? "" : previewCover || bannerUrl
           })`,
         }}
-        className={`h-[350px] bg-no-repeat bg-center bg-cover bg-black/50 bg-blend-overlay relative ${
+        className={`h-[250px] lg:h-[350px] bg-no-repeat bg-center bg-cover bg-black/50 bg-blend-overlay relative ${
           bannerPending && "animate-pulse"
         }`}
       >
         <Container>
-          <div className="flex h-[350px] items-end relative">
+          <div className="flex h-[250px] lg:h-[350px] items-end relative">
             <label
               htmlFor="cover"
               className="absolute top-10 right-0 bg-primary-green size-10 cursor-pointer rounded-full grid place-items-center z-30 border border-gray-500 shadow"
@@ -127,15 +127,15 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
           <div>
             {/* Shop Name */}
             <div className="flex gap-6 items-center">
-              <h3 className="text-secondary-black text-3xl font-semibold">
+              <h3 className="text-secondary-black text-xl lg:text-3xl font-semibold">
                 {data?.shop_info?.shop_name}
               </h3>
             </div>
 
             {/* Location */}
-            <div className="flex gap-3 items-center py-4">
+            <div className="flex gap-3 items-center py-2 lg:py-4">
               <LocationTwoSvg />
-              <p className="text-secondary-gray text-lg">
+              <p className="text-secondary-gray lg:text-lg">
                 {data?.shop_info?.address?.display_my_address
                   ? data?.shop_info?.address?.address_line_1
                   : `${data?.shop_info?.address?.city}, ${data?.shop_info?.address?.state}`}
@@ -143,7 +143,7 @@ const EditShopBanner = ({ shop_id, data }: BannerProps) => {
             </div>
 
             {/* Counts */}
-            <div className="flex gap-8 items-center">
+            <div className="flex gap-5 lg:gap-8 items-center text-sm lg:text-base">
               <div className="flex gap-2 items-center">
                 <p className="flex justify-center items-center size-7 rounded-full bg-primary-green">
                   <StarSvg />

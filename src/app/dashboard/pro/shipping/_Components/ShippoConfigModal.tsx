@@ -29,8 +29,8 @@ const HOW_IT_WORKS_STEPS = [
     icon: <FaCheck />,
     text: (
       <>
-        <strong>Enable</strong> or disable the shipping carriers you want
-        to offer for creating labels.
+        <strong>Enable</strong> or disable the shipping carriers you want to
+        offer for creating labels.
       </>
     ),
   },
@@ -38,8 +38,8 @@ const HOW_IT_WORKS_STEPS = [
     icon: <MdLabel />,
     text: (
       <>
-        <strong>Choose</strong> whether you prefer the quickest shipping
-        time or the lowest shipping rate.
+        <strong>Choose</strong> whether you prefer the quickest shipping time or
+        the lowest shipping rate.
       </>
     ),
   },
@@ -116,7 +116,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
           {/* ── Header ── */}
           <div>
             <Image src={shippoImg} alt="shippo" className="w-2/7 mx-auto" />
-            <h3 className="text-primary-green md:text-[18px] -mt-2 md:text-2xl font-bold text-center">
+            <h3 className="text-primary-green md:text-[18px] md:-mt-2 md:text-2xl font-bold text-center">
               Shippo Settings
             </h3>
             <p className="text-sm text-gray-500 mt-1 text-center">
@@ -143,9 +143,9 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
               chooses the shipping rate applied to your customer's checkout.
             </p>
 
-            <div className="grid grid-cols-5 gap-10 items-start">
+            <div className="grid md:grid-cols-5 gap-5 md:gap-10 items-start">
               {/* Left: steps */}
-              <div className="col-span-3 flex flex-col gap-4">
+              <div className="md:col-span-3 flex flex-col gap-1 md:gap-4">
                 {HOW_IT_WORKS_STEPS.map((step, i) => (
                   <div key={i} className="flex gap-3">
                     <div className="size-9 rounded-full flex items-center justify-center flex-shrink-0 text-lg bg-off-green/50 text-primary-green mt-1.5">
@@ -159,7 +159,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
               </div>
 
               {/* Right: things to know */}
-              <div className="col-span-2 bg-off-green/20 border border-gray-100 rounded-lg p-4">
+              <div className="md:col-span-2 bg-off-green/20 border border-gray-100 rounded-lg p-4">
                 <p className="font-semibold text-primary-green mb-3">
                   A few things to know:
                 </p>
@@ -178,7 +178,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
           </div>
 
           {/* ── Shipping Settings + Return Address ── */}
-          <div className="grid grid-cols-2 gap-4 mt-4 mb-5">
+          <div className="grid md:grid-cols-2 gap-4 mt-4 mb-5">
             {/* Shipping Settings */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
               <p className="font-semibold text-primary-green">
@@ -303,7 +303,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
           </div>
 
           {/* ── Footer ── */}
-          <div className="border-t border-gray-200 pt-4 flex gap-3 items-start justify-end">
+          <div className="border-t border-gray-200 pt-4 flex flex-col md:flex-row gap-3 items-start justify-end">
             <button
               disabled={isDisconnecting}
               onClick={() => {
@@ -317,22 +317,20 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
                     toast.error(err?.data?.message);
                   });
               }}
-              className="flex items-center gap-1.5 bg-primary-red border border-primary-red text-white px-3 py-2 rounded-lg text-[14px] font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
+              className="flex items-center justify-center gap-1.5 bg-primary-red border border-primary-red text-white px-3 py-2 rounded-lg text-[14px] font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse w-full md:w-auto"
             >
               <MdSync className="text-base" />
               Disconnect from Shippo
             </button>
 
-            <div className="flex flex-col items-end gap-1">
-              <button
-                disabled={isSyncing}
-                onClick={() => syncShippo(user?.id).unwrap()}
-                className="flex items-center gap-2 bg-forest-green text-white px-5 py-2.5 rounded-lg text-[14px] font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed hover:bg-forest-green transition"
-              >
-                <MdSync className="text-base" />
-                Sync now
-              </button>
-            </div>
+            <button
+              disabled={isSyncing}
+              onClick={() => syncShippo(user?.id).unwrap()}
+              className="flex items-center justify-center gap-2 bg-forest-green text-white px-5 py-2.5 rounded-lg text-[14px] font-medium cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed hover:bg-forest-green transition w-full md:w-auto"
+            >
+              <MdSync className="text-base" />
+              Sync now
+            </button>
           </div>
 
           <p className="text-[11px] text-gray-400 text-end mt-2">

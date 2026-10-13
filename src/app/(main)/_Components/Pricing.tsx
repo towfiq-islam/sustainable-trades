@@ -257,34 +257,32 @@ const Pricing = ({
 
       {/* Cancel btn */}
       {isCancel && user?.membership?.status === "active" && (
-        <div className="mt-10 border border-primary-green rounded-lg p-6 max-w-[850px] mx-auto">
-          <p className="text-secondary-black font-semibold text-2xl capitalize mb-4">
+        <div className="mt-10 border border-primary-green rounded-lg p-4 md:p-6 max-w-[850px] mx-auto">
+          <p className="text-secondary-black font-semibold text-xl md:text-2xl capitalize mb-2 md:mb-4">
             {user?.membership?.membership_type}
           </p>
-          <p className="text-secondary-black mb-6">
+          <p className="text-secondary-black mb-4 md:mb-6 text-sm md:text-base">
             Cancel or upgrade to Pro by choosing premium above. Refunds will not
             be issued for canceled memberships, however we will prorate the Pro
             membership if you are upgrading from Basic.
           </p>
 
-          <div className="flex justify-end gap-4">
-            <button
-              disabled={isPending}
-              onClick={() => cancelMembership({}).unwrap()}
-              className={`px-6 py-2 bg-primary-red rounded-lg shadow hover:bg-primary-red text-white font-semibold text-[16px] ${
-                isPending ? "cursor-not-allowed" : "cursor-pointer"
-              }`}
-            >
-              {isPending ? (
-                <p className="flex gap-2 items-center justify-center">
-                  <CgSpinnerTwo className="animate-spin text-xl" />
-                  <span>Please wait....</span>
-                </p>
-              ) : (
-                "Cancel"
-              )}
-            </button>
-          </div>
+          <button
+            disabled={isPending}
+            onClick={() => cancelMembership({}).unwrap()}
+            className={`px-4 md:px-6 py-2 text-sm md:text-base bg-primary-red rounded-lg shadow hover:bg-primary-red text-white font-semibold ${
+              isPending ? "cursor-not-allowed" : "cursor-pointer"
+            }`}
+          >
+            {isPending ? (
+              <p className="flex gap-2 items-center justify-center">
+                <CgSpinnerTwo className="animate-spin text-xl" />
+                <span>Please wait....</span>
+              </p>
+            ) : (
+              "Cancel"
+            )}
+          </button>
         </div>
       )}
 

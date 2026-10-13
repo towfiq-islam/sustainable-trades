@@ -516,7 +516,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
     <>
       <button
         onClick={() => router.back()}
-        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-1 group"
+        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green text-sm md:text-base mb-1 group"
       >
         <span className="group-hover:-translate-x-1 duration-300 transition-transform">
           <GoBackSvg />
@@ -568,7 +568,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
 
             {/* Main image preview */}
             <div>
-              <div className="w-full relative h-[400px] md:h-[500px]">
+              <div className="w-full relative h-[270px] md:h-[500px]">
                 <Image
                   src={mainImage || Preview}
                   alt="Main product preview"

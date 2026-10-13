@@ -50,31 +50,31 @@ const Page = () => {
 
   return (
     <>
-      <h1 className="text-2xl 2xl:text-3xl font-semibold text-secondary-black mb-2">
+      <h1 className="text-xl md:text-2xl 2xl:text-3xl font-semibold text-secondary-black mb-2">
         Local Pickup Locations
       </h1>
 
-      <p className="text-secondary-gray text-[15px]">
+      <p className="text-secondary-gray text-sm md:text-[15px]">
         Add the physical locations where buyers can pick up their orders.
       </p>
 
-      <p className="text-secondary-gray text-[15px] mb-6">
+      <p className="text-secondary-gray text-sm md:text-[15px] mt-1.5 md:mt-0 mb-6">
         These locations will appear as options for shoppers during the Arrange
         Local Pickup checkout.
       </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_390px] gap-7 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_390px] gap-5 md:gap-7 items-start">
         <div>
           {/* How it works */}
           <div className="flex gap-3 border border-gray-200 bg-off-green/20 rounded-xl p-4 mb-4">
             <span className="size-8 rounded-full bg-primary-green/10 text-primary-green flex items-center justify-center shrink-0">
-              <FaLightbulb className="text-primary-green text-lg" />
+              <FaLightbulb className="text-primary-green md:text-lg" />
             </span>
             <div>
               <p className="font-semibold text-secondary-black mb-1">
                 How it works
               </p>
-              <p className="text-sm text-secondary-gray mb-0.5">
+              <p className="text-sm text-secondary-gray mb-1">
                 Buyers will see the locations you add here as pickup options
                 during checkout.
               </p>
@@ -114,14 +114,14 @@ const Page = () => {
 
           {/* Locations table */}
           <div className="border border-gray-200 rounded-xl overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
-              <h2 className="font-semibold text-lg text-secondary-black">
+            <div className="flex items-center justify-between px-3 md:px-5 py-4 border-b border-gray-200">
+              <h2 className="font-semibold text-sm md:text-lg text-secondary-black">
                 Your Local Pickup Locations
               </h2>
               <button
                 type="button"
                 onClick={openAddModal}
-                className="flex items-center gap-2 bg-primary-green text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-primary-green/90 transition-colors cursor-pointer"
+                className="flex items-center shrink-0 gap-1 md:gap-2 bg-primary-green text-white font-medium px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-base rounded-lg hover:bg-primary-green/90 transition-colors cursor-pointer"
               >
                 <FiPlus />
                 Add Location
@@ -146,13 +146,13 @@ const Page = () => {
                     (location: PickupLocation) => (
                       <div
                         key={location?.id}
-                        className="grid grid-cols-1 md:grid-cols-[1.2fr_1.6fr_0.8fr_0.8fr] gap-2 md:gap-4 px-5 py-4 items-start md:items-center hover:bg-off-green/20"
+                        className="grid grid-cols-1 md:grid-cols-[1.2fr_1.6fr_0.8fr_0.8fr] gap-1.5 md:gap-4 px-3 md:px-5 py-3 md:py-4 items-start md:items-center hover:bg-off-green/20"
                       >
-                        <span className="font-semibold text-primary-green text-[15px]">
+                        <span className="font-semibold text-primary-green text-sm md:text-[15px]">
                           {location?.location_name}
                         </span>
 
-                        <span className="text-sm text-secondary-gray leading-relaxed">
+                        <span className="text-xs md:text-sm text-secondary-gray leading-relaxed">
                           {location?.address}
                           {location?.unit ? `, ${location?.unit}` : ""}
                           <br />
@@ -161,7 +161,7 @@ const Page = () => {
                           <br />
                           {location?.country}
                         </span>
-                        <span className="flex items-center gap-1.5 text-sm">
+                        <span className="flex items-center gap-1.5 text-xs md:text-sm">
                           <span
                             className={`size-2 rounded-full ${
                               location?.is_active
@@ -180,7 +180,7 @@ const Page = () => {
                           </span>
                         </span>
 
-                        <span className="flex items-center gap-5">
+                        <span className="flex items-center gap-4 md:gap-5 pt-2 md:pt-0">
                           <button
                             type="button"
                             onClick={() => openEditModal(location)}
@@ -222,22 +222,22 @@ const Page = () => {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-7 p-6 rounded-xl border border-gray-200 shadow">
+        <div className="space-y-7 p-4 md:p-6 rounded-xl border border-gray-200 shadow">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <div className="size-6 rounded-full bg-primary-green text-white flex items-center justify-center">
                 i
               </div>
-              <p className="font-semibold text-secondary-black">
+              <p className="text-sm md:text-base font-semibold text-secondary-black">
                 About Local Pickup Locations
               </p>
             </div>
 
-            <p className="text-[15px] text-secondary-gray leading-relaxed">
+            <p className="text-sm md:text-text-[15px] text-secondary-gray leading-relaxed">
               These are the addresses where you offer Local Pickup. Shoppers
               will see these as selectable options during checkout.
             </p>
-            <p className="text-[15px] text-secondary-gray leading-relaxed mt-2">
+            <p className="text-sm md:text-text-[15px] text-secondary-gray leading-relaxed mt-2">
               Make sure each address is accurate and up to date so buyers can
               pick up their orders without any issues.
             </p>
@@ -246,16 +246,16 @@ const Page = () => {
 
             <div className="flex items-center gap-2 mb-2">
               <IoIosWarning className="text-primary-green text-2xl shrink-0" />
-              <p className="font-semibold text-secondary-black">
+              <p className="text-sm md:text-base font-semibold text-secondary-black">
                 Important Tax Note
               </p>
             </div>
-            <p className="text-[15px] text-secondary-gray leading-relaxed">
+            <p className="text-sm md:text-text-[15px] text-secondary-gray leading-relaxed">
               If you are using the Sustainable Trades Local Sales Tax setting
               from your dashboard, please ensure that the same sales tax rates
               apply to all of your local pickup locations.
             </p>
-            <p className="text-[15px] text-secondary-gray leading-relaxed mt-2">
+            <p className="text-sm md:text-text-[15px] text-secondary-gray leading-relaxed mt-2">
               If your locations have different tax rates, we recommend using
               ZipTax to automatically calculate the correct rate for the pickup
               location.

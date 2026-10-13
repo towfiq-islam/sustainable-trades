@@ -110,17 +110,17 @@ export default function LocalDeliverySettingsPage() {
 
   return (
     <>
-      <h1 className="text-2xl 2xl:text-3xl font-semibold text-secondary-black mb-2.5">
+      <h1 className="text-xl md:text-2xl 2xl:text-3xl font-semibold text-secondary-black mb-2.5">
         Local Delivery Settings
       </h1>
 
-      <p className="text-secondary-gray text-[15px] mb-2.5">
+      <p className="text-secondary-gray text-sm md:text-[15px] mb-2.5">
         Set up custom local delivery fees based on the distance from your
         delivery origin. Shoppers will see the <br /> delivery fee during
         checkout based on their delivery address.
       </p>
 
-      <p className="text-secondary-gray text-[15px] mb-6">
+      <p className="text-secondary-gray text-sm md:text-[15px] mb-6">
         Please note, local delivery is only available for shops with an online
         payment provider connected.
         <br />
@@ -137,9 +137,9 @@ export default function LocalDeliverySettingsPage() {
         {/* Left */}
         <div className="space-y-4">
           {/* How it works */}
-          <div className="flex gap-3 border border-gray-200 bg-off-green/20 rounded-xl p-4">
+          <div className="flex gap-3 border border-gray-200 bg-off-green/20 rounded-xl p-3 md:p-4">
             <span className="size-8 rounded-full bg-primary-green/10 text-primary-green flex items-center justify-center shrink-0">
-              <FaLightbulb className="text-primary-green text-lg" />
+              <FaLightbulb className="text-primary-green md:text-lg" />
             </span>
             <div>
               <p className="font-semibold text-secondary-black mb-0.5">
@@ -158,17 +158,17 @@ export default function LocalDeliverySettingsPage() {
           <div className="rounded-xl border border-neutral-200 p-4.5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="font-semibold text-neutral-900">
+                <h3 className="text-sm md:text-base font-semibold text-neutral-900">
                   Delivery Origin (Your Home Base)
                 </h3>
-                <p className="mt-1 text-[15px] text-neutral-600">
+                <p className="mt-1 text-sm md:text-[15px] text-neutral-600">
                   This address is the starting point (0 miles) for calculating
                   delivery distances.
                 </p>
               </div>
               <button
                 onClick={() => setIsOriginModalOpen(true)}
-                className="shrink-0 rounded-lg border border-primary-green/70 px-4 py-2 text-sm font-semibold text-primary-green transition hover:bg-primary-green duration-300 cursor-pointer hover:text-white"
+                className="shrink-0 rounded-lg border border-primary-green/70 px-3 md:px-4 py-2 text-xs md:text-sm font-semibold text-primary-green transition hover:bg-primary-green duration-300 cursor-pointer hover:text-white"
               >
                 {origin ? "Edit Address" : "Add Address"}
               </button>
@@ -190,7 +190,7 @@ export default function LocalDeliverySettingsPage() {
                   <FiMapPin className="h-4 w-4" />
                 </span>
 
-                <div className="text-sm leading-relaxed text-neutral-700">
+                <div className="text-xs md:text-sm leading-relaxed text-neutral-700">
                   {origin.street}
                   {origin.apartment ? `, ${origin.apartment}` : ""}
                   <br />
@@ -211,16 +211,16 @@ export default function LocalDeliverySettingsPage() {
           <div className="rounded-xl border border-neutral-200">
             <div className="flex items-start justify-between gap-4 p-4 pb-0">
               <div>
-                <h3 className="font-semibold text-neutral-900">
+                <h3 className="font-semibold text-sm md:text-base text-neutral-900">
                   Your Local Delivery Ranges
                 </h3>
-                <p className="mt-1 text-[15px] text-neutral-600">
+                <p className="mt-1 text-sm md:text-[15px] text-neutral-600">
                   Add distance ranges and set a delivery fee for each.
                 </p>
               </div>
               <button
                 onClick={openAddRange}
-                className="flex shrink-0 items-center gap-1.5 rounded-lg bg-primary-green cursor-pointer px-4 py-2.5 text-sm font-semibold text-white transition-transform duration-300 hover:scale-95"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg bg-primary-green cursor-pointer px-3 md:px-4 py-2 md:py-2.5 font-semibold text-white transition-transform duration-300 hover:scale-95 text-xs md:text-sm"
               >
                 <FiPlus className="h-4 w-4" />
                 Add Range
@@ -228,7 +228,7 @@ export default function LocalDeliverySettingsPage() {
             </div>
 
             <div className="mt-4 overflow-hidden">
-              <table className="w-full text-left text-[15px]">
+              <table className="w-full text-left text-xs md:text-[15px]">
                 <thead>
                   <tr className="border-b border-neutral-200 bg-off-green/10 text-neutral-500">
                     <th className="px-4 py-3 font-medium">
@@ -295,14 +295,14 @@ export default function LocalDeliverySettingsPage() {
                           {formatFee(range.fee)}
                         </td>
                         <td className="px-4 py-3.5">
-                          <div className="flex items-center justify-end gap-4">
+                          <div className="flex items-center justify-end gap-3 md:gap-4">
                             <button
                               aria-label="Edit range"
                               onClick={() => openEditRange(range.id)}
                               disabled={deletingId === range.id}
                               className="text-neutral-400 transition hover:text-primary-green cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                              <FiEdit2 className="h-4 w-4" />
+                              <FiEdit2 className="size-3.5 md:size-4" />
                             </button>
                             <button
                               aria-label="Delete range"
@@ -310,7 +310,7 @@ export default function LocalDeliverySettingsPage() {
                               disabled={deletingId === range.id}
                               className="text-neutral-400 transition hover:text-red-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                              <FiTrash2 className="h-4 w-4" />
+                              <FiTrash2 className="size-3.5 md:size-4" />
                             </button>
                           </div>
                         </td>
@@ -324,7 +324,7 @@ export default function LocalDeliverySettingsPage() {
         </div>
 
         {/* Sidebar */}
-        <aside className="space-y-5 p-5 rounded-xl border border-gray-200">
+        <aside className="space-y-3 md:space-y-5 p-3 md:p-5 rounded-xl border border-gray-200">
           <InfoCard
             icon={<FiInfo className="h-4 w-4" />}
             title="About Local Delivery"
@@ -377,7 +377,7 @@ export default function LocalDeliverySettingsPage() {
             </InfoCard>
           </div>
 
-          <div className="border border-gray-200 bg-off-green/20 rounded-xl p-4">
+          <div className="border border-gray-200 bg-off-green/20 rounded-xl p-3 md:p-4">
             <div className="flex items-center gap-2 mb-2">
               <FaLightbulb className="text-primary-green text-lg shrink-0" />
               <p className="font-semibold text-secondary-black">Tip</p>

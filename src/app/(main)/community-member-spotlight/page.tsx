@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import Container from "@/Components/Common/Container";
 import { RightSvg } from "@/Components/Svg/SvgContainer";
 import { getSpotlightData } from "@/lib/cms.api";
 
@@ -26,7 +25,6 @@ const Community = async () => {
 
   return (
     <section className="py-5 md:py-10">
-      <Container>
         <div className="space-y-6">
           {spotlightData?.data?.map((item: SpotlightItem) => (
             <div
@@ -85,7 +83,6 @@ const Community = async () => {
             </div>
           ))}
         </div>
-      </Container>
     </section>
   );
 };

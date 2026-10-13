@@ -72,10 +72,18 @@ const AddPickupLocationModal = ({
     let finalLng = lng !== null ? lng.toString() : null;
 
     // Fallback to existing valid coordinates if editing
-    if (!finalLat && editingLocation?.latitude && editingLocation.latitude !== "0") {
+    if (
+      !finalLat &&
+      editingLocation?.latitude &&
+      editingLocation.latitude !== "0"
+    ) {
       finalLat = editingLocation.latitude;
     }
-    if (!finalLng && editingLocation?.longitude && editingLocation.longitude !== "0") {
+    if (
+      !finalLng &&
+      editingLocation?.longitude &&
+      editingLocation.longitude !== "0"
+    ) {
       finalLng = editingLocation.longitude;
     }
 
@@ -134,16 +142,20 @@ const AddPickupLocationModal = ({
     <div>
       <h2
         id="pickup-modal-title"
-        className="text-2xl font-semibold text-secondary-black mb-1"
+        className="text-lg md:text-2xl font-semibold text-secondary-black mb-0.5 md:mb-1"
       >
         {defaultValues ? "Edit Pickup Location" : "Add Pickup Location"}
       </h2>
 
-      <p className="text-sm text-secondary-gray mb-5">
+      <p className="text-sm text-secondary-gray mb-3 md:mb-5">
         Add the details for this pickup location.
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="space-y-3 md:space-y-4"
+      >
         <div>
           <label className="block text-sm font-medium text-secondary-black mb-1.5">
             Location Name <span className="text-red-500">*</span>
@@ -222,10 +234,7 @@ const AddPickupLocationModal = ({
                 });
               }}
             />
-            <input
-              type="hidden"
-              {...register("state", { required: true })}
-            />
+            <input type="hidden" {...register("state", { required: true })} />
             {errors.state && (
               <span className="text-red-500 text-xs mt-1 block">
                 State is required
@@ -284,16 +293,16 @@ const AddPickupLocationModal = ({
         <div className="flex gap-3 pt-2">
           <button
             type="button"
+            className="flex-1 border border-gray-300 rounded-lg py-2.5 md:py-3 font-semibold text-secondary-black hover:bg-gray-50 cursor-pointer text-sm md:text-base"
             onClick={onClose}
-            className="flex-1 border border-gray-300 rounded-lg py-3 font-semibold text-secondary-black hover:bg-gray-50 cursor-pointer"
           >
             Cancel
           </button>
 
           <button
             type="submit"
+            className="flex-1 bg-primary-green text-white rounded-lg py-2.5 md:py-3 font-semibold hover:bg-primary-green/90 disabled:opacity-60 cursor-pointer text-sm md:text-base"
             disabled={isEditing || isAdding || isGeocoding}
-            className="flex-1 bg-primary-green text-white rounded-lg py-3 font-semibold hover:bg-primary-green/90 disabled:opacity-60 cursor-pointer"
           >
             Save Location
           </button>

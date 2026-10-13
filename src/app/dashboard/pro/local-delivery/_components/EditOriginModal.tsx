@@ -117,7 +117,7 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
     <div>
       <h2
         id="delivery-origin-modal-title"
-        className="text-2xl font-semibold text-secondary-black mb-1"
+        className="text-lg md:text-2xl font-semibold text-secondary-black mb-1"
       >
         {origin ? "Edit Delivery Origin" : "Add Delivery Origin"}
       </h2>
@@ -127,7 +127,7 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
         and fees.
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-3 md:space-y-4">
         <div>
           <label className="block text-sm font-medium text-secondary-black mb-1.5">
             Address <span className="text-red-500">*</span>
@@ -252,7 +252,7 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
             <FiMapPin className="size-4" />
           </span>
           <div>
-            <h4 className="text-[15px] font-semibold">Important</h4>
+            <h4 className="text-sm md:text-[15px] font-semibold">Important</h4>
             <p className="mt-1 text-sm leading-relaxed text-gray-700">
               Accurate delivery origin is essential for correct delivery fee
               calculations based on distance.

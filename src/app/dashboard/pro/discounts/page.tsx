@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import moment from "moment";
-import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import { Delete, Pen } from "@/Components/Svg/SvgContainer";
 import { DiscountSkeleton } from "@/Components/Loader/Loader";
@@ -91,15 +90,11 @@ const DiscountsPage = () => {
               type="search"
               className="py-1.5 md:py-3 pl-4 outline-0 border border-primary-green rounded-[8px] text-[16px] text-muted-gray font-normal w-full md:w-[300px]"
             />
-            <div className="absolute top-4 right-3">
-              <FaSearch />
-            </div>
-            <div className="absolute top-0 right-10 w-[2px] bg-primary-green h-[45px]"></div>
           </div>
 
           {/* Create button */}
           <Link href="/dashboard/pro/discounts/create-discount">
-            <button className="hover:border-off-green hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2 px-5  md:text-lg font-semibold cursor-pointer w-full md:w-fit bg-off-green text-primary-green duration-500 ease-in-out">
+            <button className="hover:border-off-green hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2.5 px-5  md:text-lg font-semibold cursor-pointer w-full md:w-fit bg-off-green text-primary-green duration-500 ease-in-out">
               Create Discount
             </button>
           </Link>

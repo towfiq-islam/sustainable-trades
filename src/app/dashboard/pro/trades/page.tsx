@@ -3,7 +3,6 @@ import SentTrades from "@/Components/Common/SentTrades";
 import PendingTrades from "@/Components/Common/PendingTrades";
 import PreviousTrades from "@/Components/Common/PreviousTrades";
 import CanceledTrades from "@/Components/Common/CanceledTrades";
-import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import {
   useGetTradeCountsQuery,
@@ -48,12 +47,9 @@ const Page = () => {
           <input
             placeholder="Search..."
             type="search"
-            className="py-2 md:py-[10px] pl-4 outline-0 border border-border-gray rounded-[8px] text-[16px] text-muted-gray font-normal w-full  md:w-[500px]"
+            className="py-2 md:py-[10px] pl-4 outline-0 border border-border-gray rounded-[8px] text-[16px] text-muted-gray font-normal w-full md:w-[300px]"
           />
-          <div className="absolute top-4 right-3">
-            <FaSearch />
-          </div>
-          <div className="absolute top-0 right-10 w-[2px] bg-border-gray h-[45px]"></div>
+          
         </div>
       </div>
 

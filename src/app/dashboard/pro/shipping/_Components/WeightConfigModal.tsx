@@ -53,7 +53,7 @@ const WeightConfigModal = ({ weightRanges }: any) => {
 
   return (
     <div>
-      <h3 className="text-dark-gray text-[24px] font-bold text-center pb-4 border-b border-dark-gray">
+      <h3 className="text-dark-gray text-lg md:text-xl lg:text-[24px] font-semibold md:font-bold text-center pb-2 md:pb-4 md:border-b border-dark-gray">
         ADD WEIGHT RANGE RATE
       </h3>
 
@@ -75,7 +75,7 @@ const WeightConfigModal = ({ weightRanges }: any) => {
           )}
         </div>
 
-        <div className="flex gap-x-10">
+        <div className="flex gap-x-5 md:gap-x-10">
           <div className="w-full">
             <p className="form-label font-bold">Min Weight</p>
             <input
@@ -113,21 +113,21 @@ const WeightConfigModal = ({ weightRanges }: any) => {
           <button
             type="submit"
             disabled={isWightLoading}
-            className="mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-47.5 cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
+            className="mt-0 md:mt-8 px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-full md:w-47.5 cursor-pointer disabled:cursor-not-allowed disabled:opacity-80"
           >
             {isWightLoading ? "Saving..." : "Save"}
           </button>
         </div>
 
-        <div className="border border-off-green/30 bg-off-green/30 rounded-lg p-4">
-          <div className="text-primary-green text-sm flex gap-5 items-center">
-            <span className="shrink-0 bg-off-green/60 size-14 rounded-full grid place-items-center">
-              <RiLightbulbFlashLine className="text-2xl" />
+        <div className="border border-off-green/30 bg-off-green/30 rounded-lg p-3 md:p-4">
+          <div className="text-primary-green text-sm flex gap-3 md:gap-5 items-center">
+            <span className="shrink-0 bg-off-green/60 size-10 md:size-14 rounded-full grid place-items-center">
+              <RiLightbulbFlashLine className="text-lg md:text-2xl" />
             </span>
 
             <div>
               <h3 className="text-base font-semibold">How it works</h3>
-              <p className="text-gray-700 mt-1">
+              <p className="text-gray-700 text-sm mt-1">
                 Set a cost for a specific weight range by adding a minimum and
                 maximum weight. You can create as many ranges as you need to
                 match your shipping strategy.
@@ -136,7 +136,7 @@ const WeightConfigModal = ({ weightRanges }: any) => {
           </div>
         </div>
 
-        <div className="border border-off-green/30 bg-off-green/30 rounded-lg font-semibold -mt-2 p-4">
+        <div className="border border-off-green/30 bg-off-green/30 rounded-lg font-semibold -mt-2 p-3 md:p-4">
           <p className="text-gray-700 text-sm flex gap-2 items-center">
             <IoLocationSharp className="text-xl text-primary-green" />
             This weight-based rate option is for U.S. and Canada only.
@@ -144,21 +144,21 @@ const WeightConfigModal = ({ weightRanges }: any) => {
         </div>
       </form>
 
-      <h4 className="text-[20px] font-semibold text-primary-green mt-5">
+      <h4 className="text-base md:text-[20px] font-semibold text-primary-green mt-5">
         Weight Ranges
       </h4>
-      <p className="font-normal text-[16px] text-dark-gray">
+      <p className="font-normal text-sm md:text-[16px] text-dark-gray">
         Depending on the total weight, you can charge different amounts for
         shipping.
       </p>
 
-      <table className="w-full border-collapse my-5 px-5">
+      <table className="w-full border-collapse py-3 md:my-5 px-5">
         <thead>
           <tr className="border-b">
-            <th className="text-left py-2 text-[18px] font-medium">
+            <th className="text-left py-2 md:text-[18px] font-medium">
               Weight (lbs)
             </th>
-            <th className="text-left py-2 text-[18px] font-medium">Cost</th>
+            <th className="text-left py-2 md:text-[18px] font-medium">Cost</th>
             <th></th>
           </tr>
         </thead>

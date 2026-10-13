@@ -1,7 +1,6 @@
 "use client";
 import moment from "moment";
 import { useState } from "react";
-import { FaSearch } from "react-icons/fa";
 import { PaymentRowSkeleton } from "@/Components/Loader/Loader";
 import { useGetPaymentsQuery } from "@/redux/api/vendorApi";
 import { FiCreditCard } from "react-icons/fi";
@@ -40,12 +39,6 @@ const page = () => {
                 placeholder="Search Payments"
                 className="flex-1 py-[10px] pl-4 pr-2 outline-0 text-[16px] text-muted-gray font-normal"
               />
-              {/* Divider */}
-              <div className="w-[1px] h-6 bg-border-gray" />
-              {/* Icon */}
-              <button className="p-3 text-muted-gray">
-                <FaSearch />
-              </button>
             </div>
           </div>
         </div>

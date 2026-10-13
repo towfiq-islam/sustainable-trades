@@ -116,7 +116,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
           {/* ── Header ── */}
           <div>
             <Image src={shippoImg} alt="shippo" className="w-2/7 mx-auto" />
-            <h3 className="text-primary-green text-[18px] -mt-2 md:text-2xl font-bold text-center">
+            <h3 className="text-primary-green md:text-[18px] -mt-2 md:text-2xl font-bold text-center">
               Shippo Settings
             </h3>
             <p className="text-sm text-gray-500 mt-1 text-center">
@@ -132,7 +132,9 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
               <div className="w-7 h-7 rounded-full bg-forest-green flex items-center justify-center flex-shrink-0">
                 <BsInfoLg className="text-white text-base" />
               </div>
-              <span className="font-bold text-primary-green">How it works</span>
+              <span className="font-semibold md:font-bold text-primary-green">
+                How it works
+              </span>
             </div>
 
             {/* Subtitle */}
@@ -341,17 +343,17 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
         <div>
           <Image src={shippoImg} alt="shippo" className="w-2/5 mx-auto" />
 
-          <h3 className="text-dark-gray text-[18px] md:text-[24px] font-bold text-center">
+          <h3 className="text-dark-gray md:text-lg lg:text-[24px] font-bold text-center">
             CONNECT TO SHIPPO
           </h3>
 
           <div className="px-6 pt-3 pb-6 space-y-5">
-            <p className="font-semibold text-secondary-black">
+            <p className="text-sm md:font-semibold text-secondary-black">
               Flexible, powerful shipping starting at $0/month (billed directly
               by Shippo)
             </p>
 
-            <ul className="list-disc list-inside space-y-1 text-secondary-black text-[15px]">
+            <ul className="list-disc list-outside space-y-1 text-secondary-black text-sm md:text-[15px]">
               <li>
                 Sync your Sustainable Trades orders with Shippo in just a few
                 clicks.
@@ -375,7 +377,7 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
               sync with their Sustainable Trades shop.
             </p>
 
-            <p>
+            <p className="text-sm md:text-base">
               <span className="font-semibold text-secondary-black">
                 Sustainable Trades customers are billed directly by Shippo.
               </span>
@@ -391,17 +393,17 @@ const ShippoConfigModal = ({ user, setOpenConnectFlatModal }: any) => {
               .
             </p>
 
-            <p className="text-primary-green">
+            <p className="text-primary-green text-sm md:text-base">
               <span className="font-semibold"> Note:</span> Connecting to Shippo
               will allow you to pick from multiple carriers and label types.
             </p>
           </div>
 
-          <div className="flex justify-end px-6 py-4">
+          <div className="flex justify-end px-6 md:py-4">
             <button
               disabled={isConnecting}
               onClick={() => connectShippo().unwrap()}
-              className="bg-forest-green text-white px-6 py-2 rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
+              className="bg-forest-green text-white px-4 md:px-6 py-2 text-sm md:text-base rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 disabled:animate-pulse"
             >
               Connect to Shippo
             </button>

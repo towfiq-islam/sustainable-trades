@@ -299,7 +299,6 @@ const page = () => {
                       <th className="py-3 px-4 text-left">Opt In</th>
                       <th className="py-3 px-4 text-left">Items</th>
                       <th className="py-3 px-4 text-left">Amount</th>
-                      <th className="py-3 px-4 text-left">Payment Method</th>
                       <th className="py-3 px-4 text-left">Order Status</th>
                       <th className="py-3 px-4 text-left">Fulfillment</th>
                       <th className="py-3 px-4 text-center">Action</th>
@@ -346,7 +345,6 @@ const page = () => {
                       <th className="py-3 px-4 text-left">Opt In</th>
                       <th className="py-3 px-4 text-left">Items</th>
                       <th className="py-3 px-4 text-left">Amount</th>
-                      <th className="py-3 px-4 text-left">Payment</th>
                       <th className="py-3 px-4 text-left">Order Status</th>
                       <th className="py-3 px-4 text-left">Fulfillment</th>
                       <th className="py-3 px-4 text-center">Action</th>
@@ -386,10 +384,6 @@ const page = () => {
                         <td className="py-3.5 px-4 font-bold text-primary-green">
                           ${order?.amount}
                         </td>
-                        <td className="py-3.5 px-4 capitalize text-secondary-gray">
-                          {order?.payment_method || "Paypal"}
-                        </td>
-
                         <td className="py-3.5 px-4">
                           <span
                             className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getOrderStatusBadge(

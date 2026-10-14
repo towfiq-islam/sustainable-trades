@@ -40,7 +40,7 @@ const DashboardSidebar = ({
   };
 
   const parentLinkClass = (isActive: boolean) =>
-    `w-full text-left ml-1 px-2.5 py-2 lg:py-2.5 flex gap-3 items-center text-[14px] 2xl:text-base font-semibold border-l-2 hover:bg-gray-100/80 rounded-r-lg duration-200 transition-all ${
+    `w-full text-left ml-1 px-2.5 py-2 lg:py-2.5 flex gap-3 items-center text-sm xl:text-base font-semibold border-l-2 hover:bg-gray-100/80 rounded-r-lg duration-200 transition-all ${
       isActive
         ? "text-primary-green border-primary-green bg-primary-green/5"
         : "text-light-green border-transparent"
@@ -50,7 +50,7 @@ const DashboardSidebar = ({
     <aside
       className={`${
         open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-      } fixed top-0 left-0 z-[999] lg:static h-screen lg:h-[calc(100vh-80px)] w-68 2xl:w-72 duration-300 transition-transform border-r border-light-gray bg-dashboard-bg py-4 px-3.5 shrink-0 overflow-y-auto side-scrollbar shadow-2xl lg:shadow-none flex flex-col`}
+      } fixed top-0 left-0 z-[999] lg:static h-screen lg:h-[calc(100vh-80px)] w-60 xl:w-68 2xl:w-72 duration-300 transition-transform border-r border-light-gray bg-dashboard-bg py-4 px-3.5 shrink-0 overflow-y-auto side-scrollbar shadow-2xl lg:shadow-none flex flex-col`}
     >
       {/* Mobile Drawer Header */}
       <div className="flex items-center justify-between pb-3 mb-2 border-b border-light-gray lg:hidden">

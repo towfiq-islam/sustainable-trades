@@ -62,7 +62,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
       {/* Back Btn */}
       <button
         onClick={() => router.back()}
-        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-2 group"
+        className="flex gap-1 items-center text-sm md:text-base cursor-pointer font-semibold text-primary-green mb-2 group"
       >
         <span className="group-hover:-translate-x-1 duration-300 transition-transform">
           <GoBackSvg />
@@ -70,35 +70,35 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
         <span>Back</span>
       </button>
 
-      <h2 className="text-3xl  font-semibold text-secondary-black mb-5">
+      <h2 className="text-xl md:text-2xl xl:text-3xl font-semibold text-secondary-black mb-5">
         Order Details
       </h2>
 
-      <div className="flex flex-col lg:flex-row gap-5">
+      <div className="flex flex-col xl:flex-row gap-5">
         {/* ============ LEFT: main column ============ */}
-        <div className="w-full lg:w-[68%] 2xl:w-[75%]">
+        <div className="w-full xl:w-[68%] 2xl:w-[75%]">
           {/* Meta bar */}
-          <div className="border border-card-border rounded-[10px] px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+          <div className="border border-card-border rounded-[10px] px-4 xl:px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 mb-4">
             <div>
-              <h3 className="text-muted-gray text-[15px] font-semibold mb-1">
+              <h3 className="text-muted-gray text-sm md:text-[15px] font-semibold md:mb-1">
                 Order Placed
               </h3>
-              <p className=" text-secondary-black text-sm">
+              <p className=" text-secondary-black text-[13px] md:text-sm">
                 {moment(order?.created_at).format("MMMM D, YYYY")}
               </p>
             </div>
 
             <div>
-              <h3 className="text-muted-gray text-[15px] font-semibold mb-1">
+              <h3 className="text-muted-gray text-sm md:text-[15px] font-semibold md:mb-1">
                 Order Number
               </h3>
-              <p className=" text-secondary-black text-sm">
+              <p className=" text-secondary-black text-[13px] md:text-sm">
                 {order?.order_number}
               </p>
             </div>
 
             <div>
-              <h3 className="text-muted-gray text-[15px] font-semibold mb-1.5">
+              <h3 className="text-muted-gray text-sm md:text-[15px] font-semibold md:mb-1.5">
                 Payment Status
               </h3>
               <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize bg-primary-green/10 text-primary-green">
@@ -107,7 +107,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
             </div>
 
             <div>
-              <h3 className="text-muted-gray text-[15px] font-semibold mb-1">
+              <h3 className="text-muted-gray text-sm md:text-[15px] font-semibold md:mb-1">
                 View Invoice
               </h3>
 
@@ -131,7 +131,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
 
           {/* Multi-vendor banner */}
           {order?.vendor_count > 1 && (
-            <div className="flex items-start gap-3 bg-off-green/40 border border-primary-green/20 rounded-[10px] px-4 py-3 mb-5">
+            <div className="flex items-start gap-2 md:gap-3 bg-off-green/40 border border-primary-green/20 rounded-[10px] px-4 py-3 mb-5">
               <FiShield
                 className="text-primary-green mt-0.5 shrink-0"
                 size={18}
@@ -163,8 +163,8 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                   className="border border-card-border rounded-[10px] overflow-hidden"
                 >
                   {/* Header */}
-                  <div className="flex items-center gap-2 px-5 py-3 bg-table-header border-b border-card-border">
-                    <figure className="size-9 rounded-full relative">
+                  <div className="flex items-center gap-2 px-3 md:px-5 py-3 bg-table-header border-b border-card-border">
+                    <figure className="size-9 shrink-0 rounded-full relative">
                       <Image
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${vendorOrder?.shop?.image}`}
                         alt="shop_image"
@@ -173,19 +173,19 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                       />
                     </figure>
 
-                    <h4 className=" font-semibold text-secondary-black text-[15px]">
+                    <h4 className=" font-semibold text-secondary-black text-[13px] md:text-[15px]">
                       Sold by {shopName}
                     </h4>
                     <span className="text-gray-400">•</span>
-                    <p className="text-sm  text-muted-gray">
+                    <p className="text-[13px] md:text-sm text-muted-gray">
                       Delivery Method:{" "}
                       {fulfillmentLabel(vendorOrder.fulfillment_type)}
                     </p>
                   </div>
 
-                  <div className="grid md:grid-cols-5 gap-12 p-5">
+                  <div className="grid 2xl:grid-cols-5 gap-5 2xl:gap-12 p-3 md:p-5">
                     {/* Left: items + totals + address */}
-                    <div className="col-span-3">
+                    <div className="2xl:col-span-3">
                       <h5 className=" font-semibold text-secondary-black text-sm mb-3">
                         Items
                       </h5>
@@ -193,7 +193,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                       <div className="space-y-4 mb-4">
                         {vendorOrder?.items?.map((item: any) => (
                           <div key={item.id} className="flex gap-x-3">
-                            <figure className="rounded size-16 shrink-0">
+                            <figure className="rounded size-12 md:size-16 shrink-0">
                               <Image
                                 src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product_image}`}
                                 alt={item?.product_name}
@@ -205,7 +205,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                             </figure>
 
                             <div className="flex flex-col gap-0.5 flex-1">
-                              <h5 className="text-[15px] font-semibold text-secondary-black ">
+                              <h5 className="text-[13px] md:text-[15px] font-semibold text-secondary-black line-clamp-1">
                                 {item?.product_name}
                               </h5>
                               <p className="text-muted-gray text-sm ">
@@ -233,7 +233,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                         ))}
                       </div>
 
-                      <div className="text-sm  space-y-1.5 border-t border-light-gray pt-3">
+                      <div className="text-sm  space-y-1.5 border-t border-light-gray pt-2 md:pt-3">
                         <div className="flex justify-between text-muted-gray">
                           <span>Items Subtotal</span>
                           <span>${vendorOrder.sub_total}</span>
@@ -279,7 +279,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                       </div>
 
                       {address && (
-                        <div className="mt-4 pt-4 border-t border-light-gray text-sm ">
+                        <div className="mt-3 md:mt-4 pt-2 md:pt-4 border-t border-light-gray text-sm">
                           <h5 className="font-semibold text-secondary-black mb-1">
                             {vendorOrder.fulfillment_type === "pickup"
                               ? "Pickup Location"
@@ -308,7 +308,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                     </div>
 
                     {/* Right: chat + actions */}
-                    <div className="col-span-2">
+                    <div className="2xl:col-span-2">
                       <div className="rounded-[10px] h-[450px] flex flex-col overflow-hidden mb-3 border border-gray-300 p-3">
                         <MessagePage
                           receiverId={vendorOrder?.vendor_id}
@@ -349,10 +349,10 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
         </div>
 
         {/* ============ RIGHT: sticky sidebar ============ */}
-        <div className="w-full lg:w-[32%] 2xl:w-[25%]">
+        <div className="w-full xl:w-[32%] 2xl:w-[25%]">
           <div className="sticky top-6 flex flex-col gap-4">
-            <div className="border border-card-border rounded-[10px] p-5">
-              <h4 className=" font-bold text-secondary-black mb-4">
+            <div className="border border-card-border rounded-[10px] p-3 md:p-5">
+              <h4 className="font-semibold md:font-bold text-secondary-black text-[15px] md:text-base mb-3 md:mb-4">
                 Order Summary ({order?.item_count} items)
               </h4>
 
@@ -392,7 +392,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                 })}
               </div>
 
-              <div className="text-sm  space-y-1.5 border-t border-light-gray pt-3">
+              <div className="text-sm space-y-1.5 border-t border-light-gray pt-3">
                 <div className="flex justify-between text-muted-gray">
                   <span>Subtotal</span>
                   <span>${order?.sub_total}</span>
@@ -420,13 +420,13 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
 
               <div className="flex justify-between items-center border-t border-light-gray mt-3 pt-3">
                 <span className="font-bold  text-secondary-black">Total</span>
-                <span className="font-bold text-primary-green text-lg ">
+                <span className="font-bold text-primary-green text-lg">
                   ${order?.total_amount}
                 </span>
               </div>
             </div>
 
-            <div className="border border-card-border rounded-[10px] p-5">
+            <div className="border border-card-border rounded-[10px] p-3 md:p-5">
               <h4 className=" font-bold text-secondary-black mb-2">
                 Need Help?
               </h4>
@@ -436,7 +436,7 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
               </p>
             </div>
 
-            <div className="border border-card-border rounded-[10px] p-5">
+            <div className="border border-card-border rounded-[10px] p-3 md:p-5">
               <p className="text-[15px] font-semibold text-secondary-black ">
                 Thank you for shopping local!
               </p>

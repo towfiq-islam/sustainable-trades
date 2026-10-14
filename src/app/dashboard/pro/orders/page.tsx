@@ -202,7 +202,7 @@ const page = () => {
           </div>
 
           <select
-            className="border rounded-lg px-3 py-2 text-sm border-gray-300 outline-none cursor-pointer bg-white"
+            className="border rounded-lg px-3 py-2 text-sm border-gray-300 outline-none cursor-pointer"
             value={filter}
             onChange={e => {
               setFilter(e.target.value);
@@ -335,19 +335,19 @@ const page = () => {
           ) : allOrders?.data?.length > 0 ? (
             <>
               {/* Desktop Table View */}
-              <div className="hidden lg:block w-full overflow-x-auto border border-gray-200 rounded-[8px] bg-white/40">
+              <div className="hidden lg:block w-full overflow-x-auto border border-gray-200 rounded-[8px]">
                 <table className="w-full min-w-[900px] border-collapse text-nowrap">
                   <thead>
                     <tr className="border-b border-gray-200 text-secondary-black text-sm font-semibold bg-gray-50/70">
-                      <th className="py-3 px-4 text-left">Order #</th>
-                      <th className="py-3 px-4 text-left">Order Date</th>
-                      <th className="py-3 px-4 text-left">Customer</th>
-                      <th className="py-3 px-4 text-left">Opt In</th>
-                      <th className="py-3 px-4 text-left">Items</th>
-                      <th className="py-3 px-4 text-left">Amount</th>
-                      <th className="py-3 px-4 text-left">Order Status</th>
-                      <th className="py-3 px-4 text-left">Fulfillment</th>
-                      <th className="py-3 px-4 text-center">Action</th>
+                      <th className="py-4 px-4 text-left">Order #</th>
+                      <th className="py-4 px-4 text-left">Order Date</th>
+                      <th className="py-4 px-4 text-left">Customer</th>
+                      <th className="py-4 px-4 text-left">Opt In</th>
+                      <th className="py-4 px-4 text-left">Items</th>
+                      <th className="py-4 px-4 text-left">Amount</th>
+                      <th className="py-4 px-4 text-left">Order Status</th>
+                      <th className="py-4 px-4 text-left">Fulfillment</th>
+                      <th className="py-4 px-4 text-center">Action</th>
                     </tr>
                   </thead>
 
@@ -357,13 +357,13 @@ const page = () => {
                         key={order.id || i}
                         className="border-b last:border-b-0 border-gray-200 text-secondary-black text-sm hover:bg-off-green/10 transition-colors"
                       >
-                        <td className="py-3.5 px-4 font-semibold">
+                        <td className="py-4 px-4 font-semibold">
                           {order?.order_number}
                         </td>
-                        <td className="py-3.5 px-4 text-secondary-gray">
+                        <td className="py-4 px-4 text-secondary-gray">
                           {moment(order?.order_date).format("ll")}
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-4 px-4">
                           <div className="flex flex-col">
                             <span className="font-semibold text-secondary-black">
                               {order?.customer?.first_name}{" "}
@@ -375,16 +375,16 @@ const page = () => {
                           </div>
                         </td>
 
-                        <td className="py-3.5 px-4 text-secondary-gray">
+                        <td className="py-4 px-4 text-secondary-gray">
                           {order?.opt_in ? "Yes" : "No"}
                         </td>
-                        <td className="py-3.5 px-4 font-semibold">
+                        <td className="py-4 px-4 font-semibold">
                           {order?.items}
                         </td>
-                        <td className="py-3.5 px-4 font-bold text-primary-green">
+                        <td className="py-4 px-4 font-bold text-primary-green">
                           ${order?.amount}
                         </td>
-                        <td className="py-3.5 px-4">
+                        <td className="py-4 px-4">
                           <span
                             className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${getOrderStatusBadge(
                               order?.status,
@@ -394,11 +394,11 @@ const page = () => {
                           </span>
                         </td>
 
-                        <td className="py-3.5 px-4 capitalize text-secondary-gray">
+                        <td className="py-4 px-4 capitalize text-secondary-gray">
                           {order?.fulfillment_type || "Standard"}
                         </td>
 
-                        <td className="py-3.5 px-4 text-center relative">
+                        <td className="py-4 px-4 text-center relative">
                           <button
                             onClick={e => {
                               e.stopPropagation();

@@ -319,7 +319,7 @@ const CombinedNavbar = ({
           <Link
             href={messagesHref}
             aria-label="Messages"
-            className={`cursor-pointer text-accent-white hover:opacity-80 transition-opacity duration-200 ${isDashboard ? "hidden lg:block" : ""}`}
+            className={`cursor-pointer text-accent-white hover:opacity-80 transition-opacity duration-200 hidden md:block ${isDashboard ? "hidden lg:block" : ""}`}
           >
             <MessageSvg />
           </Link>
@@ -329,7 +329,7 @@ const CombinedNavbar = ({
           <Link
             href={notificationHref}
             aria-label="Notifications"
-            className={`cursor-pointer text-accent-white hover:opacity-80 transition-opacity duration-200 ${isDashboard ? "hidden lg:block" : ""}`}
+            className={`cursor-pointer text-accent-white hover:opacity-80 transition-opacity duration-200 hidden md:block ${isDashboard ? "hidden lg:block" : ""}`}
           >
             <NotificationSvg />
           </Link>

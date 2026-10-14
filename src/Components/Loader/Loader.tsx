@@ -279,63 +279,105 @@ export const ShopCardSkeleton = () => {
 
 export const CustomerOrderTableSkeleton = () => {
   return (
-    <div className="border border-light-gray rounded-[12px] overflow-hidden mt-6 sm:mt-10 w-full">
-      <div className="overflow-x-auto w-full">
-        <table className="w-full min-w-[620px] text-left border-collapse">
-          <thead>
-            <tr className="bg-table-header text-[14px] sm:text-[15px] text-muted-gray font-semibold">
-              <th className="px-4 sm:px-6 py-3.5 sm:py-4">Order</th>
-              <th className="px-4 sm:px-6 py-3.5 sm:py-4">Items</th>
-              <th className="px-4 sm:px-6 py-3.5 sm:py-4">Total</th>
-              <th className="px-4 sm:px-6 py-3.5 sm:py-4">Status</th>
-              <th className="px-4 sm:px-6 py-3.5 sm:py-4">Date</th>
-              <th className="px-4 sm:px-6 py-3.5 sm:py-4 text-right">Action</th>
-            </tr>
-          </thead>
+    <div className="w-full mt-4 sm:mt-6">
+      {/* Mobile Card Skeleton */}
+      <div className="block md:hidden space-y-3">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div
+            key={index}
+            className="border border-light-gray rounded-[12px] p-4 bg-white space-y-3 animate-pulse"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div className="space-y-1.5">
+                <div className="h-4 w-28 bg-gray-200 rounded" />
+                <div className="h-3 w-16 bg-gray-200 rounded" />
+              </div>
+              <div className="h-6 w-20 rounded-full bg-gray-200" />
+            </div>
 
-          <tbody>
-            {Array.from({ length: 4 }).map((_, index) => (
-              <tr
-                key={index}
-                className="border-t border-light-gray animate-pulse"
-              >
-                {/* Order */}
-                <td className="px-4 sm:px-6 py-3.5 sm:py-4">
-                  <div className="h-4 sm:h-5 w-24 sm:w-32 rounded bg-gray-200 mb-1.5" />
-                  <div className="h-3.5 w-16 sm:w-20 rounded bg-gray-200" />
-                </td>
+            <div className="grid grid-cols-2 gap-2.5 py-3 border-y border-light-gray">
+              <div className="space-y-1.5">
+                <div className="h-3 w-10 bg-gray-200 rounded" />
+                <div className="h-3.5 w-20 bg-gray-200 rounded" />
+              </div>
+              <div className="space-y-1.5">
+                <div className="h-3 w-10 bg-gray-200 rounded" />
+                <div className="h-3.5 w-16 bg-gray-200 rounded" />
+              </div>
+              <div className="space-y-1.5">
+                <div className="h-3 w-10 bg-gray-200 rounded" />
+                <div className="h-4 w-14 bg-gray-200 rounded" />
+              </div>
+              <div className="space-y-1.5">
+                <div className="h-3 w-12 bg-gray-200 rounded" />
+                <div className="h-3.5 w-16 bg-gray-200 rounded" />
+              </div>
+            </div>
 
-                {/* Items */}
-                <td className="px-4 sm:px-6 py-3.5 sm:py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="size-4 sm:size-5 rounded bg-gray-200 shrink-0" />
-                    <div className="h-4 w-16 sm:w-20 rounded bg-gray-200" />
-                  </div>
-                </td>
+            <div className="h-9 w-full bg-gray-200 rounded-[8px]" />
+          </div>
+        ))}
+      </div>
 
-                {/* Total */}
-                <td className="px-4 sm:px-6 py-3.5 sm:py-4">
-                  <div className="h-4 sm:h-5 w-16 sm:w-20 rounded bg-gray-200" />
-                </td>
-
-                {/* Status */}
-                <td className="px-4 sm:px-6 py-3.5 sm:py-4">
-                  <div className="h-6 sm:h-7 w-20 rounded-full bg-gray-200" />
-                </td>
-
-                {/* Date */}
-                <td className="px-4 sm:px-6 py-3.5 sm:py-4">
-                  <div className="h-4 w-24 sm:w-28 rounded bg-gray-200" />
-                </td>
-
-                {/* Action */}
-                <td className="px-4 sm:px-6 py-3.5 sm:py-4">
-                  <div className="ml-auto h-8 sm:h-9 w-24 sm:w-28 rounded-[8px] bg-gray-200" />
-                </td>
+      {/* Desktop Table Skeleton */}
+      <div className="hidden md:block border border-light-gray rounded-[12px] overflow-hidden w-full">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full min-w-[720px] text-left border-collapse">
+            <thead>
+              <tr className="bg-table-header text-[14px] sm:text-[15px] text-muted-gray font-semibold">
+                <th className="px-4 sm:px-6 py-3.5 sm:py-4">Order</th>
+                <th className="px-4 sm:px-6 py-3.5 sm:py-4">Items</th>
+                <th className="px-4 sm:px-6 py-3.5 sm:py-4">Total</th>
+                <th className="px-4 sm:px-6 py-3.5 sm:py-4">Status</th>
+                <th className="px-4 sm:px-6 py-3.5 sm:py-4">Date</th>
+                <th className="px-4 sm:px-6 py-3.5 sm:py-4 text-right">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {Array.from({ length: 4 }).map((_, index) => (
+                <tr
+                  key={index}
+                  className="border-t border-light-gray animate-pulse"
+                >
+                  {/* Order */}
+                  <td className="px-4 sm:px-6 py-3.5 sm:py-4">
+                    <div className="h-4 sm:h-5 w-24 sm:w-32 rounded bg-gray-200 mb-1.5" />
+                    <div className="h-3.5 w-16 sm:w-20 rounded bg-gray-200" />
+                  </td>
+
+                  {/* Items */}
+                  <td className="px-4 sm:px-6 py-3.5 sm:py-4">
+                    <div className="flex items-center gap-2">
+                      <div className="size-4 sm:size-5 rounded bg-gray-200 shrink-0" />
+                      <div className="h-4 w-16 sm:w-20 rounded bg-gray-200" />
+                    </div>
+                  </td>
+
+                  {/* Total */}
+                  <td className="px-4 sm:px-6 py-3.5 sm:py-4">
+                    <div className="h-4 sm:h-5 w-16 sm:w-20 rounded bg-gray-200" />
+                  </td>
+
+                  {/* Status */}
+                  <td className="px-4 sm:px-6 py-3.5 sm:py-4">
+                    <div className="h-6 sm:h-7 w-20 rounded-full bg-gray-200" />
+                  </td>
+
+                  {/* Date */}
+                  <td className="px-4 sm:px-6 py-3.5 sm:py-4">
+                    <div className="h-4 w-24 sm:w-28 rounded bg-gray-200" />
+                  </td>
+
+                  {/* Action */}
+                  <td className="px-4 sm:px-6 py-3.5 sm:py-4">
+                    <div className="ml-auto h-8 sm:h-9 w-24 sm:w-28 rounded-[8px] bg-gray-200" />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

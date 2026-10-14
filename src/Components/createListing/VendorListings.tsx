@@ -168,7 +168,7 @@ export default function VendorListings({
             onChange={e => setSearch(e.target.value)}
             placeholder="Search listings..."
             type="search"
-            className="w-full py-2 pl-3.5 pr-9 outline-0 border border-gray-200 rounded-lg text-sm bg-white focus:border-primary-green transition-colors"
+            className="w-full py-2 pl-3.5 pr-9 outline-0 border border-gray-200 rounded-lg text-sm focus:border-primary-green transition-colors"
           />
           <FaSearch className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-gray text-xs pointer-events-none" />
         </div>
@@ -176,7 +176,7 @@ export default function VendorListings({
         <select
           value={statusFilter}
           onChange={e => setStatusFilter(e.target.value)}
-          className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white cursor-pointer w-full sm:w-44 outline-none capitalize"
+          className="border border-gray-200 rounded-lg px-3 py-2 text-sm cursor-pointer w-full sm:w-44 outline-none capitalize"
         >
           <option value="">All Statuses</option>
           {allStatus.map(status => (
@@ -206,7 +206,7 @@ export default function VendorListings({
                     ].map(h => (
                       <th
                         key={h}
-                        className="text-secondary-black font-semibold text-sm py-3 px-4"
+                        className="text-secondary-black font-semibold text-sm py-5 px-4"
                       >
                         {h}
                       </th>
@@ -334,7 +334,7 @@ export default function VendorListings({
                     ].map(h => (
                       <th
                         key={h}
-                        className="text-secondary-black font-semibold text-sm py-3 px-4"
+                        className="text-secondary-black font-semibold text-sm py-5 px-4"
                       >
                         {h}
                       </th>

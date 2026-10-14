@@ -2,10 +2,10 @@
 import {
   useCancelOrderMutation,
   useGetVendorOrdersQuery,
+  useLazyGetVendorOrdersQuery,
 } from "@/redux/api/ordersApi";
 import moment from "moment";
 import Link from "next/link";
-import { CSVLink } from "react-csv";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
 import { useEffect, useState } from "react";
@@ -13,6 +13,7 @@ import { FiShoppingBag } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Download } from "@/Components/Svg/SvgContainer";
+import { CgSpinnerTwo } from "react-icons/cg";
 import { OrderRowSkeleton } from "@/Components/Loader/Loader";
 import PaginationControl from "@/Components/Common/PaginationControl";
 import OrdersList from "@/Components/order/OrdersList";
@@ -77,9 +78,10 @@ const page = () => {
   const [page, setPage] = useState<number>(1);
   const [filter, setFilter] = useState("last_30_days");
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
-  const [year, setYear] = useState(2026);
+  const [year, setYear] = useState(() => new Date().getFullYear());
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [isExporting, setIsExporting] = useState(false);
 
   const tabs = [
     "orders",
@@ -100,6 +102,7 @@ const page = () => {
   }, [searchInput]);
 
   const [cancelOrder, { isLoading: isCancelling }] = useCancelOrderMutation();
+  const [triggerGetVendorOrders] = useLazyGetVendorOrdersQuery();
   const { data: allOrders, isFetching: isLoading } = useGetVendorOrdersQuery({
     status,
     search,
@@ -126,21 +129,100 @@ const page = () => {
     { label: "Notes", key: "note" },
   ];
 
-  const csvData =
-    allOrders?.data?.map((order: orderItem) => ({
-      order_number: order?.order_number,
-      order_date: moment(order?.order_date).format("ll"),
-      customer: `${order?.customer?.first_name || ""} ${order?.customer?.last_name || ""}`,
-      email: order?.customer?.email,
-      opt: order?.opt_in ? "Yes" : "No",
-      total_quantity: order?.items,
-      total_amount: `$${order?.amount}`,
-      payment_method: "paypal",
-      payment_status: order?.payment_status,
-      status: order?.status,
-      shipping_option: order?.fulfillment_type,
-      note: order?.note || "",
-    })) || [];
+  const handleExportCSV = async () => {
+    try {
+      setIsExporting(true);
+      const totalToFetch = allOrders?.meta?.total || 1000;
+      const res = await triggerGetVendorOrders({
+        status,
+        search,
+        filter,
+        date_from: filter === "custom_date_range" ? dateRange.from : undefined,
+        date_to: filter === "custom_date_range" ? dateRange.to : undefined,
+        year: filter === "specific_year" ? year : undefined,
+        page: 1,
+        per_page: Math.max(totalToFetch, 100),
+      }).unwrap();
+
+      let ordersList = res?.data || [];
+
+      if (res?.meta?.last_page && res.meta.last_page > 1) {
+        const pagePromises = [];
+        for (let p = 2; p <= res.meta.last_page; p++) {
+          pagePromises.push(
+            triggerGetVendorOrders({
+              status,
+              search,
+              filter,
+              date_from:
+                filter === "custom_date_range" ? dateRange.from : undefined,
+              date_to:
+                filter === "custom_date_range" ? dateRange.to : undefined,
+              year: filter === "specific_year" ? year : undefined,
+              page: p,
+              per_page: res.meta.per_page || 100,
+            }).unwrap(),
+          );
+        }
+        const restResults = await Promise.all(pagePromises);
+        restResults.forEach(r => {
+          if (r?.data && Array.isArray(r.data)) {
+            ordersList = ordersList.concat(r.data);
+          }
+        });
+      }
+
+      if (!ordersList || ordersList.length === 0) {
+        toast.error("No orders found to export.");
+        return;
+      }
+
+      const rows = ordersList.map((order: orderItem) => [
+        order?.order_number || "",
+        order?.order_date ? moment(order.order_date).format("ll") : "",
+        `${order?.customer?.first_name || ""} ${order?.customer?.last_name || ""}`.trim(),
+        order?.customer?.email || "",
+        order?.opt_in ? "Yes" : "No",
+        order?.items ?? order?.total_quantity ?? 0,
+        `$${order?.amount || 0}`,
+        order?.payment_method || "paypal",
+        order?.payment_status || "",
+        order?.status || "",
+        order?.fulfillment_type || "",
+        order?.note || "",
+      ]);
+
+      const escapeCsv = (val: any) => {
+        if (val === null || val === undefined) return '""';
+        const str = String(val).replace(/"/g, '""');
+        return `"${str}"`;
+      };
+
+      const csvContent = [
+        headers.map(h => escapeCsv(h.label)).join(","),
+        ...rows.map((row: (string | number)[]) => row.map(escapeCsv).join(",")),
+      ].join("\r\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `orders-report-${moment().format("YYYY-MM-DD")}.csv`,
+      );
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success(`Exported ${ordersList.length} orders successfully.`);
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to export orders.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   useEffect(() => {
     const handleWindowClick = () => {
@@ -175,15 +257,19 @@ const page = () => {
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
           <DashBoardHeader heading="Orders" />
 
-          <CSVLink
-            data={csvData}
-            headers={headers}
-            filename={"orders-report.csv"}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-[8px] border border-light-green text-sm sm:text-base font-semibold text-secondary-black cursor-pointer hover:bg-off-green/30 duration-200 flex gap-2 items-center justify-center shrink-0 self-start sm:self-auto"
+          <button
+            type="button"
+            disabled={isExporting}
+            onClick={handleExportCSV}
+            className="w-full sm:w-auto px-4 py-2.5 rounded-[8px] border border-light-green text-sm sm:text-base font-semibold text-secondary-black cursor-pointer hover:bg-off-green/30 duration-200 flex gap-2 items-center justify-center shrink-0 self-start sm:self-auto disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Download />
-            Download File
-          </CSVLink>
+            {isExporting ? (
+              <CgSpinnerTwo className="animate-spin text-xl text-primary-green" />
+            ) : (
+              <Download />
+            )}
+            {isExporting ? "Exporting..." : "Download File"}
+          </button>
         </div>
 
         {/* Filter Bar */}
@@ -250,7 +336,7 @@ const page = () => {
                 setPage(1);
               }}
               className="border border-gray-300 px-3 py-1.5 rounded-lg text-xs sm:text-sm w-28 bg-white"
-              placeholder="e.g. 2026"
+              placeholder={`e.g. ${new Date().getFullYear()}`}
             />
           )}
         </div>

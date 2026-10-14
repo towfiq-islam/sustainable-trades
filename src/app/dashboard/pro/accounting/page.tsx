@@ -24,7 +24,7 @@ const headers = [
 const page = () => {
   const [filter, setFilter] = useState("last_30_days");
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
-  const [year, setYear] = useState(2024);
+  const [year, setYear] = useState(() => new Date().getFullYear());
   const { data: accountingData, isLoading } = useGetAccountingDataQuery({
     filter,
     date_from: filter === "custom_date_range" ? dateRange.from : undefined,

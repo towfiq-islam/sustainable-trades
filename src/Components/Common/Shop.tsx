@@ -30,7 +30,7 @@ const Shop = ({ shop }: ShopProps) => {
       className="rounded-t-lg relative block hover:-translate-y-2 duration-400 transition-transform"
     >
       {/* Shop Image */}
-      <figure className="w-full h-[200px] md:h-[270px] rounded-lg border border-gray-100 relative">
+      <figure className="w-full h-[240px] md:h-[270px] rounded-lg border border-gray-100 relative">
         <div className="absolute inset-0 bg-black/20 rounded-lg" />
         <Image
           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${shop?.shop?.shop_image}`}

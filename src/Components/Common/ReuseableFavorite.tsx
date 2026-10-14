@@ -58,7 +58,7 @@ const ReuseableFavorite = () => {
 
       {/* Favorites Products */}
       {isActive === "WishLists" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-10">
           {isFavoriteLoading ? (
             [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
           ) : myFavorites?.data?.length > 0 ? (
@@ -92,7 +92,7 @@ const ReuseableFavorite = () => {
 
       {/* FOLLOW Shop list */}
       {isActive === "Followed Shop" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mb-14 mt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mb-14 mt-10">
           {isFollowedLoading ? (
             [1, 2, 3, 4].map((_, index) => <ProductSkeleton key={index} />)
           ) : followedShop?.data?.length > 0 ? (

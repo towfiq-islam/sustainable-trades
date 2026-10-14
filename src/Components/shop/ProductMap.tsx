@@ -91,7 +91,7 @@ const ProductMap: React.FC<ProductMapProps> = ({
   } | null>(null);
   const router = useRouter();
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || "",
   });
 
   // Prepare locations
@@ -106,9 +106,9 @@ const ProductMap: React.FC<ProductMapProps> = ({
     })
     .filter(
       (
-        item
+        item,
       ): item is { id: number; lat: number; lng: number; product: Product } =>
-        item !== null
+        item !== null,
     );
 
   const defaultCenter = locations[0]

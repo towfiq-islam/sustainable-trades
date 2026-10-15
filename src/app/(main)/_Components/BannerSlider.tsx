@@ -62,7 +62,7 @@ const BannerSlider = ({ data }: bannerProps) => {
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${sliderData?.image}`}
                   alt={sliderData?.title || "slider"}
                   fill
-                  priority={idx === 0}
+                  priority={true}
                   // fetchPriority={idx === 0 ? "high" : "auto"}
                   // sizes="100vw"
                   className="object-cover object-center -z-10"

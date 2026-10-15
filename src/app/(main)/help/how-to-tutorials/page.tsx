@@ -89,7 +89,7 @@ const page = () => {
                   Array.from({ length: 3 }).map((_, idx) => (
                     <div
                       key={idx}
-                      className="border border-[#CBC8C2] rounded-lg animate-pulse"
+                      className="border border-border-stone rounded-lg animate-pulse"
                     >
                       <div className="w-full h-[200px] bg-gray-300 rounded-t-lg"></div>
                       <div className="p-5 space-y-3">
@@ -107,7 +107,7 @@ const page = () => {
                   tutorialsData?.data?.tutorials?.map((item: videoItem) => (
                     <div
                       key={item?.id}
-                      className="border border-[#CBC8C2] rounded-lg"
+                      className="border border-border-stone rounded-lg"
                     >
                       <video
                         controls
@@ -119,7 +119,7 @@ const page = () => {
                         <h3 className="text-secondary-gray md:text-lg lg:text-xl font-semibold md:mb-2">
                           {item?.name}
                         </h3>
-                        <p className="text-[#595753] text-sm md:text-base">
+                        <p className="text-muted-gray text-sm md:text-base">
                           {item?.description}
                         </p>
                       </div>

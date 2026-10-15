@@ -39,7 +39,7 @@ const EditFormTwo = ({ data }: any) => {
         Your Shop
       </h2>
 
-      <div className="lg:mt-12 mt-5 grid lg:grid-cols-2 grid-cols-1 gap-x-[96px] items-center lg:gap-y-10 gap-y-5 font-lato">
+      <div className="lg:mt-12 mt-5 grid lg:grid-cols-2 grid-cols-1 gap-x-[96px] items-center lg:gap-y-10 gap-y-5 ">
         {/* Shop Name */}
         <div>
           <p className="form-label">Name Your Shop *</p>
@@ -89,12 +89,12 @@ const EditFormTwo = ({ data }: any) => {
       <div className=" mt-8 mb-[56px] lg:flex gap-x-8">
         {/* Shop Photo */}
         <div>
-          <p className="text-[18px] text-secondary-black font-lato">
+          <p className="text-[18px] text-secondary-black ">
             Add A Profile Photo *
           </p>
 
           <div
-            className="relative bg-[#F0EEE9] h-[270px] w-[270px] lg:mx-0 mx-auto rounded-full mt-6 flex flex-col justify-center items-center cursor-pointer overflow-hidden"
+            className="relative bg-warm-beige h-[270px] w-[270px] lg:mx-0 mx-auto rounded-full mt-6 flex flex-col justify-center items-center cursor-pointer overflow-hidden"
             onClick={() => document.getElementById("shopPhotoInput")?.click()}
           >
             {shopProfilePreview ? (
@@ -144,18 +144,18 @@ const EditFormTwo = ({ data }: any) => {
               </>
             )}
           />
-          <h5 className="text-center text-[#67645F] text-[16px] mt-2">
+          <h5 className="text-center text-muted-gray text-[16px] mt-2">
             Max file size: 10 MB
           </h5>
         </div>
 
         {/* Cover Photo */}
         <div className="w-full">
-          <p className="text-[18px] text-secondary-black font-lato">
+          <p className="text-[18px] text-secondary-black ">
             Add A Cover Photo *
           </p>
           <div
-            className="relative bg-[#F0EEE9] h-[270px] w-full rounded-[8px] mt-6 flex flex-col justify-center items-center cursor-pointer overflow-hidden"
+            className="relative bg-warm-beige h-[270px] w-full rounded-[8px] mt-6 flex flex-col justify-center items-center cursor-pointer overflow-hidden"
             onClick={() => document.getElementById("coverPhotoInput")?.click()}
           >
             {shopCoverPreview ? (
@@ -205,7 +205,7 @@ const EditFormTwo = ({ data }: any) => {
               </>
             )}
           />
-          <h5 className="text-center text-[#67645F] text-[16px] mt-2">
+          <h5 className="text-center text-muted-gray text-[16px] mt-2">
             Max file size: 10 MB
           </h5>
         </div>

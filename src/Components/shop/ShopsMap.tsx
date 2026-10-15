@@ -82,7 +82,7 @@ const ShopsMap: React.FC<ShopsMapProps> = ({
   const router = useRouter();
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || "",
   });
 
   const locations = shops
@@ -161,10 +161,10 @@ const ShopsMap: React.FC<ShopsMapProps> = ({
                     center={{ lat, lng }}
                     radius={804} // 0.5 miles
                     options={{
-                      strokeColor: "#4CAF50",
+                      strokeColor: "#274f45",
                       strokeOpacity: 0.7,
                       strokeWeight: 2,
-                      fillColor: "#4CAF50",
+                      fillColor: "#274f45",
                       fillOpacity: 0.25,
                     }}
                   />
@@ -214,11 +214,11 @@ const ShopsMap: React.FC<ShopsMapProps> = ({
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold group-hover:underline text-primary-green">
                       {selected.shop_info.shop_name}
-                      </span>
-                      
+                    </span>
+
                     {shippingDistanceMiles != null && (
                       <span className="text-xs text-gray-600 flex gap-1 items-center mt-1">
-                        <MdOutlineLocationOn className="text-base"/>
+                        <MdOutlineLocationOn className="text-base" />
                         {shippingDistanceMiles.toFixed(2)} miles away
                       </span>
                     )}

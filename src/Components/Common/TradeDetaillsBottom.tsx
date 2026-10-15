@@ -109,9 +109,9 @@ const TradeDetailsBottom = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Pending":
-        return "bg-accent-red text-[#fff]";
+        return "bg-accent-red text-pure-white";
       case "Sent":
-        return "bg-primary-green text-[#fff]";
+        return "bg-primary-green text-pure-white";
       default:
         return "bg-gray-200 text-gray-600";
     }
@@ -120,9 +120,9 @@ const TradeDetailsBottom = () => {
   return (
     <div className="flex gap-x-10 max-w-full">
       {/* Chat Section */}
-      <div className="w-1/2 border border-[#BFBEBE]  rounded-lg shadow-sm flex flex-col bg-white">
+      <div className="w-1/2 border border-border-gray  rounded-lg shadow-sm flex flex-col bg-white">
         {/* Header */}
-        <div className="bg-off-green px-4 py-3 border-b border-[#BFBEBE] flex items-center gap-3 rounded-t-lg">
+        <div className="bg-off-green px-4 py-3 border-b border-border-gray flex items-center gap-3 rounded-t-lg">
           <img
             src="https://i.pravatar.cc/40?img=1"
             alt="Linda Anderson"
@@ -158,7 +158,7 @@ const TradeDetailsBottom = () => {
         </div>
 
         {/* Input */}
-        <div className="border-t border-[#BFBEBE] px-3 py-3 flex items-center gap-2 mt-20">
+        <div className="border-t border-border-gray px-3 py-3 flex items-center gap-2 mt-20">
           <button className="text-gray-400 hover:text-gray-600 p-2">
             <FaPlus size={16} />
           </button>
@@ -169,7 +169,7 @@ const TradeDetailsBottom = () => {
               value={message}
               onChange={e => setMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="w-full border border-[#BFBEBE] rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
+              className="w-full border border-border-gray rounded-full px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent"
             />
             <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
               <FaMicrophone size={14} />
@@ -177,7 +177,7 @@ const TradeDetailsBottom = () => {
           </div>
           <button
             onClick={handleSendMessage}
-            className="bg-primary-green text-white p-2 rounded-md hover:bg-[#1e3a32] transition-colors"
+            className="bg-primary-green text-white p-2 rounded-md hover:bg-dark-green-hover transition-colors"
           >
             <FaPaperPlane size={16} />
           </button>
@@ -204,7 +204,7 @@ const TradeDetailsBottom = () => {
           {trades.slice(0, visibleTrades).map((trade, idx) => (
             <div
               key={idx}
-              className="flex justify-between items-start border-b border-[#BFBEBE] pb-4 hover:bg-gray-50 p-2 
+              className="flex justify-between items-start border-b border-border-gray pb-4 hover:bg-gray-50 p-2 
              transition-colors"
             >
               <div className="flex items-start gap-3">
@@ -223,7 +223,7 @@ const TradeDetailsBottom = () => {
                   <p className="text-[14px] font-normal text-secondary-black">
                     Qty: {trade.qty}
                   </p>
-                  <p className="text-[14px] font-normal text-[#828282]">
+                  <p className="text-[14px] font-normal text-muted-gray">
                     # 379
                   </p>
                 </div>

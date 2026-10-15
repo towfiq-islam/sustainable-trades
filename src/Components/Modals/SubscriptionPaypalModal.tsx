@@ -1,6 +1,92 @@
 "use client";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import {
+  PayPalScriptProvider,
+  PayPalButtons,
+  usePayPalScriptReducer,
+} from "@paypal/react-paypal-js";
 import toast from "react-hot-toast";
+
+const PayPalSubscriptionButtons = ({ planId }: { planId: number }) => {
+  const [{ isResolved, isRejected, isPending }] = usePayPalScriptReducer();
+
+  if (isRejected) {
+    return (
+      <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+        Failed to load PayPal. Please refresh the page and try again.
+      </div>
+    );
+  }
+
+  if (!isResolved || isPending) {
+    return (
+      <div className="space-y-3 py-2">
+        <div className="h-12 w-full animate-pulse rounded-md bg-gray-200" />
+        <div className="h-12 w-full animate-pulse rounded-md bg-gray-200" />
+        <div className="h-12 w-full animate-pulse rounded-md bg-gray-200" />
+      </div>
+    );
+  }
+
+  return (
+    <PayPalButtons
+      style={{
+        shape: "rect",
+        layout: "vertical",
+        color: "gold",
+        label: "subscribe",
+      }}
+      createSubscription={async () => {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/create-subscription`,
+            {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ plan_id: planId }),
+            },
+          );
+
+          const orderData = await response.json();
+
+          if (orderData?.data?.subscriptionID) {
+            return orderData?.data?.subscriptionID;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }}
+      onApprove={async data => {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture-subscription`,
+            {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                plan_id: planId,
+                subscriptionID: data?.subscriptionID,
+              }),
+            },
+          );
+
+          const orderData = await response.json();
+          if (orderData?.status) {
+            toast.success(orderData?.message);
+            window.location.href = `${window.location.origin}/complete-shop-creation`;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }}
+    />
+  );
+};
 
 const SubscriptionPaypalModal = ({
   planId,
@@ -34,63 +120,7 @@ const SubscriptionPaypalModal = ({
       )}
 
       <PayPalScriptProvider options={initialOptions as any}>
-        <PayPalButtons
-          style={{
-            shape: "rect",
-            layout: "vertical",
-            color: "gold",
-            label: "subscribe",
-          }}
-          createSubscription={async () => {
-            try {
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/create-subscription`,
-                {
-                  method: "POST",
-                  credentials: "include",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ plan_id: planId }),
-                },
-              );
-
-              const orderData = await response.json();
-
-              if (orderData?.data?.subscriptionID) {
-                return orderData?.data?.subscriptionID;
-              }
-            } catch (error) {
-              console.error(error);
-            }
-          }}
-          onApprove={async data => {
-            try {
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_SITE_URL}/api/paypal/capture-subscription`,
-                {
-                  method: "POST",
-                  credentials: "include",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    plan_id: planId,
-                    subscriptionID: data?.subscriptionID,
-                  }),
-                },
-              );
-
-              const orderData = await response.json();
-              if (orderData?.status) {
-                toast.success(orderData?.message);
-                window.location.href = `${window.location.origin}/complete-shop-creation`;
-              }
-            } catch (error) {
-              console.error(error);
-            }
-          }}
-        />
+        <PayPalSubscriptionButtons planId={planId} />
       </PayPalScriptProvider>
     </div>
   );

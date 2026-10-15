@@ -44,25 +44,21 @@ const AccountTable = ({
   return (
     <div>
       {/* Header */}
-      <div
-        className={`flex flex-col sm:flex-row justify-between gap-3 ${data?.length > 0 && "border-b pb-2"} border-gray-400`}
-      >
-        <h4 className="text-[20px] sm:text-[24px] font-semibold text-secondary-black">
+      <div className="flex flex-col sm:flex-row justify-between gap-3 border-b pb-2 border-gray-400">
+        <h4 className="text-lg md:text-[20px] sm:text-[24px] font-semibold text-secondary-black">
           {title}
         </h4>
 
-        {data?.length > 0 && (
-          <select
-            className="w-full sm:w-[200px] border rounded-lg p-2"
-            value={filter}
-            onChange={e => setFilter(e.target.value)}
-          >
-            <option value="last_30_days">Last 30 Days</option>
-            <option value="year_to_date">Year to Date</option>
-            <option value="custom_date_range">Custom Date Range</option>
-            <option value="specific_year">Specific Year</option>
-          </select>
-        )}
+        <select
+          className="w-full sm:w-[200px] border rounded-lg p-2 cursor-pointer"
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
+        >
+          <option value="last_30_days">Last 30 Days</option>
+          <option value="year_to_date">Year to Date</option>
+          <option value="custom_date_range">Custom Date Range</option>
+          <option value="specific_year">Specific Year</option>
+        </select>
       </div>
 
       {/* Date range */}
@@ -91,7 +87,7 @@ const AccountTable = ({
           value={year}
           onChange={e => setYear(Number(e.target.value))}
           className="border p-2 rounded mt-2"
-          placeholder="Enter year (e.g. 2024)"
+          placeholder={`Enter year (e.g. ${new Date().getFullYear()})`}
         />
       )}
 
@@ -100,7 +96,7 @@ const AccountTable = ({
         {isLoading ? (
           <table className="w-full min-w-[800px] border-collapse">
             <thead>
-              <tr className="bg-primary-green text-[#fff] text-[14px] sm:text-[16px] font-semibold">
+              <tr className="bg-primary-green text-pure-white text-[14px] sm:text-[16px] font-semibold">
                 <th className="py-2 px-4 text-left"># Order</th>
                 <th className="py-2 px-4 text-left">Revenue</th>
                 <th className="py-2 px-4 text-left">Profit</th>
@@ -157,7 +153,7 @@ const AccountTable = ({
         ) : data?.length > 0 ? (
           <table className="w-full min-w-[800px] border-collapse">
             <thead>
-              <tr className="bg-primary-green text-[#fff] text-[14px] sm:text-[16px] font-semibold">
+              <tr className="bg-primary-green text-pure-white text-[14px] sm:text-[16px] font-semibold">
                 <th className="py-2 px-4 text-left"># Order</th>
                 <th className="py-2 px-4 text-left">Revenue</th>
                 <th className="py-2 px-4 text-left">Profit</th>
@@ -177,7 +173,7 @@ const AccountTable = ({
                   key={idx}
                   className="border-b border-gray-300 text-secondary-black text-[14px] font-medium"
                 >
-                  <td className="text-[#3470E5]">
+                  <td className="text-blue-600">
                     <Link
                       href={`${isTradeAndBarter ? "" : `/dashboard/pro/orders/${row?.id}`}`}
                       className="py-3 px-4 hover:underline cursor-pointer"

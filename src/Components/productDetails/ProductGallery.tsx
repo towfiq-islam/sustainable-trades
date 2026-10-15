@@ -60,7 +60,6 @@ const ProductGallery = ({ data }: galleryProps) => {
                 src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
                 alt="thumbnail"
                 fill
-                unoptimized
                 className="object-cover rounded-lg"
               />
             </figure>
@@ -87,7 +86,6 @@ const ProductGallery = ({ data }: galleryProps) => {
               src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
               alt="main product"
               fill
-              unoptimized
               className="object-cover rounded-xl"
             />
 

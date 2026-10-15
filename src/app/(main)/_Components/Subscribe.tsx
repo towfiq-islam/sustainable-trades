@@ -22,7 +22,7 @@ const Subscribe = () => {
           goods, trade opportunities, and sustainable living tips.
         </p>
 
-        <div className="flex gap-2.5 md:gap-5 flex-col md:flex-row justify-center items-center mb-8">
+        <div className="flex gap-2 md:gap-5 flex-row justify-center items-center mb-8">
           <input
             type="text"
             onChange={e => setEmail(e.target.value)}
@@ -39,7 +39,7 @@ const Subscribe = () => {
                 newsletterMutation({ email }).unwrap();
               }
             }}
-            className={`shrink-0 border-2 border-primary-green text-accent-white bg-primary-green font-semibold px-7 py-1.5 md:py-3 rounded-lg hover:scale-105 duration-300 transition-transform ${
+            className={`shrink-0 border-2 border-primary-green text-accent-white bg-primary-green md:font-semibold px-3 md:px-7 py-2 md:py-3 rounded-lg hover:scale-105 duration-300 transition-transform text-sm md:text-base ${
               isPending ? "cursor-not-allowed" : "cursor-pointer"
             }`}
           >

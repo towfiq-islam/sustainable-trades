@@ -21,27 +21,27 @@ const ShopFAQ = ({ data }: FaqProps) => {
   };
 
   return (
-    <section className="pt-3 md:pt-6 lg:pt-12 pb-5  md:pb-10 lg:pb-20">
+    <section className="pt-4 md:pt-6 lg:pt-12 pb-8 md:pb-12 lg:pb-20">
       <Container>
-        <h2 className="section_sub_title !mb-0 md:mb-3">FAQs</h2>
+        <h2 className="section_sub_title !mb-2 md:!mb-4">FAQs</h2>
 
-        <div>
+        <div className="divide-y-2 divide-gray-200">
           {data?.map(item => {
             const isOpen = activeAccordion === item.id;
 
             return (
               <div
                 key={item.id}
-                className="border-b-2 border-gray-200 py-2 md:py-4 cursor-pointer"
+                className="py-3 sm:py-4 cursor-pointer select-none"
                 onClick={() => toggleAccordion(item?.id)}
               >
                 {/* Question */}
-                <div className="flex justify-between items-center">
-                  <h3 className=" md:text-lg lg:text-xl font-semibold text-primary-green">
+                <div className="flex justify-between items-center gap-3">
+                  <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-primary-green">
                     {item?.question}
                   </h3>
                   <span
-                    className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-secondary-black transition-transform duration-300 ease-in-out ${
+                    className={`text-xs sm:text-sm md:text-base text-secondary-black shrink-0 transition-transform duration-300 ease-in-out ${
                       isOpen ? "rotate-180" : "rotate-0"
                     }`}
                   >
@@ -51,14 +51,14 @@ const ShopFAQ = ({ data }: FaqProps) => {
 
                 {/* Answer */}
                 <div
-                  className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+                  className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
                     isOpen
-                      ? "grid-rows-[1fr] opacity-100 mt-2"
+                      ? "grid-rows-[1fr] opacity-100 mt-2 sm:mt-3"
                       : "grid-rows-[0fr] opacity-0 mt-0"
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="text-secondary-gray text-xs sm:text-sm md:text-base lg:text-[17px]">
+                    <p className="text-secondary-gray text-xs sm:text-sm md:text-base leading-relaxed">
                       {item?.answer}
                     </p>
                   </div>

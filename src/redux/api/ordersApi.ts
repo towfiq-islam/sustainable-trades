@@ -112,6 +112,7 @@ export const ordersApi = apiSlice.injectEndpoints({
 
 export const {
   useGetVendorOrdersQuery,
+  useLazyGetVendorOrdersQuery,
   useGetMyOrdersQuery,
   useGetSingleOrderQuery,
   useGetOrderDetailsQuery,

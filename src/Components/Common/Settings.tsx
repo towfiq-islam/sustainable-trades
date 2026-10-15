@@ -106,12 +106,12 @@ const Settings = () => {
 
   return (
     <>
-      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-black">
+      <h2 className="text-3xl 2xl:text-[40px] font-semibold text-black">
         Settings
       </h2>
 
       <div className="lg:mt-6 flex flex-col-reverse lg:flex-row gap-x-[72.5px] xl:gap-x-[145px]">
-        <div className="mt-5 lg:mt-0 lg:w-1/2">
+        <div className="mt-5 lg:mt-0 w-full xl:w-2/3 2xl:w-1/2">
           <form
             id="settings-form"
             onSubmit={handleSubmit(onSubmit)}

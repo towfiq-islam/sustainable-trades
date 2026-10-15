@@ -54,7 +54,7 @@ export default function PaginationControl({
           aria-label="Previous page"
           className={`flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 transition-colors ${
             currentPage > 1
-              ? "text-black bg-white hover:border-primary/40 hover:text-primary cursor-pointer"
+              ? "text-black bg-white hover:border-primary-green/40 hover:text-primary-green cursor-pointer"
               : "text-gray/40 bg-gray-50 cursor-not-allowed"
           }`}
         >
@@ -76,7 +76,7 @@ export default function PaginationControl({
               className={`min-w-8 h-8 px-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                 p === currentPage
                   ? "bg-primary-green text-white"
-                  : "text-black bg-white border border-gray-200 hover:border-primary/40 hover:text-primary"
+                  : "text-black bg-white border border-gray-200 hover:border-primary-green/40 hover:text-primary-green"
               }`}
             >
               {p}
@@ -91,7 +91,7 @@ export default function PaginationControl({
           aria-label="Next page"
           className={`flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 transition-colors ${
             currentPage < lastPage
-              ? "text-black bg-white hover:border-primary/40 hover:text-primary cursor-pointer"
+              ? "text-black bg-white hover:border-primary-green/40 hover:text-primary-green cursor-pointer"
               : "text-gray/40 bg-gray-50 cursor-not-allowed"
           }`}
         >

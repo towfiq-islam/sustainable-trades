@@ -188,7 +188,7 @@ export const productApi = apiSlice.injectEndpoints({
         method: "POST",
       }),
 
-      invalidatesTags: ["product", "favorite"],
+      invalidatesTags: ["product", "favorite", "shop"],
     }),
 
     // Product Categories

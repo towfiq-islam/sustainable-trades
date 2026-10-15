@@ -11,6 +11,7 @@ import { CgSpinnerTwo } from "react-icons/cg";
 import { useFormContext } from "react-hook-form";
 import AddressForm from "@/Components/Modals/LocatorModal";
 import Modal from "@/Components/Common/Modal";
+import { getLatLng, normalizeStateCode } from "@/lib/getLatLng";
 
 const containerStyle = {
   width: "100%",
@@ -44,32 +45,6 @@ const StepFour = ({ setStep, step, isPending }: any) => {
     setIsModalOpen(true);
   };
 
-  // Geocode function
-  const fetchLatLngFromAddress = async (address: string) => {
-    if (!API_KEY) {
-      toast.error("Google Maps API key is missing.");
-      return null;
-    }
-
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-      address,
-    )}&key=${API_KEY}`;
-
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      if (data.status === "OK" && data.results.length > 0) {
-        return data.results[0].geometry.location;
-      } else {
-        toast.error("Address not found. Please enter a valid address.");
-        return null;
-      }
-    } catch {
-      toast.error("Failed to fetch location. Try again.");
-      return null;
-    }
-  };
-
   // Save button logic
   const handleSave = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -85,23 +60,30 @@ const StepFour = ({ setStep, step, isPending }: any) => {
 
     if (!isValid) return;
 
-    const { address_line_1, address_line_2, city, state, zip_code, country } =
+    const { address_line_1, city, state, zip_code } =
       getValues();
-    let address = `${address_line_1} ${
-      address_line_2 ?? ""
-    }, ${city}, ${state} ${zip_code}, ${country ?? "USA"}`;
 
-    if (selectedOption === 3) {
-      address = `${city}, ${state}, ${country ?? "USA"}`;
+    const normalizedState = normalizeStateCode(state);
+    const normalizedCountry = "US";
+
+    const location = await getLatLng({
+      street_address: address_line_1,
+      city,
+      state: normalizedState,
+      zip_code,
+      country: normalizedCountry,
+    });
+
+    if (!location || location.lat === null || location.lng === null) {
+      toast.error("Address not found. Please enter a valid address.");
+      return;
     }
 
-    const location = await fetchLatLngFromAddress(address);
-    if (!location) return;
-
-    setSelectedLocation(location);
-    setValue("latitude", location.lat);
-    setValue("longitude", location.lng);
-    setValue("country", "US", { shouldValidate: true });
+    setSelectedLocation({ lat: location.lat, lng: location.lng });
+    setValue("latitude", location.lat, { shouldValidate: true });
+    setValue("longitude", location.lng, { shouldValidate: true });
+    setValue("state", normalizedState, { shouldValidate: true });
+    setValue("country", normalizedCountry, { shouldValidate: true });
     setIsModalOpen(false);
   };
 
@@ -122,7 +104,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
 
   return (
     <section className="lg:px-12">
-      <div className="lg:my-16 my-8 text-center lg:text-left">
+      <div className="xl:my-16 my-10 text-center lg:text-left">
         <h2 className="auth_title text-2xl sm:text-3xl lg:text-4xl">
           Geo-Locator
         </h2>
@@ -149,10 +131,10 @@ const StepFour = ({ setStep, step, isPending }: any) => {
                 center={selectedLocation}
                 radius={804.672}
                 options={{
-                  strokeColor: "#41695a",
+                  strokeColor: "#274f45",
                   strokeOpacity: 0.8,
                   strokeWeight: 2,
-                  fillColor: selectedOption === 2 ? "#41695a" : "#bac7b1",
+                  fillColor: selectedOption === 2 ? "#274f45" : "#bfbebe",
                   fillOpacity: 0.25,
                 }}
               />
@@ -239,7 +221,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
       <Modal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        className="bg-[#f7f7f7] max-w-lg"
+        className="max-w-lg"
       >
         <div>
           <p className="mb-4 text-sm">

@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useGetUserDataQuery } from "@/redux/api/authApi";
 import {
@@ -20,6 +21,31 @@ const useAuth = () => {
     { skip: !isAuthenticated },
   );
 
+  const handleSetAuthenticated = useCallback(
+    () => dispatch(setUser()),
+    [dispatch],
+  );
+
+  const handleClearAuthorization = useCallback(
+    () => dispatch(removeUser()),
+    [dispatch],
+  );
+
+  const handleSetLatitude = useCallback(
+    (value: number) => dispatch(setLatitude(value)),
+    [dispatch],
+  );
+
+  const handleSetLongitude = useCallback(
+    (value: number) => dispatch(setLongitude(value)),
+    [dispatch],
+  );
+
+  const handleSetSearch = useCallback(
+    (value: string) => dispatch(setSearch(value)),
+    [dispatch],
+  );
+
   return {
     user: userData?.data ?? null,
     isAuthenticated,
@@ -27,11 +53,11 @@ const useAuth = () => {
     longitude,
     search,
     loading: loadingUserData,
-    setAuthenticated: () => dispatch(setUser()),
-    clearAuthorization: () => dispatch(removeUser()),
-    setLatitude: (value: number) => dispatch(setLatitude(value)),
-    setLongitude: (value: number) => dispatch(setLongitude(value)),
-    setSearch: (value: string) => dispatch(setSearch(value)),
+    setAuthenticated: handleSetAuthenticated,
+    clearAuthorization: handleClearAuthorization,
+    setLatitude: handleSetLatitude,
+    setLongitude: handleSetLongitude,
+    setSearch: handleSetSearch,
   };
 };
 

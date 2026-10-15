@@ -79,15 +79,15 @@
 
 ## 3. Optimization Issues
 
-1. **Dynamic Rendering De-optimization on All Static/ISR CMS Routes**
+1. **Dynamic Rendering De-optimization on All Static/ISR CMS Routes** — `[RESOLVED]`
    - **File:** [serverFetch.ts:L17-L18](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/lib/serverFetch.ts#L17-L18)
-   - **Issue:** `serverFetch` unconditionally calls `const cookieStore = await cookies();` on **every single request**, even for `mode: "ISR"` or `mode: "SSG"` CMS endpoints.
-   - **Impact:** Invoking `cookies()` opts all Next.js routes into dynamic request-time rendering, completely negating static page generation and ISR caching for public pages (Terms, FAQs, How-To, Spotlight, Categories).
+   - **Original Issue:** `serverFetch` unconditionally called `const cookieStore = await cookies();` on **every single request**, even for `mode: "ISR"` or `mode: "SSG"` CMS endpoints.
+   - **Resolution:** Gated `cookies()` access so it is only invoked when `mode === "SSR"`. All static and ISR routes (Terms, FAQs, How-To, Spotlight, Categories) now maintain full SSG generation and ISR caching without being de-optimized into request-time dynamic rendering.
 
-2. **Missing `useCallback` in Core Hooks Causing Cascading Re-renders**
-   - **File:** [useAuth.tsx:L30-L35](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Hooks/useAuth.tsx#L30-L35) & [useAddToCart.tsx:L24-L46](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Hooks/useAddToCart.tsx#L24-L46)
-   - **Issue:** Action dispatchers (`setLatitude`, `setLongitude`, `handleAddToCart`) are defined as inline anonymous functions and returned as new object references on every render.
-   - **Impact:** Any component with `useAuth` or `useAddToCart` as a dependency in `useEffect` re-triggers on every parent re-render.
+2. **Missing `useCallback` in Core Hooks Causing Cascading Re-renders** — `[RESOLVED]`
+   - **Files:** [useAuth.tsx:L30-L35](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Hooks/useAuth.tsx#L30-L35), [useAddToCart.tsx:L24-L46](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Hooks/useAddToCart.tsx#L24-L46), [useAddFavorite.tsx](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Hooks/useAddFavorite.tsx), [useFollowShop.tsx](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Hooks/useFollowShop.tsx), [useDownloadInvoice.tsx](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Hooks/useDownloadInvoice.tsx)
+   - **Original Issue:** Action dispatchers (`setLatitude`, `setLongitude`, `handleAddToCart`) were defined as inline anonymous functions and returned as new object references on every render.
+   - **Resolution:** Wrapped all action dispatchers and mutation triggers across core hooks in `useCallback` with stable dependency arrays, ensuring reference equality and preventing cascading re-renders in subscribing components.
 
 3. **Duplicate Field Append in Form Submission**
    - **File:** [CreateListing.tsx:L138](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Components/createListing/CreateListing.tsx#L138) & [L156](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Components/createListing/CreateListing.tsx#L156)

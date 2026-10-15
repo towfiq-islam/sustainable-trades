@@ -101,10 +101,10 @@
 
 ## 4. Performance Issues
 
-1. **Geolocation Prompt on Initial Page Load & Potential Render Loop**
+1. **Geolocation Prompt on Initial Page Load & Potential Render Loop** — `[RESOLVED]`
    - **File:** [LocationProvider.tsx:L10-L31](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Provider/LocationProvider/LocationProvider.tsx#L10-L31)
-   - **Issue:** `LocationProvider` calls `navigator.geolocation.getCurrentPosition` inside `useEffect(..., [setLatitude, setLongitude])`. Because `setLatitude` and `setLongitude` from `useAuth` are recreated on every state change, this effect can re-trigger on every location update.
-   - **Impact:** Aggressive permission prompt immediately on first page load before user interaction, hurting Core Web Vitals and causing excessive geolocation hardware queries.
+   - **Original Issue:** `LocationProvider` called `navigator.geolocation.getCurrentPosition` unconditionally on root mount, causing aggressive permission prompts immediately on initial visit, potential re-render loops upon location updates, and heavy high-accuracy hardware polling.
+   - **Resolution:** Added `hasRequested` ref guard, checked if Redux already contains persisted coordinates before requesting, switched to low-power network location with 5-minute cache (`maximumAge: 300000`, `enableHighAccuracy: false`), and queried the Permissions API to prevent redundant queries and avoid render loops.
 
 2. **Memory Leak in Pusher WebSocket Subscriptions**
    - **File:** [ConversationList.tsx:L84-L95](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Components/messages/ConversationList.tsx#L84-L95)
@@ -115,9 +115,10 @@
    - **Files:** [ImageUpload.tsx:L27](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Components/createListing/ImageUpload.tsx#L27) & [MessagePage.tsx:L168-L172](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/Components/messages/MessagePage.tsx#L168-L172)
    - **Issue:** `URL.createObjectURL` is called without cleaning up with `URL.revokeObjectURL` on image removal. In `MessagePage.tsx`, the cleanup in `useEffect([previewUrls])` revokes URLs prematurely when new attachments are added.
 
-4. **All Swiper Banner Slides Marked with `priority` Preload**
+4. **All Swiper Banner Slides Marked with `priority` Preload** — `[RESOLVED]`
    - **File:** [BannerSlider.tsx:L65](file:///c:/Users/tofiq/OneDrive/Desktop/My%20Projects/melissabooth-123-next-js/src/app/(main)/_Components/BannerSlider.tsx#L65)
-   - **Issue:** Every slide in the carousel has `priority={true}`, creating competing `<link rel="preload">` requests on initial page load instead of just preloading the first active slide.
+   - **Original Issue:** Every slide in the carousel had `priority={true}`, creating competing `<link rel="preload">` requests on initial page load instead of just preloading the first active slide.
+   - **Resolution:** Updated the hero banner slide image to set `priority={idx === 0}` and `sizes="100vw"`, ensuring only the visible first slide is preloaded and subsequent slides load lazily.
 
 ---
 

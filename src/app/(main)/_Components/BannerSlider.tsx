@@ -60,9 +60,10 @@ const BannerSlider = ({ data }: bannerProps) => {
                 {/* Background image */}
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${sliderData?.image}`}
-                  alt="slider"
+                  alt={sliderData?.title || "slider"}
                   fill
-                  priority
+                  priority={idx === 0}
+                  sizes="100vw"
                   className="object-cover object-center -z-10"
                 />
 
@@ -87,7 +88,7 @@ const BannerSlider = ({ data }: bannerProps) => {
                       </p>
 
                       <Link
-                        href={sliderData?.btn_link}
+                        href={sliderData?.btn_link || "#"}
                         className="md:w-[416px] text-center bg-primary-green text-white duration-500 transition-all mx-auto block text-base md:text-lg cursor-pointer py-3 lg:py-4 rounded-lg shadow-lg hover:scale-105"
                       >
                         {sliderData?.btn_text}

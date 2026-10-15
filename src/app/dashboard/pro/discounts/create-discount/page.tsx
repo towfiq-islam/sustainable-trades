@@ -198,26 +198,10 @@ const CreateDiscount = () => {
           ? { discount_limits: parseInt(totalUses.trim()) }
           : {}),
 
-      // discount_limits: limitPerCustomer
-      //   ? 1
-      //   : totalUsesLimit && totalUses.trim()
-      //     ? parseInt(totalUses.trim())
-      //     : null,
-
-      // start_date: startDate,
-      // start_time: startTime || null,
 
       start_datetime: startDatetimeUtc,
       never_expires: neverExpires,
       end_datetime: neverExpires ? null : endDatetimeUtc,
-
-      // ...(neverExpires
-      //   ? { end_date: null, end_time: null }
-      //   : {
-      //       end_date: endDate || null,
-      //       end_time: endTime || null,
-      //     }),
-
       ...(isEditMode && { id: parseInt(id!) }),
     };
 
@@ -269,7 +253,7 @@ const CreateDiscount = () => {
   if (isLoading && isEditMode) {
     return (
       <div className="h-[80vh] flex justify-center items-center">
-        <PuffLoader color="#274f45" />
+        <PuffLoader color="var(--color-primary-green)" />
       </div>
     );
   }
@@ -306,8 +290,8 @@ const CreateDiscount = () => {
             setName(e.target.value);
             if (errors.name) setErrors({ ...errors, name: "" });
           }}
-          className={`px-4 py-2.5 md:py-5 border-2 rounded-[8px] text-[16px] font-bold text-[#67645F] mt-3 w-full lg:w-[750px] ${
-            errors.name ? "border-red-500" : "border-[#67645F]"
+          className={`px-4 py-2.5 md:py-5 border-2 rounded-[8px] text-[16px] font-bold text-muted-gray mt-3 w-full lg:w-[750px] ${
+            errors.name ? "border-red-500" : "border-muted-gray"
           }`}
         />
         {errors.name && (
@@ -323,23 +307,23 @@ const CreateDiscount = () => {
         <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
           Discount Type
         </h4>
-        <div className="flex mt-3 ">
+        <div className="flex mt-3">
           <button
             onClick={() => setDiscountType("code")}
-            className={`px-4 py-[9px] md:py-[18px] rounded-l-md cursor-pointer text-[16px] md:text-[20px] text-primary-green font-semibold ${
+            className={`px-4 py-[9px] md:py-[18px] rounded-l-md cursor-pointer text-sm md:text-[16px] lg:text-[20px] text-primary-green font-semibold ${
               discountType === "code"
                 ? "bg-off-green border-2 border-primary-green "
-                : "bg-white border-2 border-[#67645F]"
+                : "bg-white border-2 border-muted-gray"
             }`}
           >
             Discount Code
           </button>
           <button
             onClick={() => setDiscountType("auto")}
-            className={`px-6 py-2 rounded-r-md cursor-pointer  text-[16px] md:text-[20px] text-primary-green font-semibold ${
+            className={`px-6 py-2 rounded-r-md cursor-pointer  text-sm md:text-[16px] lg:text-[20px] text-primary-green font-semibold ${
               discountType === "auto"
                 ? "bg-off-green border-2 border-primary-green "
-                : "bg-white border-2 border-[#67645F]"
+                : "bg-white border-2 border-muted-gray"
             }`}
           >
             Automatic Discount
@@ -353,7 +337,7 @@ const CreateDiscount = () => {
           <h4 className="text-[16px] md:text-[20px] font-normal text-secondary-black">
             Discount Code
           </h4>
-          <div className="flex gap-2 mt-3 w-full lg:w-[750px] relative">
+          <div className="flex gap-2 md:mt-3 w-full lg:w-[750px] relative">
             <input
               type="text"
               placeholder="Discount Code (Ex. SALE15)"
@@ -362,13 +346,13 @@ const CreateDiscount = () => {
                 setCode(e.target.value);
                 if (errors.code) setErrors({ ...errors, code: "" });
               }}
-              className={`px-4 py-2.5 md:py-5 border-2 rounded-[8px] text-[13px] md:text-[16px] font-bold text-[#67645F] my-3 w-full md:w-[750px] ${
-                errors.code ? "border-red-500" : "border-[#67645F]"
+              className={`px-4 py-2.5 md:py-5 border-2 rounded-[8px] text-[13px] md:text-[16px] font-bold text-muted-gray my-3 w-full md:w-[750px] ${
+                errors.code ? "border-red-500" : "border-muted-gray"
               }`}
             />
             <button
               onClick={handleGenerateCode}
-              className="absolute top-[50%] -translate-y-[50%] right-5 cursor-pointer text-[#5C7F60] font-bold text-[13px] md:text-[16px]"
+              className="absolute top-[50%] -translate-y-[50%] right-5 cursor-pointer text-medium-green font-bold text-[13px] md:text-[16px]"
             >
               Generate Code
             </button>
@@ -390,11 +374,11 @@ const CreateDiscount = () => {
         </h4>
         <div
           className={`flex mt-3 w-full lg:w-[750px] border rounded-md ${
-            errors.amount ? "border-red-500" : "border-[#67645F]"
+            errors.amount ? "border-red-500" : "border-muted-gray"
           }`}
         >
           <select
-            className="px-4 py-2.5 md:py-5 w-full bg-off-green rounded-l-md text-[#5C7F60] font-bold text-[13px] md:text-[16px] outline-0"
+            className="px-4 py-2.5 md:py-5 w-full bg-off-green rounded-l-md text-medium-green font-bold text-[13px] md:text-[16px] outline-0"
             value={promoType}
             onChange={e => setPromoType(e.target.value)}
           >
@@ -424,7 +408,7 @@ const CreateDiscount = () => {
           Applies To
         </h4>
         <select
-          className="mt-3 border border-[#3D3D3D] rounded-md px-4 py-2.5 md:py-5  w-full lg:w-[750px] bg-off-green text-[13px] md:text-[16px] font-bold text-primary-green"
+          className="mt-3 border border-dark-gray rounded-md px-4 py-2.5 md:py-5  w-full lg:w-[750px] bg-off-green text-[13px] md:text-[16px] font-bold text-primary-green"
           value={appliesTo}
           onChange={e => {
             setAppliesTo(e.target.value);
@@ -449,7 +433,7 @@ const CreateDiscount = () => {
                   setErrors({ ...errors, selectedProduct: "" });
               }}
               className={`w-full border rounded-md px-4 py-5 text-[16px] font-bold text-secondary-black ${
-                errors.selectedProduct ? "border-red-500" : "border-[#67645F]"
+                errors.selectedProduct ? "border-red-500" : "border-muted-gray"
               }`}
             >
               <option value="">Select a product</option>
@@ -538,8 +522,8 @@ const CreateDiscount = () => {
               if (errors.totalUses) setErrors({ ...errors, totalUses: "" });
             }}
             disabled={!totalUsesLimit}
-            className={`px-4 py-2.5 md:py-5 border rounded-[8px] text-[16px] font-bold text-[#67645F] my-1  w-full lg:w-[750px] ${
-              errors.totalUses ? "border-red-500" : "border-[#3D3D3D]"
+            className={`px-4 py-2.5 md:py-5 border rounded-[8px] text-[16px] font-bold text-muted-gray my-1  w-full lg:w-[750px] ${
+              errors.totalUses ? "border-red-500" : "border-dark-gray"
             }`}
           />
           {errors.totalUses && (
@@ -560,8 +544,8 @@ const CreateDiscount = () => {
               Start Date
             </label>
             <div
-              className={`flex items-center border rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4] ${
-                errors.startDate ? "border-red-500" : "border-[#67645F]"
+              className={`flex items-center border rounded-md px-4 py-2.5 md:py-5 gap-2 bg-cyan-light ${
+                errors.startDate ? "border-red-500" : "border-muted-gray"
               }`}
             >
               <FiCalendar />
@@ -587,10 +571,10 @@ const CreateDiscount = () => {
               End Date
             </label>
             <div
-              className={`flex items-center border rounded-md px-4 py-2.5 md:py-5 gap-2 bg-[#E6F5F4] ${
+              className={`flex items-center border rounded-md px-4 py-2.5 md:py-5 gap-2 bg-cyan-light ${
                 !neverExpires && errors.endDate
                   ? "border-red-500"
-                  : "border-[#67645F]"
+                  : "border-muted-gray"
               } ${neverExpires ? "opacity-50" : ""}`}
             >
               <FiCalendar />

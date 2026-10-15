@@ -63,14 +63,13 @@ const Page = () => {
   };
 
   return (
-    <section className="h-screen max-h-screen flex flex-col lg:flex-row">
+    <section className="min-h-screen max-h-screen flex flex-col lg:flex-row">
       {/* Left */}
       <div className="hidden lg:block flex-1 relative">
         <Image
           src={welcomeBg}
           alt="welcome_img"
           fill
-          unoptimized
           className="w-full h-full object-cover"
           placeholder="blur"
         />
@@ -96,16 +95,16 @@ const Page = () => {
           </p>
 
           {/* packages */}
-          <div className="flex flex-col sm:flex-row gap-5 2xl:gap-8 mb-8 2xl:mb-20">
+          <div className="flex flex-col xl:flex-row gap-5 2xl:gap-8 mb-8 2xl:mb-20">
             {data.map(item => (
               <div
                 key={item.id}
-                className={`flex-1 px-4 py-3 2xl:py-5 border border-[#D1D1D1] rounded-xl transition-colors duration-300 ${
-                  selectedRole === item.role ? "bg-[#EDF3F1]" : "bg-[#F7F7F7]"
+                className={`flex-1 px-4 py-3 2xl:py-5 border border-border-gray rounded-xl transition-colors duration-300 ${
+                  selectedRole === item.role ? "bg-mint-bg" : "bg-table-header"
                 }`}
               >
                 <div className="flex justify-between items-center gap-3 mb-5 2xl:mb-7">
-                  <h3 className="2xl:text-[22px] font-semibold text-secondary-black">
+                  <h3 className="text-[15px] xl:text-base 2xl:text-[22px] font-semibold text-secondary-black">
                     {item.package_name}
                   </h3>
 
@@ -130,7 +129,6 @@ const Page = () => {
                         <Image
                           src={magic}
                           alt="magic"
-                          unoptimized
                           className="w-full h-full object-cover"
                         />
                       </figure>

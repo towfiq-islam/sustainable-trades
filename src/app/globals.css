@@ -1,25 +1,64 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
+  /* Brand & Semantic Colors */
   --color-primary-green: #274f45;
+  --color-off-green: #d4e2cb;
   --color-light-green: #77978f;
+  --color-accent-blue: #b0dedb;
   --color-accent-red: #e48872;
   --color-primary-red: #8b200c;
-  --color-secondary-gray: #4b4a47;
-  --color-dark-green: #274f4561;
-  --color-off-green: #d4e2cb;
   --color-secondary-black: #13141d;
   --color-accent-white: #fffdf8;
+  --color-pure-white: #fefefe;
+  --color-secondary-gray: #4b4a47;
+  --color-muted-gray: #67645f;
   --color-accent-gray: #a7a39c;
-  --color-accent-blue: #b0dedb;
+  --color-warm-beige: #f0eee9;
+  --color-border-gray: #bfbebe;
+
+  /* Auxiliary UI shades used in components */
+  --color-dark-green: #274f4561;
+  --color-deep-green: #173b35;
+  --color-forest-green: #0b3c32;
+  --color-sage-green: #5b867b;
+  --color-dark-green-hover: #1e3a32;
+  --color-bright-green: #1aa884;
+  --color-medium-green: #5c7f60;
+  --color-accent-red-hover: #a34739;
+  --color-dark-gray: #3d3d3d;
+  --color-light-gray: #ededed;
+  --color-card-border: #e1e2e2;
+  --color-divider-gray: #e5e5e5;
+  --color-border-stone: #cbc8c2;
+  --color-badge-gray: #757575;
+  --color-overlay-gray: #626161;
+  --color-dashboard-bg: #fffcf9;
+  --color-table-header: #fafaf9;
+  --color-card-white: #fafffb;
+  --color-soft-teal: #d6f0eb;
+  --color-mint-bg: #edf3f1;
+  --color-modal-teal: #d8f1ec;
+  --color-modal-divider: #d6ece6;
+  --color-callout-bg: #ebf5f2;
+  --color-cyan-light: #e6f5f4;
+  --color-warm-card: #f2efe8;
+
+  /* Shadows from Design System */
+  --shadow-general:
+    0 3px 12px 0 rgba(0, 0, 0, 0.1), 0 3px 8px 0 rgba(0, 0, 0, 0.08);
+  --shadow-error-state: 0 4px 8px 0 rgba(139, 32, 12, 0.12);
 
   /* Font Family */
-  --font-lato: var(--font-lato);
+  --font-geist: var(--font-geist), sans-serif;
 }
 
 html {
   @apply scroll-smooth;
+}
+
+body {
+  @apply font-geist;
 }
 
 /* Custom CSS */
@@ -32,7 +71,7 @@ html {
 }
 
 .auth-primary-btn {
-  @apply text-secondary-black bg-transparent px-14 font-semibold py-2 xl:py-3 rounded-[6px] shadow border-2 border-secondary-black cursor-pointer hover:scale-95 duration-500 ease-in-out;
+  @apply text-secondary-black bg-transparent px-8 md:px-14 font-semibold py-2 md:py-2.5 xl:py-3 rounded-[6px] shadow border-2 border-secondary-black cursor-pointer hover:scale-95 duration-500 ease-in-out;
 }
 
 .primary_btn {
@@ -40,7 +79,7 @@ html {
 }
 
 .auth-secondary-btn {
-  @apply text-accent-white bg-primary-green px-4 py-1.5 md:py-2.5 rounded-[6px] shadow border-2 border-primary-green hover:scale-95 duration-500 ease-in-out cursor-pointer;
+  @apply text-accent-white bg-primary-green px-4 py-2 xl:py-2.5 rounded-[6px] shadow border-2 border-primary-green hover:scale-95 duration-500 ease-in-out cursor-pointer;
 }
 
 .auth-heading {
@@ -48,19 +87,15 @@ html {
 }
 
 .auth_title {
-  @apply text-primary-green text-2xl md:text-3xl lg:text-[40px] font-semibold text-center;
+  @apply text-primary-green text-2xl md:text-3xl xl:text-[40px] font-semibold text-center;
 }
 
 .auth_description {
-  @apply text-sm md:text-[18px] mt-1 font-normal max-w-[350px] w-full mx-auto text-center;
-}
-
-.form-group {
-  width: 100%;
+  @apply text-sm md:text-base xl:text-[18px] mt-2 xl:mt-1 font-normal max-w-[350px] w-full mx-auto text-center;
 }
 
 .form-label {
-  @apply text-secondary-black text-sm md:text-[15px] block w-full font-semibold;
+  @apply text-secondary-black text-sm md:text-[15px] block w-full font-semibold mb-1.5;
 }
 
 .form-label span {
@@ -68,7 +103,7 @@ html {
 }
 
 .form-input {
-  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2 xl:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray;
+  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2 xl:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray text-sm xl:text-base;
 }
 
 .shipping_form .form-input {
@@ -122,7 +157,7 @@ html {
 }
 
 option:hover {
-  background: #d4e2cb !important;
+  background: var(--color-off-green) !important;
 }
 
 .scroll-to-top {
@@ -132,9 +167,13 @@ option:hover {
 
 .chat-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #274f45;
+  scrollbar-color: var(--color-primary-green) transparent;
 }
 
 .stsearch-box input {
   @apply !border-none !outline-none;
+}
+
+.css-17plnzj-indicatorSeparator {
+  @apply !hidden;
 }

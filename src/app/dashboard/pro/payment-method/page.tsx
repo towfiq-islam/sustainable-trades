@@ -1,4 +1,5 @@
 "use client";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 import { Paypal } from "@/Components/Svg/SvgContainer";
 import useAuth from "@/Hooks/useAuth";
 import {
@@ -45,17 +46,15 @@ const page = () => {
 
   return (
     <>
-      <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-secondary-black">
-        Store Payments
-      </h2>
+      <DashBoardHeader heading=" Store Payments " />
 
-      <h5 className="text-[15px] md:text-[20px] text-[#3D4145] font-normal pt-4">
+      <h5 className="text-[15px] xl:text-lg 2xl:text-[20px] text-secondary-gray font-normal pt-4">
         Connect and manage how you'd like to receive
         <br />
         payments from buyers.
       </h5>
 
-      <div className="mt-9 md:mt-10 border border-[#BFBEBE] rounded-[10px] p-6 w-full max-w-[480px]">
+      <div className="mt-9 md:mt-10 border border-border-gray rounded-[10px] p-6 w-full max-w-[480px]">
         <div className="flex gap-3 items-start justify-between">
           <Paypal />
           {isOnboarded ? (
@@ -69,7 +68,7 @@ const page = () => {
           )}
         </div>
 
-        <p className="font-normal text-[14px] md:text-[16px] text-[#3D4145]  pt-2">
+        <p className="font-normal text-[14px] md:text-[16px] text-secondary-gray  pt-2">
           Customers can check out from your store with a PayPal or Venmo Account
         </p>
 
@@ -109,8 +108,6 @@ const page = () => {
               )}
             </button>
           )}
-
-
         </div>
       </div>
     </>

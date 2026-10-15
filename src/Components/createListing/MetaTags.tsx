@@ -28,7 +28,7 @@ const MetaTags = ({ metaTags, setMetaTags, setValue }: MetaTagsProps) => {
 
   return (
     <div>
-      <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
+      <h3 className="text-lg md:text-[20px] lg:text-[24px] font-semibold text-secondary-black">
         Meta Tags
       </h3>
 
@@ -57,7 +57,7 @@ const MetaTags = ({ metaTags, setMetaTags, setValue }: MetaTagsProps) => {
           type="text"
           value={newTag}
           onChange={e => setNewTag(e.target.value)}
-          className="flex-1 border text-[16px] md:text-[20px] text-secondary-black border-accent-gray rounded-lg py-4 pl-10"
+          className="flex-1 border text-lg md:text-[20px] lg:text-[24px] text-secondary-black border-accent-gray rounded-lg py-2 md:py-4 pl-10"
           placeholder="Enter a tag"
         />
         <button

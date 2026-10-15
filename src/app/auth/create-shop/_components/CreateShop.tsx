@@ -14,12 +14,13 @@ const StepTwo = dynamic(() => import("./StepTwo"));
 const StepThree = dynamic(() => import("./StepThree"));
 const StepFour = dynamic(() => import("./StepFour"), {
   ssr: false,
-  loading: () => (
-    <div className="py-24 text-center text-secondary-gray">Loading...</div>
-  ),
+  // loading: () => (
+  //   <div className="py-24 text-center text-secondary-gray">Loading...</div>
+  // ),
 });
 const StepFive = dynamic(() => import("./StepFive"));
 import { RxCross2 } from "react-icons/rx";
+import { getLatLng, normalizeStateCode } from "@/lib/getLatLng";
 
 type StepItem = {
   smLabel: string;
@@ -119,6 +120,27 @@ const CreateShop = ({ newStep }: { newStep: number }) => {
       delete payload.shopPhotoPreview;
       delete payload.profilePhotoPreview;
 
+      // Standardize state and country to 2-letter ISO codes (e.g. "NY", "US")
+      if (payload.state) {
+        payload.state = normalizeStateCode(payload.state);
+      }
+      payload.country = "US";
+
+      // Ensure accurate coordinates are present for distance calculation
+      if ((!payload.latitude || !payload.longitude) && payload.address_line_1) {
+        const coords = await getLatLng({
+          street_address: payload.address_line_1,
+          city: payload.city,
+          state: payload.state,
+          zip_code: payload.zip_code,
+          country: payload.country,
+        });
+        if (coords.lat !== null && coords.lng !== null) {
+          payload.latitude = coords.lat;
+          payload.longitude = coords.lng;
+        }
+      }
+
       const formData = new FormData();
 
       Object.entries(payload).forEach(([key, value]) => {
@@ -185,7 +207,7 @@ const CreateShop = ({ newStep }: { newStep: number }) => {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             {/* Step bar */}
-            <div className="relative flex justify-between items-start max-w-5xl mx-auto">
+            <div className="relative flex justify-between items-start max-w-4xl xl:max-w-5xl mx-auto">
               <div className="absolute left-[8%] right-[8%] top-5 border-t-2 border-dashed border-light-green z-0" />
 
               {steps.map((item, index) => {
@@ -209,7 +231,7 @@ const CreateShop = ({ newStep }: { newStep: number }) => {
                       ) : null}
                     </div>
 
-                    <p className="mt-3 text-center text-xs lg:text-base">
+                    <p className="mt-3 text-center text-xs md:text-sm xl:text-base">
                       <span className="block lg:hidden">{item.smLabel}</span>
                       <span className="hidden lg:block">{item.lgLabel}</span>
                     </p>

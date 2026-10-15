@@ -1,8 +1,7 @@
 import { useFormContext } from "react-hook-form";
-import { State } from "country-state-city";
 import { useState } from "react";
+import StateSelect from "@/Components/Common/StateSelect";
 const US_COUNTRY_CODE = "US";
-const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
 
 const AddressForm = () => {
   const {
@@ -62,27 +61,26 @@ const AddressForm = () => {
       <div>
         <p className="form-label font-bold">State *</p>
 
-        <select
-          {...register("state", {
-            required: "State is required",
-          })}
+        <StateSelect
+          id="locator-modal-state"
+          name="state"
+          countryCode={US_COUNTRY_CODE}
           value={state}
-          className="form-input"
-          onChange={e => {
-            setState(e.target.value);
-            setValue("state", e.target.value, {
+          error={!!errors.state}
+          variant="form-input"
+          onChange={val => {
+            setState(val);
+            setValue("state", val, {
               shouldValidate: true,
             });
           }}
-        >
-          <option value="">Select State</option>
-
-          {usStates.map(item => (
-            <option key={item.isoCode} value={item.isoCode}>
-              {item.name} ({item.isoCode})
-            </option>
-          ))}
-        </select>
+        />
+        <input
+          type="hidden"
+          {...register("state", {
+            required: "State is required",
+          })}
+        />
 
         {errors.state && (
           <span className="text-red-500 text-sm pt-1">

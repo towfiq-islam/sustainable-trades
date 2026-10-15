@@ -64,7 +64,6 @@ const FeaturedShops = () => {
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${shop_info?.shop_image}`}
                     alt="shop_image"
                     fill
-                    unoptimized
                     className="size-full rounded-full object-cover"
                   />
                 </figure>

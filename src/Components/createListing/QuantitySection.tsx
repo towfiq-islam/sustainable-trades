@@ -17,7 +17,7 @@ const QuantitySection = ({
 
   return (
     <div>
-      <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
+      <h3 className="text-lg md:text-[20px] lg:text-[24px] font-semibold text-secondary-black">
         Quantity
       </h3>
 
@@ -61,7 +61,7 @@ const QuantitySection = ({
       <div className="flex flex-col gap-4 mt-2">
         {/* Unlimited Stock */}
         <label
-          className={`flex items-center gap-2 text-[20px] md:text-[24px] font-semibold ${
+          className={`flex items-center gap-2 text-lg md:text-[20px] lg:text-[24px] font-semibold ${
             isBasicMember ? "text-gray-400" : "text-secondary-black"
           }`}
         >
@@ -87,7 +87,7 @@ const QuantitySection = ({
         </label>
 
         {/* Feature */}
-        <label className="flex items-center gap-2 text-[20px] md:text-[24px] text-secondary-black font-semibold">
+        <label className="flex items-center gap-2 text-lg md:text-[20px] lg:text-[24px] text-secondary-black font-semibold">
           Feature
           <Controller
             name="is_featured"
@@ -108,7 +108,7 @@ const QuantitySection = ({
 
         {/* Out of Stock */}
         <label
-          className={`flex items-center gap-2 text-[20px] md:text-[24px] font-semibold ${
+          className={`flex items-center gap-2 text-lg md:text-[20px] lg:text-[24px] font-semibold ${
             isBasicMember ? "text-gray-400" : "text-secondary-black"
           }`}
         >
@@ -133,7 +133,7 @@ const QuantitySection = ({
           />
         </label>
 
-        <p className="text-[16px] text-secondary-black font-normal w-full md:max-w-[400px]">
+        <p className="text-sm md:text-[16px] text-secondary-black font-normal w-full md:max-w-[400px]">
           Status automatically changes to "Out of Inventory" when zero inventory
           is reached
         </p>

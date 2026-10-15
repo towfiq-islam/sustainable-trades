@@ -3,6 +3,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 import { LuTruck } from "react-icons/lu";
+import { LeafSvg } from "../Svg/SvgContainer";
 
 const LeafBadgeIcon = ({ className = "w-8 h-8" }: { className?: string }) => (
   <svg
@@ -108,15 +109,15 @@ function ShopSetupGuideModalContent() {
         </button>
 
         {/* Celebratory Hero Header */}
-        <div className="text-center max-w-md mx-auto mb-4">
-          <div className="w-14 h-14 rounded-full bg-[#b0dedb] flex items-center justify-center mx-auto mb-3 text-[#173b35] shadow-xs">
-            <LeafBadgeIcon className="w-8 h-8 text-[#173b35]" />
+        <div className="text-center max-w-lg mx-auto mb-6">
+          <div className="size-16 rounded-full bg-accent-blue flex items-center justify-center mx-auto mb-4 text-deep-green shadow-xs">
+            <LeafSvg />
           </div>
 
-          <h3 className="text-base sm:text-xl font-semibold text-[#173b35] mt-1 mb-2">
+          <h3 className="text-base sm:text-2xl font-bold text-primary-green mt-1 mb-2">
             Welcome to Sustainable Trades!
           </h3>
-          <p className="text-secondary-gray text-xs sm:text-sm leading-relaxed">
+          <p className="text-secondary-gray text-xs sm:text-[15px] leading-relaxed">
             Your shop is officially created. Before you start adding listings,
             take a few minutes to set up your shop so you’re ready to receive
             orders.
@@ -125,7 +126,7 @@ function ShopSetupGuideModalContent() {
 
         {/* Steps Section */}
         <div className="mt-4 mb-4">
-          <h4 className="text-[13px] sm:text-[15px] font-semibold text-[#173b35] mb-4 text-left">
+          <h4 className="text-[13px] sm:text-[15px] font-semibold text-primary-green mb-4 text-left">
             Use the menu in your Shop Dashboard to complete the following
             settings:
           </h4>
@@ -133,16 +134,16 @@ function ShopSetupGuideModalContent() {
           <div className="space-y-4">
             {/* Step 1: Connect Payments */}
             <div className="flex items-start gap-3.5">
-              <div className="w-9 h-9 rounded-full bg-[#d6f0eb] flex items-center justify-center shrink-0 text-[#173b35] mt-0.5">
-                <CreditCardIcon className="w-4.5 h-4.5 text-[#173b35]" />
+              <div className="w-9 h-9 rounded-full bg-soft-teal flex items-center justify-center shrink-0 text-deep-green mt-0.5">
+                <CreditCardIcon className="w-4.5 h-4.5 text-deep-green" />
               </div>
               <div>
-                <h5 className="font-bold text-[#173b35] text-[13px] sm:text-sm">
+                <h5 className="font-bold text-primary-green text-[13px] sm:text-sm">
                   1. Connect Payments
                 </h5>
                 <p className="text-secondary-gray text-sm mt-0.5 leading-relaxed">
                   Go to{" "}
-                  <strong className="font-bold text-[#173b35]">
+                  <strong className="font-bold text-primary-green">
                     Payments &rarr; Payment Integration
                   </strong>{" "}
                   to connect your PayPal account so you can accept online
@@ -153,16 +154,16 @@ function ShopSetupGuideModalContent() {
 
             {/* Step 2: Set Up Sales Tax */}
             <div className="flex items-start gap-3.5">
-              <div className="w-9 h-9 rounded-full bg-[#d6f0eb] flex items-center justify-center shrink-0 text-[#173b35] mt-0.5">
-                <CreditCardIcon className="w-4.5 h-4.5 text-[#173b35]" />
+              <div className="w-9 h-9 rounded-full bg-soft-teal flex items-center justify-center shrink-0 text-deep-green mt-0.5">
+                <CreditCardIcon className="w-4.5 h-4.5 text-deep-green" />
               </div>
               <div>
-                <h5 className="font-bold text-[#173b35] text-[13px] sm:text-sm">
+                <h5 className="font-bold text-primary-green text-[13px] sm:text-sm">
                   2. Set Up Sales Tax
                 </h5>
                 <p className="text-secondary-gray text-sm mt-0.5 leading-relaxed">
                   Go to{" "}
-                  <strong className="font-bold text-[#173b35]">
+                  <strong className="font-bold text-primary-green">
                     Payments &rarr; Sales Tax
                   </strong>{" "}
                   to choose how you would like sales tax calculated for your
@@ -173,11 +174,11 @@ function ShopSetupGuideModalContent() {
 
             {/* Step 3: Choose Delivery Settings */}
             <div className="flex items-start gap-3.5">
-              <div className="w-9 h-9 rounded-full bg-[#d6f0eb] flex items-center justify-center shrink-0 text-[#173b35] mt-0.5">
-                <LuTruck className="w-4.5 h-4.5 text-[#173b35]" />
+              <div className="w-9 h-9 rounded-full bg-soft-teal flex items-center justify-center shrink-0 text-deep-green mt-0.5">
+                <LuTruck className="w-4.5 h-4.5 text-deep-green" />
               </div>
               <div className="flex-1">
-                <h5 className="font-bold text-[#173b35] text-[13px] sm:text-sm">
+                <h5 className="font-bold text-primary-green text-[13px] sm:text-sm">
                   3. Choose Your Delivery Settings
                 </h5>
                 <p className="text-secondary-gray text-sm mt-0.5 leading-relaxed">
@@ -186,27 +187,27 @@ function ShopSetupGuideModalContent() {
 
                 <ul className="list-disc ml-4 mt-1.5 space-y-1 text-[13px] text-secondary-gray">
                   <li>
-                    <strong className="font-bold text-[#173b35]">
+                    <strong className="font-bold text-primary-green">
                       Shipping
                     </strong>{" "}
                     &mdash; configure your shipping method and rates, or connect
                     to Shippo.
                   </li>
                   <li>
-                    <strong className="font-bold text-[#173b35]">
+                    <strong className="font-bold text-primary-green">
                       Local Pickup
                     </strong>{" "}
                     &mdash; add your pickup location(s).
                   </li>
                   <li>
-                    <strong className="font-bold text-[#173b35]">
+                    <strong className="font-bold text-primary-green">
                       Local Delivery
                     </strong>{" "}
                     &mdash; add your delivery origin, ranges, and fees.
                   </li>
                 </ul>
 
-                <p className="text-[#656461] text-xs mt-1.5">
+                <p className="text-muted-gray text-xs mt-1.5">
                   You only need to set up the delivery options you plan to
                   offer.
                 </p>
@@ -216,18 +217,18 @@ function ShopSetupGuideModalContent() {
         </div>
 
         {/* Info Callout Card */}
-        <div className="bg-[#ebf5f2] border border-[#b0dedb]/60 rounded-xl p-3.5 mb-5 text-center">
-          <p className="text-xs sm:text-[13px] font-medium text-[#173b35] leading-relaxed">
+        <div className="bg-callout-bg border border-accent-blue/60 rounded-xl p-3.5 mb-5 text-center">
+          <p className="text-xs sm:text-[13px] font-semibold text-primary-green leading-relaxed max-w-sm mx-auto">
             Once your shop settings are complete, you’re ready to start adding
             your products and services!
           </p>
         </div>
 
         {/* Footer Tagline */}
-        <p className="text-center text-xs sm:text-[13px] text-[#4b4a47] font-medium mt-3 flex items-center justify-center gap-1.5">
+        <p className="text-center text-xs sm:text-[13px] text-secondary-gray font-medium mt-3 flex items-center justify-center gap-1.5">
           Together we rise, together we thrive.
           <svg
-            className="w-3.5 h-3.5 text-[#173b35] fill-current inline-block"
+            className="w-3.5 h-3.5 text-primary-green fill-current inline-block"
             viewBox="0 0 24 24"
           >
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />

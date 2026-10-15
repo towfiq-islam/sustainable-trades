@@ -84,11 +84,11 @@ export function AddRangeModal({ initialRange, onClose }: AddRangeModalProps) {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold tracking-wide text-secondary-black mb-3 flex items-start justify-between border-b border-neutral-200 pb-2">
+      <h2 className="text-lg md:text-2xl font-semibold tracking-wide text-secondary-black md:mb-3 mb-1 flex items-start justify-between md:border-b border-neutral-200 md:pb-2">
         {initialRange ? "Edit Delivery Range" : "Add Delivery Range"}
       </h2>
 
-      <p className="text-[15px] leading-relaxed text-neutral-600">
+      <p className="text-sm md:text-[15px] md:leading-relaxed text-neutral-600">
         Set a delivery fee for a specific distance range from your delivery
         origin. You can create as many ranges as you need.
       </p>

@@ -22,9 +22,9 @@ const DimensionsSection = ({
         Dimensions
       </h3>
 
-      <div className="flex items-center gap-2 mt-2">
+      <div className="flex items-start gap-1.5 sm:gap-2 mt-2">
         {/* L */}
-        <div className="w-full">
+        <div className="flex-1 min-w-0">
           <Controller
             name="length"
             control={control}
@@ -36,9 +36,11 @@ const DimensionsSection = ({
               <input
                 {...field}
                 type="number"
+                min="0"
+                step="any"
                 placeholder="L"
                 disabled={isBasicMember}
-                className={`border border-accent-gray rounded-lg p-2 md:p-4 text-secondary-black outline-0 ${
+                className={`w-full min-w-0 h-[42px] md:h-[58px] border border-accent-gray rounded-lg px-2 md:px-4 text-[16px] md:text-[20px] text-secondary-black outline-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                   isBasicMember
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                     : ""
@@ -47,14 +49,16 @@ const DimensionsSection = ({
             )}
           />
           {errors.length && (
-            <p className="text-red-600 text-sm mt-1">{errors.length.message}</p>
+            <p className="text-red-600 text-xs sm:text-sm mt-1 break-words">{errors.length.message}</p>
           )}
         </div>
 
-        <span className="text-secondary-black font-semibold shrink-0">X</span>
+        <span className="h-[42px] md:h-[58px] flex items-center justify-center text-secondary-black font-semibold shrink-0 text-xs sm:text-sm md:text-base">
+          X
+        </span>
 
         {/* W */}
-        <div className="w-full">
+        <div className="flex-1 min-w-0">
           <Controller
             name="width"
             control={control}
@@ -66,9 +70,11 @@ const DimensionsSection = ({
               <input
                 {...field}
                 type="number"
+                min="0"
+                step="any"
                 placeholder="W"
                 disabled={isBasicMember}
-                className={`w-full border border-accent-gray rounded-lg p-2 md:p-4 text-secondary-black outline-0 ${
+                className={`w-full min-w-0 h-[42px] md:h-[58px] border border-accent-gray rounded-lg px-2 md:px-4 text-[16px] md:text-[20px] text-secondary-black outline-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                   isBasicMember
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                     : ""
@@ -77,14 +83,16 @@ const DimensionsSection = ({
             )}
           />
           {errors.width && (
-            <p className="text-red-600 text-sm  mt-1">{errors.width.message}</p>
+            <p className="text-red-600 text-xs sm:text-sm mt-1 break-words">{errors.width.message}</p>
           )}
         </div>
 
-        <span className="text-secondary-black font-semibold shrink-0">X</span>
+        <span className="h-[42px] md:h-[58px] flex items-center justify-center text-secondary-black font-semibold shrink-0 text-xs sm:text-sm md:text-base">
+          X
+        </span>
 
         {/* H */}
-        <div className="w-full">
+        <div className="flex-1 min-w-0">
           <Controller
             name="height"
             control={control}
@@ -96,9 +104,11 @@ const DimensionsSection = ({
               <input
                 {...field}
                 type="number"
+                min="0"
+                step="any"
                 placeholder="H"
                 disabled={isBasicMember}
-                className={`w-full border border-accent-gray rounded-lg p-2 md:p-4 text-secondary-black outline-0 ${
+                className={`w-full min-w-0 h-[42px] md:h-[58px] border border-accent-gray rounded-lg px-2 md:px-4 text-[16px] md:text-[20px] text-secondary-black outline-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                   isBasicMember
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                     : ""
@@ -107,7 +117,7 @@ const DimensionsSection = ({
             )}
           />
           {errors.height && (
-            <p className="text-red-600 text-sm mt-1">{errors.height.message}</p>
+            <p className="text-red-600 text-xs sm:text-sm mt-1 break-words">{errors.height.message}</p>
           )}
         </div>
 
@@ -119,7 +129,7 @@ const DimensionsSection = ({
             <select
               {...field}
               disabled={isBasicMember}
-              className={`border border-accent-gray rounded-lg p-2 md:p-4 text-secondary-black outline-0 shrink-0 self-start ${
+              className={`h-[42px] md:h-[58px] border border-accent-gray rounded-lg px-2 md:px-4 text-[14px] md:text-[18px] text-secondary-black outline-0 shrink-0 bg-white ${
                 isBasicMember
                   ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                   : ""

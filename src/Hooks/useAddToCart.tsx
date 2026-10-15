@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "@/redux/store";
 import { addToCart } from "@/redux/slices/cartSlice";
@@ -21,27 +22,30 @@ type CartProduct = {
 export function useAddToCart() {
   const dispatch = useAppDispatch();
 
-  const handleAddToCart = (product: CartProduct) => {
-    const payload = {
-      vendor_id: product?.shop?.user_id as number,
-      shop_id: product?.shop?.id as number,
-      shop_name: product?.shop?.shop_name as string,
-      shop_image: product?.shop?.shop_image as string,
-      products: [
-        {
-          id: product?.id,
-          name: product?.product_name ?? "",
-          image: product?.images?.[0]?.image ?? "",
-          price: Number(product?.product_price),
-          quantity: 1,
-          fulfillment: normalizeFulfillment(product?.fulfillment),
-        },
-      ],
-    };
+  const handleAddToCart = useCallback(
+    (product: CartProduct) => {
+      const payload = {
+        vendor_id: product?.shop?.user_id as number,
+        shop_id: product?.shop?.id as number,
+        shop_name: product?.shop?.shop_name as string,
+        shop_image: product?.shop?.shop_image as string,
+        products: [
+          {
+            id: product?.id,
+            name: product?.product_name ?? "",
+            image: product?.images?.[0]?.image ?? "",
+            price: Number(product?.product_price),
+            quantity: 1,
+            fulfillment: normalizeFulfillment(product?.fulfillment),
+          },
+        ],
+      };
 
-    dispatch(addToCart(payload));
-    toast.success("Added to cart");
-  };
+      dispatch(addToCart(payload));
+      toast.success("Added to cart");
+    },
+    [dispatch],
+  );
 
   return { handleAddToCart };
 }

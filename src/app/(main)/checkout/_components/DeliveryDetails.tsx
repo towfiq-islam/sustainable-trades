@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
@@ -9,7 +9,11 @@ import { State } from "country-state-city";
 import { useGetAllPickupLocationsQuery } from "@/redux/api/vendorApi";
 import useAuth from "@/Hooks/useAuth";
 import PickupLocationSelect from "./PickupLocationSelect";
-import { buildVendorOrdersPayload, VendorFormValues } from "@/lib/checkout";
+import {
+  buildVendorOrdersPayload,
+  VendorFormValues,
+  VendorFormFields,
+} from "@/lib/checkout";
 import { useGetShippingTaxMutation } from "@/redux/api/taxApi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
@@ -24,12 +28,12 @@ import Modal from "@/Components/Common/Modal";
 import { IoIosInformationCircle } from "react-icons/io";
 import { CiShop } from "react-icons/ci";
 import { FiUser } from "react-icons/fi";
+import StateSelect from "@/Components/Common/StateSelect";
 
 const US_COUNTRY_CODE = "US";
-const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
 
 const fieldClass = (hasError: boolean) =>
-  `flex-1 w-full border rounded-lg px-4 py-3 outline-none focus:border-primary-green ${
+  `flex-1 w-full border rounded-lg px-3.5 xl:px-4 py-2 xl:py-3 outline-none focus:border-primary-green ${
     hasError
       ? "border-red-500 placeholder:text-red-500"
       : "border-gray-300 placeholder:text-gray-400"
@@ -120,18 +124,21 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
     });
   };
 
-  const watchedAddressFields = watch([
-    `${base}.street_address`,
-    `${base}.apt`,
-    `${base}.city`,
-    `${base}.state`,
-    `${base}.postal_code`,
-  ]);
+  const streetVal = watch(`${base}.street_address`);
+  const cityVal = watch(`${base}.city`);
+  const stateVal = watch(`${base}.state`);
+  const postalVal = watch(`${base}.postal_code`);
+  const currentAddressKey = `${streetVal || ""}|${cityVal || ""}|${stateVal || ""}|${postalVal || ""}`;
+
+  const prevAddressKeyRef = useRef(currentAddressKey);
 
   useEffect(() => {
-    setValue(`${base}.latitude`, undefined);
-    setValue(`${base}.longitude`, undefined);
-  }, watchedAddressFields);
+    if (prevAddressKeyRef.current && prevAddressKeyRef.current !== currentAddressKey) {
+      setValue(`${base}.latitude`, undefined);
+      setValue(`${base}.longitude`, undefined);
+    }
+    prevAddressKeyRef.current = currentAddressKey;
+  }, [currentAddressKey, base, setValue]);
 
   // Pre-fill contact & vendor recipient from logged in user or Redux state
   useEffect(() => {
@@ -223,39 +230,59 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
     if (isLastVendor) {
       setIsGeocoding(true);
       try {
+        const currentVendors = (getValues("vendors") || {}) as VendorFormValues;
+        const formValues: VendorFormValues = { ...currentVendors };
+
+        // Deduplicate vendors to avoid duplicate geocode requests
+        const uniqueVendorIds = Array.from(
+          new Set(items.map(item => item.vendor_id)),
+        );
+
         await Promise.all(
-          items.map(async v => {
+          uniqueVendorIds.map(async vendorId => {
+            const vendorItem = items.find(it => it.vendor_id === vendorId);
             const vendorNeedsAddress =
-              v.selectedFulfillment === "delivery" ||
-              v.selectedFulfillment === "shipping";
+              vendorItem?.selectedFulfillment === "delivery" ||
+              vendorItem?.selectedFulfillment === "shipping";
             if (!vendorNeedsAddress) return;
 
-            const vBase = `vendors.${v.vendor_id}`;
-            const vValues = getValues(vBase);
-            if (vValues?.latitude && vValues?.longitude) return;
+            const vBase = `vendors.${vendorId}`;
+            const vValues = (getValues(vBase) || {}) as VendorFormFields;
 
-            const fullAddress = [
-              vValues?.street_address,
-              vValues?.apt,
-              vValues?.city,
-              vValues?.state,
-              vValues?.postal_code,
-              "United States",
-            ]
-              .filter(Boolean)
-              .join(", ");
+            // If already accurately geocoded, keep existing coordinates
+            if (
+              vValues?.latitude &&
+              vValues?.longitude &&
+              !isNaN(Number(vValues.latitude)) &&
+              !isNaN(Number(vValues.longitude))
+            ) {
+              if (!formValues[vendorId]) formValues[vendorId] = { ...vValues };
+              formValues[vendorId].latitude = Number(vValues.latitude);
+              formValues[vendorId].longitude = Number(vValues.longitude);
+              return;
+            }
 
-            if (!fullAddress) return;
+            const { lat, lng } = await getLatLng({
+              street_address: vValues?.street_address,
+              city: vValues?.city,
+              state: vValues?.state,
+              zip_code: vValues?.postal_code,
+              country: vValues?.country || "United States",
+            });
 
-            const { lat, lng } = await getLatLng(fullAddress);
-            if (lat !== null) setValue(`${vBase}.latitude`, lat);
-            if (lng !== null) setValue(`${vBase}.longitude`, lng);
+            if (lat !== null && lng !== null) {
+              setValue(`${vBase}.latitude`, lat);
+              setValue(`${vBase}.longitude`, lng);
+
+              if (!formValues[vendorId]) {
+                formValues[vendorId] = { ...vValues };
+              }
+              formValues[vendorId].latitude = lat;
+              formValues[vendorId].longitude = lng;
+            }
           }),
         );
 
-        const { vendors: formValues } = getValues() as {
-          vendors: VendorFormValues;
-        };
         const payload = buildVendorOrdersPayload(items, formValues);
         const res = await calculateTaxAndShippingCost(payload).unwrap();
 
@@ -318,7 +345,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
   return (
     <div>
       {/* Contact Information Card */}
-      <div className="border border-gray-300 rounded-xl p-6 bg-white mb-5">
+      <div className="border border-gray-300 rounded-xl p-4 xl:p-6 bg-white mb-5">
         <div className="flex items-center gap-2 mb-2">
           <FiUser className="text-xl text-primary-green stroke-[2.2]" />
           <h3 className="text-lg font-semibold text-secondary-black">
@@ -327,7 +354,9 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
         </div>
 
         <p className="text-gray-500 text-[14.5px] leading-relaxed mb-5">
-          Enter the email that you want the order confirmation, receipt, and any tracking or updates to be sent to. You can have your items sent to different addresses for each shop — wherever you'd like.
+          Enter the email that you want the order confirmation, receipt, and any
+          tracking or updates to be sent to. You can have your items sent to
+          different addresses for each shop — wherever you'd like.
         </p>
 
         <div className="space-y-4">
@@ -398,17 +427,17 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
       </div>
 
       {/* Vendor Fulfillment Card */}
-      <div className="border border-gray-300 rounded-xl p-6 bg-white">
+      <div className="border border-gray-300 rounded-xl p-4 md:p-6 bg-white">
         <VendorProgressBar current={vendorIndex + 1} total={items.length} />
 
-        <h3 className="text-lg font-semibold text-secondary-black mb-1 flex gap-3 items-center">
+        <h3 className="text-sm md:text-lg font-semibold text-secondary-black mb-1 flex flex-col md:flex-row gap-2 md:gap-3 items-center">
           Sold by {vendor.shop_name}
           <p className="size-2 rounded-full bg-primary-green" />
           Delivery Method:{" "}
           {fulfillment ? fulfillmentLabel[fulfillment] : "Fulfillment"}
         </h3>
 
-        <p className="text-gray-500 text-[15px] mb-5 max-w-lg">
+        <p className="text-gray-500 text-sm md:text-[15px] mb-5 max-w-lg">
           {fulfillment === "pickup"
             ? "Please select your pickup location below. You'll review everything before your order is placed."
             : fulfillment === "delivery"
@@ -494,19 +523,25 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
                 </div>
 
                 <div className="relative flex-1 w-full">
-                  <select
-                    {...register(`${base}.state`, { required: true })}
+                  <StateSelect
+                    id={`checkout-state-${vendor.vendor_id}`}
+                    name={`${base}.state`}
+                    countryCode={US_COUNTRY_CODE}
                     value={selectedState ?? ""}
-                    autoComplete="address-level1"
-                    className={fieldClass(!!vendorErrors.state)}
-                  >
-                    <option value="">Select State *</option>
-                    {usStates.map(item => (
-                      <option key={item.isoCode} value={item.isoCode}>
-                        {item.name} ({item.isoCode})
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="Select State *"
+                    error={!!vendorErrors.state}
+                    variant="checkout"
+                    onChange={val => {
+                      setValue(`${base}.state`, val, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }}
+                  />
+                  <input
+                    type="hidden"
+                    {...register(`${base}.state`, { required: true })}
+                  />
                 </div>
               </div>
 
@@ -576,7 +611,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           <button
             type="button"
             onClick={handleBack}
-            className="px-6 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
+            className="px-5 xl:px-6 py-2 xl:py-3 text-sm xl:text-base rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
           >
             Back
           </button>
@@ -585,7 +620,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
             type="button"
             onClick={handleNext}
             disabled={isLoading || isGeocoding}
-            className="px-6 py-3 rounded-lg bg-primary-green text-white font-medium cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-60"
+            className="px-5 xl:px-6 py-2 xl:py-3 text-sm xl:text-base rounded-lg bg-primary-green text-white font-medium cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-60"
           >
             {isLastVendor ? "Review order" : "Next vendor"}
           </button>
@@ -612,7 +647,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           <div className="py-2 px-4 mb-4 text-left">
             {deliveryUnavailableVendors.map(v => (
               <div key={v.vendor_id} className="flex items-center gap-2 py-1.5">
-                <CiShop className="text-primary-green"/>
+                <CiShop className="text-primary-green" />
                 <span className="text-sm text-secondary-black">
                   {v.shop_name}
                 </span>

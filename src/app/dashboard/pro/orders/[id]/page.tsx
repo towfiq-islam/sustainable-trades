@@ -152,6 +152,10 @@ const Page = () => {
         title: "Delivery Address",
         content: (
           <div className="text-sm text-secondary-gray pb-3">
+            <p>
+              {singleOrder?.data?.delivery?.delivery_address?.first_name}{" "}
+              {singleOrder?.data?.delivery?.delivery_address?.last_name}
+            </p>
             <p>{deliveryAddress?.street_address}</p>
             {deliveryAddress?.apt && <p>{deliveryAddress.apt}</p>}
             <p>
@@ -194,6 +198,10 @@ const Page = () => {
       title: "Shipping Address",
       content: (
         <div className="text-sm text-secondary-gray pb-3">
+          <p>
+            {singleOrder?.data?.shipping_address?.first_name}{" "}
+            {singleOrder?.data?.shipping_address?.last_name}
+          </p>
           <p>{singleOrder?.data?.shipping_address?.street_address}</p>
           {singleOrder?.data?.shipping_address?.apt && (
             <p>{singleOrder?.data?.shipping_address.apt}</p>
@@ -225,9 +233,11 @@ const Page = () => {
           <p>
             <strong>Email:</strong> {singleOrder?.data?.customer?.email}
           </p>
-          <p>
-            <strong>Phone:</strong> {singleOrder?.data?.customer?.phone}
-          </p>
+          {singleOrder?.data?.customer?.phone && (
+            <p>
+              <strong>Phone:</strong> {singleOrder?.data?.customer?.phone}
+            </p>
+          )}
         </div>
       ),
     },
@@ -242,14 +252,14 @@ const Page = () => {
   if (isLoading) {
     return (
       <div className="h-[80vh] flex justify-center items-center">
-        <PuffLoader color="#274f45" />
+        <PuffLoader color="var(--color-primary-green)" />
       </div>
     );
   }
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row justify-between gap-10">
+      <div className="flex flex-col lg:flex-row justify-between gap-5 md:gap-10">
         {/* Left Side */}
         <div className="w-full lg:w-[65%] 2xl:w-[75%]">
           <button
@@ -263,8 +273,8 @@ const Page = () => {
           </button>
 
           {/* Header */}
-          <div className="flex flex-col lg:flex-row items-center justify-between">
-            <h3 className="text-3xl font-semibold text-secondary-black">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-2 md:gap-4">
+            <h3 className="text-2xl md:text-3xl font-semibold text-secondary-black">
               Order Details
             </h3>
 
@@ -273,14 +283,14 @@ const Page = () => {
                 <Link
                   href={singleOrder?.data?.tracking?.label_url}
                   target="_blank"
-                  className="py-3 px-4 rounded-[8px] border border-accent-red font-semibold text-accent-red cursor-pointer hover:border-accent-red duration-300 ease-in-out"
+                  className="text-sm lg:text-base py-2 md:py-2.5 lg:py-3 px-3 lg:px-4 rounded-[8px] border border-accent-red font-semibold text-accent-red cursor-pointer hover:border-accent-red duration-300 ease-in-out"
                 >
                   Shipping Label
                 </Link>
               )}
 
               <button
-                className="py-3 px-4 rounded-[8px] border font-medium text-secondary-black cursor-pointer border-primary-green duration-300 ease-in-out hover:bg-primary-green hover:text-white"
+                className="text-sm lg:text-base py-2 md:py-2.5 lg:py-3 px-3 lg:px-4 rounded-[8px] border font-medium text-secondary-black cursor-pointer border-primary-green duration-300 ease-in-out hover:bg-primary-green hover:text-white"
                 onClick={() =>
                   setTrackingHistory(singleOrder?.data?.order_status_history)
                 }
@@ -292,7 +302,7 @@ const Page = () => {
 
           {/* Order Status Dropdown */}
           <div className="my-4">
-            <h4 className="text-secondary-black font-bold text-[16px] mb-3">
+            <h4 className="text-secondary-black font-semibold md:font-bold text-[16px] mb-2 md:mb-3">
               Order Status
             </h4>
 
@@ -300,7 +310,7 @@ const Page = () => {
               {/* Trigger */}
               <button
                 onClick={() => setOpenStatusPopover(prev => !prev)}
-                className="min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-4 py-2 hover:border-primary-green transition-all duration-300 cursor-pointer"
+                className="min-w[220px] lg:min-w-[240px] flex items-center justify-between gap-4 rounded-xl border border-gray-200 px-3 lg:px-4 py-2 hover:border-primary-green transition-all duration-300 cursor-pointer"
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -313,7 +323,7 @@ const Page = () => {
                     <p className="text-[12px] text-gray-500">Current Status</p>
 
                     <h5
-                      className={`text-[15px] font-semibold capitalize ${
+                      className={`text-sm md:text-[15px] font-semibold capitalize ${
                         isCancelled ? "text-primary-red" : "text-primary-green"
                       }`}
                     >
@@ -369,7 +379,7 @@ const Page = () => {
 
                           setOpenStatusPopover(false);
                         }}
-                        className={`group flex w-full items-center justify-between rounded-xl px-4 py-3 text-left transition-all ${
+                        className={`group flex w-full items-center justify-between rounded-xl px-4 py-2 lg:py-3 text-left transition-all ${
                           isEnabled
                             ? `cursor-pointer ${
                                 isCancelledOption
@@ -399,8 +409,8 @@ const Page = () => {
                                   ? "text-primary-red group-hover:text-primary-red"
                                   : "text-primary-red"
                                 : isEnabled
-                                  ? "text-[#222] group-hover:text-primary-green"
-                                  : "text-[#222]"
+                                  ? "text-secondary-black group-hover:text-primary-green"
+                                  : "text-secondary-black"
                             }`}
                           >
                             {STATUS_LABELS[statusKey] ?? statusKey}
@@ -425,7 +435,7 @@ const Page = () => {
           </div>
 
           {/* Progress Bar - steps and their count match fulfillment type */}
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start mt-6">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] items-start md:mt-6">
             {steps.map((step, index) => {
               const isCompleted = !isCancelled && index <= currentStepIndex;
 
@@ -487,7 +497,7 @@ const Page = () => {
           </div>
 
           {/* Products */}
-          <div className="mt-6">
+          <div className="md:mt-6">
             <OrderedProducts data={singleOrder?.data} order_id={order_id} />
           </div>
 
@@ -502,7 +512,7 @@ const Page = () => {
           {accordionData?.map((item, idx) => (
             <div
               key={item.title}
-              className="border border-[#E1E2E2] rounded-lg overflow-hidden"
+              className="border border-card-border rounded-lg overflow-hidden"
             >
               <div
                 className="flex justify-between items-center p-3 cursor-pointer"

@@ -2,6 +2,7 @@
 import { useForm } from "react-hook-form";
 import { State } from "country-state-city";
 import { useEffect, useState } from "react";
+import StateSelect from "@/Components/Common/StateSelect";
 import { FiMapPin } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { getLatLng } from "@/lib/getLatLng";
@@ -66,31 +67,38 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
     const stateName =
       usStates.find(s => s.isoCode === values.state)?.name ?? values.state;
 
-    const fullAddress = [
-      values.address,
-      values.unit,
-      values.city,
-      stateName,
-      values.zip_code,
-      "United States",
-    ]
-      .filter(Boolean)
-      .join(", ");
-
-    const { lat, lng } = await getLatLng(fullAddress);
+    const { lat, lng } = await getLatLng({
+      street_address: values.address,
+      city: values.city,
+      state: stateName,
+      zip_code: values.zip_code,
+      country: "United States",
+    });
     setIsGeocoding(false);
 
-    if (lat === null || lng === null) {
+    let finalLat = lat !== null ? lat.toString() : null;
+    let finalLng = lng !== null ? lng.toString() : null;
+
+    // Fallback to existing valid coordinates if editing
+    if (!finalLat && origin?.latitude && origin.latitude !== "0") {
+      finalLat = origin.latitude;
+    }
+    if (!finalLng && origin?.longitude && origin.longitude !== "0") {
+      finalLng = origin.longitude;
+    }
+
+    if (!finalLat || !finalLng) {
       toast.error(
-        "Couldn't verify this address's map location — the origin will still be saved, but you may want to double check the address.",
+        "Could not verify this address's map location. Please check your street address, city, state, and zip code.",
       );
+      return;
     }
 
     const formData = new FormData();
     formData.append("address", values.address);
-    formData.append("latitude", lat !== null ? lat.toString() : "0");
-    formData.append("longitude", lng !== null ? lng.toString() : "0");
-    formData.append("unit", values.unit);
+    formData.append("latitude", finalLat);
+    formData.append("longitude", finalLng);
+    formData.append("unit", values.unit || "");
     formData.append("city", values.city);
     formData.append("zip_code", values.zip_code);
     formData.append("state", values.state);
@@ -109,7 +117,7 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
     <div>
       <h2
         id="delivery-origin-modal-title"
-        className="text-2xl font-semibold text-secondary-black mb-1"
+        className="text-lg md:text-2xl font-semibold text-secondary-black mb-1"
       >
         {origin ? "Edit Delivery Origin" : "Add Delivery Origin"}
       </h2>
@@ -119,7 +127,7 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
         and fees.
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-3 md:space-y-4">
         <div>
           <label className="block text-sm font-medium text-secondary-black mb-1.5">
             Address <span className="text-red-500">*</span>
@@ -167,29 +175,29 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
               State <span className="text-red-500">*</span>
             </label>
 
-            <select
-              className={`w-full border rounded-lg px-3.5 py-2.5 text-sm outline-none bg-white ${
-                errors.state
-                  ? "border-red-500 placeholder:text-red-500"
-                  : "border-gray-300"
-              }`}
-              {...register("state", { required: true })}
+            <StateSelect
+              id="edit-origin-state"
+              name="state"
+              countryCode={US_COUNTRY_CODE}
               value={state}
-              onChange={e => {
-                const selectedState = e.target.value;
+              error={!!errors.state}
+              variant="modal"
+              onChange={selectedState => {
                 setState(selectedState);
                 setValue("state", selectedState, {
                   shouldValidate: true,
                 });
               }}
-            >
-              <option value="">Select State</option>
-              {usStates.map(item => (
-                <option key={item.isoCode} value={item.isoCode}>
-                  {item.name} ({item.isoCode})
-                </option>
-              ))}
-            </select>
+            />
+            <input
+              type="hidden"
+              {...register("state", { required: true })}
+            />
+            {errors.state && (
+              <span className="text-red-500 text-xs mt-1 block">
+                State is required
+              </span>
+            )}
           </div>
         </div>
 
@@ -244,7 +252,7 @@ export function EditOriginModal({ origin, onClose }: EditOriginModalProps) {
             <FiMapPin className="size-4" />
           </span>
           <div>
-            <h4 className="text-[15px] font-semibold">Important</h4>
+            <h4 className="text-sm md:text-[15px] font-semibold">Important</h4>
             <p className="mt-1 text-sm leading-relaxed text-gray-700">
               Accurate delivery origin is essential for correct delivery fee
               calculations based on distance.

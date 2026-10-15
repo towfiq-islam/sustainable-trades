@@ -62,7 +62,7 @@ const LocalMagicMarker = ({ address }: Props) => {
                     <ShopListSkeleton key={idx} />
                   ))
                 ) : shopData?.data?.length === 0 || !shopData ? (
-                  <div className="text-gray-700 font-semibold text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-[#d4e2cb2f]">
+                  <div className="text-gray-700 font-semibold text-lg text-center flex justify-center flex-col gap-2 items-center h-full p-2 lg:p-8 bg-off-green/20">
                     <LuFileQuestion className="text-5xl text-gray-600" />
                     No Shop Found
                   </div>
@@ -82,7 +82,6 @@ const LocalMagicMarker = ({ address }: Props) => {
                           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.shop_info?.shop_image}`}
                           alt="shop_image"
                           fill
-                          unoptimized
                           className="size-full object-cover rounded-lg"
                         />
                       </figure>
@@ -141,7 +140,7 @@ const LocalMagicMarker = ({ address }: Props) => {
                 )}
               </div>
             ) : (
-              <div className="flex flex-col justify-center h-full p-2 lg:p-8 bg-[#d4e2cb2f] rounded-xl">
+              <div className="flex flex-col justify-center h-full p-2 lg:p-8 bg-off-green/20 rounded-xl">
                 <h3 className="text-2xl lg:text-3xl font-semibold text-secondary-black mb-5">
                   Search to find your local magic makers
                 </h3>

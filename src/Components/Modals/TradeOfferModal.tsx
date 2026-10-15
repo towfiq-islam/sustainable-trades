@@ -114,8 +114,8 @@ const TradeOfferModal = ({
       {sellingOption ? (
         <div className="text-center">
           {/* Top Icon */}
-          <div className="mx-auto flex size-18 items-center justify-center rounded-full bg-[#D8F1EC]">
-            <HiOutlineArrowPath size={36} className="text-[#123A34]" />
+          <div className="mx-auto flex size-18 items-center justify-center rounded-full bg-modal-teal">
+            <HiOutlineArrowPath size={36} className="text-deep-green" />
           </div>
 
           {/* Title */}
@@ -125,13 +125,13 @@ const TradeOfferModal = ({
 
           {/* Divider */}
           <div className="my-4 flex items-center justify-center gap-4">
-            <div className="h-[2px] flex-1 bg-[#D6ECE6]" />
-            <FaLeaf className="text-[#93BCAF]" size={18} />
-            <div className="h-[2px] flex-1 bg-[#D6ECE6]" />
+            <div className="h-[2px] flex-1 bg-modal-divider" />
+            <FaLeaf className="text-light-green" size={18} />
+            <div className="h-[2px] flex-1 bg-modal-divider" />
           </div>
 
           {/* Description */}
-          <p className="leading-7 text-[#1F1F1F]">
+          <p className="leading-7 text-secondary-black">
             This item is not currently available for purchase. The seller has
             chosen to offer this listing exclusively through Sustainable Trades'
             Trade &amp; Barter system. Trade &amp; Barter is available to
@@ -142,7 +142,7 @@ const TradeOfferModal = ({
           {/* Primary Button */}
           <Link
             href={"/auth/create-shop"}
-            className="mt-8 flex h-13 w-full items-center justify-center gap-3 rounded-lg bg-primary-green font-medium text-white transition hover:bg-[#18453E] cursor-pointer"
+            className="mt-8 flex h-13 w-full items-center justify-center gap-3 rounded-lg bg-primary-green font-medium text-white transition hover:bg-deep-green cursor-pointer"
           >
             <FaLeaf size={18} />
             Create a Sustainable Shop &amp; Start Trading
@@ -151,7 +151,7 @@ const TradeOfferModal = ({
           {/* Secondary Button */}
           <button
             onClick={onClose}
-            className="mt-4 h-12 w-full rounded-lg border border-primary-green/10 bg-[#D8F1EC] font-medium text-primary-green transition cursor-pointer"
+            className="mt-4 h-12 w-full rounded-lg border border-primary-green/10 bg-modal-teal font-medium text-primary-green transition cursor-pointer"
           >
             Close
           </button>
@@ -263,11 +263,11 @@ const TradeOfferModal = ({
 
               {/* hr */}
               <div className="flex gap-x-5 items-center mb-2 md:my-4">
-                <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                <div className="bg-border-gray w-full h-[1px]"></div>
                 <div className="inline-block">
                   <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
                 </div>
-                <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                <div className="bg-border-gray w-full h-[1px]"></div>
               </div>
 
               {/* ---------- Their Offer Section ---------- */}

@@ -217,7 +217,7 @@ const CounterTrades = ({ id }: { id: string }) => {
   if (offerLoading || requestLoading) {
     return (
       <div className="h-[80vh] flex justify-center items-center">
-        <PuffLoader color="#274f45" />
+        <PuffLoader color="var(--color-primary-green)" />
       </div>
     );
   }
@@ -283,7 +283,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                         {product?.product?.shop?.shop_name}
                         <Link
                           href={`/shop-details?view=coustomer&id=${product?.product?.shop?.user_id}&listing_id=${product?.product?.shop_info_id}`}
-                          className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray font-lato"
+                          className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray "
                         >
                           View Shop
                         </Link>
@@ -308,7 +308,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                       </div>
                       <div className="flex gap-x-2 items-center">
                         <LocationSvg1 />
-                        <h5 className="text-[12px] lg:text-[14px] text-accent-gray font-lato">
+                        <h5 className="text-[12px] lg:text-[14px] text-accent-gray ">
                           {product?.type === "offered"
                             ? data?.data?.receiver?.shop_info?.address
                                 ?.address_line_1
@@ -375,7 +375,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                     {(addonProducts[itemId] || []).map((addon, idx) => (
                       <div
                         key={idx}
-                        className="flex w-full flex-wrap gap-2 items-center mt-2 border border-[#E5E5E5] rounded-lg p-2"
+                        className="flex w-full flex-wrap gap-2 items-center mt-2 border border-divider-gray rounded-lg p-2"
                       >
                         <select
                           value={addon.productId}
@@ -475,11 +475,11 @@ const CounterTrades = ({ id }: { id: string }) => {
                 {/* Dynamic divider */}
                 {showReloadBetween && (
                   <div className="flex gap-x-5 items-center my-4">
-                    <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                    <div className="bg-border-gray w-full h-[1px]"></div>
                     <div className="inline-block bg-white">
                       <Reload className="cursor-pointer transform transition-transform hover:rotate-180 duration-500 ease-in-out" />
                     </div>
-                    <div className="bg-[#BFBEBE] w-full h-[1px]"></div>
+                    <div className="bg-border-gray w-full h-[1px]"></div>
                   </div>
                 )}
               </div>
@@ -509,7 +509,7 @@ const CounterTrades = ({ id }: { id: string }) => {
                   if (btn === "Go Back") router.back();
                   else if (btn === "Send Counter") handleSendCounter();
                 }}
-                className={`relative cursor-pointer py-[8px] px-6 rounded-md font-lato font-semibold overflow-hidden hover:scale-105 duration-300 ease-in-out text-sm md:text-base ${
+                className={`relative cursor-pointer py-[8px] px-6 rounded-md  font-semibold overflow-hidden hover:scale-105 duration-300 ease-in-out text-sm md:text-base ${
                   style.bg || ""
                 } ${style.border || "border-2"} ${
                   style.text

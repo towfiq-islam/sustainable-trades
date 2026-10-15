@@ -42,18 +42,17 @@ const MemberSpotlight = ({ data, has_community }: CommunityProps) => {
       <Container>
         <div className="flex flex-col md:flex-row w-full">
           {/* Left */}
-          <div className="flex-1 max-w-full md:max-w-[500px] h-[450px] lg:h-[500px] xl:h-[549px] shrink-0 rounded-tl-lg rounded-bl-lg overflow-hidden relative">
+          <div className="md:flex-1 max-w-full md:max-w-[500px] h-[250px] md:h-[450px] lg:h-[500px] xl:h-[549px] shrink-0 rounded-tl-lg rounded-bl-lg overflow-hidden relative">
             <Image
               src={`${process.env.NEXT_PUBLIC_SITE_URL}/${latestSpotlight?.image}`}
               alt="community"
               fill
-              unoptimized
               className="w-full h-full object-cover rounded-tl-lg"
             />
           </div>
 
           {/* Right */}
-          <div className="flex-1 bg-primary-green rounded-br-lg md:rounded-tr-lg md:rounded-br-lg flex flex-col gap-3 justify-center p-7 lg:p-10">
+          <div className="md:flex-1 bg-primary-green rounded-br-lg md:rounded-tr-lg md:rounded-br-lg flex flex-col gap-3 justify-center p-7 lg:p-10">
             <h2 className="text-accent-white text-lg md:text-xl lg:text-2xl xl:text-4xl font-semibold">
               Community Member Spotlight
             </h2>

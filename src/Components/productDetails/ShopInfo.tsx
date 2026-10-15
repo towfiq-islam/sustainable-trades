@@ -54,7 +54,6 @@ const ShopInfo = ({ data }: shopProps) => {
               src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.shop?.user?.avatar}`}
               alt="author"
               fill
-              unoptimized
               className="size-full rounded-full"
             />
           ) : (

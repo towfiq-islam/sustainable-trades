@@ -36,7 +36,7 @@ const FlatConfigModal = ({ flatRateRanges, setOpenFlatModal }: any) => {
 
   return (
     <div>
-      <h3 className="text-[#3D3D3D] text-[18px] md:text-[24px] font-bold text-center">
+      <h3 className="text-dark-gray text-[18px] md:text-[24px] font-bold text-center">
         ADD FLAT RATE
       </h3>
 
@@ -44,7 +44,7 @@ const FlatConfigModal = ({ flatRateRanges, setOpenFlatModal }: any) => {
         onSubmit={handleFlatSubmit(onFlatSubmit)}
         className="mt-2.5 md:mt-5 flex flex-col gap-y-5"
       >
-        <h5 className="text-[#3D3D3D] font-semibold text-[16px] text-center pb-4 border-b border-[#3D3D3D]">
+        <h5 className="text-dark-gray font-semibold text-[16px] text-center pb-4 border-b border-dark-gray">
           Formula
         </h5>
 
@@ -98,8 +98,8 @@ const FlatConfigModal = ({ flatRateRanges, setOpenFlatModal }: any) => {
           </div>
         </div>
 
-        <div className="border border-off-green/40 bg-off-green/40 rounded-lg font-semibold p-4">
-          <p className="text-primary-green text-sm flex gap-2 items-center">
+        <div className="border border-off-green/40 bg-off-green/40 rounded-lg font-semibold p-3 md:p-4">
+          <p className="text-primary-green text-xs md:text-sm flex gap-2 items-center">
             <MdOutlineLocationOn className="text-xl" />
             This flat rate option is for U.S. and Canada only.
           </p>
@@ -109,7 +109,7 @@ const FlatConfigModal = ({ flatRateRanges, setOpenFlatModal }: any) => {
           <button
             type="submit"
             disabled={isPending}
-            className="px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-[190px] cursor-pointer disabled:opacity-85 disabled:cursor-not-allowed"
+            className="px-4 py-2 md:py-4 text-white font-semibold bg-primary-green rounded w-full md:w-[190px] cursor-pointer disabled:opacity-85 disabled:cursor-not-allowed"
           >
             {isPending ? "Saving..." : "Save"}
           </button>

@@ -40,7 +40,6 @@ const InventoryThumbnail = ({
       src={src}
       alt={alt}
       fill
-      unoptimized
       onError={() => setError(true)}
       className="size-full object-cover rounded-lg"
     />
@@ -65,7 +64,6 @@ const AvatarThumbnail = ({
       src={src}
       alt={name || "profile"}
       fill
-      unoptimized
       onError={() => setError(true)}
       className="rounded-full size-full object-cover"
     />

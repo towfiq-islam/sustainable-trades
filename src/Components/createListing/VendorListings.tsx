@@ -54,7 +54,6 @@ const ListingImage = ({
       src={src}
       alt={alt}
       fill
-      unoptimized
       onError={() => setError(true)}
       className={className}
     />

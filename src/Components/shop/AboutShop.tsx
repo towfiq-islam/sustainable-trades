@@ -40,7 +40,6 @@ const AboutShop = ({ data }: AboutProps) => {
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.about?.about_image}`}
                   fill
                   alt="about image"
-                  unoptimized
                   className="size-full object-cover rounded-xl"
                 />
               </figure>

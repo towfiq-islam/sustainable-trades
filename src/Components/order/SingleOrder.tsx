@@ -199,7 +199,6 @@ const SingleOrder = ({ orderId }: { orderId: number }) => {
                                 alt={item?.product_name}
                                 height={64}
                                 width={64}
-                                unoptimized
                                 className="rounded size-full object-cover"
                               />
                             </figure>

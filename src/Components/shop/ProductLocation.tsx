@@ -108,7 +108,6 @@ const ProductLocation = () => {
                           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product?.images[0]?.image}`}
                           alt="product_image"
                           fill
-                          unoptimized
                           className="size-full object-cover rounded-lg"
                         />
                       </figure>

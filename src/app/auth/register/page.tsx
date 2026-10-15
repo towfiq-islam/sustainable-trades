@@ -312,7 +312,6 @@ export default function page({ searchParams }: Props) {
           alt="welcome_img"
           className="object-cover "
           fill
-          unoptimized
           placeholder="blur"
         />
       </div>

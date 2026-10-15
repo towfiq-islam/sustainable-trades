@@ -86,7 +86,6 @@ const OrderedProducts = ({ data, order_id }: OrderProps) => {
                   <Image
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product_image}`}
                     alt="Thumbnail"
-                    unoptimized
                     fill
                     className="w-full h-full object-cover rounded"
                   />

@@ -41,7 +41,6 @@ const ShopBanner = ({ id, data }: BannerProps) => {
         alt={`${data?.shop_info?.shop_name ?? "Shop"} banner`}
         fill
         priority
-        unoptimized
         sizes="100vw"
         className="object-cover object-center -z-20"
       />
@@ -59,7 +58,6 @@ const ShopBanner = ({ id, data }: BannerProps) => {
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.shop_info?.shop_image}`}
                   alt="profile image"
                   fill
-                  unoptimized
                   className="size-full rounded-full object-cover"
                 />
               </figure>
@@ -150,7 +148,6 @@ const ShopBanner = ({ id, data }: BannerProps) => {
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.avatar}`}
                     alt="author"
                     fill
-                    unoptimized
                     className="size-full rounded-full"
                   />
                 ) : (

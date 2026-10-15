@@ -54,7 +54,6 @@ const OrderSummarySidebar = ({ items }: { items: CartItem[] }) => {
                       src={`${process.env.NEXT_PUBLIC_SITE_URL}/${product.image}`}
                       alt={product.name}
                       fill
-                      unoptimized
                       className="object-cover rounded-md"
                     />
                   )}

@@ -38,7 +38,6 @@ const Review = ({ reviews, isLoading, setPage }: ReviewProps) => {
               <figure className="size-16 rounded-full mb-4 border border-gray-100">
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images[0]?.image}`}
-                  unoptimized
                   width={16}
                   height={16}
                   alt={"ProductImage"}

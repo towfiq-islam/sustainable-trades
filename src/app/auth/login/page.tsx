@@ -230,7 +230,6 @@ const Page = () => {
           alt="welcome_img"
           className="object-cover"
           fill
-          unoptimized
           placeholder="blur"
         />
       </div>

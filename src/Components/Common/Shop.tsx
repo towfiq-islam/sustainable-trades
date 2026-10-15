@@ -36,7 +36,6 @@ const Shop = ({ shop }: ShopProps) => {
           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${shop?.shop?.shop_image}`}
           alt="product image"
           fill
-          unoptimized
           className="w-full h-full object-cover rounded-lg"
         />
       </figure>

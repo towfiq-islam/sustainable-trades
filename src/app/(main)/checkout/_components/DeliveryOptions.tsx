@@ -165,7 +165,6 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${vendor.shop_image}`}
                     alt={vendor?.shop_name}
                     fill
-                    unoptimized
                     className="object-cover"
                   />
                 </figure>

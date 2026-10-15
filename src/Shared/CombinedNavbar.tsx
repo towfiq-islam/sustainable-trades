@@ -176,7 +176,6 @@ const CombinedNavbar = ({
                 src="/favicon.svg"
                 alt="logo"
                 fill
-                unoptimized
                 className="size-full object-cover rounded-full"
               />
             </figure>
@@ -287,7 +286,6 @@ const CombinedNavbar = ({
                                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${icon}`}
                                   alt="icon"
                                   fill
-                                  unoptimized
                                   className="size-full object-cover"
                                 />
                               ) : (
@@ -295,7 +293,6 @@ const CombinedNavbar = ({
                                   src={logo}
                                   alt="logo"
                                   fill
-                                  unoptimized
                                   className="size-full object-cover"
                                 />
                               )}
@@ -384,7 +381,6 @@ const CombinedNavbar = ({
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${user?.avatar}`}
                     alt="author"
                     fill
-                    unoptimized
                     className="size-full rounded-full"
                   />
                 ) : (

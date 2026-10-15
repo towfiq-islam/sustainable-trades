@@ -79,7 +79,6 @@ const ShopReviews = ({ id }: { id: number }) => {
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.user?.avatar}`}
                         alt="author_img"
                         fill
-                        unoptimized
                         className="size-full object-cover rounded-full"
                       />
                     ) : (
@@ -155,7 +154,6 @@ const ShopReviews = ({ id }: { id: number }) => {
                                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
                                   alt="Reviewed img"
                                   fill
-                                  unoptimized
                                   className="w-full h-full rounded-lg object-cover"
                                 />
                               </figure>
@@ -179,7 +177,6 @@ const ShopReviews = ({ id }: { id: number }) => {
                           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images?.[0]?.image}`}
                           alt="product image"
                           fill
-                          unoptimized
                           className="size-full rounded-lg object-cover"
                         />
                       </figure>

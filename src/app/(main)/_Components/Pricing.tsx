@@ -152,7 +152,6 @@ const Pricing = ({
                       alt="logo"
                       width={45}
                       height={45}
-                      unoptimized
                     />
                   </figure>
 
@@ -189,7 +188,6 @@ const Pricing = ({
                               alt="image"
                               width={24}
                               height={24}
-                              unoptimized
                             />
                           </figure>
 

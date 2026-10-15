@@ -59,7 +59,6 @@ function ProductCard({
             src={`${process.env.NEXT_PUBLIC_SITE_URL}/${image}`}
             alt={name}
             fill
-            unoptimized
             className="object-cover"
           />
         )}
@@ -313,7 +312,6 @@ const MessagePage = ({
               <Image
                 src={`${process.env.NEXT_PUBLIC_SITE_URL}/${participant.avatar}`}
                 fill
-                unoptimized
                 alt="author_img"
                 className="size-full rounded-full"
               />
@@ -378,7 +376,6 @@ const MessagePage = ({
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${msg.sender.avatar}`}
                         alt="author"
                         fill
-                        unoptimized
                         className="size-full rounded-full"
                       />
                     ) : (

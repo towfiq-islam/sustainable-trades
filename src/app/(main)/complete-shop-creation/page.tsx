@@ -17,7 +17,7 @@ const page = () => {
   return (
     <div className="pt-10 pb-20">
       <Container>
-        <Image src={setupBg} alt="setup" unoptimized className="mx-auto my-9" />
+        <Image src={setupBg} alt="setup" className="mx-auto my-9" />
 
         <p className="md:text-lg text-secondary-gray font-medium text-center max-w-[700px] w-full mx-auto">
           Now that we have your preferences all sorted out, it's time to unveil

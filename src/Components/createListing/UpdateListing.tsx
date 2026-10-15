@@ -573,7 +573,6 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
                   src={mainImage || Preview}
                   alt="Main product preview"
                   fill
-                  unoptimized
                   className="w-full h-full object-cover rounded-lg border"
                 />
               </div>

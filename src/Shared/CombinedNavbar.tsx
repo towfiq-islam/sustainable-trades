@@ -176,6 +176,8 @@ const CombinedNavbar = ({
                 src="/favicon.svg"
                 alt="logo"
                 fill
+                priority
+                fetchPriority="high"
                 className="size-full object-cover rounded-full"
               />
             </figure>

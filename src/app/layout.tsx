@@ -29,7 +29,7 @@ export default async function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body className={`${geist.variable} antialiased`}>
-        {/* <ScrollToTop /> */}
+        <ScrollToTop />
         <ReduxProvider>
           <LocationProvider>
             <ToastProvider />

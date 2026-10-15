@@ -63,6 +63,7 @@ const BannerSlider = ({ data }: bannerProps) => {
                   alt={sliderData?.title || "slider"}
                   fill
                   priority={idx === 0}
+                  fetchPriority={idx === 0 ? "high" : "auto"}
                   sizes="100vw"
                   className="object-cover object-center -z-10"
                 />

@@ -65,7 +65,7 @@ const PickupLocationSelect = ({
       <button
         type="button"
         onClick={() => setOpen(prev => !prev)}
-        className={`w-full flex items-center justify-between border rounded-lg px-4 py-3 text-left cursor-pointer ${
+        className={`w-full flex items-center justify-between border rounded-lg px-4 py-2 xl:py-3 text-left cursor-pointer ${
           hasError
             ? "border-red-500"
             : open
@@ -101,16 +101,16 @@ const PickupLocationSelect = ({
                 }`}
               >
                 <div>
-                  <p className="font-semibold text-[15px] text-secondary-black">
+                  <p className="font-semibold text-sm xl:text-[15px] text-secondary-black">
                     {loc.location_name}
                   </p>
-                  <p className="text-sm text-secondary-gray">
+                  <p className="text-xs xl:text-sm text-secondary-gray">
                     {loc.address}
                     {loc.unit ? `, ${loc.unit}` : ""}, {loc.city}, {loc.state}{" "}
                     {loc.zip_code}
                   </p>
                 </div>
-                <span className="flex items-center gap-1 text-sm text-secondary-gray shrink-0">
+                <span className="flex items-center gap-1 text-xs xl:text-sm text-secondary-gray shrink-0">
                   <IoLocationOutline className="text-primary-green shrink-0" />
                   {loc.distance.toFixed(1)}{" "}
                   {loc.distance_unit === "miles" ? "mi" : loc.distance_unit}

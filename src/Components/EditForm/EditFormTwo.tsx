@@ -39,7 +39,7 @@ const EditFormTwo = ({ data }: any) => {
         Your Shop
       </h2>
 
-      <div className="lg:mt-12 mt-5 grid lg:grid-cols-2 grid-cols-1 gap-x-[96px] items-center lg:gap-y-10 gap-y-5 font-lato">
+      <div className="lg:mt-12 mt-5 grid lg:grid-cols-2 grid-cols-1 gap-x-[96px] items-center lg:gap-y-10 gap-y-5 ">
         {/* Shop Name */}
         <div>
           <p className="form-label">Name Your Shop *</p>
@@ -89,7 +89,7 @@ const EditFormTwo = ({ data }: any) => {
       <div className=" mt-8 mb-[56px] lg:flex gap-x-8">
         {/* Shop Photo */}
         <div>
-          <p className="text-[18px] text-secondary-black font-lato">
+          <p className="text-[18px] text-secondary-black ">
             Add A Profile Photo *
           </p>
 
@@ -151,7 +151,7 @@ const EditFormTwo = ({ data }: any) => {
 
         {/* Cover Photo */}
         <div className="w-full">
-          <p className="text-[18px] text-secondary-black font-lato">
+          <p className="text-[18px] text-secondary-black ">
             Add A Cover Photo *
           </p>
           <div

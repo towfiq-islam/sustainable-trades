@@ -1,9 +1,11 @@
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { BsEyeFill } from "react-icons/bs";
 import { PiEyeClosed } from "react-icons/pi";
 
 const StepOne = ({ step, totalSteps }: any) => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showRePassword, setShowRePassword] = useState<boolean>(false);
 
@@ -21,15 +23,15 @@ const StepOne = ({ step, totalSteps }: any) => {
         Lets set up your shop! Fill in all required fields below to get started.
       </p>
 
-      <div className="border border-accent-gray rounded-[20px] my-8 md:my-[56px] lg:p-20 p-5">
-        <p className="text-sm md:text-[16px] text-secondary-gray font-normal font-lato">
+      <div className="border border-accent-gray rounded-xl md:rounded-[20px] my-10 xl:my-[56px] p-5 md:p-10 xl:p-20">
+        <p className="text-sm md:text-[16px] text-secondary-gray font-normal ">
           <span className="text-primary-red">*</span>Indicates a required field
         </p>
-        <h6 className="text-sm md:text-[16px] text-secondary-gray font-normal font-lato">
+        <h6 className="text-sm md:text-[16px] text-secondary-gray font-normal ">
           Note: Email and password entered here will be your login credentials
         </h6>
 
-        <div className="mt-5 md:mt-12 grid lg:grid-cols-2 grid-cols-1 gap-x-20 lg:gap-y-10 gap-y-3 font-lato">
+        <div className="mt-5 md:mt-12 grid lg:grid-cols-2 grid-cols-1 gap-x-10 xl:gap-x-20 gap-y-3 md:gap-y-5 xl:gap-y-10 ">
           {/* First Name */}
           <div>
             <p className="form-label">
@@ -130,7 +132,7 @@ const StepOne = ({ step, totalSteps }: any) => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-[45px] cursor-pointer"
+              className="absolute right-3 top-[41px] md:top-[45px] cursor-pointer"
             >
               {showPassword ? (
                 <PiEyeClosed size={20} />
@@ -165,7 +167,7 @@ const StepOne = ({ step, totalSteps }: any) => {
             <button
               type="button"
               onClick={() => setShowRePassword(!showRePassword)}
-              className="absolute right-3 top-[45px] cursor-pointer"
+              className="absolute right-3 top-[41px] md:top-[45px] cursor-pointer"
             >
               {showRePassword ? (
                 <PiEyeClosed size={20} />
@@ -193,7 +195,16 @@ const StepOne = ({ step, totalSteps }: any) => {
         </div>
       </div>
 
-      <div className="flex justify-end">
+      {/* Buttons */}
+      <div className="flex justify-between items-center gap-4">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="auth-primary-btn w-fit"
+        >
+          Back
+        </button>
+
         <button type="submit" className="auth-secondary-btn w-full md:w-fit">
           {step < totalSteps ? "Save and Continue" : "Submit"}
         </button>

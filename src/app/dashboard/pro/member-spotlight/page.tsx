@@ -1,11 +1,11 @@
-import Community from "@/app/(main)/community-member-spotlight/page";
+import Spotlight from "./_Components/Spotlight";
 import SpotlightButton from "./_Components/SpotlightButton";
 
 const page = () => {
   return (
     <>
       <SpotlightButton isPro={true} />
-      <Community />
+      <Spotlight />
     </>
   );
 };

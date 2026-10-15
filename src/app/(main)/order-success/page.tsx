@@ -224,7 +224,6 @@ export default function Page({ searchParams }: Props) {
                             src={`${process.env.NEXT_PUBLIC_SITE_URL}/${vendorOrder.shop.image}`}
                             alt={vendorOrder.shop.name}
                             fill
-                            unoptimized
                             className="object-cover"
                           />
                         </figure>

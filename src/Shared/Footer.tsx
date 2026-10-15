@@ -22,7 +22,7 @@ const helpUsLinks = [
 
 const Footer = async () => {
   const footer_title_class =
-    "text-xl font-bold text-accent-white leading-[ 140%] tracking-[0.2px] mb-3";
+    "md:text-xl font-semibold md:font-bold text-accent-white leading-[ 140%] tracking-[0.2px] mb-2.5 md:mb-3";
   const socialLinks = await getSocialLinks();
   const siteSettings = await getSiteSettings();
   const dynamicPages = await getDynamicPages();
@@ -37,7 +37,6 @@ const Footer = async () => {
             <figure className="size-24 md:size-40">
               <Image
                 src={logo}
-                unoptimized
                 alt="logo"
                 className="w-full h-full object-cover "
               />
@@ -45,7 +44,7 @@ const Footer = async () => {
           </div>
 
           {/* Right */}
-          <div className="flex flex-wrap gap-10 xl:gap-24">
+          <div className="flex flex-wrap gap-7 md:gap-10 xl:gap-24">
             {/* About */}
             <div>
               <h3 className={footer_title_class}>About</h3>
@@ -124,7 +123,7 @@ const Footer = async () => {
       <Container>
         <div className="flex flex-col md:flex-row w-full md:items-center justify-between text-accent-white tracking-[0.16px] mb-5">
           {/* Left - Copyright */}
-          <p className="md:text-base text-xs text-center md:text-left mb-7 md:mb-0">
+          <p className="md:text-base text-[13px] text-center md:text-left mb-4 md:mb-0">
             {siteSettings?.data?.copyright_text}
           </p>
 

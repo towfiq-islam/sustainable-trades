@@ -31,10 +31,9 @@ import { FiUser } from "react-icons/fi";
 import StateSelect from "@/Components/Common/StateSelect";
 
 const US_COUNTRY_CODE = "US";
-const usStates = State.getStatesOfCountry(US_COUNTRY_CODE);
 
 const fieldClass = (hasError: boolean) =>
-  `flex-1 w-full border rounded-lg px-4 py-3 outline-none focus:border-primary-green ${
+  `flex-1 w-full border rounded-lg px-3.5 xl:px-4 py-2 xl:py-3 outline-none focus:border-primary-green ${
     hasError
       ? "border-red-500 placeholder:text-red-500"
       : "border-gray-300 placeholder:text-gray-400"
@@ -346,7 +345,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
   return (
     <div>
       {/* Contact Information Card */}
-      <div className="border border-gray-300 rounded-xl p-6 bg-white mb-5">
+      <div className="border border-gray-300 rounded-xl p-4 xl:p-6 bg-white mb-5">
         <div className="flex items-center gap-2 mb-2">
           <FiUser className="text-xl text-primary-green stroke-[2.2]" />
           <h3 className="text-lg font-semibold text-secondary-black">
@@ -355,7 +354,9 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
         </div>
 
         <p className="text-gray-500 text-[14.5px] leading-relaxed mb-5">
-          Enter the email that you want the order confirmation, receipt, and any tracking or updates to be sent to. You can have your items sent to different addresses for each shop — wherever you'd like.
+          Enter the email that you want the order confirmation, receipt, and any
+          tracking or updates to be sent to. You can have your items sent to
+          different addresses for each shop — wherever you'd like.
         </p>
 
         <div className="space-y-4">
@@ -426,17 +427,17 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
       </div>
 
       {/* Vendor Fulfillment Card */}
-      <div className="border border-gray-300 rounded-xl p-6 bg-white">
+      <div className="border border-gray-300 rounded-xl p-4 md:p-6 bg-white">
         <VendorProgressBar current={vendorIndex + 1} total={items.length} />
 
-        <h3 className="text-lg font-semibold text-secondary-black mb-1 flex gap-3 items-center">
+        <h3 className="text-sm md:text-lg font-semibold text-secondary-black mb-1 flex flex-col md:flex-row gap-2 md:gap-3 items-center">
           Sold by {vendor.shop_name}
           <p className="size-2 rounded-full bg-primary-green" />
           Delivery Method:{" "}
           {fulfillment ? fulfillmentLabel[fulfillment] : "Fulfillment"}
         </h3>
 
-        <p className="text-gray-500 text-[15px] mb-5 max-w-lg">
+        <p className="text-gray-500 text-sm md:text-[15px] mb-5 max-w-lg">
           {fulfillment === "pickup"
             ? "Please select your pickup location below. You'll review everything before your order is placed."
             : fulfillment === "delivery"
@@ -610,7 +611,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           <button
             type="button"
             onClick={handleBack}
-            className="px-6 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
+            className="px-5 xl:px-6 py-2 xl:py-3 text-sm xl:text-base rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
           >
             Back
           </button>
@@ -619,7 +620,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
             type="button"
             onClick={handleNext}
             disabled={isLoading || isGeocoding}
-            className="px-6 py-3 rounded-lg bg-primary-green text-white font-medium cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-60"
+            className="px-5 xl:px-6 py-2 xl:py-3 text-sm xl:text-base rounded-lg bg-primary-green text-white font-medium cursor-pointer enabled:hover:scale-95 transition-all duration-300 disabled:cursor-not-allowed disabled:animate-pulse disabled:opacity-60"
           >
             {isLastVendor ? "Review order" : "Next vendor"}
           </button>
@@ -646,7 +647,7 @@ const DeliveryDetails = ({ items }: { items: CartItem[] }) => {
           <div className="py-2 px-4 mb-4 text-left">
             {deliveryUnavailableVendors.map(v => (
               <div key={v.vendor_id} className="flex items-center gap-2 py-1.5">
-                <CiShop className="text-primary-green"/>
+                <CiShop className="text-primary-green" />
                 <span className="text-sm text-secondary-black">
                   {v.shop_name}
                 </span>

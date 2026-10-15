@@ -104,7 +104,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
 
   return (
     <section className="lg:px-12">
-      <div className="lg:my-16 my-8 text-center lg:text-left">
+      <div className="xl:my-16 my-10 text-center lg:text-left">
         <h2 className="auth_title text-2xl sm:text-3xl lg:text-4xl">
           Geo-Locator
         </h2>
@@ -221,7 +221,7 @@ const StepFour = ({ setStep, step, isPending }: any) => {
       <Modal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        className="bg-table-header max-w-lg"
+        className="max-w-lg"
       >
         <div>
           <p className="mb-4 text-sm">

@@ -22,7 +22,7 @@ const PaymentOptions = () => {
   return (
     <section className="">
       <div className="flex items-center justify-between gap-3 mb-3">
-        <h3 className="text-xl md:text-2xl lg:text-[28px] text-secondary-black font-semibold">
+        <h3 className="text-xl md:text-2xl xl:text-[28px] text-secondary-black font-semibold">
           {totalQuantity
             ? `${totalQuantity} Items from ${items?.length} Sellers`
             : "Cart is empty"}
@@ -30,8 +30,11 @@ const PaymentOptions = () => {
 
         {items?.length > 0 && (
           <button
-            onClick={() => { dispatch(clearCart()); dispatch(clearCheckout()); }}
-            className="px-3 py-1.5 text-sm rounded-full font-medium bg-primary-red cursor-pointer text-white flex gap-1 items-center"
+            onClick={() => {
+              dispatch(clearCart());
+              dispatch(clearCheckout());
+            }}
+            className="px-3 py-1.5 text-xs xl:text-sm rounded-full font-medium bg-primary-red cursor-pointer text-white flex gap-1 items-center"
           >
             <TiDelete className="text-lg" />
             Clear Cart
@@ -40,15 +43,15 @@ const PaymentOptions = () => {
       </div>
 
       {items?.length > 0 ? (
-        <div className="grid grid-cols-12 gap-5 items-start">
-          <div className="space-y-5 col-span-8">
+        <div className="grid lg:grid-cols-12 gap-5 items-start">
+          <div className="order-1 lg:order-0 space-y-5 lg:col-span-8">
             <div className="border border-off-green/40 bg-off-green/20 max-w-4xl rounded-lg p-3">
               <div className="flex gap-3">
                 <div className="size-7 shrink-0 rounded-full bg-primary-green text-sm text-white flex items-center justify-center">
                   i
                 </div>
 
-                <p className="text-secondary-gray leading-6 text-[14px]">
+                <p className="text-secondary-gray leading-6 text-[13px] xl:text-[14px]">
                   After you click Proceed to Checkout, you'll choose from the
                   available delivery options. Options may include Local Pickup,
                   Local Delivery, or Shipping. If the items in your order are
@@ -64,7 +67,7 @@ const PaymentOptions = () => {
             ))}
           </div>
 
-          <div className="col-span-4 border border-gray-300 rounded-xl p-5 space-y-4 sticky top-40">
+          <div className="order-0 lg:order-1 lg:col-span-4 border border-gray-300 rounded-xl p-4 xl:p-5 space-y-4 lg:sticky top-40">
             <h3 className="text-lg font-semibold text-secondary-black">
               Order Summary
             </h3>
@@ -91,7 +94,7 @@ const PaymentOptions = () => {
             <button
               disabled={!items?.length}
               onClick={() => router.push("/checkout")}
-              className="w-full mt-2 py-3 rounded-[5px] bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300"
+              className="w-full mt-2 py-2.5 xl:py-3 rounded-[5px] bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:scale-95 transition-all duration-300 text-sm xl:text-base"
             >
               Proceed to Checkout
             </button>

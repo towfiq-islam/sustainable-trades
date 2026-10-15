@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import moment from "moment";
-import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import { Delete, Pen } from "@/Components/Svg/SvgContainer";
 import { DiscountSkeleton } from "@/Components/Loader/Loader";
@@ -13,6 +12,7 @@ import {
   useGetDiscountsQuery,
 } from "@/redux/api/discountApi";
 import { FiTag } from "react-icons/fi";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 
 const DiscountsPage = () => {
   const [status, setStatus] = useState<string>("active");
@@ -79,10 +79,8 @@ const DiscountsPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-        <h2 className="text-[30px] md:text-[40px] font-lato font-semibold text-black">
-          Discounts
-        </h2>
+      <div className="flex flex-col gap-3 md:flex-row md:justify-between md:items-center">
+        <DashBoardHeader heading="Discounts " />
 
         <div className="flex flex-col md:flex-row gap-4 md:items-center">
           {/* Search */}
@@ -92,15 +90,11 @@ const DiscountsPage = () => {
               type="search"
               className="py-1.5 md:py-3 pl-4 outline-0 border border-primary-green rounded-[8px] text-[16px] text-muted-gray font-normal w-full md:w-[300px]"
             />
-            <div className="absolute top-4 right-3">
-              <FaSearch />
-            </div>
-            <div className="absolute top-0 right-10 w-[2px] bg-primary-green h-[45px]"></div>
           </div>
 
           {/* Create button */}
           <Link href="/dashboard/pro/discounts/create-discount">
-            <button className="hover:border-off-green hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2 px-5  md:text-lg font-semibold cursor-pointer w-full md:w-fit bg-off-green text-primary-green duration-500 ease-in-out">
+            <button className="hover:border-off-green hover:border border hover:bg-transparent rounded-[8px] py-1.5 md:py-2.5 px-5  md:text-lg font-semibold cursor-pointer w-full md:w-fit bg-off-green text-primary-green duration-500 ease-in-out">
               Create Discount
             </button>
           </Link>
@@ -195,22 +189,28 @@ const DiscountsPage = () => {
                     {d.description}
                   </p>
 
-                  <div className="mt-3 md:mt-7 text-[14px] md:text-[16px] flex gap-1 items-center">
-                    <span className="font-bold text-[12px] md:text-[16px] text-secondary-black">
-                      STARTS:
-                    </span>
-                    <span className="text-gray-600">{`${moment(
-                      d?.start_datetime,
-                    ).format("MMMM Do YYYY, h:mm:ss a")}`}</span>
+                  <div className="mt-3 md:mt-7 text-[14px] md:text-[16px] flex flex-col md:flex-row gap-1 md:items-center">
+                    <p>
+                      <span className="font-bold text-[12px] md:text-[16px] text-secondary-black">
+                        STARTS:
+                      </span>
+                      <span className="text-gray-600">
+                        {`${moment(d?.start_datetime).format(
+                          " MMMM Do YYYY, h:mm:ss a",
+                        )}`}
+                      </span>
+                    </p>
 
-                    <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-secondary-black">
-                      ENDS:
-                    </span>
-                    <span className="text-gray-600">
-                      {d?.never_expires || !d?.end_datetime
-                        ? "Never Expires"
-                        : `${moment(d?.end_datetime).format("MMMM Do YYYY, h:mm:ss a")}`}
-                    </span>
+                    <p>
+                      <span className="sm:ml-4 font-bold text-[14px] md:text-[16px] text-secondary-black">
+                        ENDS:
+                      </span>
+                      <span className="text-gray-600">
+                        {d?.never_expires || !d?.end_datetime
+                          ? "Never Expires"
+                          : `${moment(d?.end_datetime).format(" MMMM Do YYYY, h:mm:ss a")}`}
+                      </span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -225,7 +225,7 @@ const DiscountsPage = () => {
                   <Link
                     href={`/dashboard/pro/discounts/create-discount/${d?.id}`}
                   >
-                    <button className="py-2 px-2 md:text-sm rounded bg-off-green text-primary-green cursor-pointer flex gap-x-2 font-semibold">
+                    <button className="py-2 px-2 text-xs md:text-sm rounded bg-off-green text-primary-green cursor-pointer flex gap-x-2 font-semibold">
                       <Pen />
                       Edit
                     </button>

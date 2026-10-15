@@ -100,13 +100,13 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
   };
 
   return (
-    <div className="border border-gray-300 rounded-xl p-6 bg-white">
-      <div className="flex gap-10 items-center justify-between">
+    <div className="border border-gray-300 rounded-xl p-4 xl:p-6 bg-white">
+      <div className="mb-5 md:mb-0 flex flex-col md:flex-row md:gap-5 xl:gap-10 items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-secondary-black mb-1">
+          <h3 className="xl:text-lg font-semibold text-secondary-black mb-1">
             Choose Local Delivery, Local Pickup, or Shipping
           </h3>
-          <p className="text-secondary-gray text-[15px] mb-6">
+          <p className="text-secondary-gray text-sm xl:text-[15px] mb-6">
             Choose how you'd like to receive your order. Available delivery
             options are determined at the listing level by each shop owner.
           </p>
@@ -152,7 +152,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
           return (
             <div
               key={vendor.vendor_id}
-              className={`border rounded-xl p-4 ${
+              className={`border rounded-xl p-3 xl:p-4 ${
                 status === "blocked"
                   ? "border-off-green/40 bg-off-green/10"
                   : "border-gray-200"
@@ -165,12 +165,11 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${vendor.shop_image}`}
                     alt={vendor?.shop_name}
                     fill
-                    unoptimized
                     className="object-cover"
                   />
                 </figure>
                 <div>
-                  <p className="font-semibold text-[15px] text-secondary-black">
+                  <p className="font-semibold text-sm xl:text-[15px] text-secondary-black">
                     Sold by {vendor.shop_name}
                   </p>
                   <p className="text-sm text-secondary-gray">
@@ -201,7 +200,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                     {vendor.products.map(product => (
                       <div
                         key={product.id}
-                        className="flex items-center justify-between text-sm border border-gray-200 rounded-lg px-3 py-2"
+                        className="flex items-center justify-between text-sm border border-gray-200 rounded-lg px-2.5 xl:px-4 py-2 xl:py-3"
                       >
                         <span className="text-secondary-black">
                           {product.name}
@@ -230,15 +229,15 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
               )}
 
               {status === "auto" && (
-                <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-off-green/70 bg-off-green/40">
+                <div className="flex items-center gap-3 px-2.5 xl:px-4 py-2 xl:py-3 rounded-lg border border-off-green/70 bg-off-green/40">
                   <span className="size-5 rounded-full border-2 border-primary-green grid place-items-center shrink-0">
                     <span className="size-2.5 rounded-full bg-primary-green" />
                   </span>
                   <span>
-                    <span className="block text-[15px] font-semibold text-primary-green">
+                    <span className="block text-sm md:text-[15px] font-semibold text-primary-green">
                       {fulfillmentLabel[options[0]]}
                     </span>
-                    <span className="block text-sm text-secondary-gray">
+                    <span className="block text-xs md:text-sm text-secondary-gray">
                       {fulfillmentDescription[options[0]]}
                       {!isDeliveryUnavailable &&
                         " · This is the only delivery option available for this product."}
@@ -270,7 +269,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                         key={option}
                         type="button"
                         onClick={() => handleSelect(vendor.vendor_id, option)}
-                        className={`w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg border transition-colors cursor-pointer ${
+                        className={`w-full flex items-center gap-3 text-left px-2.5 xl:px-4 py-2 xl:py-3 rounded-lg border transition-colors cursor-pointer ${
                           isSelected
                             ? "bg-off-green/40 border-off-green/70"
                             : "border-gray-200 hover:border-off-green hover:bg-off-green/20"
@@ -291,7 +290,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                         <span>
                           <span className="flex items-center gap-2">
                             <span
-                              className={`block font-semibold text-[15px] ${
+                              className={`block font-semibold text-sm xl:text-[15px] ${
                                 isSelected
                                   ? "text-primary-green"
                                   : "text-secondary-black"
@@ -307,7 +306,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
                             )}
                           </span>
 
-                          <span className="block text-sm text-secondary-gray">
+                          <span className="block text-xs md:text-sm text-secondary-gray">
                             {fulfillmentDescription[option]}
                           </span>
                         </span>
@@ -325,7 +324,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
         <button
           type="button"
           onClick={() => router.push(mode === "buy-now" ? "/" : "/cart")}
-          className="px-6 py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
+          className="px-5 xl:px-6 py-2 xl:py-3 text-sm xl:text-base rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
         >
           Back
         </button>
@@ -334,7 +333,7 @@ const DeliveryOptions = ({ items }: { items: CartItem[] }) => {
           type="button"
           disabled={!allResolved || blockedVendors.length > 0}
           onClick={handleContinue}
-          className="px-6 py-3 rounded-lg bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:scale-95 transition-all duration-300"
+          className="px-5 xl:px-6 py-2 xl:py-3 text-sm xl:text-base rounded-lg bg-primary-green text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:scale-95 transition-all duration-300"
         >
           Continue
         </button>

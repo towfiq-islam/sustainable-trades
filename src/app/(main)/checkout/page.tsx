@@ -113,7 +113,7 @@ const CheckoutContent = () => {
           <h2 className="text-2xl font-semibold text-secondary-black mb-3">
             How would you like to check out?
           </h2>
-          <p className="text-secondary-gray text-[15px] mb-8">
+          <p className="text-secondary-gray text-sm xl:text-[15px] mb-8">
             You can check out as a guest, or sign in for faster checkout and
             order tracking.
           </p>
@@ -122,7 +122,7 @@ const CheckoutContent = () => {
             <button
               type="button"
               onClick={handleContinueAsGuest}
-              className="w-full py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer hover:scale-95 transition-all duration-300"
+              className="w-full py-2.5 xl:py-3 rounded-lg bg-primary-green text-white font-semibold cursor-pointer hover:scale-95 transition-all duration-300"
             >
               Continue as guest
             </button>
@@ -134,7 +134,7 @@ const CheckoutContent = () => {
                   `/auth/login?redirect=${encodeURIComponent(redirectTo)}`,
                 )
               }
-              className="w-full py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
+              className="w-full py-2.5 xl:py-3 rounded-lg border border-gray-300 font-semibold text-secondary-black cursor-pointer hover:bg-gray-50"
             >
               Sign in to your account
             </button>
@@ -164,7 +164,7 @@ const CheckoutContent = () => {
 
       <FormProvider {...methods}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <div className="lg:col-span-8">
+          <div className="order-1 lg:order-0 lg:col-span-8">
             {step === "delivery-options" && <DeliveryOptions items={items} />}
             {step === "delivery-details" && <DeliveryDetails items={items} />}
             {step === "review-order" && <ReviewStep items={items} />}
@@ -173,7 +173,7 @@ const CheckoutContent = () => {
             )}
           </div>
 
-          <div className="lg:col-span-4 sticky top-40">
+          <div className="order-0 lg:order-1 lg:col-span-4 lg:sticky top-40">
             <OrderSummarySidebar items={items} />
           </div>
         </div>

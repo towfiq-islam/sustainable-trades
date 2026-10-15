@@ -42,7 +42,7 @@ const CheckoutStepper = ({ current }: { current: CheckoutStep }) => {
     <nav className="mb-7">
       <div className="-mx-1 px-1">
         <div
-          className="grid items-center gap-y-2 max-w-3xl mx-auto"
+          className="grid items-center gap-y-2 max-w-2xl xl:max-w-3xl mx-auto"
           style={{ gridTemplateColumns, gridTemplateRows: "auto auto" }}
         >
           {nodes.map((node, idx) => {

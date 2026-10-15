@@ -46,7 +46,6 @@ const Sidebar = ({ open, setOpen, dynamicPages }: any) => {
               src={logo}
               alt="logo"
               fill
-              unoptimized
               className="size-full object-cover rounded-full"
             />
           </figure>

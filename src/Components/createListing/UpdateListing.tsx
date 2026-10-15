@@ -516,7 +516,7 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
     <>
       <button
         onClick={() => router.back()}
-        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green mb-1 group"
+        className="flex gap-1 items-center cursor-pointer font-semibold text-primary-green text-sm md:text-base mb-1 group"
       >
         <span className="group-hover:-translate-x-1 duration-300 transition-transform">
           <GoBackSvg />
@@ -526,12 +526,12 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
 
       {/* Header */}
       <div className="flex justify-between items-center gap-3">
-        <h3 className="text-3xl font-semibold text-secondary-black">
+        <h3 className="text-xl md:text-3xl font-semibold text-secondary-black">
           Edit Listing
         </h3>
 
         <Link href={config.listingHref} className="shrink-0">
-          <button className="text-accent-red font-semibold flex gap-x-1 items-center border-2 border-accent-red rounded-lg py-1.5 md:py-3 px-6 hover:bg-accent-red hover:text-white duration-300 cursor-pointer">
+          <button className="text-accent-red font-semibold flex gap-x-1 items-center border-2 border-accent-red rounded-lg py-1.5 md:py-3 px-3 md:px-6 text-sm md:text-base hover:bg-accent-red hover:text-white duration-300 cursor-pointer">
             <MdArrowOutward />
             View Listings
           </button>
@@ -568,12 +568,11 @@ const UpdateListing = ({ variant }: { variant: "basic" | "pro" }) => {
 
             {/* Main image preview */}
             <div>
-              <div className="w-full relative h-[400px] md:h-[500px]">
+              <div className="w-full relative h-[270px] md:h-[500px]">
                 <Image
                   src={mainImage || Preview}
                   alt="Main product preview"
                   fill
-                  unoptimized
                   className="w-full h-full object-cover rounded-lg border"
                 />
               </div>

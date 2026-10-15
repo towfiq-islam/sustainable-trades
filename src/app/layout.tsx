@@ -1,17 +1,13 @@
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Lato, Geist } from "next/font/google";
+import { Geist } from "next/font/google";
 import ToastProvider from "@/Provider/ToastProvider/ToastProvider";
 import ReduxProvider from "@/Provider/ReduxProvider/ReduxProvider";
 import LocationProvider from "@/Provider/LocationProvider/LocationProvider";
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
-
-// Fonts
-const lato = Lato({
-  variable: "--font-lato",
+import ScrollToTop from "@/Shared/ScrollToTop";
+const geist = Geist({
   subsets: ["latin"],
-  weight: ["100", "300", "400", "700", "900"],
+  variable: "--font-geist",
   display: "swap",
 });
 
@@ -31,8 +27,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
-      <body className={`${lato.variable} antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth">
+      <body className={`${geist.variable} antialiased`}>
+        <ScrollToTop />
         <ReduxProvider>
           <LocationProvider>
             <ToastProvider />

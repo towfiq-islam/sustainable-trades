@@ -1,33 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand Colors */
-  --color-primary: #274f45; /* Japanese Indigo */
-  --color-secondary: #d4e2cb; /* Honeydew */
-
-  /* Accent Colors */
-  --color-accent-1: #77978f; /* Japanese Indigo Lightened */
-  --color-accent-2: #b0dedb; /* Cruise */
-  --color-accent-3: #e48872; /* Middle Red */
-
-  /* System Colors */
-  --color-error: #8b200c; /* Totem Red */
-  --color-warning: #8b200c; /* Totem Red */
-  --color-success: #274f45; /* Japanese Indigo */
-
-  /* B&W Colors */
-  --color-black-chocolate: #13141d; /* Black Chocolate */
-  --color-vanilla-powder: #fffdf8; /* Vanilla Powder */
-  --color-almost-white: #fefefe; /* Almost White */
-
-  /* Grey Colors */
-  --color-gray-1: #4b4a47; /* Gray 1 */
-  --color-gray-2: #67645f; /* Gray 2 */
-  --color-gray-3: #a7a39c; /* Gray 3 */
-  --color-gray-4: #f0eee9; /* Gray 4 */
-  --color-gray-5: #bfbebe; /* Gray 5 */
-
-  /* Semantic Aliases for backwards compatibility */
+  /* Brand & Semantic Colors */
   --color-primary-green: #274f45;
   --color-off-green: #d4e2cb;
   --color-light-green: #77978f;
@@ -76,11 +50,15 @@
   --shadow-error-state: 0 4px 8px 0 rgba(139, 32, 12, 0.12);
 
   /* Font Family */
-  --font-lato: var(--font-lato);
+  --font-geist: var(--font-geist), sans-serif;
 }
 
 html {
   @apply scroll-smooth;
+}
+
+body {
+  @apply font-geist;
 }
 
 /* Custom CSS */
@@ -93,7 +71,7 @@ html {
 }
 
 .auth-primary-btn {
-  @apply text-secondary-black bg-transparent px-14 font-semibold py-2 xl:py-3 rounded-[6px] shadow border-2 border-secondary-black cursor-pointer hover:scale-95 duration-500 ease-in-out;
+  @apply text-secondary-black bg-transparent px-8 md:px-14 font-semibold py-2 md:py-2.5 xl:py-3 rounded-[6px] shadow border-2 border-secondary-black cursor-pointer hover:scale-95 duration-500 ease-in-out;
 }
 
 .primary_btn {
@@ -101,7 +79,7 @@ html {
 }
 
 .auth-secondary-btn {
-  @apply text-accent-white bg-primary-green px-4 py-1.5 md:py-2.5 rounded-[6px] shadow border-2 border-primary-green hover:scale-95 duration-500 ease-in-out cursor-pointer;
+  @apply text-accent-white bg-primary-green px-4 py-2 xl:py-2.5 rounded-[6px] shadow border-2 border-primary-green hover:scale-95 duration-500 ease-in-out cursor-pointer;
 }
 
 .auth-heading {
@@ -109,15 +87,11 @@ html {
 }
 
 .auth_title {
-  @apply text-primary-green text-2xl md:text-3xl lg:text-[40px] font-semibold text-center;
+  @apply text-primary-green text-2xl md:text-3xl xl:text-[40px] font-semibold text-center;
 }
 
 .auth_description {
-  @apply text-sm md:text-[18px] mt-1 font-normal max-w-[350px] w-full mx-auto text-center;
-}
-
-.form-group {
-  width: 100%;
+  @apply text-sm md:text-base xl:text-[18px] mt-2 xl:mt-1 font-normal max-w-[350px] w-full mx-auto text-center;
 }
 
 .form-label {
@@ -129,7 +103,7 @@ html {
 }
 
 .form-input {
-  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2 xl:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray;
+  @apply w-full block mt-1.5 px-2 md:px-3 py-1.5 md:py-2 xl:py-2.5 rounded-[5px] border md:border-2 border-secondary-gray text-sm xl:text-base;
 }
 
 .shipping_form .form-input {

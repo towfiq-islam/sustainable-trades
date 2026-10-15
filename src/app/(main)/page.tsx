@@ -8,6 +8,7 @@ import OurMission from "./_Components/OurMission";
 import CommunityMember from "./_Components/CommunityMember";
 import Pricing from "./_Components/Pricing";
 import Subscribe from "./_Components/Subscribe";
+import Container from "@/Components/Common/Container";
 
 const Page = () => {
   return (
@@ -36,11 +37,13 @@ const Page = () => {
         <CommunityMember />
       </Suspense>
 
-      <Pricing
-        description="No matter how you want to manage your shop, we got you covered!"
-        button1="Annual Billing"
-        button2="Monthly Billing"
-      />
+      <Container>
+        <Pricing
+          description="No matter how you want to manage your shop, we got you covered!"
+          button1="Annual Billing"
+          button2="Monthly Billing"
+        />
+      </Container>
       <Subscribe />
     </>
   );

@@ -36,7 +36,7 @@ const OrderSummary = ({ data }: OrderItem) => {
           Order Summary
         </h3>
         <div className="flex gap-x-10 justify-between sm:justify-normal">
-          <ul className="flex flex-col gap-y-3 font-sans">
+          <ul className="flex flex-col gap-y-3 ">
             <li className="text-[16px] font-normal text-secondary-black">
               Items Subtotal:
             </li>
@@ -56,7 +56,7 @@ const OrderSummary = ({ data }: OrderItem) => {
             </li>
           </ul>
 
-          <ul className="flex flex-col gap-y-3 font-sans">
+          <ul className="flex flex-col gap-y-3 ">
             <li className="text-[16px] font-normal text-secondary-black">
               ${data?.sub_total ?? 0}
             </li>

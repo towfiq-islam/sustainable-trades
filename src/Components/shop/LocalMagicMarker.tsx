@@ -82,7 +82,6 @@ const LocalMagicMarker = ({ address }: Props) => {
                           src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.shop_info?.shop_image}`}
                           alt="shop_image"
                           fill
-                          unoptimized
                           className="size-full object-cover rounded-lg"
                         />
                       </figure>

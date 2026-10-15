@@ -44,25 +44,21 @@ const AccountTable = ({
   return (
     <div>
       {/* Header */}
-      <div
-        className={`flex flex-col sm:flex-row justify-between gap-3 ${data?.length > 0 && "border-b pb-2"} border-gray-400`}
-      >
-        <h4 className="text-[20px] sm:text-[24px] font-semibold text-secondary-black">
+      <div className="flex flex-col sm:flex-row justify-between gap-3 border-b pb-2 border-gray-400">
+        <h4 className="text-lg md:text-[20px] sm:text-[24px] font-semibold text-secondary-black">
           {title}
         </h4>
 
-        {data?.length > 0 && (
-          <select
-            className="w-full sm:w-[200px] border rounded-lg p-2"
-            value={filter}
-            onChange={e => setFilter(e.target.value)}
-          >
-            <option value="last_30_days">Last 30 Days</option>
-            <option value="year_to_date">Year to Date</option>
-            <option value="custom_date_range">Custom Date Range</option>
-            <option value="specific_year">Specific Year</option>
-          </select>
-        )}
+        <select
+          className="w-full sm:w-[200px] border rounded-lg p-2 cursor-pointer"
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
+        >
+          <option value="last_30_days">Last 30 Days</option>
+          <option value="year_to_date">Year to Date</option>
+          <option value="custom_date_range">Custom Date Range</option>
+          <option value="specific_year">Specific Year</option>
+        </select>
       </div>
 
       {/* Date range */}
@@ -91,7 +87,7 @@ const AccountTable = ({
           value={year}
           onChange={e => setYear(Number(e.target.value))}
           className="border p-2 rounded mt-2"
-          placeholder="Enter year (e.g. 2024)"
+          placeholder={`Enter year (e.g. ${new Date().getFullYear()})`}
         />
       )}
 

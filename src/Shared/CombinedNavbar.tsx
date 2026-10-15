@@ -50,7 +50,9 @@ const CombinedNavbar = ({
   const [activeSubMenu, setActiveSubMenu] = useState<number | null>(null);
   const [logout, { isLoading }] = useLogoutMutation();
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isLoggedIn = !!user;
+  const isVendorWithoutMembership =
+    user?.role === "vendor" && !user?.membership;
+  const isLoggedIn = !!user && !isVendorWithoutMembership;
 
   const openSubMenu = (id: number) => {
     if (closeTimeoutRef.current) {
@@ -155,7 +157,7 @@ const CombinedNavbar = ({
               handleOpenSidebar();
             }}
             aria-label="Open menu"
-            className={`${isDashboard ? "xl:hidden" : "block lg:hidden"} text-white text-2xl cursor-pointer`}
+            className={`${isDashboard ? "lg:hidden" : "block lg:hidden"} text-white text-2xl cursor-pointer`}
           >
             ☰
           </button>
@@ -174,7 +176,6 @@ const CombinedNavbar = ({
                 src="/favicon.svg"
                 alt="logo"
                 fill
-                unoptimized
                 className="size-full object-cover rounded-full"
               />
             </figure>
@@ -184,7 +185,7 @@ const CombinedNavbar = ({
         {/* NavLinks */}
         {isDashboard ? (
           <div
-            className="hidden xl:flex static top-0 left-0 h-auto w-auto bg-transparent transform transition-transform duration-300 ease-in-out z-40 flex-row gap-6 xl:gap-10 items-center p-0"
+            className="hidden lg:flex static top-0 left-0 h-auto w-auto bg-transparent transform transition-transform duration-300 ease-in-out z-40 flex-row gap-6 xl:gap-10 items-center p-0"
             onClick={e => e.stopPropagation()}
           >
             {navLins?.slice(0, 3)?.map(item => {
@@ -273,7 +274,7 @@ const CombinedNavbar = ({
                             key={id}
                             href={itemPath}
                             onClick={() => setActiveSubMenu(null)}
-                            className={`flex gap-3 items-center px-3 py-2.5 rounded-lg text-[15px] transition-colors duration-150 ${
+                            className={`flex gap-3 items-center px-3 py-2 xl:py-2.5 rounded-lg text-sm xl:text-[15px] transition-colors duration-150 ${
                               itemIsActive
                                 ? "bg-primary-green/10 text-primary-green font-semibold"
                                 : "text-gray-700 hover:bg-gray-100 hover:text-primary-green"
@@ -285,7 +286,6 @@ const CombinedNavbar = ({
                                   src={`${process.env.NEXT_PUBLIC_SITE_URL}/${icon}`}
                                   alt="icon"
                                   fill
-                                  unoptimized
                                   className="size-full object-cover"
                                 />
                               ) : (
@@ -293,7 +293,6 @@ const CombinedNavbar = ({
                                   src={logo}
                                   alt="logo"
                                   fill
-                                  unoptimized
                                   className="size-full object-cover"
                                 />
                               )}
@@ -312,12 +311,12 @@ const CombinedNavbar = ({
       </div>
 
       {/* Right */}
-      <div className="flex gap-3 2xl:gap-5 items-center">
+      <div className="flex gap-5 lg:gap-3 2xl:gap-5 items-center">
         {isLoggedIn && (
           <Link
             href={messagesHref}
             aria-label="Messages"
-            className={`cursor-pointer text-accent-white hover:opacity-80 transition-opacity duration-200 ${isDashboard ? "hidden lg:block" : ""}`}
+            className={`cursor-pointer text-accent-white hover:opacity-80 transition-opacity duration-200 hidden md:block ${isDashboard ? "hidden lg:block" : ""}`}
           >
             <MessageSvg />
           </Link>
@@ -327,13 +326,13 @@ const CombinedNavbar = ({
           <Link
             href={notificationHref}
             aria-label="Notifications"
-            className={`cursor-pointer text-accent-white hover:opacity-80 transition-opacity duration-200 ${isDashboard ? "hidden lg:block" : ""}`}
+            className={`cursor-pointer text-accent-white hover:opacity-80 transition-opacity duration-200 hidden md:block ${isDashboard ? "hidden lg:block" : ""}`}
           >
             <NotificationSvg />
           </Link>
         )}
 
-        {!isDashboard && !user && (
+        {!isDashboard && !isLoggedIn && (
           <Link
             href="/auth/create-shop"
             className="px-2 lg:px-4 py-1 md:py-2 block rounded-lg bg-accent-red text-secondary-black cursor-pointer shadow-[0_3px_10px_0_rgba(0,0,0,0.12),_0_3px_8px_0_rgba(0,0,0,0.08)] duration-300 transition-all hover:text-accent-red hover:bg-transparent border border-accent-red text-[15px]"
@@ -347,7 +346,7 @@ const CombinedNavbar = ({
           aria-label={`Cart, ${totalQuantity ?? 0} items`}
           className="cursor-pointer relative hover:opacity-80 transition-opacity duration-200"
         >
-          <span className="absolute -top-4 -right-4 min-w-5 h-5 px-1 font-semibold text-[11px] grid place-items-center rounded-full bg-accent-red text-white">
+          <span className="absolute -top-4 -right-4 size-4.5 md:size-5 px-1 font-semibold text-[11px] grid place-items-center rounded-full bg-accent-red text-white">
             {totalQuantity ?? 0}
           </span>
           <CartSvg2 />
@@ -382,7 +381,6 @@ const CombinedNavbar = ({
                     src={`${process.env.NEXT_PUBLIC_SITE_URL}/${user?.avatar}`}
                     alt="author"
                     fill
-                    unoptimized
                     className="size-full rounded-full"
                   />
                 ) : (
@@ -402,8 +400,8 @@ const CombinedNavbar = ({
           <div
             onClick={e => e.stopPropagation()}
             className={`bg-white border border-gray-100 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.18)] z-50 rounded-xl absolute right-0 top-full mt-3 translate-y-2 overflow-hidden duration-300 transition-all ${
-              isLoggedIn ? "w-60" : "w-40"
-            } ${isDashboard ? "hidden lg:block" : ""} ${
+              isLoggedIn ? "w-60" : "w-32 md:w-40"
+            } ${isDashboard ? "block" : ""} ${
               showPopover
                 ? "opacity-100 scale-100"
                 : "opacity-0 pointer-events-none scale-95"
@@ -459,7 +457,7 @@ const CombinedNavbar = ({
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col text-gray-700 p-2 text-[15px]">
+              <div className="flex flex-col text-gray-700 p-2 text-sm md:text-[15px]">
                 <Link
                   href="/auth/login"
                   onClick={() => setShowPopover(false)}
@@ -481,7 +479,7 @@ const CombinedNavbar = ({
           </div>
         </div>
 
-        {isDashboard && user?.role !== "customer" && (
+        {isDashboard && isLoggedIn && user?.role !== "customer" && (
           <Link
             href={`/shop-details?view=customer&id=${user?.shop_info?.user_id}&listing_id=${user?.shop_info?.id}`}
             className="px-5 py-2 rounded-lg bg-accent-red text-secondary-black cursor-pointer shadow-[0_3px_10px_0_rgba(0,0,0,0.12),_0_3px_8px_0_rgba(0,0,0,0.08)] duration-300 transition-all hover:text-accent-red hover:bg-transparent border border-accent-red hover:scale-95 hidden lg:block"
@@ -495,7 +493,7 @@ const CombinedNavbar = ({
 
   if (isDashboard) {
     return (
-      <header className="bg-primary-green py-3 px-5 lg:px-20 relative">
+      <header className="bg-primary-green py-3 px-5 xl:px-12 2xl:px-20 relative">
         {content}
       </header>
     );

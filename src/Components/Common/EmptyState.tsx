@@ -28,7 +28,9 @@ const EmptyState = ({
   return (
     <div className="col-span-full flex flex-col items-center justify-center text-center py-16">
       {Icon && (
-        <div className={`size-14 rounded-full ${iconBg} grid place-items-center mb-5`}>
+        <div
+          className={`size-12 md:size-14 rounded-full ${iconBg} grid place-items-center mb-5`}
+        >
           {typeof Icon === "function" ? (
             <Icon className={`${iconColor} text-2xl`} />
           ) : (
@@ -36,14 +38,16 @@ const EmptyState = ({
           )}
         </div>
       )}
-      <h6 className="text-secondary-black font-semibold">{title}</h6>
-      <p className="text-sm text-gray-500 font-normal mt-2 max-w-xs">
+      <h6 className="text-secondary-black font-semibold text-sm md:text-base">
+        {title}
+      </h6>
+      <p className="text-xs md:text-sm text-gray-500 font-normal mt-2 max-w-xs">
         {description}
       </p>
       {actionLabel && onAction && (
         <button
           onClick={onAction}
-          className="mt-4 px-5 py-2 rounded-lg bg-primary-green text-white font-semibold hover:bg-transparent hover:text-primary-green border-2 border-primary-green transition-all duration-500 cursor-pointer"
+          className="mt-4 px-3 md:px-5 py-1.5 md:py-2 rounded-lg bg-primary-green text-white md:font-semibold hover:bg-transparent hover:text-primary-green border-2 border-primary-green text-sm md:text-base transition-all duration-500 cursor-pointer"
         >
           {actionLabel}
         </button>

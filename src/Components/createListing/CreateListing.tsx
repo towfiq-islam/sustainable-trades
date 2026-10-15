@@ -367,9 +367,9 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
             />
 
             <div>
-              <p className="font-semibold text-[20px] md:text-[24px] text-secondary-black">
+              <p className="font-semibold text-lg lg:text-[20px] md:text-[24px] text-secondary-black">
                 Listing Status:{" "}
-                <span className="px-3 py-2 text-white text-sm rounded-full bg-badge-gray">
+                <span className="px-2.5 md:px-3 py-1.5 md:py-2 text-white text-xs md:text-sm rounded-full bg-badge-gray">
                   Pending
                 </span>
               </p>
@@ -392,7 +392,7 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
 
             {/* Description */}
             <div>
-              <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
+              <h3 className="text-lg md:text-[20px] lg:text-[24px] font-semibold text-secondary-black">
                 Description
               </h3>
               <Controller
@@ -424,7 +424,7 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
 
             {/* Fulfillment */}
             <div>
-              <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
+              <h3 className="text-lg md:text-[20px] lg:text-[24px] font-semibold text-secondary-black">
                 Fulfillment
               </h3>
 
@@ -460,7 +460,11 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
                           if (!user?.onboarded) {
                             toast(
                               "Please connect a payment processor before selecting a fulfillment option.",
-                              { icon: <MdInfo className="text-4xl text-primary-red" /> },
+                              {
+                                icon: (
+                                  <MdInfo className="text-4xl text-primary-red" />
+                                ),
+                              },
                             );
                             field.onChange("");
                             return;
@@ -479,7 +483,11 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
                           ) {
                             toast.error(
                               "No pickup location found. Please add a pickup location first.",
-                              { icon: <MdInfo className="text-4xl text-primary-red" /> },
+                              {
+                                icon: (
+                                  <MdInfo className="text-4xl text-primary-red" />
+                                ),
+                              },
                             );
                             field.onChange("");
                             return;
@@ -498,7 +506,11 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
                           ) {
                             toast.error(
                               "No delivery range found. Please add a delivery range first.",
-                              { icon: <MdInfo className="text-4xl text-primary-red" /> },
+                              {
+                                icon: (
+                                  <MdInfo className="text-4xl text-primary-red" />
+                                ),
+                              },
                             );
                             field.onChange("");
                             return;
@@ -518,7 +530,11 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
                           ) {
                             toast(
                               "Please configure a shipping calculator (Flat Rate, By Weight, or Shippo) before enabling shipping.",
-                              { icon: <MdInfo className="text-4xl text-primary-red" /> },
+                              {
+                                icon: (
+                                  <MdInfo className="text-4xl text-primary-red" />
+                                ),
+                              },
                             );
                             field.onChange("");
                             return;
@@ -564,7 +580,7 @@ if (requiresShipping && (!user?.shop_info?.shipping_setting || (user?.shop_info?
 
             {/* Selling Option */}
             <div>
-              <h3 className="text-[20px] md:text-[24px] font-semibold text-secondary-black">
+              <h3 className="text-lg md:text-[20px] lg:text-[24px] font-semibold text-secondary-black">
                 Selling Option
               </h3>
               <Controller

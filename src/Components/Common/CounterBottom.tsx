@@ -156,7 +156,7 @@ const CounterBottom = () => {
               </h3>
               <h4 className="text-[18px] lg:text-[20px] font-normal text-secondary-gray flex gap-x-5 items-center">
                 The Soap Shop
-                <span className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray font-lato">
+                <span className="text-[12px] lg:text-[14px] underline cursor-pointer text-accent-gray ">
                   View Shop
                 </span>
               </h4>
@@ -169,10 +169,10 @@ const CounterBottom = () => {
               </div>
               <div className="flex gap-x-2 items-center">
                 <LocationSvg1 />
-                <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
+                <h5 className="text-[14px] underline cursor-pointer text-accent-gray ">
                   13 mi. away -
                 </h5>
-                <h5 className="text-[14px] underline cursor-pointer text-accent-gray font-lato">
+                <h5 className="text-[14px] underline cursor-pointer text-accent-gray ">
                   Denver, CO
                 </h5>
               </div>
@@ -232,10 +232,10 @@ const CounterBottom = () => {
             </div>
             <div className="flex gap-x-2 items-center mt-1">
               <LocationSvg1 />
-              <h5 className="text-[14px] underline cursor-pointer text-secondary-black font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-secondary-black ">
                 13 mi. away -
               </h5>
-              <h5 className="text-[14px] underline cursor-pointer text-secondary-black font-lato">
+              <h5 className="text-[14px] underline cursor-pointer text-secondary-black ">
                 Denver, CO
               </h5>
             </div>

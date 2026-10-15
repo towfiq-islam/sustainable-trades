@@ -5,6 +5,7 @@ import { Download } from "@/Components/Svg/SvgContainer";
 import { CSVLink } from "react-csv";
 import { useGetTradeAndBarterDataQuery } from "@/redux/api/tradeApi";
 import { useGetAccountingDataQuery } from "@/redux/api/vendorApi";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 
 const headers = [
   { label: "Order#", key: "order_number" },
@@ -23,7 +24,7 @@ const headers = [
 const page = () => {
   const [filter, setFilter] = useState("last_30_days");
   const [dateRange, setDateRange] = useState({ from: "", to: "" });
-  const [year, setYear] = useState(2024);
+  const [year, setYear] = useState(() => new Date().getFullYear());
   const { data: accountingData, isLoading } = useGetAccountingDataQuery({
     filter,
     date_from: filter === "custom_date_range" ? dateRange.from : undefined,
@@ -41,10 +42,8 @@ const page = () => {
 
   return (
     <>
-      <div className="flex flex-wrap w-full justify-between">
-        <h3 className="text-[30px] lg:text-4xl font-semibold text-black flex items-center gap-x-2">
-          Accounting
-        </h3>
+      <div className="flex flex-wrap gap-3 w-full justify-between">
+        <DashBoardHeader heading="Accounting" />
 
         <div className="flex flex-wrap gap-3 md:gap-6 items-center w-full md:w-fit">
           <CSVLink
@@ -59,7 +58,7 @@ const page = () => {
         </div>
       </div>
 
-      <div className="mt-10">
+      <div className="mt-5 md:mt-10">
         <AccountTable
           title="Sales"
           data={accountingData?.data?.orders}
@@ -72,7 +71,7 @@ const page = () => {
         />
       </div>
 
-      <div className="mt-12">
+      <div className="mt-7 md:mt-12">
         <AccountTable
           title="Barters and Trades"
           data={tradeAndBarterData?.data?.trades}

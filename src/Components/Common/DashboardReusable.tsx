@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
@@ -16,6 +17,58 @@ import {
 import { FaAngleRight } from "react-icons/fa";
 import { FiBox, FiBell } from "react-icons/fi";
 import { ImageItem } from "@/Types";
+
+const InventoryThumbnail = ({
+  src,
+  alt,
+}: {
+  src?: string;
+  alt: string;
+}) => {
+  const [error, setError] = useState(false);
+
+  if (!src || error) {
+    return (
+      <div className="size-full flex items-center justify-center bg-off-green/20 text-primary-green">
+        <FiBox className="text-xl sm:text-2xl" />
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      onError={() => setError(true)}
+      className="size-full object-cover rounded-lg"
+    />
+  );
+};
+
+const AvatarThumbnail = ({
+  src,
+  name,
+}: {
+  src?: string;
+  name?: string;
+}) => {
+  const [error, setError] = useState(false);
+
+  if (!src || error) {
+    return <span>{name?.at(0) || "U"}</span>;
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={name || "profile"}
+      fill
+      onError={() => setError(true)}
+      className="rounded-full size-full object-cover"
+    />
+  );
+};
 
 type ItemData = {
   id: number;
@@ -57,96 +110,100 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
   return (
     <>
       {/* Top Section */}
-      <div className="pb-9  flex flex-col  md:flex-row justify-between md:items-center gap-[32px] md:gap-0">
-        <div className="text-[20px] md:text-[24px] flex flex-col gap-y-2">
-          <h3 className=" font-semibold text-secondary-black tracking-[2.4px]">
-            Hi {user?.first_name},
-          </h3>
-          <h3 className=" font-semibold text-secondary-black tracking-[2.4px]">
-            Here’s your store: {user?.shop_info?.shop_name}
-          </h3>
+      <div className="pb-6 sm:pb-8 flex flex-col sm:flex-row justify-between sm:items-center gap-3.5 sm:gap-6">
+        <div className="flex flex-col gap-y-1">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-secondary-black">
+            Hi {user?.first_name || "Vendor"},
+          </h2>
+          <p className="text-sm sm:text-base text-secondary-gray font-medium">
+            Here’s your store:{" "}
+            <span className="font-semibold text-primary-green">
+              {user?.shop_info?.shop_name || "My Shop"}
+            </span>
+          </p>
         </div>
 
         <Link
-          href={`/shop-details?view=${"owner"}&id=${
-            user?.shop_info?.user_id
-          }&listing_id=${user?.shop_info?.id}`}
-          className="px-[20px] lg:px-[58px] py-2 md:py-4 rounded-[8px] bg-accent-red text-[14px] md:text-[18px] font-semibold text-secondary-black cursor-pointer hover:bg-transparent duration-500 ease-in-out border border-accent-red text-center"
+          href={`/shop-details?view=owner&id=${user?.shop_info?.user_id}&listing_id=${user?.shop_info?.id}`}
+          className="px-5 sm:px-8 py-2.5 sm:py-3 rounded-[8px] bg-accent-red text-sm sm:text-base font-semibold text-secondary-black hover:bg-transparent hover:text-accent-red border border-accent-red duration-300 transition-all text-center self-start sm:self-auto cursor-pointer"
         >
           Edit Shop
         </Link>
       </div>
 
-      {/* Upper section */}
-      <div className="border border-accent-gray py-3 rounded-[8px]">
-        <div className="flex flex-wrap justify-between items-center">
-          <div className="px-[40px] md:px-[65px]">
-            <p className="text-[16px] text-muted-gray font-semibold text-center">
+      {/* Upper KPI metrics */}
+      <div className="border border-gray-200 rounded-[8px] py-2 sm:py-3 mb-6 sm:mb-8 bg-off-green/5">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-accent-gray/20">
+          <div className="py-3 px-4 sm:px-6 text-center flex flex-col justify-center items-center">
+            <p className="text-sm sm:text-base text-muted-gray font-semibold mb-1">
               Orders
             </p>
-            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
+            <h4 className="text-2xl sm:text-3xl lg:text-4xl text-primary-green font-semibold">
               {homeDataLoading ? (
-                <p className="w-10 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+                <span className="inline-block w-12 h-7 bg-warm-beige rounded animate-pulse" />
               ) : (
-                homeData?.data?.total_orders
+                (homeData?.data?.total_orders ?? 0)
               )}
             </h4>
           </div>
-          <div className="px-[40px] md:px-[65px]">
-            <p className="text-[16px] text-muted-gray font-semibold text-center">
+
+          <div className="py-3 px-4 sm:px-6 text-center flex flex-col justify-center items-center">
+            <p className="text-sm sm:text-base text-muted-gray font-semibold mb-1">
               Trades
             </p>
-            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
+            <h4 className="text-2xl sm:text-3xl lg:text-4xl text-primary-green font-semibold">
               {homeDataLoading ? (
-                <p className="w-14 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+                <span className="inline-block w-12 h-7 bg-warm-beige rounded animate-pulse" />
               ) : (
-                homeData?.data?.total_trades
+                (homeData?.data?.total_trades ?? 0)
               )}
             </h4>
           </div>
-          <div className="px-[40px] md:px-[65px]">
-            <p className="text-[16px] text-muted-gray font-semibold text-center">
+
+          <div className="py-3 px-4 sm:px-6 text-center flex flex-col justify-center items-center">
+            <p className="text-sm sm:text-base text-muted-gray font-semibold mb-1">
               Revenue
             </p>
-            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
+            <h4 className="text-2xl sm:text-3xl lg:text-4xl text-primary-green font-semibold">
               {homeDataLoading ? (
-                <p className="w-20 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+                <span className="inline-block w-16 h-7 bg-warm-beige rounded animate-pulse" />
               ) : (
-                `${homeData?.data?.total_revenue ? "$" : ""}${
-                  homeData?.data?.total_revenue
-                }`
+                `$${Number(homeData?.data?.total_revenue ?? 0).toFixed(2)}`
               )}
             </h4>
           </div>
-          <div className="px-[40px] md:px-[65px]">
-            <p className="text-[16px] text-muted-gray font-semibold text-center">
+
+          <div className="py-3 px-4 sm:px-6 text-center flex flex-col justify-center items-center">
+            <p className="text-sm sm:text-base text-muted-gray font-semibold mb-1">
               Visits
             </p>
-            <h4 className="text-[25px] md:text-[40px] text-primary-green font-semibold text-center">
+            <h4 className="text-2xl sm:text-3xl lg:text-4xl text-primary-green font-semibold">
               {homeDataLoading ? (
-                <p className="w-10 h-5 rounded bg-gray-300 animate-pulse mt-2"></p>
+                <span className="inline-block w-12 h-7 bg-warm-beige rounded animate-pulse" />
               ) : (
-                homeData?.data?.total_visits
+                (homeData?.data?.total_visits ?? 0)
               )}
             </h4>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-[20px] lg:flex-row justify-between py-10">
+      <div
+        className={`flex flex-col gap-5 ${isPackage ? "lg:flex-row" : ""} mb-6 sm:mb-8`}
+      >
         {/* Latest Products */}
-        <div className="pt-[30px] md:pt-[77px] pb-8">
-          <div className="border border-accent-gray rounded-[10px] w-full md:w-[380px]">
-            <div className="p-3">
-              <div className="flex justify-between">
-                <h5 className="text-[16px] text-secondary-black font-semibold text-center">
+        <div className={`w-full ${isPackage ? "lg:w-2/3" : ""}`}>
+          <div className="border border-gray-200 rounded-[8px] overflow-hidden">
+            <div className="p-4 sm:p-5">
+              <div className="flex justify-between items-center mb-3 pb-3 border-b border-accent-gray/20">
+                <h5 className="text-base sm:text-lg text-secondary-black font-semibold">
                   Inventory
                 </h5>
 
                 {latestProductsData?.data?.length > 0 && (
                   <Link
                     href={`/dashboard/${user?.membership?.membership_type}/listing`}
-                    className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+                    className="text-xs sm:text-sm text-primary-green hover:underline font-semibold flex gap-1 items-center cursor-pointer"
                   >
                     More
                     <FaAngleRight />
@@ -162,31 +219,33 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                 latestProductsData?.data?.map((item: ItemData) => (
                   <div
                     key={item?.id}
-                    className="py-4 flex flex-col md:flex-row gap-3 md:items-center border-b last:border-b-0 border-gray-300 overflow-hidden"
+                    className="py-3.5 sm:py-4 flex items-center gap-3 sm:gap-4 border-b last:border-b-0 border-accent-gray/20 overflow-hidden"
                   >
-                    <figure className="relative w-[80px] h-[80px] rounded-lg shrink-0">
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.images?.[0]?.image}`}
-                        alt="Inventory"
-                        fill
-                        className="shrink-0 w-full h-full object-cover rounded-lg"
+                    <figure className="relative size-16 sm:size-20 rounded-lg shrink-0 overflow-hidden bg-warm-beige/40 border border-accent-gray/40">
+                      <InventoryThumbnail
+                        src={
+                          item?.images?.[0]?.image
+                            ? `${process.env.NEXT_PUBLIC_SITE_URL}/${item.images[0].image}`
+                            : undefined
+                        }
+                        alt={item?.product_name || "Inventory"}
                       />
                     </figure>
 
-                    <div className="w-full">
-                      <div className="flex w-full justify-between items-center">
-                        <h4 className="text-[14px] text-secondary-black font-semibold truncate w-40">
+                    <div className="w-full min-w-0 flex-1">
+                      <div className="flex justify-between items-start gap-2">
+                        <h4 className="text-xs sm:text-sm md:text-base text-secondary-black font-semibold truncate flex-1">
                           {item?.product_name}
                         </h4>
 
-                        <h4 className="text-[14px] text-primary-green font-semibold">
+                        <span className="text-[11px] sm:text-xs text-primary-green font-semibold shrink-0 bg-off-green/50 px-2.5 py-0.5 rounded-full whitespace-nowrap">
                           {item?.unlimited_stock
                             ? "Unlimited Stock"
                             : `${item?.product_quantity} items left`}
-                        </h4>
+                        </span>
                       </div>
 
-                      <p className="text-sm text-secondary-black font-normal py-1 truncate">
+                      <p className="text-xs sm:text-sm text-secondary-gray font-normal py-0.5 sm:py-1 truncate">
                         {item?.selling_option === "for_sale_or_trade_barter"
                           ? "For sale and trade/barter"
                           : item?.selling_option === "trade/barter"
@@ -194,29 +253,38 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
                             : "For sale"}
                       </p>
 
-                      <h6 className="text-[12px] text-secondary-black font-semibold">
-                        {item?.out_of_stock ? "Out of stock" : "In Stock"}
-                      </h6>
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className={`inline-block size-2 rounded-full ${
+                            item?.out_of_stock
+                              ? "bg-accent-red"
+                              : "bg-primary-green"
+                          }`}
+                        />
+                        <span className="text-[11px] sm:text-xs text-secondary-black font-semibold">
+                          {item?.out_of_stock ? "Out of stock" : "In Stock"}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="flex flex-col items-center justify-center pt-5 pb-10 px-4 text-center">
-                  <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-4">
-                    <FiBox className="text-accent-red text-2xl" />
+                <div className="flex flex-col items-center justify-center py-8 sm:py-10 px-4 text-center">
+                  <div className="size-12 sm:size-14 rounded-full bg-off-green/40 grid place-items-center mb-3">
+                    <FiBox className="text-primary-green text-xl sm:text-2xl" />
                   </div>
 
-                  <h6 className="text-[15px] text-secondary-black font-semibold">
+                  <h6 className="text-sm sm:text-base text-secondary-black font-semibold">
                     No inventory yet
                   </h6>
 
-                  <p className="text-sm text-muted-gray font-normal mt-2 max-w-[250px]">
+                  <p className="text-xs sm:text-sm text-muted-gray font-normal mt-1 max-w-[250px]">
                     Products you add to your store will show up here.
                   </p>
 
                   <Link
                     href={`/dashboard/${user?.membership?.membership_type}/create-listing`}
-                    className="mt-4 px-5 py-2 rounded-[8px] bg-accent-red text-[13px] font-semibold text-gray-50 border border-accent-red duration-300"
+                    className="mt-3 px-5 py-2 rounded-[8px] bg-accent-red text-xs sm:text-sm font-semibold text-secondary-black border border-accent-red duration-300 hover:bg-transparent hover:text-accent-red"
                   >
                     Add Product
                   </Link>
@@ -226,20 +294,20 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
           </div>
         </div>
 
-        {/* Popup */}
+        {/* Upgrade Popup for basic users */}
         {isPackage && (
-          <div className="border border-accent-gray rounded-[8px] p-4 lg:w-1/3 text-center flex flex-col justify-center items-center">
-            <h3 className="text-[16px] md:text-[20px] font-semibold text-secondary-black">
+          <div className="border border-accent-gray rounded-[8px] p-5 lg:w-1/3 text-center flex flex-col justify-center items-center">
+            <h3 className="text-base sm:text-lg font-semibold text-secondary-black">
               Want more admin access?
             </h3>
-            <p className="text-[13px] md:text-[16px] font-normal text-secondary-black max-w-[280px] pt-[10px] pb-2.5 lg:pb-5">
+            <p className="text-xs sm:text-sm font-normal text-secondary-gray max-w-[280px] pt-2 pb-4">
               Upgrade at anytime to pro! All you have to do is pay the
               difference for the remainder of the year.
             </p>
 
             <Link
               href="/dashboard/basic/membership"
-              className="min-w-[250px] md:min-w-[300px] py-2 md:py-4 rounded-[8px] bg-transparent text-[14px] md:text-[18px] font-semibold text-secondary-black cursor-pointer hover:bg-accent-red  duration-500 ease-in-out border border-accent-red"
+              className="w-full sm:w-auto px-6 py-2.5 sm:py-3 rounded-[8px] bg-transparent text-sm sm:text-base font-semibold text-secondary-black cursor-pointer hover:bg-accent-red hover:text-white duration-300 transition-colors border border-accent-red"
             >
               Upgrade To Pro
             </Link>
@@ -248,16 +316,16 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
       </div>
 
       {/* Recent Activity */}
-      <div className="border border-accent-gray rounded-[8px]">
-        <div className="flex justify-between p-4">
-          <h5 className="text-[16px] text-secondary-black font-semibold text-center">
+      <div className="border border-gray-200 rounded-[8px] mb-6 sm:mb-8 overflow-hidden">
+        <div className="flex justify-between items-center p-4 sm:p-5 border-b border-accent-gray/30">
+          <h5 className="text-base sm:text-lg text-secondary-black font-semibold">
             Recent Activity
           </h5>
 
           {notificationsData?.data?.data?.length > 0 && (
             <Link
               href={`/dashboard/${user?.membership?.membership_type}/notification`}
-              className="text-[16px] text-secondary-black font-semibold text-center flex gap-x-1 items-center cursor-pointer"
+              className="text-xs sm:text-sm text-primary-green hover:underline font-semibold flex gap-1 items-center cursor-pointer"
             >
               More
               <FaAngleRight />
@@ -266,45 +334,45 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
         </div>
 
         {notificationLoading ? (
-          Array.from({ length: 3 }).map((_, idx) => (
-            <NotificationSkeleton key={idx} />
-          ))
+          <div className="p-4 space-y-3">
+            {Array.from({ length: 3 }).map((_, idx) => (
+              <NotificationSkeleton key={idx} />
+            ))}
+          </div>
         ) : notificationsData?.data?.data?.length > 0 ? (
           notificationsData?.data?.data?.map((item: NotificationItem) => (
             <div
               key={item?.id}
-              className="border-b last:border-b-0 border-accent-gray py-4"
+              className="border-b last:border-b-0 border-accent-gray/30 py-3.5 px-4 sm:px-5 hover:bg-warm-beige/20 transition-colors"
             >
-              <div className="flex flex-col sm:flex-row justify-between px-4 sm:items-center gap-3.5 sm:gap-0">
-                <div className="flex gap-x-2 items-center">
-                  <figure className="rounded-full size-[50px] grid place-items-center bg-accent-red text-white text-lg font-semibold relative">
-                    {item?.user?.avatar ? (
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.user?.avatar}`}
-                        alt="profile"
-                        fill
-                        className="rounded-full size-full object-cover"
-                      />
-                    ) : (
-                      <h3>{item?.user?.name?.at(0)}</h3>
-                    )}
+              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2.5 sm:gap-4">
+                <div className="flex gap-3 items-center min-w-0 flex-1">
+                  <figure className="rounded-full size-10 sm:size-11 grid place-items-center bg-accent-red text-white text-base font-semibold relative shrink-0 overflow-hidden">
+                    <AvatarThumbnail
+                      src={
+                        item?.user?.avatar
+                          ? `${process.env.NEXT_PUBLIC_SITE_URL}/${item.user.avatar}`
+                          : undefined
+                      }
+                      name={item?.user?.name}
+                    />
                   </figure>
 
-                  <div className="">
-                    <h5 className="text-[14px] text-secondary-black font-semibold">
+                  <div className="min-w-0 flex-1">
+                    <h5 className="text-xs sm:text-sm text-secondary-black font-semibold truncate">
                       {item?.user?.name}
                     </h5>
-                    <p className="text-[14px] text-muted-gray font-normal">
+                    <p className="text-[11px] sm:text-xs text-muted-gray font-normal">
                       {`Sent ${moment(item?.created_at).fromNow()}`}
                     </p>
                   </div>
                 </div>
 
-                <div>
-                  <h5 className="text-[14px] text-secondary-black font-semibold">
+                <div className="sm:text-right min-w-0 flex-1 sm:max-w-xs">
+                  <h5 className="text-xs sm:text-sm text-secondary-black font-semibold truncate">
                     {item?.data?.subject}
                   </h5>
-                  <p className="text-[14px] text-muted-gray font-normal truncate">
+                  <p className="text-xs text-muted-gray font-normal truncate">
                     {item?.data?.message}
                   </p>
                 </div>
@@ -312,14 +380,14 @@ const DashboardReusable = ({ isStatistics, isPackage }: HomeProps) => {
             </div>
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center pb-10 px-4 text-center">
-            <div className="size-14 rounded-full bg-accent-red/10 grid place-items-center mb-4">
-              <FiBell className="text-accent-red text-2xl" />
+          <div className="flex flex-col items-center justify-center py-8 sm:py-10 px-4 text-center">
+            <div className="size-12 sm:size-14 rounded-full bg-off-green/40 grid place-items-center mb-3">
+              <FiBell className="text-primary-green text-xl sm:text-2xl" />
             </div>
-            <h6 className="text-[15px] text-secondary-black font-semibold">
+            <h6 className="text-sm sm:text-base text-secondary-black font-semibold">
               You&apos;re all caught up
             </h6>
-            <p className="text-sm text-muted-gray font-normal mt-2 max-w-[250px]">
+            <p className="text-xs sm:text-sm text-muted-gray font-normal mt-1 max-w-[260px]">
               New orders, trades, and messages will appear here as they happen.
             </p>
           </div>

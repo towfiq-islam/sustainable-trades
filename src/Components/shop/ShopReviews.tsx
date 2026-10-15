@@ -68,19 +68,18 @@ const ShopReviews = ({ id }: { id: number }) => {
             shopReviews?.data?.data?.map((item: ReviewItem) => (
               <div
                 key={item?.id}
-                className="flex flex-col lg:flex-row gap-5 sm:gap-10 md:gap-16 lg:items-center border-b last:border-b-0 border-gray-200 pt-4 pb-2"
+                className="flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-10 lg:items-center justify-between border-b last:border-b-0 border-gray-200 py-4 sm:py-6"
               >
                 {/* Left - Reviews */}
-                <div className="grow flex flex-col sm:flex-row gap-4 items-start">
+                <div className="grow flex flex-col sm:flex-row gap-3 sm:gap-4 items-start min-w-0">
                   {/* Author Image */}
-                  <figure className="shrink-0 size-12 grid place-items-center rounded-full relative bg-accent-red text-accent-white font-semibold">
+                  <figure className="shrink-0 size-10 sm:size-12 grid place-items-center rounded-full relative bg-accent-red text-accent-white font-semibold">
                     {item?.user?.avatar ? (
                       <Image
                         src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.user?.avatar}`}
                         alt="author_img"
                         fill
-                        unoptimized
-                        className="size-full object-cover"
+                        className="size-full object-cover rounded-full"
                       />
                     ) : (
                       <span>{item?.user?.first_name?.at(0)}</span>
@@ -88,15 +87,15 @@ const ShopReviews = ({ id }: { id: number }) => {
                   </figure>
 
                   {/* Content */}
-                  <div className="flex gap-10">
-                    <div>
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 md:gap-8 justify-between flex-1 min-w-0">
+                    <div className="flex-1 min-w-0">
                       {/* Author Name */}
-                      <h3 className=" text-sm sm:text-base font-semibold text-primary-green">
+                      <h3 className="text-sm sm:text-base font-semibold text-primary-green">
                         {item?.user?.first_name} {item?.user?.last_name}
                       </h3>
 
                       {/* Review Count */}
-                      <div className="flex gap-1 items-center py-1.5">
+                      <div className="flex gap-1 items-center py-1 sm:py-1.5">
                         {Array.from({ length: item?.rating }).map(
                           (_, index) => (
                             <FaStar
@@ -117,7 +116,7 @@ const ShopReviews = ({ id }: { id: number }) => {
                       </div>
 
                       {/* Description */}
-                      <p className="text-secondary-gray text-xs sm:text-[15px]">
+                      <p className="text-secondary-gray text-xs sm:text-sm md:text-[15px] break-words">
                         {showMore && item?.id === showMoreId
                           ? item?.message
                           : item?.message?.slice(0, 150)}
@@ -128,7 +127,7 @@ const ShopReviews = ({ id }: { id: number }) => {
                               setShowMore(!showMore);
                               setShowMoreId(item?.id);
                             }}
-                            className="text-primary-green font-semibold cursor-pointer pl-2"
+                            className="text-primary-green font-semibold cursor-pointer pl-1 sm:pl-2"
                           >
                             {showMore && item?.id === showMoreId
                               ? "read less"
@@ -139,57 +138,61 @@ const ShopReviews = ({ id }: { id: number }) => {
                     </div>
 
                     {/* Reviewed Image */}
-                    <div className="flex gap-3 items-center rounded-lg w-[130px] h-[100px] shrink-0">
-                      <Swiper
-                        modules={[Pagination]}
-                        spaceBetween={10}
-                        pagination={{ clickable: true }}
-                        className="review_swiper rounded-lg"
-                      >
-                        {item?.images?.map((img, idx) => (
-                          <SwiperSlide key={idx}>
-                            <figure className="w-[130px] h-[100px] rounded-lg border border-gray-100 relative">
-                              <div className="absolute bg-black/10 z-50 inset-0 rounded-lg" />
-                              <Image
-                                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
-                                alt="Reviewed img"
-                                fill
-                                unoptimized
-                                className="w-full h-full rounded-lg object-cover"
-                              />
-                            </figure>
-                          </SwiperSlide>
-                        ))}
-                      </Swiper>
-                    </div>
+                    {item?.images?.length > 0 && (
+                      <div className="rounded-lg w-[110px] sm:w-[130px] h-[85px] sm:h-[100px] shrink-0 mt-2 sm:mt-0">
+                        <Swiper
+                          modules={[Pagination]}
+                          spaceBetween={10}
+                          pagination={{ clickable: true }}
+                          className="review_swiper rounded-lg size-full"
+                        >
+                          {item?.images?.map((img, idx) => (
+                            <SwiperSlide key={idx}>
+                              <figure className="w-[110px] sm:w-[130px] h-[85px] sm:h-[100px] rounded-lg border border-gray-100 relative overflow-hidden">
+                                <div className="absolute bg-black/10 z-10 inset-0 rounded-lg" />
+                                <Image
+                                  src={`${process.env.NEXT_PUBLIC_SITE_URL}/${img?.image}`}
+                                  alt="Reviewed img"
+                                  fill
+                                  className="w-full h-full rounded-lg object-cover"
+                                />
+                              </figure>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Right - Product under review */}
-                <div className="xl:w-[300px] shrink-0">
-                  <h4 className="text-primary-green text-sm font-semibold mb-3">
-                    Purchased product:
-                  </h4>
-                  <div className="flex items-center gap-5">
-                    <figure className="size-16 relative rounded-lg">
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images[0]?.image}`}
-                        alt="product image"
-                        fill
-                        unoptimized
-                        className="size-full rounded-lg object-cover"
-                      />
-                    </figure>
+                {item?.product && (
+                  <div className="w-full lg:w-[260px] xl:w-[300px] shrink-0 pt-3 lg:pt-0 border-t lg:border-t-0 border-gray-100">
+                    <h4 className="text-primary-green text-xs sm:text-sm font-semibold mb-2 sm:mb-3">
+                      Purchased product:
+                    </h4>
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <figure className="size-14 sm:size-16 relative rounded-lg shrink-0 overflow-hidden bg-gray-100">
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_SITE_URL}/${item?.product?.images?.[0]?.image}`}
+                          alt="product image"
+                          fill
+                          className="size-full rounded-lg object-cover"
+                        />
+                      </figure>
 
-                    <Link
-                      href={`/product-details/${item?.product?.id}`}
-                      className="text-sm font-semibold text-primary-green hover:underline"
-                    >
-                      {item?.product?.product_name}
-                    </Link>
-                    <RightArrowSvg />
+                      <Link
+                        href={`/product-details/${item?.product?.id}`}
+                        className="text-xs sm:text-sm font-semibold text-primary-green hover:underline line-clamp-2 flex-1"
+                      >
+                        {item?.product?.product_name}
+                      </Link>
+                      <span className="shrink-0 text-primary-green">
+                        <RightArrowSvg />
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             ))
           ) : (

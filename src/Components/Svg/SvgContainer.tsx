@@ -129,8 +129,7 @@ export function SearchSvg() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+    className="size-5 md:size-6"
       viewBox="0 0 24 24"
       fill="none"
     >
@@ -732,8 +731,7 @@ export function FacebookLogoSvg() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
+      className="size-8 xl:size-10"
       viewBox="0 0 44 44"
       fill="none"
     >
@@ -878,8 +876,7 @@ export function GoogleLogoSvg() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
+      className="size-8 xl:size-10"
       viewBox="0 0 44 44"
       fill="none"
     >
@@ -907,8 +904,7 @@ export function AppleLogoSvg() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="44"
-      height="44"
+      className="size-8 xl:size-10"
       viewBox="0 0 44 44"
       fill="none"
     >
@@ -1330,8 +1326,7 @@ export function CartSvg2() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="26"
-      height="25"
+     className="size-5.5 md:size-6"
       viewBox="0 0 26 25"
       fill="none"
     >
@@ -2182,11 +2177,10 @@ export function Pen({ className }: PenProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
+     
       viewBox="0 0 20 20"
       fill="none"
-      className={className}
+      className={`size-3 md:size-5 ${className}`}
     >
       <path
         d="M10.0001 16.6664H17.5001M13.6468 3.01811C13.9786 2.68637 14.4285 2.5 14.8976 2.5C15.3668 2.5 15.8167 2.68637 16.1485 3.01811C16.4802 3.34985 16.6666 3.79979 16.6666 4.26895C16.6666 4.7381 16.4802 5.18804 16.1485 5.51978L6.14014 15.5289C5.94189 15.7272 5.69683 15.8722 5.42764 15.9506L3.03431 16.6489C2.9626 16.6699 2.88659 16.6711 2.81423 16.6526C2.74188 16.634 2.67583 16.5964 2.62302 16.5436C2.5702 16.4908 2.53255 16.4247 2.51401 16.3524C2.49547 16.28 2.49673 16.204 2.51764 16.1323L3.21598 13.7389C3.29449 13.4701 3.43952 13.2253 3.63764 13.0273L13.6468 3.01811Z"

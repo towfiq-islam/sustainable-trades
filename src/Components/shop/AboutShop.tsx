@@ -26,42 +26,43 @@ const AboutShop = ({ data }: AboutProps) => {
   const [showMore, setShowMore] = useState<boolean>(false);
 
   return (
-    <section id="About" className="mt-4 md:mt-8">
+    <section id="About" className="mt-6 md:mt-10 lg:mt-14">
       <Container>
         <h2 className="section_sub_title">About us</h2>
 
         <div className="flex flex-col lg:flex-row gap-5 xl:gap-10 lg:items-center">
           <div className="flex flex-col sm:flex-row gap-5 md:gap-10 grow">
             {/* Left - Shop Image */}
-            <figure className="size-auto xs:size-[220px] md:size-[280px] lg:size-[350px] shrink-0 border border-gray-50 rounded-xl relative">
-              <div className="absolute inset-0 bg-black/20 rounded-xl" />
-              <Image
-                src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.about?.about_image}`}
-                fill
-                alt="about image"
-                unoptimized
-                className="size-full object-cover rounded-xl"
-              />
-            </figure>
+            {data?.about?.about_image && (
+              <figure className="w-full sm:w-[240px] md:w-[280px] lg:w-[350px] h-[200px] sm:h-[240px] md:h-[280px] lg:h-[350px] shrink-0 border border-gray-100 rounded-xl relative overflow-hidden shadow-sm">
+                <div className="absolute inset-0 bg-black/20 rounded-xl z-10" />
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_SITE_URL}/${data?.about?.about_image}`}
+                  fill
+                  alt="about image"
+                  className="size-full object-cover rounded-xl"
+                />
+              </figure>
+            )}
 
-            <div>
-              <h3 className="mb-2.5 md:mb-5 text-secondary-black text-sm sm:text-base xl:text-lg 2xl:text-2xl font-semibold">
+            <div className="flex-1 min-w-0">
+              <h3 className="mb-2 sm:mb-3 text-secondary-black text-base sm:text-lg xl:text-xl 2xl:text-2xl font-semibold">
                 {data?.shop_name}
               </h3>
 
-              <h4 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-secondary-black mb-2.5 md:mb-5">
+              <h4 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-secondary-black mb-2 sm:mb-4">
                 {data?.about?.tagline}
               </h4>
 
-              <p className="text-secondary-gray text-sm sm:text-[15px] xl:text-base">
+              <p className="text-secondary-gray text-xs sm:text-sm md:text-[15px] xl:text-base leading-relaxed">
                 {data?.about?.statement}
               </p>
 
-              <h4 className="text-sm sm:text-base xl:text-lg font-semibold text-primary-green my-3 xl:my-5">
+              <h4 className="text-sm sm:text-base xl:text-lg font-semibold text-primary-green my-2.5 sm:my-4 xl:my-5">
                 Our Story
               </h4>
 
-              <p className="text-secondary-gray text-sm sm:text-[15px] xl:text-base">
+              <p className="text-secondary-gray text-xs sm:text-sm md:text-[15px] xl:text-base leading-relaxed">
                 {showMore
                   ? data?.about?.our_story
                   : data?.about?.our_story?.slice(0, 400)}
@@ -69,30 +70,31 @@ const AboutShop = ({ data }: AboutProps) => {
                 {data?.about?.our_story?.length > 400 && (
                   <button
                     onClick={() => setShowMore(!showMore)}
-                    className="text-primary-green font-semibold cursor-pointer pl-2"
+                    className="text-primary-green font-semibold cursor-pointer pl-1 sm:pl-2"
                   >
                     {showMore ? "read less" : "read more...."}
                   </button>
                 )}
               </p>
 
-              <div className="flex gap-5 items-center mt-5">
+              <div className="flex flex-wrap gap-4 items-center mt-4 sm:mt-5">
                 {data?.social_links?.website_url && (
                   <Link
                     target="_blank"
                     href={data?.social_links?.website_url}
-                    className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold"
+                    className="text-xs sm:text-sm md:text-base lg:text-lg font-semibold text-primary-green hover:underline break-all"
                   >
                     {data?.social_links?.website_url}
                   </Link>
                 )}
 
-                <div className="flex gap-3 items-center">
+                <div className="flex gap-2.5 sm:gap-3 items-center">
                   {data?.social_links?.facebook_url && (
                     <Link
                       target="_blank"
                       href={data?.social_links?.facebook_url}
-                      className="size-9 rounded-full bg-primary-green grid place-items-center"
+                      aria-label="Facebook"
+                      className="size-8 sm:size-9 rounded-full bg-primary-green grid place-items-center hover:scale-105 transition-transform"
                     >
                       <FBSvg />
                     </Link>
@@ -102,7 +104,8 @@ const AboutShop = ({ data }: AboutProps) => {
                     <Link
                       target="_blank"
                       href={data?.social_links?.instagram_url}
-                      className="size-9 rounded-full bg-primary-green grid place-items-center"
+                      aria-label="Instagram"
+                      className="size-8 sm:size-9 rounded-full bg-primary-green grid place-items-center hover:scale-105 transition-transform"
                     >
                       <ISSvg />
                     </Link>

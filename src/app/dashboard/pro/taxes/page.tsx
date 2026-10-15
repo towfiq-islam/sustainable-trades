@@ -136,7 +136,7 @@ export default function TaxRatePage() {
     <section>
       <h2 className="section_title text-center !mb-4 md:!mb-7">Sales Tax</h2>
 
-      <p className="text-center text-base sm:text-lg max-w-3xl mx-auto text-secondary-gray mb-7">
+      <p className="text-center text-sm md:text-lg max-w-3xl mx-auto text-secondary-gray mb-7">
         Choose how you'd like to calculate sales tax for your business. Set up a
         single local sales tax rate for local pickup and/or local delivery
         orders, or connect ZipTax to automatically calculate sales tax based on
@@ -147,7 +147,7 @@ export default function TaxRatePage() {
         <button
           type="button"
           onClick={() => setActiveTab("automatic")}
-          className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm md:text-base ${
+          className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-xs md:text-base ${
             activeTab === "automatic"
               ? "text-primary-green bg-accent-white"
               : "text-accent-white bg-transparent"
@@ -159,7 +159,7 @@ export default function TaxRatePage() {
         <button
           type="button"
           onClick={() => setActiveTab("manual")}
-          className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-sm md:text-base ${
+          className={`px-2 md:px-5 py-1.5 md:py-2.5 rounded-lg cursor-pointer shadow font-semibold w-full text-xs md:text-base ${
             activeTab === "manual"
               ? "text-primary-green bg-accent-white"
               : "text-accent-white bg-transparent"
@@ -173,19 +173,19 @@ export default function TaxRatePage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-[1.2fr_0.9fr] gap-5 items-start">
             {/* Left Card */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-7 shadow-sm relative">
+            <div className="bg-white border border-gray-200 rounded-2xl p-4 md:p-7 shadow-sm relative">
               {/* Active Status */}
               {user?.shop_info?.tax_provider === "manual" && (
-                <p className="absolute right-3 top-3 rounded-full px-3.5 py-1 text-sm text-white bg-accent-red">
+                <p className="absolute right-3 top-3 rounded-full px-2 md:px-3.5 py-1 text-xs md:text-sm text-white bg-accent-red">
                   Active
                 </p>
               )}
 
-              <h2 className="text-2xl font-bold text-secondary-black">
+              <h2 className="text-xl md:text-2xl font-bold text-secondary-black">
                 Add Local Tax Rate
               </h2>
 
-              <p className="text-muted-gray mt-2 mb-8">
+              <p className="text-muted-gray mt-2 mb-4 md:mb-8 text-sm md:text-base">
                 The local tax rate you enter here will be applied to every order
                 at checkout.
               </p>
@@ -193,7 +193,7 @@ export default function TaxRatePage() {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Country */}
                 <div>
-                  <label className="block font-semibold text-secondary-black mb-2">
+                  <label className="block text-sm md:text-base font-semibold text-secondary-black mb-1 md:mb-2">
                     Country *
                   </label>
 
@@ -202,14 +202,14 @@ export default function TaxRatePage() {
                     value="United States"
                     disabled
                     readOnly
-                    className="w-full h-12 px-4 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                    className="w-full h-9 md:h-12 px-4 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
                   />
                   <input type="hidden" {...register("country")} value="US" />
                 </div>
 
                 {/* State */}
                 <div>
-                  <label className="block font-semibold text-secondary-black mb-2">
+                  <label className="block text-sm md:text-base font-semibold text-secondary-black mb-1 md:mb-2">
                     State *
                   </label>
 
@@ -243,7 +243,7 @@ export default function TaxRatePage() {
 
                 {/* Tax Rate */}
                 <div>
-                  <label className="block font-semibold text-secondary-black mb-2">
+                  <label className="block text-sm md:text-base font-semibold text-secondary-black mb-1 md:mb-2">
                     Local Sales Tax Rate *
                   </label>
 
@@ -255,7 +255,7 @@ export default function TaxRatePage() {
                       {...register("rate", {
                         required: "Tax rate is required",
                       })}
-                      className="w-full h-12 px-4 pr-10 border border-gray-300 rounded-lg"
+                      className="w-full h-9 md:h-12 px-4 pr-10 border border-gray-300 rounded-lg"
                     />
 
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 font-semibold">
@@ -271,7 +271,7 @@ export default function TaxRatePage() {
                 </div>
 
                 {/* Digital Products */}
-                <div className="flex items-center justify-between border-t border-gray-300 pt-5">
+                <div className="flex text-sm md:text-base items-center justify-between border-t border-gray-300 pt-5">
                   <span className="font-semibold text-secondary-black">
                     Don’t charge tax on services and digital products
                   </span>
@@ -279,7 +279,7 @@ export default function TaxRatePage() {
                   <button
                     type="button"
                     onClick={() => setChargeOnServices(!chargeOnServices)}
-                    className={`cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    className={`cursor-pointer relative shrink-0 inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                       chargeOnServices ? "bg-primary-green" : "bg-gray-300"
                     }`}
                   >
@@ -292,7 +292,7 @@ export default function TaxRatePage() {
                 </div>
 
                 {/* Product Tax */}
-                <div className="flex items-center justify-between border-t border-gray-300 pt-5">
+                <div className="flex text-sm md:text-base items-center justify-between border-t border-gray-300 pt-5">
                   <span className="font-semibold text-secondary-black">
                     Don’t charge tax on food and produce
                   </span>
@@ -300,7 +300,7 @@ export default function TaxRatePage() {
                   <button
                     type="button"
                     onClick={() => setChargeOnProduce(!chargeOnProduce)}
-                    className={`cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    className={`cursor-pointer relative shrink-0 inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                       chargeOnProduce ? "bg-primary-green" : "bg-gray-300"
                     }`}
                   >
@@ -316,7 +316,7 @@ export default function TaxRatePage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full bg-primary-green text-white h-12 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full bg-primary-green text-white h-10 md:h-12 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-sm md:text-base"
                 >
                   {isPending ? "Saving..." : "Save Local Tax Rate"}
                 </button>
@@ -332,10 +332,12 @@ export default function TaxRatePage() {
                       i
                     </p>
 
-                    <h3 className="font-bold">About Local Tax Rate</h3>
+                    <h3 className="font-semibold md:font-bold">
+                      About Local Tax Rate
+                    </h3>
                   </div>
 
-                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
+                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-sm md:text-[15px]">
                     <span>
                       This option is for shop owners who offer Local Pickup
                       and/or Local Delivery and use the same sales tax rate for
@@ -358,7 +360,7 @@ export default function TaxRatePage() {
                     <h3 className="font-bold">Important</h3>
                   </div>
 
-                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
+                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-sm md:text-[15px]">
                     <span>
                       This tax rate applies only when a shopper selects Local
                       Pickup or Local Delivery. It will not be applied to orders
@@ -373,7 +375,7 @@ export default function TaxRatePage() {
                     <h3 className="font-bold">How It Works</h3>
                   </div>
 
-                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
+                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-sm md:text-[15px]">
                     <span>
                       Enter the sales tax rate you want applied at checkout.
                       This rate is automatically applied to Local Pickup and
@@ -388,7 +390,7 @@ export default function TaxRatePage() {
                     <h3 className="font-bold">Keep in Mind</h3>
                   </div>
 
-                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-[15px]">
+                  <p className="text-gray-600 leading-relaxed flex flex-col gap-1 text-sm md:text-[15px]">
                     <span>
                       You are responsible for collecting and remitting sales tax
                       according to your local, state, and federal obligations.
@@ -406,9 +408,9 @@ export default function TaxRatePage() {
           </div>
 
           {/* Bottom Banner */}
-          <div className="mt-6 bg-cyan-light border border-accent-blue/40 rounded-xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div className="mt-4 md:mt-6 bg-cyan-light border border-accent-blue/40 rounded-xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div>
-              <h4 className="font-semibold text-secondary-black">
+              <h4 className="font-semibold text-secondary-black text-sm md:text-base">
                 Need to calculate sales tax based on your customer's address or
                 pickup location?
               </h4>
@@ -421,7 +423,7 @@ export default function TaxRatePage() {
             <Link
               target="_blank"
               href="https://www.zip.tax"
-              className="text-primary-green font-semibold underline"
+              className="text-primary-green font-semibold underline text-sm md:text-base"
             >
               Learn more about ZipTax
             </Link>
@@ -430,35 +432,35 @@ export default function TaxRatePage() {
       ) : (
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Top Info Card */}
-          <div className="border border-primary-green/30 rounded-2xl bg-card-white px-5 py-6 relative">
+          <div className="border border-primary-green/30 rounded-2xl bg-card-white px-4 md:px-5 py-5 md:py-6 relative">
             {/* Active Status */}
             {user?.shop_info?.tax_provider === "ziptax" && (
-              <p className="absolute right-3 top-3 rounded-full px-3.5 py-1 text-sm text-white bg-accent-red">
+              <p className="absolute right-3 top-3 rounded-full px-2 md:px-3.5 py-1 text-xs md:text-sm text-white bg-accent-red">
                 Active
               </p>
             )}
 
             <div className="flex gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary-green flex items-center justify-center text-white font-bold">
+              <div className="size-7 md:size-10 rounded-full bg-primary-green flex items-center justify-center text-white font-bold">
                 i
               </div>
 
               <div className="flex-1">
-                <h3 className="text-2xl font-bold text-secondary-black">
+                <h3 className="text-base md:text-2xl font-bold text-secondary-black">
                   Automatic Sales Tax with ZipTax
                 </h3>
 
-                <p className="mt-2 text-gray-600">
+                <p className="mt-2 text-gray-600  text-sm md:text-base">
                   Connect your shop to ZipTax to automatically calculate sales
                   tax during checkout.
                 </p>
 
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm md:text-base">
                   ZipTax will return the appropriate rate based on the
                   customer's address or pickup location.
                 </p>
 
-                <div className="mt-4 space-y-2 text-gray-700">
+                <div className="mt-4 space-y-2 text-gray-700 text-sm md:text-base">
                   <p className="flex gap-2">
                     <input
                       type="checkbox"
@@ -497,11 +499,11 @@ export default function TaxRatePage() {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-8 mt-6">
+                <div className="flex flex-wrap gap-3 md:gap-8 mt-6">
                   <Link
                     target="_blank"
                     href="https://www.zip.tax/pricing"
-                    className="text-primary-green font-medium underline"
+                    className="text-primary-green font-medium underline text-sm md:text-base"
                   >
                     Create a ZipTax Account
                   </Link>
@@ -509,7 +511,7 @@ export default function TaxRatePage() {
                   <button
                     type="button"
                     onClick={() => setShowVideoModal(true)}
-                    className="text-primary-green font-medium underline cursor-pointer"
+                    className="text-primary-green font-medium underline cursor-pointer text-sm md:text-base"
                   >
                     Watch: How To Connect ZipTax
                   </button>
@@ -519,11 +521,11 @@ export default function TaxRatePage() {
           </div>
 
           {/* Settings Card */}
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 md:p-6">
             <div className="grid lg:grid-cols-3 gap-6">
               {/* Left */}
               <div className="col-span-2">
-                <label className="block font-semibold text-lg mb-2">
+                <label className="block font-semibold md:text-lg mb-2">
                   ZipTax API Key
                 </label>
 
@@ -533,7 +535,7 @@ export default function TaxRatePage() {
                     value={apiKey}
                     onChange={e => setApiKey(e.target.value)}
                     placeholder="Enter ZipTax API Key"
-                    className="w-full h-12 px-4 pr-9 border rounded-lg"
+                    className="w-full h-10 md:h-12 px-4 pr-9 border rounded-lg"
                   />
                   <button
                     onClick={() => setShow(!show)}
@@ -549,8 +551,8 @@ export default function TaxRatePage() {
               </div>
 
               {/* Right */}
-              <div className="border border-primary-green/30 bg-card-white rounded-xl p-4">
-                <h4 className="font-semibold text-lg mb-2 flex gap-1 items-center">
+              <div className="border border-primary-green/30 bg-card-white rounded-xl p-3 md:p-4">
+                <h4 className="font-semibold md:text-lg mb-2 flex gap-1 items-center">
                   <FaLightbulb className="text-primary-green" />
                   How it works
                 </h4>
@@ -567,25 +569,25 @@ export default function TaxRatePage() {
 
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <h3 className="font-bold text-xl">
+                <h3 className="font-semibold md:font-bold md:text-xl">
                   States Where I Collect Sales Tax
                 </h3>
 
                 <span className="text-gray-400">ⓘ</span>
               </div>
 
-              <p className="text-gray-500 text-sm mb-6">
+              <p className="text-gray-500 text-sm mb-4 md:mb-6">
                 Enable the states where you have sales tax collection
                 obligations.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-3 md:gap-y-4">
                 {states.map((state: stateItem) => (
                   <div
                     key={state.id}
                     className="flex items-center justify-between"
                   >
-                    <span className="text-[15px] text-gray-700">
+                    <span className="text-sm md:text-[15px] text-gray-700">
                       {state.name} ({state.code})
                     </span>
 
@@ -620,7 +622,7 @@ export default function TaxRatePage() {
             type="button"
             disabled={isAddingSalesTax || !apiKey}
             onClick={handleSaveAutomaticTax}
-            className="bg-primary-green text-white px-8 py-3 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="bg-primary-green text-white px-5 md:px-8 py-2 md:py-3 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-sm md:text-base"
           >
             {isAddingSalesTax ? "Saving..." : "Save Changes"}
           </button>

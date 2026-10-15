@@ -302,7 +302,7 @@ const TradesTabs: React.FC<TradesTabsProps> = ({
                               handleTrade(btn, trade?.id);
                             }
                           }}
-                          className={`relative cursor-pointer py-[10px] border px-4 rounded-md font-lato font-semibold overflow-hidden hover:scale-110 duration-500 ease-in-out 
+                          className={`relative cursor-pointer py-[10px] border px-4 rounded-md  font-semibold overflow-hidden hover:scale-110 duration-500 ease-in-out 
                             ${style.bg || ""} 
                           ${style.border || "border-2"} ${style.text}`}
                         >

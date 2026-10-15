@@ -18,8 +18,9 @@ const Header = ({ isBasicMember }: { isBasicMember: boolean }) => {
         </span>
         <span>Back</span>
       </button>
+
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <h3 className="text-3xl font-semibold text-secondary-black">
+        <h3 className="text-xl md:text-3xl font-semibold text-secondary-black">
           Create New Listing
         </h3>
 
@@ -30,7 +31,7 @@ const Header = ({ isBasicMember }: { isBasicMember: boolean }) => {
               : "/dashboard/pro/listing"
           }
         >
-          <button className="text-accent-red font-semibold flex gap-x-1 items-center border-2 border-accent-red rounded-lg py-1.5 md:py-3 px-6 hover:bg-accent-red hover:text-white duration-300 cursor-pointer">
+          <button className="text-accent-red font-semibold flex gap-x-1 items-center border-2 border-accent-red rounded-lg py-1.5 md:py-3 px-3 md:px-6 text-sm md:text-base hover:bg-accent-red hover:text-white duration-300 cursor-pointer">
             <MdArrowOutward />
             View Listings
           </button>

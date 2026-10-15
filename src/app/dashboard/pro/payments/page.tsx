@@ -1,10 +1,10 @@
 "use client";
 import moment from "moment";
 import { useState } from "react";
-import { FaSearch } from "react-icons/fa";
 import { PaymentRowSkeleton } from "@/Components/Loader/Loader";
 import { useGetPaymentsQuery } from "@/redux/api/vendorApi";
 import { FiCreditCard } from "react-icons/fi";
+import DashBoardHeader from "@/Components/Common/DashBoardHeader";
 
 type orderItem = {
   payment_method: string;
@@ -29,9 +29,7 @@ const page = () => {
   return (
     <>
       <div className="flex flex-col gap-2.5 md:gap-0 md:flex-row justify-between md:items-center">
-        <h2 className="text-[40px] font-lato font-semibold text-secondary-black">
-          Payments
-        </h2>
+        <DashBoardHeader heading="Payments" />
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <div className="relative w-full sm:w-[300px]">
@@ -41,12 +39,6 @@ const page = () => {
                 placeholder="Search Payments"
                 className="flex-1 py-[10px] pl-4 pr-2 outline-0 text-[16px] text-muted-gray font-normal"
               />
-              {/* Divider */}
-              <div className="w-[1px] h-6 bg-border-gray" />
-              {/* Icon */}
-              <button className="p-3 text-muted-gray">
-                <FaSearch />
-              </button>
             </div>
           </div>
         </div>
@@ -74,10 +66,10 @@ const page = () => {
         </div>
 
         <div className="w-full mt-7">
-          {/* Desktop Table */}
-          <div className="hidden md:block overflow-x-auto">
+          {/* Table */}
+          <div className="w-full overflow-x-auto">
             {isLoading ? (
-              <table className="w-full border-collapse">
+              <table className="w-full min-w-[700px] text-nowrap border-collapse">
                 <thead>
                   <tr className="border-b-2 border-gray-300 text-secondary-black text-[16px] font-semibold">
                     <th className="py-3 px-4 text-left"># Order ID</th>
@@ -95,7 +87,7 @@ const page = () => {
                 </tbody>
               </table>
             ) : allPayments?.data?.length > 0 ? (
-              <table className="w-full border-collapse">
+              <table className="w-full min-w-[700px] text-nowrap border-collapse">
                 <thead>
                   <tr className="border-b-2 border-gray-300 text-secondary-black text-[16px] font-semibold">
                     <th className="py-3 px-4 text-left"># Order ID</th>

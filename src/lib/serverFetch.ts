@@ -14,14 +14,8 @@ export async function serverFetch({
   tags = [],
 }: Props) {
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}${endpoint}`;
-  // const cookieStore = await cookies();
-  // const token = cookieStore.get("token")?.value;
-
-  let token: string | undefined;
-  if (mode === "SSR") {
-    const cookieStore = await cookies();
-    token = cookieStore.get("token")?.value;
-  }
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
   const fetchOptions: RequestInit & {
     next?: { revalidate?: number; tags?: string[] };

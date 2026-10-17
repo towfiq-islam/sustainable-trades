@@ -63,7 +63,6 @@ const BannerSlider = ({ data }: bannerProps) => {
                   alt={sliderData?.title || "slider"}
                   fill
                   priority
-                  unoptimized
                   className="object-cover object-center -z-10"
                 />
 

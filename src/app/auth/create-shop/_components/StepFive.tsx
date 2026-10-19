@@ -16,16 +16,10 @@ const StepFive = () => {
       router.replace("/");
     };
 
-    const handleBeforeUnload = () => {
-      clearAuthorization();
-    };
-
     window.addEventListener("popstate", handlePopState);
-    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       window.removeEventListener("popstate", handlePopState);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [clearAuthorization, router]);
 

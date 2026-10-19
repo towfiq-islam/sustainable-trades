@@ -21,6 +21,7 @@ const StepFour = dynamic(() => import("./StepFour"), {
 const StepFive = dynamic(() => import("./StepFive"));
 import { RxCross2 } from "react-icons/rx";
 import { getLatLng, normalizeStateCode } from "@/lib/getLatLng";
+import { useRouter } from "next/navigation";
 
 type StepItem = {
   smLabel: string;
@@ -29,6 +30,7 @@ type StepItem = {
 };
 
 const CreateShop = ({ newStep }: { newStep: number }) => {
+  const router = useRouter();
   const { setAuthenticated, clearAuthorization } = useAuth();
   const formRef = useRef<HTMLDivElement | null>(null);
   const [step, setStep] = useState<number>(1);
@@ -174,7 +176,7 @@ const CreateShop = ({ newStep }: { newStep: number }) => {
 
         if (res?.success) {
           toast.success(res?.message);
-          setStep(step + 1);
+          router.push(`/auth/create-shop?step=${step + 1}`);
           setAuthenticated();
         }
       } catch (err: any) {

@@ -38,11 +38,15 @@ const CombinedNavbar = ({
   const isDashboard = variant === "dashboard";
   const { totalQuantity } = useAppSelector(state => state.cart);
   const navLins = getNavLinks(dynamicPages);
-  const { user: liveUser, clearAuthorization } = useAuth();
-  const user = liveUser ?? initialUser;
   const router = useRouter();
   const dispatch = useAppDispatch();
   const pathname = usePathname();
+
+  const { user: liveUser, clearAuthorization } = useAuth();
+  const user = liveUser ?? initialUser;
+  const isVendorWithoutMembership =
+    user?.role === "vendor" && !user?.membership;
+  const isLoggedIn = !!user && !isVendorWithoutMembership;
 
   const [internalSidebarOpen, setInternalSidebarOpen] =
     useState<boolean>(false);
@@ -50,9 +54,6 @@ const CombinedNavbar = ({
   const [activeSubMenu, setActiveSubMenu] = useState<number | null>(null);
   const [logout, { isLoading }] = useLogoutMutation();
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isVendorWithoutMembership =
-    user?.role === "vendor" && !user?.membership;
-  const isLoggedIn = !!user && !isVendorWithoutMembership;
 
   const openSubMenu = (id: number) => {
     if (closeTimeoutRef.current) {

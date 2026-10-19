@@ -34,7 +34,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
   };
 
   return (
-    <section className="relative min-h-[440px] md:h-[430px] lg:h-[470px] 2xl:h-[600px] py-8 sm:py-10 mb-8 sm:mb-10 overflow-hidden flex items-center">
+    <section className="relative min-h-[440px] md:h-[430px] lg:h-[470px] 2xl:h-[600px] py-8 sm:py-10 mb-8 sm:mb-10 overflow-hidden">
       {/* Banner image */}
       <Image
         src={bannerUrl}
@@ -48,7 +48,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
       <div className="absolute inset-0 bg-black/50 -z-10" />
 
       <Container>
-        <div className="flex flex-col md:flex-row justify-between w-full">
+        <div className="flex flex-col md:flex-row justify-between">
           {/* Left - Shop Info */}
           <div className="space-y-2 lg:space-y-3.5 2xl:space-y-4">
             {/* Shop Profile */}

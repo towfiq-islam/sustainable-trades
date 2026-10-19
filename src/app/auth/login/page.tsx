@@ -26,7 +26,7 @@ const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect");
-  const { setAuthenticated } = useAuth();
+  const { setAuthenticated, clearAuthorization } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [login, { isLoading }] = useLoginMutation();
 
@@ -41,7 +41,9 @@ const Page = () => {
       const res = await login(data).unwrap();
 
       if (
-        res?.success && (res?.data?.role === "customer" || res?.data?.membership)
+        res?.success &&
+        (res?.data?.role === "customer" ||
+          (res?.data?.role === "vendor" && res?.data?.membership))
       ) {
         setAuthenticated();
         toast.success(res?.message);

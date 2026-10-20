@@ -3,7 +3,6 @@ import Image from "next/image";
 import useAuth from "@/Hooks/useAuth";
 import { useState } from "react";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { useRouter } from "next/navigation";
 import Modal from "@/Components/Common/Modal";
 import { PricingSkeletonCard } from "@/Components/Loader/Loader";
 import EmptyState from "@/Components/Common/EmptyState";
@@ -51,8 +50,7 @@ const Pricing = ({
   isCancel = false,
 }: PricingProps) => {
   // Hook
-  const { user } = useAuth();
-  const router = useRouter();
+  const { requireAuth, user } = useAuth();
 
   // States
   const [activeTab, setActiveTab] = useState<string>("yearly");
@@ -215,9 +213,8 @@ const Pricing = ({
                   onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
-                    if (!user) {
-                      router.push("/auth/login");
-                    } else {
+                    if (!requireAuth()) return;
+                    else {
                       setPlanId(id);
                       setInterval(interval);
                       setOpen(true);

@@ -18,15 +18,13 @@ interface BannerProps {
 
 const ShopBanner = ({ id, data }: BannerProps) => {
   const [msgOpen, setMsgOpen] = useState<boolean>(false);
-  const { user } = useAuth();
+  const { requireAuth, user } = useAuth();
   const bannerUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/${data?.shop_info?.shop_banner}`;
   const { handleFollowShop, isLoading: isPending } = useFollowShop();
 
   // Func for send message
   const handleMessage = () => {
-    if (!user) {
-      return toast.error("Please login first");
-    }
+    if (!requireAuth()) return;
     if (user?.shop_info?.user_id === id) {
       return toast.error("You can't message your own shop");
     }

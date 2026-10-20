@@ -1,21 +1,15 @@
 import { useCallback } from "react";
 import toast from "react-hot-toast";
 import useAuth from "@/Hooks/useAuth";
-import { useRouter } from "next/navigation";
 import { useAddFavoriteMutation } from "@/redux/api/productApi";
 
 export function useAddFavorite() {
-  const { user } = useAuth();
-  const router = useRouter();
+  const { requireAuth } = useAuth();
   const [addFavoriteMutation, { isLoading }] = useAddFavoriteMutation();
 
   const handleAddFavorite = useCallback(
     (productId: number) => {
-      if (!user) {
-        toast.error("Please login first to proceed");
-        router.push("/auth/login");
-        return;
-      }
+      if (!requireAuth()) return;
       addFavoriteMutation(productId)
         .unwrap()
         .then((res) => {
@@ -25,7 +19,7 @@ export function useAddFavorite() {
           toast.error(err?.data?.message);
         });
     },
-    [user, router, addFavoriteMutation],
+    [requireAuth, addFavoriteMutation],
   );
 
   return { handleAddFavorite, isLoading };

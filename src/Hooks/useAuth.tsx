@@ -1,5 +1,7 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
+import { usePathname, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { useGetUserDataQuery } from "@/redux/api/authApi";
 import {
   removeUser,
@@ -12,6 +14,9 @@ import { useAppSelector } from "@/redux/store";
 
 const useAuth = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const { isAuthenticated, latitude, longitude, search } = useAppSelector(
     state => state.auth,
   );
@@ -46,6 +51,23 @@ const useAuth = () => {
     [dispatch],
   );
 
+  const requireAuth = useCallback(
+    (action?: () => void) => {
+      if (!userData?.data) {
+        toast.error("Please login first to proceed");
+        const currentUrl =
+          typeof window !== "undefined"
+            ? `${window.location.pathname}${window.location.search}`
+            : pathname;
+        router.push(`/auth/login?redirect=${encodeURIComponent(currentUrl)}`);
+        return false;
+      }
+      action?.();
+      return true;
+    },
+    [userData?.data, pathname, router],
+  );
+
   return {
     user: userData?.data ?? null,
     isAuthenticated,
@@ -58,6 +80,7 @@ const useAuth = () => {
     setLatitude: handleSetLatitude,
     setLongitude: handleSetLongitude,
     setSearch: handleSetSearch,
+    requireAuth,
   };
 };
 

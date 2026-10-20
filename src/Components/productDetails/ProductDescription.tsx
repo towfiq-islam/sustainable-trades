@@ -71,7 +71,7 @@ interface descriptionProps {
 const ProductDescription = ({ data }: descriptionProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { user } = useAuth();
+  const { user, requireAuth } = useAuth();
   const [sellingOption, setSellingOption] = useState<boolean>(Boolean);
   const [openMsg, setOpenMsg] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
@@ -263,11 +263,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
       ) : (
         <button
           onClick={() => {
-            if (!user) {
-              toast.error("Please login first to proceed");
-              router.push("/auth/login");
-              return;
-            }
+            if (!requireAuth()) return;
             setOpenMsg(true);
           }}
           className="mb-3 xl:mb-5 block w-full text-center duration-500 transition-all border-2 xl:text-lg cursor-pointer py-2 xl:py-3 bg-primary-green text-accent-white rounded-lg shadow enabled:hover:text-primary-green enabled:hover:bg-transparent font-medium border-primary-green disabled:opacity-60 disabled:cursor-not-allowed"
@@ -283,11 +279,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
           user?.shop_info?.user_id === data?.shop?.user_id
         }
         onClick={() => {
-          if (!user) {
-            toast.error("Please login first to proceed");
-            router.push("/auth/login");
-            return;
-          }
+          if (!requireAuth()) return;
 
           if (data?.selling_option === "for_sale") {
             setSellingOption(true);
@@ -307,11 +299,7 @@ const ProductDescription = ({ data }: descriptionProps) => {
         data?.shop?.user?.membership?.membership_type === "pro" && (
           <button
             onClick={() => {
-              if (!user) {
-                toast.error("Please login first to proceed");
-                router.push("/auth/login");
-                return;
-              }
+              if (!requireAuth()) return;
               setId(data?.shop?.user_id);
               setProductId(data?.id);
               setMsgOpen(true);

@@ -5,7 +5,6 @@ import {
   useLogoutMutation,
   useUpdateUserMutation,
 } from "@/redux/api/authApi";
-import { useAppDispatch } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -28,7 +27,6 @@ type SettingsFormValues = {
 const Settings = () => {
   const router = useRouter();
   const { user, clearAuthorization } = useAuth();
-  const dispatch = useAppDispatch();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [modalType, setModalType] = useState<"logout" | "delete" | null>(null);
   const hiddenFileInputRef = useRef<HTMLInputElement | null>(null);
@@ -91,7 +89,11 @@ const Settings = () => {
         .then(() => {
           toast.success("Logged out successfully");
           router.replace("/auth/login");
-          dispatch(clearAuthorization());
+          clearAuthorization();
+        })
+        .catch(() => {
+          router.replace("/auth/login");
+          clearAuthorization();
         });
     } else if (modalType === "delete") {
       deleteUser()
@@ -99,7 +101,11 @@ const Settings = () => {
         .then(() => {
           toast.success("Account deleted successfully");
           router.replace("/auth/login");
-          dispatch(clearAuthorization());
+          clearAuthorization();
+        })
+        .catch(() => {
+          router.replace("/auth/login");
+          clearAuthorization();
         });
     }
   };

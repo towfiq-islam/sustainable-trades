@@ -69,7 +69,7 @@ const useAuth = () => {
   );
 
   return {
-    user: userData?.data ?? null,
+    user: isAuthenticated ? (userData?.data ?? null) : null,
     isAuthenticated,
     latitude,
     longitude,

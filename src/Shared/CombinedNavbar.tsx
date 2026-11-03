@@ -142,7 +142,11 @@ const CombinedNavbar = ({
       .then(() => {
         toast.success("Logged out successfully");
         router.replace("/auth/login");
-        dispatch(clearAuthorization());
+        clearAuthorization();
+      })
+      .catch(() => {
+        router.replace("/auth/login");
+        clearAuthorization();
       });
   };
 

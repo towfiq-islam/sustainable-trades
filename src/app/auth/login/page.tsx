@@ -26,7 +26,7 @@ const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect");
-  const { setAuthenticated, clearAuthorization } = useAuth();
+  const { setAuthenticated } = useAuth();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [login, { isLoading }] = useLoginMutation();
 
@@ -89,7 +89,9 @@ const Page = () => {
           </div>
 
           <h2 className="auth-heading">
-            {redirectTo ? "Sign in to continue checkout" : "Welcome Back!"}
+            {redirectTo?.includes("checkout")
+              ? "Sign in to continue checkout"
+              : "Welcome Back!"}
           </h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

@@ -18,15 +18,13 @@ interface BannerProps {
 
 const ShopBanner = ({ id, data }: BannerProps) => {
   const [msgOpen, setMsgOpen] = useState<boolean>(false);
-  const { user } = useAuth();
+  const { requireAuth, user } = useAuth();
   const bannerUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/${data?.shop_info?.shop_banner}`;
   const { handleFollowShop, isLoading: isPending } = useFollowShop();
 
   // Func for send message
   const handleMessage = () => {
-    if (!user) {
-      return toast.error("Please login first");
-    }
+    if (!requireAuth()) return;
     if (user?.shop_info?.user_id === id) {
       return toast.error("You can't message your own shop");
     }
@@ -34,7 +32,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
   };
 
   return (
-    <section className="relative min-h-[440px] md:h-[430px] lg:h-[470px] 2xl:h-[600px] py-8 sm:py-10 mb-8 sm:mb-10 overflow-hidden flex items-center">
+    <section className="relative min-h-[440px] md:h-[430px] lg:h-[470px] 2xl:h-[600px] py-8 sm:py-10 mb-8 sm:mb-10 overflow-hidden">
       {/* Banner image */}
       <Image
         src={bannerUrl}
@@ -48,7 +46,7 @@ const ShopBanner = ({ id, data }: BannerProps) => {
       <div className="absolute inset-0 bg-black/50 -z-10" />
 
       <Container>
-        <div className="flex flex-col md:flex-row justify-between w-full">
+        <div className="flex flex-col md:flex-row justify-between">
           {/* Left - Shop Info */}
           <div className="space-y-2 lg:space-y-3.5 2xl:space-y-4">
             {/* Shop Profile */}

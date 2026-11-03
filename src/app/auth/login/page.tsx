@@ -41,7 +41,9 @@ const Page = () => {
       const res = await login(data).unwrap();
 
       if (
-        res?.success && (res?.data?.role === "customer" || res?.data?.membership)
+        res?.success &&
+        (res?.data?.role === "customer" ||
+          (res?.data?.role === "vendor" && res?.data?.membership))
       ) {
         setAuthenticated();
         toast.success(res?.message);
@@ -87,7 +89,9 @@ const Page = () => {
           </div>
 
           <h2 className="auth-heading">
-            {redirectTo ? "Sign in to continue checkout" : "Welcome Back!"}
+            {redirectTo?.includes("checkout")
+              ? "Sign in to continue checkout"
+              : "Welcome Back!"}
           </h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

@@ -1,5 +1,6 @@
 "use client";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import DashboardSidebar from "@/Shared/DashboardSidebar";
 import useAuth from "@/Hooks/useAuth";
 import {
@@ -19,9 +20,38 @@ export default function DashboardLayoutClient({
   children,
   initialUser,
 }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
   const { user: liveUser } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const user = liveUser ?? initialUser;
+
+  const isPro =
+    user?.role === "vendor" && user?.membership?.membership_type === "pro";
+  const isBasic =
+    user?.role === "vendor" && user?.membership?.membership_type === "basic";
+  const isCustomer = user?.role === "customer";
+
+  const isUnauthorized =
+    (isPro && !pathname.startsWith("/dashboard/pro")) ||
+    (isBasic && !pathname.startsWith("/dashboard/basic")) ||
+    (isCustomer && !pathname.startsWith("/dashboard/customer"));
+
+  const userHome = isPro
+    ? "/dashboard/pro/home"
+    : isBasic
+      ? "/dashboard/basic/home"
+      : "/dashboard/customer/orders";
+
+  useEffect(() => {
+    if (isUnauthorized) {
+      router.replace(userHome);
+    }
+  }, [isUnauthorized, userHome, router]);
+
+  if (isUnauthorized) {
+    return null;
+  }
 
   return (
     <section className=" flex flex-col">

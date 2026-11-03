@@ -23,7 +23,6 @@ const baseQueryWithInterceptor: BaseQueryFn<
   // Handle 401 interceptor
   if (status === 401) {
     api.dispatch(removeUser());
-    api.dispatch(apiSlice.util.resetApiState()); // Wipe all cached queries
   }
 
   return result;

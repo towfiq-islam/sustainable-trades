@@ -23,7 +23,7 @@ const CheckoutContent = () => {
   const searchParams = useSearchParams();
   const step = (searchParams.get("step") as CheckoutStep) || "delivery-options";
   const isBuyNow = searchParams.get("mode") === "buy-now";
-  const { isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const { items: cartItems } = useAppSelector(state => state.cart);
   const { buyNowItem } = useAppSelector(state => state.checkout);
   const items = isBuyNow ? (buyNowItem ? [buyNowItem] : []) : cartItems;
@@ -31,16 +31,16 @@ const CheckoutContent = () => {
   const [isResetting, setIsResetting] = useState(true);
   const [checkoutMode, setCheckoutMode] = useState<
     "guest" | "authenticated" | null
-  >(isAuthenticated ? "authenticated" : null);
+  >(user ? "authenticated" : null);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (user) {
       setCheckoutMode("authenticated");
       return;
     }
     const saved = sessionStorage.getItem("checkout_guest_mode");
     if (saved === "guest") setCheckoutMode("guest");
-  }, [isAuthenticated]);
+  }, [user]);
 
   const handleContinueAsGuest = () => {
     sessionStorage.setItem("checkout_guest_mode", "guest");
